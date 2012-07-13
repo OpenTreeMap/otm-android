@@ -3,6 +3,7 @@ package org.azavea.otm;
 import org.azavea.otm.tasks.HttpRequest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,6 +26,13 @@ public class Download extends Activity
     	EditText url = (EditText)findViewById(R.id.edit_message);
     	String text = url.getText().toString();
     	new HttpRequest(this).execute(text);
+    }
+    
+    public void showMap(View view) {
+    	// Create intent for map-view activity and switch
+    	Intent intent = new Intent(view.getContext(), MapDisplay.class);
+    	startActivity(intent);
+    	
     }
     
     public void showResult(String result) {
