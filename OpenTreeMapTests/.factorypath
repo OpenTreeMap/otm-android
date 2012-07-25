@@ -1,0 +1,8 @@
+<factorypath>
+    <factorypathentry kind="EXTJAR" id="/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="ANDROID_RUNTIME" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="APP_UNDER_TEST" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="ANDROID_FRAMEWORK_MOCKS" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="ASYNC_HTTP_LIBRARY" enabled="true" runInBatchMode="false"/>
+</factorypath>

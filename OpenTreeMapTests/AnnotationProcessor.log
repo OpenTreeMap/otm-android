@@ -1,0 +1,1598 @@
+Jul 24, 2012 4:23:54 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:23:54 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:23:54 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:23:54 PM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:23:54 PM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.resources.Workspace.buildInternal(Workspace.java:513)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:422)
+	at org.eclipse.ui.actions.GlobalBuildAction$1.run(GlobalBuildAction.java:180)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 24, 2012 4:23:54 PM - NOTE : Known Classpath: 
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/bin/classes/
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:23:54 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:23:54 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:23:54 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:23:54 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:23:54 PM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:23:54 PM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.resources.Workspace.buildInternal(Workspace.java:513)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:422)
+	at org.eclipse.ui.actions.GlobalBuildAction$1.run(GlobalBuildAction.java:180)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 24, 2012 4:23:54 PM - NOTE : Known Classpath: 
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/bin/classes/
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 24, 2012 4:23:54 PM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:23:54 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:23:54 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:23:54 PM - NOTE : Processing []
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:23:54 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:23:54 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:23:54 PM - NOTE : Processing []
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:23:54 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:23:54 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:10 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:10 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:25:10 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:10 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:25:10 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:10 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:25:10 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:10 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:10 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:10 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:10 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:10 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:10 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:25:10 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:10 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:25:10 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:10 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:25:10 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:10 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:10 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:10 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:10 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:10 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:10 PM - NOTE : Processing []
+Jul 24, 2012 4:25:10 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:25:10 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:25:10 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:10 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:10 PM - NOTE : Processing []
+Jul 24, 2012 4:25:10 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:25:10 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:25:10 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:22 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:22 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:25:22 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:22 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:25:22 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:22 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:25:22 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:22 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:22 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:22 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:22 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:22 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:22 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:25:22 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:22 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:25:22 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:25:22 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:25:22 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:22 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:25:22 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:22 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:25:22 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:22 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:22 PM - NOTE : Processing []
+Jul 24, 2012 4:25:22 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:25:22 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:25:22 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:25:22 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:25:22 PM - NOTE : Processing []
+Jul 24, 2012 4:25:22 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:25:22 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:25:22 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:27:07 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:27:07 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:27:07 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:27:07 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:27:07 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:27:07 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:27:07 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:27:07 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:27:07 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:27:07 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:27:07 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:27:07 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:27:07 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:27:07 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:27:07 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:27:07 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:27:07 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:27:07 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:27:07 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:27:07 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:27:07 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:27:07 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:27:07 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:27:07 PM - NOTE : Processing []
+Jul 24, 2012 4:27:07 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:27:07 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:27:07 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:27:07 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:27:07 PM - NOTE : Processing []
+Jul 24, 2012 4:27:07 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:27:07 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:27:07 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:37 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:37 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:28:37 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:37 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:28:37 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:37 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:28:37 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:37 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:37 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:37 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:37 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:37 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:37 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:28:37 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:37 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:28:37 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:37 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:28:37 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:37 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:37 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:37 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:37 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:37 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:37 PM - NOTE : Processing []
+Jul 24, 2012 4:28:37 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:28:37 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:28:37 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:37 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:37 PM - NOTE : Processing []
+Jul 24, 2012 4:28:37 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:28:37 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:28:37 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:46 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:46 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:28:46 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:46 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:28:46 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:46 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:28:46 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:46 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:46 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:46 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:46 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:46 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:46 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:28:46 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:46 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:28:46 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:28:46 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:28:46 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:46 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:28:46 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:46 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:28:46 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:46 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:46 PM - NOTE : Processing []
+Jul 24, 2012 4:28:46 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:28:46 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:28:46 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:28:46 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:28:46 PM - NOTE : Processing []
+Jul 24, 2012 4:28:46 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:28:46 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:28:46 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:41 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:41 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:29:41 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:41 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:29:41 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:41 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:29:41 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:41 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:41 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:41 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:41 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:41 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:41 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:29:41 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:41 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:29:41 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:41 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:29:41 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:41 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:41 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:41 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:41 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:41 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:41 PM - NOTE : Processing []
+Jul 24, 2012 4:29:41 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:29:41 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:29:41 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:41 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:41 PM - NOTE : Processing []
+Jul 24, 2012 4:29:41 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:29:41 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:29:41 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:45 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:45 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:29:45 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:45 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:29:45 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:45 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:29:45 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:45 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:45 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:45 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:45 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:45 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:45 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:29:45 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:45 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:29:45 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:29:45 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:29:45 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:45 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:29:45 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:45 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:29:45 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:45 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:45 PM - NOTE : Processing []
+Jul 24, 2012 4:29:45 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:29:45 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:29:45 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:29:45 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:29:45 PM - NOTE : Processing []
+Jul 24, 2012 4:29:45 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:29:45 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:29:45 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:42:01 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:42:01 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:42:01 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:42:01 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:42:01 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:42:01 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:42:01 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:42:01 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:42:01 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:42:01 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:42:01 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:42:01 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:42:01 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:42:01 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:42:01 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:42:01 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:42:01 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:42:01 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:42:01 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:42:01 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:42:01 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:42:01 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:42:01 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:42:01 PM - NOTE : Processing []
+Jul 24, 2012 4:42:01 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:42:01 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:42:01 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:42:01 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:42:01 PM - NOTE : Processing []
+Jul 24, 2012 4:42:01 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:42:01 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:42:01 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:04 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:04 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:04 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:04 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:04 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:04 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:04 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:04 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:04 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:04 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:04 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:04 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:04 PM - NOTE : Processing []
+Jul 24, 2012 4:47:04 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:04 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:04 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:04 PM - NOTE : Processing []
+Jul 24, 2012 4:47:04 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:04 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:04 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:09 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:09 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:09 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:09 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:09 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:09 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:09 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:09 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:09 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:09 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:09 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:09 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:09 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:09 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:09 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:09 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:09 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:09 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:09 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:09 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:09 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:09 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:09 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:09 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:09 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:09 PM - NOTE : Processing []
+Jul 24, 2012 4:47:09 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:09 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:09 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:09 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:09 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:09 PM - NOTE : Processing []
+Jul 24, 2012 4:47:09 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:09 PM - NOTE : Regenerating Framework Mocks on Request
+Jul 24, 2012 4:47:09 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:09 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:42 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:42 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:42 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:42 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:42 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:42 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:42 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:42 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:42 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:42 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:42 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:42 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:42 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:47:42 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:42 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:47:42 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:47:42 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:47:42 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:42 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:47:42 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:42 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:47:42 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:42 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:42 PM - NOTE : Processing []
+Jul 24, 2012 4:47:42 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:42 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:42 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:47:42 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:47:42 PM - NOTE : Processing []
+Jul 24, 2012 4:47:42 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:47:42 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:47:42 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:49:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:49:04 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:49:04 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:49:04 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:49:04 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:49:04 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:49:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:49:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:49:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:49:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:49:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:49:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:49:04 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:49:04 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:49:04 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:49:04 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:49:04 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:49:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:49:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:49:04 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:49:04 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:49:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:49:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:49:04 PM - NOTE : Processing []
+Jul 24, 2012 4:49:04 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:49:04 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:49:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:49:04 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:49:04 PM - NOTE : Processing []
+Jul 24, 2012 4:49:04 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:49:04 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:49:04 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:53:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:53:48 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:53:48 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:53:48 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:53:48 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:53:48 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:53:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:53:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:53:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:53:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:53:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:53:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:53:48 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:53:48 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:53:48 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:53:48 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:53:48 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:53:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:53:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:53:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:53:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:53:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:53:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:53:48 PM - NOTE : Processing []
+Jul 24, 2012 4:53:48 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:53:48 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:53:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:53:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:53:48 PM - NOTE : Processing []
+Jul 24, 2012 4:53:48 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:53:48 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:53:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:29 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:29 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:54:29 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:29 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:54:29 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:29 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:54:29 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:29 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:29 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:29 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:29 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:29 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:29 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:54:29 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:29 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:54:29 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:29 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:54:29 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:29 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:29 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:29 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:29 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:29 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:29 PM - NOTE : Processing []
+Jul 24, 2012 4:54:29 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:54:29 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:54:29 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:29 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:29 PM - NOTE : Processing []
+Jul 24, 2012 4:54:29 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:54:29 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:54:29 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:34 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:34 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:54:34 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:34 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:54:34 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:34 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:54:34 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:34 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:34 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:34 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:34 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:34 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:34 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:54:34 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:34 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:54:34 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:54:34 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:54:34 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:34 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:54:34 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:34 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:54:34 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:34 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:34 PM - NOTE : Processing []
+Jul 24, 2012 4:54:34 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:54:34 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:54:34 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:54:34 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:54:34 PM - NOTE : Processing []
+Jul 24, 2012 4:54:34 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:54:34 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:54:34 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:50 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:50 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:56:50 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:50 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:56:50 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:50 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:56:50 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:50 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:50 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:50 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:50 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:50 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:50 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:56:50 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:50 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:56:50 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:50 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:56:50 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:50 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:50 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:50 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:50 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:50 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:50 PM - NOTE : Processing []
+Jul 24, 2012 4:56:50 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:56:50 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:56:50 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:50 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:50 PM - NOTE : Processing []
+Jul 24, 2012 4:56:50 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:56:50 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:56:50 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:55 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:55 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:56:55 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:55 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:56:55 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:55 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:56:55 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:55 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:55 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:55 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:55 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:55 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:55 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:56:55 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:55 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:56:55 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:56:55 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:56:55 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:55 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:56:55 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:55 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:56:55 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:55 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:55 PM - NOTE : Processing []
+Jul 24, 2012 4:56:55 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:56:55 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:56:55 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:56:55 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:56:55 PM - NOTE : Processing []
+Jul 24, 2012 4:56:55 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:56:55 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:56:55 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:57:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:57:48 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:57:48 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:57:48 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:57:48 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:57:48 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:57:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:57:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:57:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:57:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:57:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:57:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:57:48 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:57:48 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:57:48 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:57:48 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:57:48 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:57:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:57:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:57:48 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:57:48 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:57:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:57:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:57:48 PM - NOTE : Processing []
+Jul 24, 2012 4:57:48 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:57:48 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:57:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:57:48 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:57:48 PM - NOTE : Processing []
+Jul 24, 2012 4:57:48 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:57:48 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:57:48 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:59:32 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:59:32 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:59:32 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:59:32 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:59:32 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:59:32 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:59:32 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:59:32 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:59:32 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:59:32 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:59:32 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:59:32 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:59:32 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 4:59:32 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:59:32 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 4:59:32 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 4:59:32 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 4:59:32 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:59:32 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 4:59:32 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:59:32 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 4:59:32 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:59:32 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:59:32 PM - NOTE : Processing []
+Jul 24, 2012 4:59:32 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:59:32 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:59:32 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 4:59:32 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 4:59:32 PM - NOTE : Processing []
+Jul 24, 2012 4:59:32 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 4:59:32 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 4:59:32 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:08 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:08 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:00:08 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:08 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 5:00:08 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:08 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:00:08 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:08 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:08 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:08 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:08 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:08 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:08 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:00:08 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:08 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 5:00:08 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:08 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:00:08 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:08 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:08 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:08 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:08 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:08 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:08 PM - NOTE : Processing []
+Jul 24, 2012 5:00:08 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:00:08 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:00:08 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:08 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:08 PM - NOTE : Processing []
+Jul 24, 2012 5:00:08 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:00:08 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:00:08 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:27 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:27 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:00:27 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:27 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 5:00:27 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:27 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:00:27 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:27 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:27 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:27 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:27 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:27 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:27 PM - NOTE : Processing [public void testUrlConstruction() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:00:27 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:27 PM - NOTE : Found 1 classes to mock
+Jul 24, 2012 5:00:27 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:00:27 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:00:27 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:27 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:00:27 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:27 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:00:27 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:27 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:27 PM - NOTE : Processing []
+Jul 24, 2012 5:00:27 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:00:27 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:00:27 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:00:27 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:00:27 PM - NOTE : Processing []
+Jul 24, 2012 5:00:27 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:00:27 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:00:27 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:08:59 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:08:59 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:08:59 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Found 2 classes to mock
+Jul 24, 2012 5:08:59 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:08:59 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:08:59 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:08:59 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:08:59 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:08:59 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:08:59 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:08:59 PM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 24, 2012 5:08:59 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Found 2 classes to mock
+Jul 24, 2012 5:08:59 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 24, 2012 5:08:59 PM - NOTE : Found 2 mocked classes to save
+Jul 24, 2012 5:08:59 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:08:59 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 24, 2012 5:08:59 PM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:08:59 PM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 24, 2012 5:08:59 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:08:59 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:08:59 PM - NOTE : Processing []
+Jul 24, 2012 5:08:59 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:08:59 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:08:59 PM - NOTE : Finished Processing Mocks
+Jul 24, 2012 5:08:59 PM - NOTE : Start Processing Annotations
+Jul 24, 2012 5:08:59 PM - NOTE : Processing []
+Jul 24, 2012 5:08:59 PM - NOTE : Found 0 classes to mock
+Jul 24, 2012 5:08:59 PM - NOTE : Found 0 mocked classes to save
+Jul 24, 2012 5:08:59 PM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:20:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:20:59 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:20:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:394)
+	at org.eclipse.core.internal.resources.Project$1.run(Project.java:618)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2344)
+	at org.eclipse.core.internal.resources.Project.internalBuild(Project.java:597)
+	at org.eclipse.core.internal.resources.Project.build(Project.java:114)
+	at org.eclipse.jdt.internal.ui.util.CoreUtility$BuildJob.run(CoreUtility.java:161)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 25, 2012 10:20:59 AM - NOTE : Known Classpath: 
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMap/bin/classes/
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 25, 2012 10:20:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:394)
+	at org.eclipse.core.internal.resources.Project$1.run(Project.java:618)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2344)
+	at org.eclipse.core.internal.resources.Project.internalBuild(Project.java:597)
+	at org.eclipse.core.internal.resources.Project.build(Project.java:114)
+	at org.eclipse.jdt.internal.ui.util.CoreUtility$BuildJob.run(CoreUtility.java:161)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 25, 2012 10:20:59 AM - NOTE : Known Classpath: 
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMap/bin/classes/
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:20:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:20:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:20:59 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:20:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:394)
+	at org.eclipse.core.internal.resources.Project$1.run(Project.java:618)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2344)
+	at org.eclipse.core.internal.resources.Project.internalBuild(Project.java:597)
+	at org.eclipse.core.internal.resources.Project.build(Project.java:114)
+	at org.eclipse.jdt.internal.ui.util.CoreUtility$BuildJob.run(CoreUtility.java:161)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 25, 2012 10:20:59 AM - NOTE : Known Classpath: 
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMap/bin/classes/
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 25, 2012 10:20:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : Could not find com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:20:59 AM - ERROR : java.lang.ClassNotFoundException: com.loopj.android.http.AsyncHttpClient
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:321)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:266)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.google.android.testing.mocking.UsesMocksProcessor.findClassesToMock(UsesMocksProcessor.java:179)
+	at com.google.android.testing.mocking.UsesMocksProcessor.getClassesToMock(UsesMocksProcessor.java:125)
+	at com.google.android.testing.mocking.UsesMocksProcessor.process(UsesMocksProcessor.java:86)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.handleProcessor(RoundDispatcher.java:139)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.RoundDispatcher.round(RoundDispatcher.java:121)
+	at org.eclipse.jdt.internal.compiler.apt.dispatch.BaseAnnotationProcessorManager.processAnnotations(BaseAnnotationProcessorManager.java:159)
+	at org.eclipse.jdt.internal.apt.pluggable.core.dispatch.IdeAnnotationProcessorManager.processAnnotations(IdeAnnotationProcessorManager.java:134)
+	at org.eclipse.jdt.internal.compiler.Compiler.processAnnotations(Compiler.java:820)
+	at org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:434)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:365)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.jdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:302)
+	at org.eclipse.jdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:60)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:254)
+	at org.eclipse.jdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:173)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:728)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:199)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:239)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:256)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:394)
+	at org.eclipse.core.internal.resources.Project$1.run(Project.java:618)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2344)
+	at org.eclipse.core.internal.resources.Project.internalBuild(Project.java:597)
+	at org.eclipse.core.internal.resources.Project.build(Project.java:114)
+	at org.eclipse.jdt.internal.ui.util.CoreUtility$BuildJob.run(CoreUtility.java:161)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+Jul 25, 2012 10:20:59 AM - NOTE : Known Classpath: 
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockGenerator.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/android-sdks/platforms/android-8/android.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMap/bin/classes/
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AndroidMock/android_framework_mocks.jar
+Jul 25, 2012 10:20:59 AM - NOTE : file:/home/local/AZVA-INT/mdelaney/workspace/OpenTreeMapTests/AndroidMock/AndroidMockRuntime.jar
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:20:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:20:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:20:59 AM - NOTE : Processing []
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:20:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:20:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:20:59 AM - NOTE : Processing []
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:20:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:20:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:22:01 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:22:01 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:22:01 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:22:01 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:22:01 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:22:01 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:22:01 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:22:01 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:22:01 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:22:01 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:22:01 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:22:01 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:22:01 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:22:01 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:22:01 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:22:01 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:22:01 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:22:01 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:22:01 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:22:01 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:22:01 AM - NOTE : Processing []
+Jul 25, 2012 10:22:01 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:22:01 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:22:01 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:22:01 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:22:01 AM - NOTE : Processing []
+Jul 25, 2012 10:22:01 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:22:01 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:22:01 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:24:16 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:24:16 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:24:16 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:16 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:16 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:24:16 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:24:17 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:24:17 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:24:17 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:24:17 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:24:17 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:24:17 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:24:17 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:24:17 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:24:17 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:24:17 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:24:17 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:24:17 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:24:17 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:24:17 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:24:17 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:24:17 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:24:17 AM - NOTE : Processing []
+Jul 25, 2012 10:24:17 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:24:17 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:24:17 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:24:17 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:24:17 AM - NOTE : Processing []
+Jul 25, 2012 10:24:17 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:24:17 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:24:17 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:30:21 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:30:21 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:30:21 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:30:21 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:30:21 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:30:21 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:30:21 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:30:21 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:30:21 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:30:21 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:30:21 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:30:21 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Found 2 classes to mock
+Jul 25, 2012 10:30:21 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:30:21 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:30:21 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:30:21 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:30:21 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:30:21 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:30:21 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:30:21 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:30:21 AM - NOTE : Processing []
+Jul 25, 2012 10:30:21 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:30:21 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:30:21 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:30:21 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:30:21 AM - NOTE : Processing []
+Jul 25, 2012 10:30:21 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:30:21 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:30:21 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:36:56 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:36:56 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:36:56 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:56 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:56 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:56 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:36:56 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:56 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:36:57 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:36:57 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:36:57 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:36:57 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:36:57 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:36:57 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:36:57 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:36:57 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:36:57 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:36:57 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:36:57 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:36:57 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:36:57 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:36:57 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:36:57 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:36:57 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:36:57 AM - NOTE : Processing []
+Jul 25, 2012 10:36:57 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:36:57 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:36:57 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:36:57 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:36:57 AM - NOTE : Processing []
+Jul 25, 2012 10:36:57 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:36:57 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:36:57 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:37:44 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:37:44 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:37:44 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:37:44 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:37:44 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:37:44 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:37:44 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:37:44 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:37:44 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:37:44 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:37:44 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:37:44 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:37:44 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:37:44 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:37:44 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:37:44 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:37:44 AM - NOTE : Processing []
+Jul 25, 2012 10:37:44 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:37:44 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:37:44 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:37:44 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:37:44 AM - NOTE : Processing []
+Jul 25, 2012 10:37:44 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:37:44 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:37:44 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:39:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:39:59 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:39:59 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:39:59 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:39:59 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:39:59 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:39:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:39:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:39:59 AM - NOTE : Processing [public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:39:59 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:39:59 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:39:59 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:39:59 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:39:59 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:39:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:39:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:39:59 AM - NOTE : Processing []
+Jul 25, 2012 10:39:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:39:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:39:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:39:59 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:39:59 AM - NOTE : Processing []
+Jul 25, 2012 10:39:59 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:39:59 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:39:59 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:10 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:10 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:10 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:10 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:10 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:10 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:10 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:10 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:10 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:10 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:10 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:10 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:10 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:10 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:10 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:10 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:10 AM - NOTE : Processing []
+Jul 25, 2012 10:40:10 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:10 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:10 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:10 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:10 AM - NOTE : Processing []
+Jul 25, 2012 10:40:10 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:10 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:10 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:26 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:26 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:26 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:26 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:26 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:26 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:26 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:26 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:26 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:26 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:26 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:26 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:26 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:26 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:26 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:26 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:26 AM - NOTE : Processing []
+Jul 25, 2012 10:40:26 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:26 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:26 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:26 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:26 AM - NOTE : Processing []
+Jul 25, 2012 10:40:26 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:26 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:26 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:37 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:37 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:37 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:37 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:37 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:37 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:37 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:37 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:37 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:40:37 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:40:37 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:37 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:40:37 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:37 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:40:37 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:37 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:37 AM - NOTE : Processing []
+Jul 25, 2012 10:40:37 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:37 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:37 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:40:37 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:40:37 AM - NOTE : Processing []
+Jul 25, 2012 10:40:37 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:40:37 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:40:37 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:56:58 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:56:58 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:56:58 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:56:58 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:56:58 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:56:58 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:56:58 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:56:58 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:56:58 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Found 3 classes to mock
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:56:58 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:56:58 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:56:58 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:56:58 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:56:58 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:56:58 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:56:58 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:56:58 AM - NOTE : Processing []
+Jul 25, 2012 10:56:58 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:56:58 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:56:58 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:56:58 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:56:58 AM - NOTE : Processing []
+Jul 25, 2012 10:56:58 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:56:58 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:56:58 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:58:02 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:58:02 AM - NOTE : Processing [public void testDelete() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:58:02 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:58:02 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:58:02 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:58:02 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:58:02 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:58:02 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:58:02 AM - NOTE : Processing [public void testDelete() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:58:02 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:58:02 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:58:02 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:58:02 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:58:02 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:58:02 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:58:02 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:58:02 AM - NOTE : Processing []
+Jul 25, 2012 10:58:02 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:58:02 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:58:02 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:58:02 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:58:02 AM - NOTE : Processing []
+Jul 25, 2012 10:58:02 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:58:02 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:58:02 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:11 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:11 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testDelete() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:59:11 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:11 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:11 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:11 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:11 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:11 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:11 AM - NOTE : Processing [public void testPost() throws java.lang.ClassNotFoundException, public void testDelete() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:11 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:59:11 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:11 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:11 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:11 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:11 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:11 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:11 AM - NOTE : Processing []
+Jul 25, 2012 10:59:11 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:59:11 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:59:11 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:11 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:11 AM - NOTE : Processing []
+Jul 25, 2012 10:59:11 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:59:11 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:59:12 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:54 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:54 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testDelete() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:59:54 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:54 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:54 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:54 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:54 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:54 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:54 AM - NOTE : Processing [public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testDelete() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 10:59:54 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 10:59:54 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:54 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 10:59:54 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:54 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 10:59:54 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:54 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:54 AM - NOTE : Processing []
+Jul 25, 2012 10:59:54 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:59:54 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:59:54 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 10:59:54 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 10:59:54 AM - NOTE : Processing []
+Jul 25, 2012 10:59:54 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 10:59:54 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 10:59:54 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 11:01:41 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 11:01:41 AM - NOTE : Processing [public void testDelete() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 11:01:41 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 11:01:41 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 11:01:41 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 11:01:41 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 11:01:41 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 11:01:41 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 11:01:41 AM - NOTE : Processing [public void testDelete() throws java.lang.ClassNotFoundException, public void testGet() throws java.lang.ClassNotFoundException, public void testNullParams() throws java.lang.ClassNotFoundException, public void testPost() throws java.lang.ClassNotFoundException]
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Adding Class to Mocking List: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Found 4 classes to mock
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Creating mocks of class: com.loopj.android.http.AsyncHttpClient
+Jul 25, 2012 11:01:41 AM - NOTE : Found 2 mocked classes to save
+Jul 25, 2012 11:01:41 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 11:01:41 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateSubclass
+Jul 25, 2012 11:01:41 AM - NOTE : Saving genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 11:01:41 AM - NOTE : Saving via Eclipse genmocks.com.loopj.android.http.AsyncHttpClientDelegateInterface
+Jul 25, 2012 11:01:41 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 11:01:41 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 11:01:41 AM - NOTE : Processing []
+Jul 25, 2012 11:01:41 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 11:01:41 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 11:01:41 AM - NOTE : Finished Processing Mocks
+Jul 25, 2012 11:01:41 AM - NOTE : Start Processing Annotations
+Jul 25, 2012 11:01:41 AM - NOTE : Processing []
+Jul 25, 2012 11:01:41 AM - NOTE : Found 0 classes to mock
+Jul 25, 2012 11:01:41 AM - NOTE : Found 0 mocked classes to save
+Jul 25, 2012 11:01:41 AM - NOTE : Finished Processing Mocks
