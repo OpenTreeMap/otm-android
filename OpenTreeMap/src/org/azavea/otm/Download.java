@@ -63,4 +63,9 @@ public class Download extends Activity
     		}
     	});
     }
+    
+    public void showRequestGeneratorUi(View view) {
+    	Intent intent = new Intent(view.getContext(), RequestGeneratorUi.class);
+    	startActivity(intent);
+    }
 }
