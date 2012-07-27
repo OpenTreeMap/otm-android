@@ -2,13 +2,17 @@
 <resources>
 
     <string name="app_name">OpenTreeMap</string>
-    <string name="url_msg">Type in URL</string>
-    <string name="download">Download</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="test_get">Get</string>
+    <string name="test_auth">Get/Auth</string>
     <string name="title_activity_map_display">MapDisplay</string>
+    
+    <string name="title_activity_login">Login</string>
     <string name="show_map">Map</string>
     <string name="show_location">My Location</string>
-    <string name="test_get">Get</string>
-
+    
+    <string name="hint_email">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
 </resources>
