@@ -21,13 +21,16 @@ import java.lang.Object;
 
 public class RestClientTest extends TestCase {
 	private RestClient rc;
+	private String urlBase;
 	
 	public void setUp() {
 		rc = new RestClient();
+		urlBase = "http://10.0.2.2:8000/api/v0.1";
 	}
 	
 	public void tearDown() {
 		rc = null;
+		urlBase = "";
 	}
 	
 	// Does .get() correctly process its parameters
@@ -42,7 +45,7 @@ public class RestClientTest extends TestCase {
 		
 		// Create a mock async client that expects a complete URL
 		AsyncHttpClient mockClient = AndroidMock.createMock(AsyncHttpClient.class);
-		mockClient.get("http://httpbin.org/get", params, jsonClient);
+		mockClient.get(urlBase + "/get", params, jsonClient);
 		
 		// Begin test-sequence
 		AndroidMock.replay(mockClient);
@@ -69,7 +72,7 @@ public class RestClientTest extends TestCase {
 		
 		// Create a mock async client that expects a complete URL
 		AsyncHttpClient mockClient = AndroidMock.createMock(AsyncHttpClient.class);
-		mockClient.post("http://httpbin.org/put", params, jsonClient);
+		mockClient.post(urlBase + "/put", params, jsonClient);
 		
 		// Begin test-sequence
 		AndroidMock.replay(mockClient);
@@ -95,7 +98,7 @@ public class RestClientTest extends TestCase {
 		
 		// Create a mock async client that expects a complete URL
 		AsyncHttpClient mockClient = AndroidMock.createMock(AsyncHttpClient.class);
-		mockClient.delete("http://httpbin.org/delete", jsonClient);
+		mockClient.delete(urlBase + "/delete", jsonClient);
 		
 		// Begin test-sequence
 		AndroidMock.replay(mockClient);
@@ -117,7 +120,7 @@ public class RestClientTest extends TestCase {
 		AsyncHttpClient mockClient = AndroidMock.createMock(AsyncHttpClient.class);
 		
 		JsonHttpResponseHandler jsonClient = new JsonHttpResponseHandler();
-		mockClient.get(AndroidMock.eq("http://httpbin.org/get"), (RequestParams)AndroidMock.anyObject(), AndroidMock.eq(jsonClient));
+		mockClient.get(AndroidMock.eq(urlBase + "/get"), (RequestParams)AndroidMock.anyObject(), AndroidMock.eq(jsonClient));
 		
 		AndroidMock.replay(mockClient);
 		
