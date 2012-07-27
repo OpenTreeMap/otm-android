@@ -1,11 +1,9 @@
 package org.azavea.otm;
 
+import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RestClient;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -19,6 +17,7 @@ import android.view.View;
 public class Download extends Activity
 {
 	private RestClient client;
+	private LoginManager loginManager = App.getLoginManager();
 	
     /** Called when the activity is first created. */
     @Override
@@ -26,7 +25,6 @@ public class Download extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        client = new RestClient();
     }
     
     public void showMap(View view) {
@@ -37,10 +35,27 @@ public class Download extends Activity
     
     public void testAsync(View view) {
     	RestClient rc = new RestClient();
-    	client.get("/get", new RequestParams(), new JsonHttpResponseHandler() {
+    	rc.get("/get", new RequestParams(), new JsonHttpResponseHandler() {
     		@Override
     		public void onSuccess(JSONObject resp) {
     			Log.d("Anything", resp.toString());
+    		}
+    	});
+    }
+    
+    public void testAuth(View view) {
+    	RestClient rc = new RestClient();
+    	User user = loginManager.loggedInUser;
+    	rc.getWithAuthentication(this, "/basic-auth/user/passwd", user.username, 
+    			user.password, new RequestParams(), new JsonHttpResponseHandler() {
+    		@Override
+    		public void onSuccess(JSONObject resp) {
+    			Log.d("Anything", resp.toString());
+    		}
+    		
+    		@Override
+    		public void onFailure(Throwable e) {
+    			Log.e("Anything", "auth", e);
     		}
     	});
     }

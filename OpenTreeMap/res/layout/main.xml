@@ -10,7 +10,12 @@
          android:layout_height="wrap_content"
          android:text="@string/test_get"
          android:onClick="testAsync" />
-
+     <Button
+         android:id="@+id/test_auth"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/test_auth"
+         android:onClick="testAuth" />
      <Button
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
