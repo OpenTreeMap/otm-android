@@ -56,7 +56,7 @@ public class RequestGeneratorUi extends Activity {
     		@Override
     		public void dataReceived(Plot response) {
     			try {
-    				output.setText(response.getAddressStreet() + "\n" + response.getTree().getSpeciesName());
+    				output.setText(response.getPowerlineConflictPotential() + "\n" + response.getTree().getSpeciesName());
     				RequestGeneratorUi.this.plot = response;
     			} catch (JSONException e) {
     				output.setText("Exception: " + e.getMessage());
@@ -66,18 +66,9 @@ public class RequestGeneratorUi extends Activity {
     }
     
     public void updatePlot(View view) throws JSONException {
-    	plot.setAddressStreet("210 Sweet St Ne");
+    	plot.setPowerlineConflictPotential("2");
     	try {
-    		rg.updatePlot(this, 329, plot, new RestHandler<Plot>(new Plot()) {
-    			@Override
-    			public void dataReceived(Plot plot) {
-    				try {
-    					output.setText(plot.getAddressStreet());
-    				} catch (Exception e) {
-    					output.setText(e.getMessage());
-    				}
-    			}
-    		});
+    		rg.updatePlot(this, 329, plot, null);
     	} catch (Exception e) {
     		output.setText(e.getMessage());
     	}
