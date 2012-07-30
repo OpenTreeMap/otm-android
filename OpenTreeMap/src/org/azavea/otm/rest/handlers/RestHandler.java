@@ -1,6 +1,7 @@
 package org.azavea.otm.rest.handlers;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Plot;
 import org.json.JSONObject;
 
 import android.util.Log;

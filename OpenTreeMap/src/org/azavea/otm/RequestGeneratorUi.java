@@ -1,6 +1,7 @@
 package org.azavea.otm;
 
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.User;
 import org.azavea.otm.data.Version;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -56,7 +58,7 @@ public class RequestGeneratorUi extends Activity {
     		@Override
     		public void dataReceived(Plot response) {
     			try {
-    				output.setText(response.getPowerlineConflictPotential() + "\n" + response.getTree().getSpeciesName());
+    				output.setText(response.getWidth() + "\n" + response.getTree().getSpeciesName() + "\n");
     				RequestGeneratorUi.this.plot = response;
     			} catch (JSONException e) {
     				output.setText("Exception: " + e.getMessage());
@@ -66,9 +68,25 @@ public class RequestGeneratorUi extends Activity {
     }
     
     public void updatePlot(View view) throws JSONException {
-    	plot.setPowerlineConflictPotential("2");
+    	//plot.setPowerlineConflictPotential("5");
+    	plot.setWidth(plot.getWidth()+1);
     	try {
     		rg.updatePlot(this, 329, plot, null);
+    	} catch (Exception e) {
+    		output.setText(e.getMessage());
+    	}
+    }
+    
+    public void addUser(View view) throws JSONException {
+    	EditText userName = (EditText)findViewById(R.id.userName);
+    	EditText actualName = (EditText)findViewById(R.id.name);
+    	EditText email = (EditText)findViewById(R.id.email);
+    	EditText password = (EditText)findViewById(R.id.password);
+    	
+    	String[] names = actualName.getText().toString().split(" ");
+    	User user = new User(userName.getText().toString(), names[0], names[1], email.getText().toString(), password.getText().toString(), "19087");
+    	try {
+    		rg.addUser(this, user, null);
     	} catch (Exception e) {
     		output.setText(e.getMessage());
     	}

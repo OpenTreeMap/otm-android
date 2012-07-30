@@ -3,6 +3,8 @@ package org.azavea.otm.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
+
 public class Permissions extends Model {
 	public Permissions() {
 		data = new JSONObject();

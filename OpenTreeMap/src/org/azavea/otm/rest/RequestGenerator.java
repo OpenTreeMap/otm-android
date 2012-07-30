@@ -3,6 +3,8 @@ package org.azavea.otm.rest;
 import java.io.UnsupportedEncodingException;
 
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.User;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -32,6 +34,10 @@ public class RequestGenerator {
 	}
 	
 	public void updatePlot(Context context, int id, Plot plot, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
-		client.put(context, "/plots/", id, plot, handler);
+		client.putWithAuthentication(context, "/plots/", "administrator", "123456", id, plot, handler);
+	}
+	
+	public void addUser(Context context, User user, AsyncHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException {
+		client.postWithAuthentication(context, "/user/", "administrator", "123456", user, handler);
 	}
 }
