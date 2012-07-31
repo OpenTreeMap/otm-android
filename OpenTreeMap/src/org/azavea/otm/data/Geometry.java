@@ -3,6 +3,8 @@ package org.azavea.otm.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
+
 public class Geometry extends Model {
 	public Geometry() {
 		data = new JSONObject();
@@ -37,5 +39,9 @@ public class Geometry extends Model {
 	
 	public void setLon(long lon) throws JSONException {
 		data.put("lng", lon);
+	}
+	
+	public RequestParams toParams() throws JSONException {
+		return new RequestParams();
 	}
 }

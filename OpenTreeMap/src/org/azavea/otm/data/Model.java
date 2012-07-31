@@ -5,7 +5,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.loopj.android.http.RequestParams;
 
 import android.util.Log;
 

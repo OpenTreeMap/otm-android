@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
+
 public class Plot extends Model {
 	public Plot() throws JSONException {
 		data = new JSONObject();
@@ -38,7 +40,7 @@ public class Plot extends Model {
 		data.put("id", id);
 	}
 	
-	public double getWidth() throws JSONException {
+	public long getWidth() throws JSONException {
 		return data.getLong("plot_width");
 	}
 	
@@ -46,7 +48,7 @@ public class Plot extends Model {
 		data.put("plot_width", width);
 	}
 	
-	public double getLength() throws JSONException {
+	public long getLength() throws JSONException {
 		return data.getLong("plot_length");
 	}
 	

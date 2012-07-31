@@ -7,6 +7,8 @@ import java.util.Hashtable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
+
 import android.util.Log;
 
 public class Version extends Model {

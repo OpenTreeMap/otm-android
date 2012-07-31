@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
+
 public class Tree extends Model {
 	public Tree() {
 		data = new JSONObject();
