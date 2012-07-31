@@ -3,20 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
-    
-     <EditText
-         android:id="@+id/edit_message"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_weight="1.56"
-         android:hint="@string/url_msg"
-         android:text="http://httpbin.org/delay/7" />
-
-     <Button
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="@string/download" 
-         android:onClick="fetch"/>
 
      <Button
          android:id="@+id/test_get"

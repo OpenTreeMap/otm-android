@@ -36,34 +36,41 @@ public class Download extends Activity
     
     public void testAsync(View view) {
     	RestClient rc = new RestClient();
-    	rc.get("/get", new RequestParams(), new JsonHttpResponseHandler() {
+    	rc.get("/getasdf", new RequestParams(), new JsonHttpResponseHandler() {
     		@Override
     		public void onSuccess(JSONObject resp) {
     			Log.d("Anything", resp.toString());
     		}
+			@Override
+			public void onFailure(Throwable e) {
+				Log.e("Anything", "auth", e);
+			}
+		    @Override
+		    public void onFinish() {
+		    	 Log.e("Anything", "finish");
+		     }    		
     	});
     }
     
     public void testAuth(View view) {
     	RestClient rc = new RestClient();
     	User user = loginManager.loggedInUser;
-    	try {
-			rc.getWithAuthentication(this, "/login", user.getUsername(), 
-					user.password, new RequestParams(), new JsonHttpResponseHandler() {
-				@Override
-				public void onSuccess(JSONObject resp) {
-					Log.d("Anything", resp.toString());
-				}
-				
-				@Override
-				public void onFailure(Throwable e) {
-					Log.e("Anything", "auth", e);
-				}
-			});
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	rc.getWithAuthentication(this, "/login", "administrator", 
+				"123456", new RequestParams(), new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(JSONObject resp) {
+				Log.e("Anything", resp.toString());
+			}
+			
+			@Override
+			public void onFailure(Throwable e) {
+				Log.e("Anything", "auth", e);
+			}
+		     @Override
+		    public void onFinish() {
+		    	 Log.e("Anything", "finish");
+		     }
+		});
     }
 
     public void showRequestGeneratorUi(View view) {
