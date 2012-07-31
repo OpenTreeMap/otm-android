@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/login"
-        android:text="@string/forgot_password" />
+        android:text="@string/forgot_password"
+        android:onClick="cancel" />
     
 </RelativeLayout>
