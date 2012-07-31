@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.azavea.otm.App;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 
@@ -82,6 +83,7 @@ public class RestClient {
 		String password, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		RequestParams reqParams = prepareParams(params);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
+		Log.d("rc", "Sending get request...");
 		client.get(context, getAbsoluteUrl(url), headers, reqParams, responseHandler);
 	}
 	
@@ -159,8 +161,10 @@ public class RestClient {
 	
 	private String getBaseUrl() {
 		// TODO: Expand once configuration management has been implemented
-		return "http://10.0.2.2:8888/api/v0.1";
-		//return "http://192.168.16.61:8082/api/v0.1";
+
+		//return "http://10.0.2.2:8888/api/v0.1";
+		return "http://192.168.16.61:8082/api/v0.1";
+		//return "http://treemap01.internal.azavea.com/web/v1.2/ptm/tip/api/v0.1";
 		//return "http://httpbin.org";
 	}
 	
@@ -170,6 +174,7 @@ public class RestClient {
 	}
 	
 	private String getAbsoluteUrl(String relativeUrl) {
+		Log.d(App.LOG_TAG, baseUrl + relativeUrl);
 		return baseUrl + relativeUrl;
 	}
 	

@@ -40,4 +40,8 @@ public class RequestGenerator {
 	public void addUser(Context context, User user, AsyncHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException {
 		client.postWithAuthentication(context, "/user/", "administrator", "123456", user, handler);
 	}
+	
+	public void logIn(Context context, String username, String password, JsonHttpResponseHandler handler) {
+		client.getWithAuthentication(context, "/login", username, password, null, handler);
+	}
 }

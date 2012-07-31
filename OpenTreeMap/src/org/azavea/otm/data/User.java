@@ -71,4 +71,39 @@ public class User extends Model {
 	public void setZipcode(String zipcode) throws JSONException {
 		data.put("zipcode", zipcode);
 	}
+	
+	public String getUsername() throws JSONException {
+		return data.getString("username");
+	}
+	
+	public void setusername(String username) throws JSONException {
+		data.put("username", username);
+	}
+	
+	public int getZipCode() throws JSONException {
+		return data.getInt("zipcode");
+	}
+	
+	public void setZipCode(int zipCode) throws JSONException {
+		data.put("zipcode", zipCode);
+	}
+
+	public int getReputation() throws JSONException {
+		return data.getInt("reputation");
+	}
+	
+	public void setReputation(int reputation) throws JSONException {
+	
+		data.put("reputation", reputation);
+	}
+	
+	public UserType getUserType() throws JSONException {
+		UserType type = new UserType();
+		type.setData(data.getJSONObject("user_type"));
+		return type;
+	}
+	
+	public void setUserType(UserType type) throws JSONException {
+		data.put("user_type", type.getData());
+	}
 }
