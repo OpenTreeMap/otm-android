@@ -72,14 +72,6 @@ public class User extends Model {
 		data.put("zipcode", zipcode);
 	}
 	
-	public String getUsername() throws JSONException {
-		return data.getString("username");
-	}
-	
-	public void setusername(String username) throws JSONException {
-		data.put("username", username);
-	}
-	
 	public int getZipCode() throws JSONException {
 		return data.getInt("zipcode");
 	}
