@@ -1,8 +1,5 @@
 package org.azavea.otm;
 
-
-import org.azavea.otm.rest.handlers.CBack;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +26,11 @@ public class LoginActivity extends Activity {
     		return false;
     	}
     	return true;
+    }
+    
+    public void cancel(View view) {
+		Intent next = new Intent(App.getInstance(), Download.class);
+        startActivity(next);    	
     }
     
     public void login(View view) {
