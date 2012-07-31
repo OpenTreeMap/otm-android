@@ -5,6 +5,7 @@ import org.azavea.otm.data.User;
 import org.azavea.otm.data.Version;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,14 @@ public class RequestGeneratorUi extends Activity {
     
     public void showVersion(View view) {
     	rg.getVersion(new RestHandler<Version>(new Version()) {
+			@Override
+			public void onSuccess(String resp) {
+				Log.d(App.LOG_TAG, resp);
+			}
+    		@Override
+			public void onFailure(Throwable e, JSONArray errorResponse){
+				Log.e(App.LOG_TAG, "version bad", e);
+			}
     		@Override
     		public void dataReceived(Version response) {
     			try {
@@ -71,7 +80,12 @@ public class RequestGeneratorUi extends Activity {
     	//plot.setPowerlineConflictPotential("5");
     	plot.setWidth(plot.getWidth()+1);
     	try {
-    		rg.updatePlot(this, 329, plot, null);
+    		rg.updatePlot(this, 329, plot, new RestHandler<Plot>(new Plot()) {
+    			@Override
+    			public void onSuccess(String resp) {
+    				Log.d(App.LOG_TAG, resp);
+    			}
+    		});
     	} catch (Exception e) {
     		output.setText(e.getMessage());
     	}
@@ -86,7 +100,16 @@ public class RequestGeneratorUi extends Activity {
     	String[] names = actualName.getText().toString().split(" ");
     	User user = new User(userName.getText().toString(), names[0], names[1], email.getText().toString(), password.getText().toString(), "19087");
     	try {
-    		rg.addUser(this, user, null);
+    		rg.addUser(this, user, new RestHandler<User>(new User()) {
+				@Override
+				public void onFailure(Throwable e, JSONArray errorResponse){
+					Log.e(App.LOG_TAG, "login bad", e);
+				}
+    			@Override
+    			public void dataReceived(User resp) {
+    				Log.d(App.LOG_TAG, "user received");
+    			}
+    		});
     	} catch (Exception e) {
     		output.setText(e.getMessage());
     	}
