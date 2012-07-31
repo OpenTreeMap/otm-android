@@ -41,7 +41,7 @@ public class Plot extends Model {
 	}
 	
 	public long getWidth() throws JSONException {
-		return data.getLong("plot_width");
+		return getLongOrDefault("plot_width", (long) 0);
 	}
 	
 	public void setWidth(long width) throws JSONException {
@@ -49,7 +49,7 @@ public class Plot extends Model {
 	}
 	
 	public long getLength() throws JSONException {
-		return data.getLong("plot_length");
+		return getLongOrDefault("plot_length", (long) 0);
 	}
 	
 	public void setLength(long length) throws JSONException {
