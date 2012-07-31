@@ -34,4 +34,8 @@ public class RequestGenerator {
 	public void updatePlot(Context context, int id, Plot plot, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
 		client.put(context, "/plots/", id, plot, handler);
 	}
+	
+	public void logIn(Context context, String username, String password, JsonHttpResponseHandler handler) {
+		client.getWithAuthentication(context, "/login", username, password, null, handler);
+	}
 }

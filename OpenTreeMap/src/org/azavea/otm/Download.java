@@ -2,6 +2,7 @@ package org.azavea.otm;
 
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RestClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -46,18 +47,23 @@ public class Download extends Activity
     public void testAuth(View view) {
     	RestClient rc = new RestClient();
     	User user = loginManager.loggedInUser;
-    	rc.getWithAuthentication(this, "/basic-auth/user/passwd", user.username, 
-    			user.password, new RequestParams(), new JsonHttpResponseHandler() {
-    		@Override
-    		public void onSuccess(JSONObject resp) {
-    			Log.d("Anything", resp.toString());
-    		}
-    		
-    		@Override
-    		public void onFailure(Throwable e) {
-    			Log.e("Anything", "auth", e);
-    		}
-    	});
+    	try {
+			rc.getWithAuthentication(this, "/login", user.getUsername(), 
+					user.password, new RequestParams(), new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(JSONObject resp) {
+					Log.d("Anything", resp.toString());
+				}
+				
+				@Override
+				public void onFailure(Throwable e) {
+					Log.e("Anything", "auth", e);
+				}
+			});
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public void showRequestGeneratorUi(View view) {

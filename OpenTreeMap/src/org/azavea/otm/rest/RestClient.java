@@ -58,6 +58,8 @@ public class RestClient {
 		completeUrl += id + "?apikey=" + getApiKey();
 		client.setBasicAuth("administrator", "123456");
 		client.put(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
+	};
+	
 	/**
 	 * Executes a get request and adds basic authentication headers to the request.
 	 */
@@ -116,13 +118,13 @@ public class RestClient {
 	
 	private String getBaseUrl() {
 		// TODO: Expand once configuration management has been implemented
-		return "http://10.0.2.2:8000/api/v0.1";
-		//return "http://httpbin.org";
+		//return "http://treemap01.internal.azavea.com/web/v1.2/ptm/tip/api/v0.1";
+		return "http://httpbin.org";
 	}
 	
 	private String getApiKey() {
 		// TODO: Expand once authentication management has been implemented
-		return "123456";
+		return "APIKEY";
 	}
 	
 	private String getAbsoluteUrl(String relativeUrl) {
