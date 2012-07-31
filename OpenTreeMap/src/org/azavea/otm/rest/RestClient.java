@@ -64,15 +64,17 @@ public class RestClient {
 	public void post(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
 		completeUrl += id + "?apikey=" + getApiKey();
-		client.setBasicAuth("administrator", "123456");
 		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
+	}
+	
+	public void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		RequestParams reqParams = prepareParams(params);
+		client.post(getAbsoluteUrl(url), reqParams, responseHandler);
 	}
 	
 	public void put(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
 		completeUrl += id + "?apikey=" + getApiKey();
-		
-		client.setBasicAuth("administrator", "123456");
 		client.put(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
 	
@@ -85,11 +87,6 @@ public class RestClient {
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		Log.d("rc", "Sending get request...");
 		client.get(context, getAbsoluteUrl(url), headers, reqParams, responseHandler);
-	}
-	
-	public void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		RequestParams reqParams = prepareParams(params);
-		client.post(getAbsoluteUrl(url), reqParams, responseHandler);
 	}
 
 	/**
@@ -161,16 +158,12 @@ public class RestClient {
 	
 	private String getBaseUrl() {
 		// TODO: Expand once configuration management has been implemented
-
-		//return "http://10.0.2.2:8888/api/v0.1";
-		return "http://192.168.16.61:8082/api/v0.1";
-		//return "http://treemap01.internal.azavea.com/web/v1.2/ptm/tip/api/v0.1";
-		//return "http://httpbin.org";
+		return "http://10.0.2.2:9100/gr/api/v0.1";
 	}
 	
 	private String getApiKey() {
 		// TODO: Expand once authentication management has been implemented
-		return "123456";
+		return "APIKEY";
 	}
 	
 	private String getAbsoluteUrl(String relativeUrl) {
