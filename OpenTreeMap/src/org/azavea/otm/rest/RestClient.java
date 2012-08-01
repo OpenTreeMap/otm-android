@@ -13,10 +13,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -27,6 +29,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 
 import android.util.Log;
@@ -42,11 +45,14 @@ public class RestClient {
 	
 	private AsyncHttpClient client;
 	
+	private SharedPreferences prefs;
+	
 	
 	public RestClient() {
+		client = new AsyncHttpClient();
+		prefs = App.getSharedPreferences();
 		baseUrl = getBaseUrl();
 		apiKey = getApiKey();
-		client = new AsyncHttpClient();
 	}
 
 	// Dependency injection to support mocking
@@ -57,7 +63,7 @@ public class RestClient {
 	
 	public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		RequestParams reqParams = prepareParams(params);
-		Log.d("rc", "Sending get request...");
+		Log.d("rc", baseUrl);
 		client.get(getAbsoluteUrl(url), reqParams, responseHandler);
 	}
 	
@@ -85,7 +91,6 @@ public class RestClient {
 		String password, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		RequestParams reqParams = prepareParams(params);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
-		Log.d("rc", "Sending get request...");
 		client.get(context, getAbsoluteUrl(url), headers, reqParams, responseHandler);
 	}
 
@@ -157,13 +162,13 @@ public class RestClient {
 	}
 	
 	private String getBaseUrl() {
-		// TODO: Expand once configuration management has been implemented
-		return "http://10.0.2.2:9100/gr/api/v0.1";
+		String baseUrl = prefs.getString("base_url", "");
+		return baseUrl;
 	}
 	
 	private String getApiKey() {
-		// TODO: Expand once authentication management has been implemented
-		return "APIKEY";
+		String apiKey = prefs.getString("api_key", "");
+		return apiKey;
 	}
 	
 	private String getAbsoluteUrl(String relativeUrl) {
