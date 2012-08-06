@@ -1,6 +1,8 @@
 package org.azavea.otm;
 
 
+import java.net.ConnectException;
+
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
@@ -31,15 +33,33 @@ public class LoginManager {
 		return loggedInUser != null;
 	}
 	
-	public void logIn(final String username, final String password, final Callback callback) {
+	public void logIn(final Context activityContext, final String username, final String password, 
+			final Callback callback) {
 		
-		RequestGenerator rg = new RequestGenerator();
+		final RequestGenerator rg = new RequestGenerator();
 		try {
-			rg.logIn(context, username, password, new RestHandler<User>(new User()) {
+			rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
+		    	
+				Message resultMessage = new Message();
+		    	Bundle data = new Bundle();
+		    	
+		    	private void handleCallback(Bundle resp) {
+			    	resultMessage.setData(data);
+			    	callback.handleMessage(resultMessage);
+		    	}
+
 				@Override
-				public void onFailure(Throwable e, JSONArray errorResponse){
-					Log.e(App.LOG_TAG, "login bad", e);
-				}
+				public void onFailure(Throwable e, String message){
+					if (e instanceof ConnectException ) {
+						Log.e(App.LOG_TAG, "timeout");
+						data.putBoolean("success", false);
+						data.putString("message", "Could not connect to server");
+						handleCallback(data);
+					} else {
+						
+					}
+					rg.cancelRequests(activityContext);
+				}				
 				
 				@Override
 				public void dataReceived(User response) {
@@ -55,11 +75,8 @@ public class LoginManager {
 					}
 			    	Log.d(App.LOG_TAG, "Login successful: " + username);
 			    	
-			    	Message resultMessage = new Message();
-			    	Bundle data = new Bundle();
 			    	data.putBoolean("success", true);
-			    	resultMessage.setData(data);
-			    	callback.handleMessage(resultMessage);
+		    		handleCallback(data);
 				}
 			});
 		} catch (JSONException e) {
@@ -81,7 +98,7 @@ public class LoginManager {
 		String user = prefs.getString(userKey, null);
 		String pass = prefs.getString(passKey, null);
 		if (user != null && pass != null) {
-			logIn(user, pass, new Callback() {
+			logIn(context, user, pass, new Callback() {
 				@Override
 				public boolean handleMessage(Message msg) {
 					Bundle data = msg.getData();
