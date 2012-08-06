@@ -2,6 +2,7 @@ package org.azavea.otm;
 
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RestClient;
+import org.azavea.otm.ui.MapDisplay;
 import org.json.JSONException;
 import org.json.JSONObject;
 
