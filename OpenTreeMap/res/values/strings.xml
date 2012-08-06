@@ -19,4 +19,7 @@
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
 
+    <string name="about_text">About OpenTreemap</string>
+    <string name="profile_text">Profile</string>
+    <string name="list_text">All the lists</string>
 </resources>
