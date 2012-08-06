@@ -61,6 +61,10 @@ public class RestClient {
 		this.client = client;
 	}
 	
+	public void cancelRequests(Context context) {
+		client.cancelRequests(context, true);
+	}
+	
 	public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		RequestParams reqParams = prepareParams(params);
 		Log.d("rc", baseUrl);

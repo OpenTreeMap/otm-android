@@ -28,6 +28,13 @@ public class RequestGenerator {
 		this.client = client;
 	}
 	
+	/**
+	 * Cancel any pending or active requests started from the provided context
+	 */
+	public void cancelRequests(Context activityContext) {
+		client.cancelRequests(activityContext);
+	}
+	
 	public void getVersion(JsonHttpResponseHandler handler) {
 		client.get("/version", null, handler);
 	}
@@ -60,8 +67,9 @@ public class RequestGenerator {
 	
 	public void logIn(Context context, String username, String password, 
 			JsonHttpResponseHandler handler) {
-		client.getWithAuthentication(context, "/login", username, password, null, handler);
+			client.getWithAuthentication(context, "/login", username, password, null, handler);
 	}
+	
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
