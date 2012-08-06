@@ -1,15 +1,12 @@
-package org.azavea.otm;
+package org.azavea.otm.ui;
 
 import java.util.List;
 
+import org.azavea.otm.R;
+
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-import android.support.v4.app.NavUtils;
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
