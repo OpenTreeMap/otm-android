@@ -133,7 +133,6 @@ public class RestClient {
 	}
 
 	public void delete(String url, AsyncHttpResponseHandler responseHandler) {
-		client.setBasicAuth("administrator", "123456");
 		client.delete(getAbsoluteUrl(url), responseHandler);
 	}
 
