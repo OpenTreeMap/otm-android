@@ -4,7 +4,7 @@
         android:layout_height="fill_parent" >
 
 	    <Button
-	        android:id="@+id/button1"
+	        android:id="@+id/login"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
@@ -13,7 +13,7 @@
 	        android:layout_marginRight="54dp"
 	        android:text="Show Login" 
 	        android:onClick="showLogin"/>
-
+	    	    
 	    <TextView
 	        xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/textView1"
@@ -22,5 +22,15 @@
 	        android:layout_centerHorizontal="true"
 	        android:layout_centerVertical="true"
 	        android:text="@string/profile_text" />
+
+	    <Button
+	        android:id="@+id/logout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/login"
+	        android:layout_alignBottom="@+id/login"
+	        android:layout_toLeftOf="@+id/login"
+	        android:onClick="logout"
+	        android:text="Logout" />
 	        
     </RelativeLayout>
