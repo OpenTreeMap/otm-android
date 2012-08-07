@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.azavea.otm.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -59,6 +61,17 @@ public class MapDisplay extends MapActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_filter:
+            	Intent filter = new Intent(this, FilterDisplay.class);
+            	startActivityForResult(filter, 0);
+            	break;
+        }
+        return true;
+    }
+    
     @Override
     protected void onResume() {
     	super.onResume();
