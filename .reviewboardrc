@@ -1,0 +1,2 @@
+REPOSITORY = "OTM-android"
+REVIEWBOARD_URL = "http://review.internal.azavea.com"
