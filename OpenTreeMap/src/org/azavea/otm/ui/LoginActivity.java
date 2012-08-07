@@ -1,13 +1,11 @@
 package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
-import org.azavea.otm.Download;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -37,8 +35,8 @@ public class LoginActivity extends Activity {
     }
     
     public void cancel(View view) {
-		Intent next = new Intent(App.getInstance(), Download.class);
-        startActivity(next);    	
+    	setResult(RESULT_CANCELED);
+    	finish();
     }
     
     public void login(View view) {
@@ -48,30 +46,30 @@ public class LoginActivity extends Activity {
     			.getText().toString().trim();
     
     	if (validate(username, password)) {
-    		final ProgressDialog dialog = ProgressDialog.show(this, "", 
-                    "Logging in...", true, true);
-    		loginManager.logIn(this, username, password, new Callback() {
-
-				@Override
-				public boolean handleMessage(Message msg) {
-					dialog.cancel();
-					Bundle data = msg.getData();
-					if(data != null && data.getBoolean("success")) {
-						Intent next = new Intent(App.getInstance(), Download.class);
-			            startActivity(next);
-			            return true;
-					} else {
-						Toast.makeText(App.getInstance(), 
-								data.getString("message"), 
-								Toast.LENGTH_LONG).show();
-						return false;
-					}
-					
-				} 
-			});
-    		
+    		requestLogin(username, password);
     	}
     }
-    
 
+	private void requestLogin(String username, String password) {
+		final ProgressDialog dialog = ProgressDialog.show(this, "", 
+                "Logging in...", true, true);
+		loginManager.logIn(this, username, password, new Callback() {
+
+			@Override
+			public boolean handleMessage(Message msg) {
+				dialog.cancel();
+				Bundle data = msg.getData();
+				if(data.getBoolean("success")) {
+					setResult(RESULT_OK);
+					finish();
+		            return true;
+				} else {
+					Toast.makeText(App.getInstance(), 
+							data.getString("message"), 
+							Toast.LENGTH_LONG).show();
+					return false;
+				}
+			} 
+		});
+	} 
 }
