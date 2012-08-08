@@ -17,6 +17,10 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="cancel">Cancel</string>
 
+    <string name="filter_range_to">to</string>
+    <string name="finish_filtering">Done</string>
+    <string name="cancel_filtering">Cancel</string>
+    <string name="clear_filtering">Clear</string>
     <string name="test_get">Get</string>
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
