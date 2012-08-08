@@ -1,7 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
+	
+	<RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/footer"
+	    android:layout_width="fill_parent"
+	    android:layout_height="100dp"
+	    android:layout_alignParentBottom="true" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/filter_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-    </LinearLayout>
+	    <Button
+	        android:id="@+id/cancel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_centerVertical="true"
+	        android:text="@string/cancel_filtering"
+	        android:width="75dp" 
+	        android:onClick="onCancel"/>
+
+	    <Button
+	        android:id="@+id/finish"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/cancel"
+	        android:layout_alignBottom="@+id/cancel"
+	        android:layout_toRightOf="@+id/cancel"
+	        android:text="@string/finish_filtering"
+	        android:width="75dp" 
+	        android:onClick="onFinish"/>
+
+	    <Button
+	        android:id="@+id/clear"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/cancel"
+	        android:layout_alignBottom="@+id/cancel"
+	        android:layout_toLeftOf="@+id/cancel"
+	        android:text="@string/clear_filtering"
+	        android:width="75dp" 
+	        android:onClick="onClear"/>
+
+	</RelativeLayout>
+
+	<ScrollView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scroller"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@+id/footer" >
+	    
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/filter_list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+	    </LinearLayout>
+	    
+	</ScrollView>
+
+
+	
+</RelativeLayout>	
