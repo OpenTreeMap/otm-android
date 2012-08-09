@@ -70,6 +70,9 @@ public class RequestGenerator {
 			client.getWithAuthentication(context, "/login", username, password, null, handler);
 	}
 	
+	public void getAllSpecies(JsonHttpResponseHandler handler) {
+		client.get("/species", null, handler);
+	}
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
