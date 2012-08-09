@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * A global singleton object to maintain application state
@@ -15,6 +15,7 @@ public class App extends Application {
 	
 	private static App instance = null;
 	private static LoginManager loginManager = null;
+	private static SearchManager searchManager = null;
 	private static SharedPreferences sharedPreferences = null;
 	
 	public static App getInstance() {
@@ -31,11 +32,28 @@ public class App extends Application {
 		return loginManager;
 	}
 
+	/**
+	 * Static access to single search manager instance
+	 */
+	public static SearchManager getSearchManager() {
+		if (searchManager == null) {
+			checkInstance();
+			try {
+				searchManager = new SearchManager(instance);
+			} catch (Exception e) {
+				Toast.makeText(instance, "Unable to access search manager", 
+						Toast.LENGTH_LONG).show();
+				Log.e(LOG_TAG, "Unable to create search manager", e);
+			}
+		}
+		return searchManager;
+	}
+	
 	public static SharedPreferences getSharedPreferences() {
 		if (sharedPreferences == null) {
 			checkInstance();
 			sharedPreferences = instance.getSharedPreferences(instance.getString(R.string.app_name), Context.MODE_PRIVATE);
-			// Set-up SharedPreferences iff they haven't been set up before
+			// Set-up SharedPreferences if they haven't been set up before
 			setDefaultSharedPreferences(sharedPreferences);
 		}
 		return sharedPreferences;
