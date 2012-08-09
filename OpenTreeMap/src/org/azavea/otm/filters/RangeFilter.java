@@ -31,7 +31,7 @@ public class RangeFilter extends MapFilter {
 	}
 
 	@Override
-	protected String toQueryStringParam() {
+	public String toQueryStringParam() {
 		String params = "";
 		if (min > 0) {
 			params += minKey() + "=" + Double.toString(min); 
@@ -43,12 +43,12 @@ public class RangeFilter extends MapFilter {
 	}
 
 	@Override
-	boolean isActive() {
+	public boolean isActive() {
 		return (min > 0 || max > 0) ? true : false;
 	}
 
 	@Override
-	void updateFromView(View view) {
+	public void updateFromView(View view) {
 		String min = ((EditText)view.findViewById(R.id.min))
 				.getText().toString().trim();
 		if (min != null && !"".equals(min)) {

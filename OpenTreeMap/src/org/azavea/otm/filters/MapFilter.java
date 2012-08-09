@@ -21,17 +21,17 @@ public abstract class MapFilter {
 	/**
 	 *  Checks if this filter currently has an active value
 	 */
-	abstract boolean isActive();
+	public abstract boolean isActive();
 	
 	/**
 	 *  Update the value of the filter, and its active status
 	 *  from a view of the corresponding type
 	 */
-	abstract void updateFromView(View view);
+	public abstract void updateFromView(View view);
 	
 	/**
 	 * Return a string for this filter to be used in a URL query string
 	 * parameter
 	 */
-	abstract String toQueryStringParam();
+	public abstract String toQueryStringParam();
 }

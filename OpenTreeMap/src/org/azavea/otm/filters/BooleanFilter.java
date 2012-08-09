@@ -15,17 +15,17 @@ public class BooleanFilter extends MapFilter {
 	}
 	
 	@Override
-	protected String toQueryStringParam() {
+	public String toQueryStringParam() {
 		return key + "=" + Boolean.toString(active);
 	}
 
 	@Override
-	void updateFromView(View view) {
+	public void updateFromView(View view) {
 		this.active = ((ToggleButton)view.findViewById(R.id.active)).isChecked();
 	}
 
 	@Override
-	boolean isActive() {
+	public boolean isActive() {
 		return this.active;
 	}
 }
