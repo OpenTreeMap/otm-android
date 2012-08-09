@@ -2,7 +2,9 @@ package org.azavea.otm.ui;
 
 import java.util.HashMap;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.SearchManager;
 import org.azavea.otm.adapters.SpeciesAdapter;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.filters.BooleanFilter;
@@ -14,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,30 +26,50 @@ public class FilterDisplay extends Activity{
     
     private HashMap<String, MapFilter> filters = new HashMap<String, MapFilter>();
     
+    private LinearLayout filter_list;
+    
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_activity);
-        
-        LinearLayout list = (LinearLayout)findViewById(R.id.filter_list);
-        
-        addToggleFilter(new BooleanFilter("filter_missing_tree", false, "Missing Tree"), list);
-        addToggleFilter(new BooleanFilter("filter_missing_plot", false, "Missing Plot"), list);
-        addToggleFilter(new BooleanFilter("filter_missing_thing", false, "Missing Thing"), list);
-        addRangeFilter(new RangeFilter("filter_bip", "Diameter Z"), list);
-        addRangeFilter(new RangeFilter("filter_bop", "Diameter X"), list);
-        
+		
+		filter_list = (LinearLayout)findViewById(R.id.filter_list);
+		createFilterUI(App.getSearchManager().availableFilters, filter_list);
     }
 	
 	public void onFinish(View view) {
-		
+		// Check all filters on the UI and create the appropriate filters
+		// for them
+		filters.clear();
+		int filterCount = filter_list.getChildCount();
+		for (int i=0; i < filterCount; i++) {
+			View filter_view = filter_list.getChildAt(i);
+			MapFilter filter = (MapFilter)filter_view.getTag();
+			filter.updateFromView(filter_view);
+			if (filter.isActive()) {
+				filters.put(filter.key, filter);
+			}
+		}
+		setResult(RESULT_OK);
+		finish();
 	}
 	
 	public void onCancel(View view) {
+		setResult(RESULT_CANCELED);
 		finish();
 	}
 	
 	public void onClear(View view) {
-		
+		filters.clear();
+	}
+	
+	private void createFilterUI(MapFilter[] filters, LinearLayout parent) {
+		for (MapFilter filter : filters) {
+			if (filter instanceof BooleanFilter) {
+				addToggleFilter((BooleanFilter)filter, parent);
+			} else if (filter instanceof RangeFilter) {
+				addRangeFilter((RangeFilter)filter, parent);
+			}
+		}
 	}
 	
 	private void addRangeFilter(RangeFilter filter, LinearLayout list) {
