@@ -1,0 +1,9 @@
+
+<filters>
+    <filter key="filter_edible" name="Edible" type="OTMBoolFilter"/>
+    <filter key="filter_fall_colors" name="Fall Colors" type="OTMBoolFilter"/>
+    <filter key="filter_flowering" name="Flowering" type="OTMBoolFilter"/>
+    <filter key="filter_native" name="Native" type="OTMBoolFilter"/>
+    <filter key="filter_dbh" name="Diameter" type="OTMRangeFilter"/>
+</filters>
+    
