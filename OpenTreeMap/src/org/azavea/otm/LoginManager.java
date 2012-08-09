@@ -7,7 +7,6 @@ import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
-import org.json.JSONArray;
 
 import android.content.Context;
 import android.content.SharedPreferences;
