@@ -1,12 +1,9 @@
 package org.azavea.otm.data;
 
-import org.azavea.otm.App;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-public class Species extends Model {
+public class Species extends Model implements Comparable {
 	public Species() {
 		data = new JSONObject();
 	}
@@ -58,6 +55,20 @@ public class Species extends Model {
 		data.put("genus", genus);
 	}
 	
+
+	public int compareTo(Object otherOne) 
+	{
+		Species other = (Species)otherOne;
+		try {
+			if (getCommonName().compareTo(other.getCommonName()) < 0) return -1;
+			if (getCommonName().compareTo(other.getCommonName())  > 0) return 1;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  return 0;
+	}
+
 	@Override
 	public String toString() {
 		try {
