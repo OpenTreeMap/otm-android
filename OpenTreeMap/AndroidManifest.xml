@@ -38,6 +38,10 @@
             android:label="@string/app_name" >
         </activity>        
         <activity
+            android:name=".ui.SpeciesListDisplay"
+            android:label="@string/app_name" >
+        </activity>      
+        <activity
             android:name=".ui.ProfileDisplay"
             android:label="@string/app_name" >
         </activity>
