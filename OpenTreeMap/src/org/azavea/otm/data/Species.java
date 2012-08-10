@@ -1,7 +1,10 @@
 package org.azavea.otm.data;
 
+import org.azavea.otm.App;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 public class Species extends Model {
 	public Species() {
@@ -53,5 +56,17 @@ public class Species extends Model {
 
 	public void setGenus(String genus) throws JSONException {
 		data.put("genus", genus);
+	}
+	
+	@Override
+	public String toString() {
+		try {
+			return getCommonName();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 }
