@@ -15,8 +15,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,7 +60,29 @@ public class SpeciesListDisplay extends ListActivity {
 				species);
 		Log.d(App.LOG_TAG, list.size() + " species loaded");
 		setListAdapter(adapter);
-		
+		setContentView(R.layout.species_list_selector);
+		setupFiltering(adapter);
+	}
+	
+	private void setupFiltering(final SpeciesAdapter adapter) {
+		EditText filterEditText = (EditText) findViewById(R.id.species_filter_text);
+		filterEditText.addTextChangedListener(new TextWatcher() {
+		   @Override
+		    public void onTextChanged(CharSequence s, int start, int before,
+		    		int count) {
+			   //adapter.getFilter().filter(s.toString());
+		    }
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s);
+				adapter.notifyDataSetChanged();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {}
+			}); 		
 	}
 	
 	@Override
