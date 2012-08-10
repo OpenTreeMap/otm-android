@@ -5,7 +5,7 @@ import org.azavea.otm.R;
 import android.view.View;
 import android.widget.EditText;
 
-public class RangeFilter extends MapFilter {
+public class RangeFilter extends BaseFilter {
 	private double min = 0;
 	private double max = 0;
 	
