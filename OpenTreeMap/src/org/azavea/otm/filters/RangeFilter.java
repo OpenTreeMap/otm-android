@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.EditText;
 
 public class RangeFilter extends BaseFilter {
-	private double min = 0;
-	private double max = 0;
+	final private double DEFAULT = 0;
+	private double min = DEFAULT;
+	private double max = DEFAULT;
 	
 	public RangeFilter(String key, String label) {
 		this.key = key;
@@ -44,7 +45,7 @@ public class RangeFilter extends BaseFilter {
 
 	@Override
 	public boolean isActive() {
-		return (min > 0 || max > 0) ? true : false;
+		return (min > DEFAULT || max > DEFAULT) ? true : false;
 	}
 
 	@Override
@@ -57,19 +58,19 @@ public class RangeFilter extends BaseFilter {
 		if (min != null && !"".equals(min)) {
 			this.min = Double.parseDouble(min);
 		} else {
-			this.min = 0;
+			this.min = DEFAULT;
 		}
 			
 		if (max != null && !"".equals(max)) {
 			this.max = Double.parseDouble(max);
 		} else {
-			this.max = 0;
+			this.max = DEFAULT;
 		}
 	}
 
 	@Override
 	public void clear() {
-		min = 0;
-		max = 0;
+		min = DEFAULT;
+		max = DEFAULT;
 	}
 }
