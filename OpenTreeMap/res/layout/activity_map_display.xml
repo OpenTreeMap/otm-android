@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:azavea="http://schemas.android.com/apk/res/org.azavea.map"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +12,12 @@
 		 android:clickable="true"
 		 android:apiKey="0oNSfjh7cn05XmJ-qgSrPTdUch8X2L9BMYmKdHA"
 		 />
+    
+    <org.azavea.map.WMSTileRaster
+        android:id="@+id/tileraster"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
 
     <ImageButton
         android:id="@+id/mylocationbutton"

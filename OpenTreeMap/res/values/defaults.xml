@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="base_url">http://10.0.2.2:8000/api/v0.1</string>
+    <string name="api_key">123456</string>
+</resources>
