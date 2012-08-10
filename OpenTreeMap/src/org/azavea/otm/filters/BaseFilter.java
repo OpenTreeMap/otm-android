@@ -2,7 +2,7 @@ package org.azavea.otm.filters;
 
 import android.view.View;
 
-public abstract class MapFilter {
+public abstract class BaseFilter {
 	/**
 	 * The key for the filter which is used as a query string argument
 	 */
