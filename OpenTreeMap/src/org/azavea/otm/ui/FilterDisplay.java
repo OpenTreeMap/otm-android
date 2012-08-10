@@ -88,34 +88,67 @@ public class FilterDisplay extends Activity{
         list.addView(toggle);
 	}
 	
-	private void addListFilter() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Select a Species");
-		 
-		Species species[] = null;
-		try {
-			species = new Species[] {
-				new Species(1, "Treeus Maximus", "Maximum Tree"),
-				new Species(2, "Treeus Minimus", "Minimum Tree"),
-				new Species(3, "Treeus Basicus", "Basic Tree"),
-			 };
-		} catch (JSONException e) {
-			e.printStackTrace();
+	private View makeListFilter(SpeciesFilter filter, LayoutInflater layout) {
+        speciesFilter = layout.inflate(R.layout.filter_species_control, null);
+        Button button = ((Button)speciesFilter.findViewById(R.id.species_filter));
+        if (filter.isActive()) {
+        	updateSpecies(filter, filter.species);
+        } else {
+        	resetSpecies(filter);
+        }
+        button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent speciesSelector = new Intent(App.getInstance(), SpeciesListDisplay.class);
+				startActivityForResult(speciesSelector, SPECIES_SELECTOR);
+			}
+		});
+        return speciesFilter;
+	}
+
+	private void resetSpecies(BaseFilter filter) {
+		updateSpecies(filter, null);
+	}
+	
+	private void resetSpecies() {
+		resetSpecies(null);
+	}
+	
+	private void updateSpecies(Species species) {
+		updateSpecies(null,  species);
+	}
+	
+	private void updateSpecies(BaseFilter filter, Species species) {
+		if (filter == null) {
+			String key = speciesFilter.getTag(R.id.filter_key).toString();
+			filter = App.getFilterManager().getFilter(key);
 		}
-		 
-		 SpeciesAdapter adapter = new SpeciesAdapter(this, R.layout.species_list_row, species);
-		 builder.setAdapter(adapter,  new  DialogInterface.OnClickListener() {
-			 public void onClick(DialogInterface dialog, int pos) {
-			     //selection processing code
-			
-			 }});
-			 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			     public void onClick(DialogInterface dialog, int whichButton) {
-			
-			     }
-			 });
-		 AlertDialog dialog=builder.create();
-		 dialog.getListView(); 
-		 dialog.show();
+		String name = "Not filtered";
+		if (species != null) {
+			try {
+				name = species.getCommonName();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+        Button button = ((Button)speciesFilter.findViewById(R.id.species_filter));
+		speciesFilter.setTag(R.id.species_id, species);
+		button.setText(filter.label + ": " + name);
+	}
+	
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+	  super.onActivityResult(requestCode, resultCode, data); 
+	  switch(requestCode) { 
+	  	case (SPECIES_SELECTOR) : { 
+	  		if (resultCode == Activity.RESULT_OK) {
+	  			int speciesId = data.getIntExtra("species_id", 0);
+	  			updateSpecies(App.getFilterManager().getSpecieById(speciesId));
+	  			
+	  		} 
+	  		break; 
+	    } 
+	  } 
 	}
 }
