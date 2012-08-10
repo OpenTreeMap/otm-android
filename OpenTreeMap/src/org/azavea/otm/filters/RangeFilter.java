@@ -51,8 +51,20 @@ public class RangeFilter extends BaseFilter {
 	public void updateFromView(View view) {
 		String min = ((EditText)view.findViewById(R.id.min))
 				.getText().toString().trim();
+		String max = ((EditText)view.findViewById(R.id.max))
+				.getText().toString().trim();
+		
 		if (min != null && !"".equals(min)) {
 			this.min = Double.parseDouble(min);
+		} else {
+			this.min = 0;
 		}
+			
+		if (max != null && !"".equals(max)) {
+			this.max = Double.parseDouble(max);
+		} else {
+			this.max = 0;
+		}
+	}
 	}
 }
