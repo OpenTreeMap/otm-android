@@ -2,13 +2,18 @@ package org.azavea.otm.ui;
 
 import java.util.List;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -18,6 +23,8 @@ import com.google.android.maps.Overlay;
 
 public class MapDisplay extends MapActivity {
 
+	final private int FILTER_INTENT = 1;
+	
 	private MyLocationOverlay myLocationOverlay;
 	
     @Override
@@ -66,7 +73,7 @@ public class MapDisplay extends MapActivity {
         switch (item.getItemId()) {
             case R.id.menu_filter:
             	Intent filter = new Intent(this, FilterDisplay.class);
-            	startActivityForResult(filter, 0);
+            	startActivityForResult(filter, FILTER_INTENT);
             	break;
         }
         return true;
@@ -96,4 +103,18 @@ public class MapDisplay extends MapActivity {
     	mc.setCenter(myLocationOverlay.getMyLocation());
     	mc.setZoom(7);
     }
+    
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+	  super.onActivityResult(requestCode, resultCode, data); 
+	  switch(requestCode) { 
+	  	case (FILTER_INTENT) : { 
+	  		if (resultCode == Activity.RESULT_OK) { 
+	  			Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
+	  					Toast.LENGTH_LONG).show();
+	  		} 
+	  		break; 
+	    } 
+	  } 
+	}
 }
