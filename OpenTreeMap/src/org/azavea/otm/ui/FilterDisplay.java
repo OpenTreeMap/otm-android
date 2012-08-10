@@ -1,31 +1,34 @@
 package org.azavea.otm.ui;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.SearchManager;
-import org.azavea.otm.adapters.SpeciesAdapter;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.filters.BooleanFilter;
-import org.azavea.otm.filters.MapFilter;
+import org.azavea.otm.filters.SpeciesFilter;
+import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.json.JSONException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ToggleButton;
 
 public class FilterDisplay extends Activity{
-    
-    private HashMap<String, MapFilter> filters = new HashMap<String, MapFilter>();
-    
+	
+    final private int SPECIES_SELECTOR = 1;
+    private View speciesFilter;
     private LinearLayout filter_list;
     
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,21 +36,17 @@ public class FilterDisplay extends Activity{
         setContentView(R.layout.filter_activity);
 		
 		filter_list = (LinearLayout)findViewById(R.id.filter_list);
-		createFilterUI(App.getSearchManager().availableFilters, filter_list);
+		createFilterUI(App.getFilterManager().getFilters(), filter_list);
     }
 	
-	public void onFinish(View view) {
-		// Check all filters on the UI and create the appropriate filters
-		// for them
-		filters.clear();
+	public void onComplete(View view) {
+		// Update any active filters from the view
+		
 		int filterCount = filter_list.getChildCount();
 		for (int i=0; i < filterCount; i++) {
 			View filter_view = filter_list.getChildAt(i);
-			MapFilter filter = (MapFilter)filter_view.getTag();
-			filter.updateFromView(filter_view);
-			if (filter.isActive()) {
-				filters.put(filter.key, filter);
-			}
+			String filterKey = filter_view.getTag(R.id.filter_key).toString();
+			App.getFilterManager().updateFilterFromView(filterKey, filter_view);
 		}
 		setResult(RESULT_OK);
 		finish();
@@ -58,34 +57,64 @@ public class FilterDisplay extends Activity{
 		finish();
 	}
 	
-	public void onClear(View view) {
-		filters.clear();
+	public void onClear(View clearButton) {
+		resetFilterUI(filter_list);
+		resetSpecies();
 	}
 	
-	private void createFilterUI(MapFilter[] filters, LinearLayout parent) {
-		for (MapFilter filter : filters) {
-			if (filter instanceof BooleanFilter) {
-				addToggleFilter((BooleanFilter)filter, parent);
-			} else if (filter instanceof RangeFilter) {
-				addRangeFilter((RangeFilter)filter, parent);
-			}
+	private void resetFilterUI(ViewGroup group) {
+		// Recursively clear all text and toggle elements
+		for (int i = 0, count = group.getChildCount(); i < count; ++i) {
+		    View view = group.getChildAt(i);
+		    if (view instanceof EditText) {
+		        ((EditText)view).setText("");
+		    } else if (view instanceof ToggleButton) {
+		    	((ToggleButton)view).setChecked(false);
+		    } else if (view instanceof ViewGroup) {
+		    	resetFilterUI((ViewGroup)view);
+		    }
 		}
 	}
 	
-	private void addRangeFilter(RangeFilter filter, LinearLayout list) {
-        LayoutInflater inflater = ((Activity)this).getLayoutInflater();
-        View rangeControl = inflater.inflate(R.layout.filter_range_control, null);
-        ((TextView)rangeControl.findViewById(R.id.filter_label)).setText(filter.label);
-        rangeControl.setTag(filter);
-        list.addView(rangeControl);
+	private void createFilterUI(LinkedHashMap<String,BaseFilter> filters, 
+			LinearLayout parent) {
+		
+		LayoutInflater layout = ((Activity)this).getLayoutInflater();
+		for (Map.Entry<String, BaseFilter> entry : filters.entrySet()) {
+			BaseFilter filter = entry.getValue();
+			View view = null;
+			if (filter instanceof BooleanFilter) {
+				view = makeToggleFilter((BooleanFilter)filter, layout);
+			} else if (filter instanceof RangeFilter) {
+				view = makeRangeFilter((RangeFilter)filter, layout);
+			} else if (filter instanceof SpeciesFilter) {
+				view = makeListFilter((SpeciesFilter)filter, layout);
+			}
+	        view.setTag(R.id.filter_key, filter.key);
+	        parent.addView(view);
+		}
+	}
+	
+	private View makeRangeFilter(RangeFilter filter, LayoutInflater layout) {
+		RangeFilter range = (RangeFilter)filter;
+        View rangeControl = layout.inflate(R.layout.filter_range_control, null);
+        ((TextView)rangeControl.findViewById(R.id.filter_label)).setText(range.label);
+        if (filter.isActive()) {
+        	((EditText)rangeControl.findViewById(R.id.min))
+        		.setText(Double.toString(range.getMin()));
+        	((EditText)rangeControl.findViewById(R.id.max))
+    			.setText(Double.toString(range.getMax()));
+        }
+        return rangeControl;
 	}
 
-	private void addToggleFilter(final BooleanFilter filter, LinearLayout list) {
-        LayoutInflater inflater = ((Activity)this).getLayoutInflater();
-        View toggle = inflater.inflate(R.layout.filter_toggle_control, null);
+	private View makeToggleFilter(final BooleanFilter filter, LayoutInflater layout) {
+        View toggle = layout.inflate(R.layout.filter_toggle_control, null);
         ((TextView)toggle.findViewById(R.id.filter_label)).setText(filter.label);
-        toggle.setTag(filter);
-        list.addView(toggle);
+        if (filter.isActive()) {
+        	((ToggleButton)toggle.findViewById(R.id.active)).setChecked(true);
+        }
+        return toggle;
 	}
 	
 	private View makeListFilter(SpeciesFilter filter, LayoutInflater layout) {
