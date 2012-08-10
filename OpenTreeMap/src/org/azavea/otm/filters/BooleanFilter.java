@@ -5,7 +5,7 @@ import org.azavea.otm.R;
 import android.view.View;
 import android.widget.ToggleButton;
 
-public class BooleanFilter extends MapFilter {
+public class BooleanFilter extends BaseFilter {
 	public boolean active;
 	
 
@@ -36,5 +36,10 @@ public class BooleanFilter extends MapFilter {
 	@Override
 	public boolean isActive() {
 		return this.active;
+	}
+
+	@Override
+	public void clear() {
+		active = false;
 	}
 }
