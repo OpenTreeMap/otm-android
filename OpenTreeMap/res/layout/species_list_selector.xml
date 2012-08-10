@@ -11,7 +11,6 @@
             android:layout_gravity="top"
             android:hint="@string/filter_species_hint"
             android:inputType="text"
-            android:windowSoftInputMode="stateHidden"
         	android:maxLines="1" >
 
             <requestFocus />
