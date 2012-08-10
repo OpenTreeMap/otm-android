@@ -34,4 +34,9 @@ public abstract class BaseFilter {
 	 * parameter
 	 */
 	public abstract String toQueryStringParam();
+
+	/**
+	 *  Reset the filter to the default state
+	 */
+	public abstract void clear();
 }
