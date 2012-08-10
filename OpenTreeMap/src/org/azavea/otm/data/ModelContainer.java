@@ -1,5 +1,7 @@
 package org.azavea.otm.data;
 
+import java.util.LinkedHashMap;
+
 import org.json.JSONArray;
 
 public abstract class ModelContainer<T> {
@@ -13,5 +15,5 @@ public abstract class ModelContainer<T> {
 		return data;
 	}
 	
-	public abstract T[] getAll(); 
+	public abstract LinkedHashMap<Integer,T> getAll(); 
 }
