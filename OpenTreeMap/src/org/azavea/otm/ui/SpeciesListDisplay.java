@@ -1,5 +1,7 @@
 package org.azavea.otm.ui;
 
+
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -56,6 +58,10 @@ public class SpeciesListDisplay extends ListActivity {
 			species[i] = entry.getValue();
 			i++;
 		}
+		// Sort by common name
+		Arrays.sort(species);
+		
+		// Bind the custom adapter to the view
 		SpeciesAdapter adapter = new SpeciesAdapter(this, R.layout.species_list_row, 
 				species);
 		Log.d(App.LOG_TAG, list.size() + " species loaded");
