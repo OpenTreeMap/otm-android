@@ -66,5 +66,10 @@ public class RangeFilter extends BaseFilter {
 			this.max = 0;
 		}
 	}
+
+	@Override
+	public void clear() {
+		min = 0;
+		max = 0;
 	}
 }
