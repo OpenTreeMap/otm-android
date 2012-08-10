@@ -21,6 +21,7 @@
     <string name="finish_filtering">Done</string>
     <string name="cancel_filtering">Cancel</string>
     <string name="clear_filtering">Clear</string>
+    
     <string name="test_get">Get</string>
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
@@ -28,4 +29,8 @@
     <string name="about_text">About OpenTreemap</string>
     <string name="profile_text">Profile</string>
     <string name="list_text">All the lists</string>
+    
+    <item type="id" name="species_id"/>
+    <item type="id" name="filter_key"/>
+    
 </resources>
