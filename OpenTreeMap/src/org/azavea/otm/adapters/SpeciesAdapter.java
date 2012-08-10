@@ -47,7 +47,10 @@ public class SpeciesAdapter extends ArrayAdapter<Species>{
             holder = (SpeciesHolder)row.getTag();
         }
         
-        Species species = data[position];
+        // Use getItem as it's reference is always pointed to the data list
+        // which is active.  When filtering is applied, data is not active, 
+        // so data[position] will get the position from the unfiltered list.
+        Species species = getItem(position);
         try {
 			holder.commonName.setText(species.getCommonName());
 			holder.scientificName.setText(species.getScientificName() + "asdf");
