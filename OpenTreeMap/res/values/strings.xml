@@ -29,6 +29,7 @@
     <string name="about_text">About OpenTreemap</string>
     <string name="profile_text">Profile</string>
     <string name="list_text">All the lists</string>
+    <string name="filter_species_hint">Filter species...</string>
     
     <item type="id" name="species_id"/>
     <item type="id" name="filter_key"/>
