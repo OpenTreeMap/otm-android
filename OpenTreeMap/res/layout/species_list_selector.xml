@@ -1,12 +1,29 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="0dip"
+        <EditText
+            android:id="@+id/species_filter_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:hint="@string/filter_species_hint"
+            android:inputType="text"
+            android:windowSoftInputMode="stateHidden"
+        	android:maxLines="1" >
+
+            <requestFocus />
+        </EditText>
+
+        <!-- NOTE: This listview must have anroid id/list for the listactivity
+        	to find it. -->
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:fastScrollEnabled="true"
             android:textFilterEnabled="true" >
