@@ -3,7 +3,7 @@ package org.azavea.otm.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Species extends Model implements Comparable {
+public class Species extends Model implements Comparable<Object> {
 	public Species() {
 		data = new JSONObject();
 	}
