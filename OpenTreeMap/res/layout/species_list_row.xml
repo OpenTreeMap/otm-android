@@ -4,7 +4,14 @@
     android:orientation="vertical" 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
-        
+
+	<TextView
+		style="?android:attr/listSeparatorTextViewStyle"
+		android:id="@+id/separator"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@android:color/white" />
+	
      <TextView
          android:id="@+id/common_name"
          android:layout_width="fill_parent"
