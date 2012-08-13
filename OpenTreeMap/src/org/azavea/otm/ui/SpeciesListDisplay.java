@@ -20,6 +20,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -39,13 +40,13 @@ public class SpeciesListDisplay extends ListActivity {
 				public boolean handleMessage(Message msg) {
 					if (msg.getData().getBoolean("success")) {
 						renderSpeciesList();
-					} else {
+					} else
+						  {
 						Toast.makeText(App.getInstance(), "Could not get species list", 
 								Toast.LENGTH_SHORT).show();
 					}
 					return true;
 				}
-				
 			});
 		}
 	}
@@ -68,16 +69,25 @@ public class SpeciesListDisplay extends ListActivity {
 		setListAdapter(adapter);
 		setContentView(R.layout.species_list_selector);
 		setupFiltering(adapter);
+
 	}
 	
 	private void setupFiltering(final SpeciesAdapter adapter) {
 		EditText filterEditText = (EditText) findViewById(R.id.species_filter_text);
+		setKeyboardChangeEvents(adapter, filterEditText);
+		setTextWatcherEvents(adapter, filterEditText); 		
+	}
+
+	/**
+	 * Listen on events of the filter text box to pass along filter text
+	 * and invalidate the current view
+	 */
+	private void setTextWatcherEvents(final SpeciesAdapter adapter,
+			EditText filterEditText) {
 		filterEditText.addTextChangedListener(new TextWatcher() {
 		   @Override
 		    public void onTextChanged(CharSequence s, int start, int before,
-		    		int count) {
-			   //adapter.getFilter().filter(s.toString());
-		    }
+		    		int count) {}
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -88,7 +98,28 @@ public class SpeciesListDisplay extends ListActivity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {}
-			}); 		
+			});
+	}
+
+	/**
+	 *  Listen on events the keyboard emits when finished editing
+	 *  ('Done' and 'Next' are the ENTER event).
+	 *  The Keyboard ENTER event on a ListActivity will re-render
+	 *  the list, so the current view must be invalidated
+	 */
+	private void setKeyboardChangeEvents(final SpeciesAdapter adapter,
+			EditText filterEditText) {
+		filterEditText.setOnKeyListener(new View.OnKeyListener()
+	    {
+	        public boolean onKey(View v, int keyCode, KeyEvent event)
+	        {
+	            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+	            {
+	                adapter.notifyDataSetChanged();
+	            }
+	            return false;
+	        }
+	    });
 	}
 	
 	@Override
@@ -105,4 +136,4 @@ public class SpeciesListDisplay extends ListActivity {
 		setResult(RESULT_OK, result);
 		finish();
 	}	    
-  }
+ }
