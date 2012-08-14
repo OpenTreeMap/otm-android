@@ -115,7 +115,7 @@ public class WMSTileRaster extends SurfaceView {
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * -1 * Tile.HEIGHT, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * Tile.HEIGHT, offsetX, offsetY);
 				}
 			}
 		}
@@ -162,7 +162,6 @@ public class WMSTileRaster extends SurfaceView {
 			}
 			
 			if ((shuffleRight != 0 || shuffleDown != 0) && okToShuffle) {
-				//okToShuffle = false;
 				synchronized (this) {
 					shuffleTiles(shuffleRight, shuffleDown);
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
@@ -170,7 +169,6 @@ public class WMSTileRaster extends SurfaceView {
 					panOffsetX = 0;
 					panOffsetY = 0;
 				}
-				//okToShuffle = true;
 			}
 			
 			drawTiles(canvas, offsetX + panOffsetX, offsetY + panOffsetY);
