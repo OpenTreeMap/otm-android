@@ -4,6 +4,7 @@
     <string name="app_name">OpenTreeMap</string>
     <string name="menu_filter">Filter</string>
     <string name="menu_add">Add Tree</string>
+    <string name="menu_view">(Temp)View Tree</string>
     <string name="test_auth">Get/Auth</string>
     <string name="title_activity_map_display">MapDisplay</string>
     

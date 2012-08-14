@@ -1,9 +1,15 @@
 package org.azavea.otm.ui;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.User;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.RestHandler;
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,6 +25,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 
 public class MapDisplay extends MapActivity {
@@ -75,6 +82,26 @@ public class MapDisplay extends MapActivity {
             	Intent filter = new Intent(this, FilterDisplay.class);
             	startActivityForResult(filter, FILTER_INTENT);
             	break;
+            case R.id.temp_view:
+            	RequestGenerator rg = new RequestGenerator();
+			try {
+				rg.getPlot(90010, new RestHandler<Plot>(new Plot()) {
+					@Override
+					public void onFailure(Throwable e, String message){
+						Log.e(App.LOG_TAG, "Bad Plot Request" , e);
+					}
+					
+            		@Override
+            		public void dataReceived(Plot plot) {
+            			Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
+            			viewPlot.putExtra("plot", plot.getData().toString());
+            			startActivity(viewPlot);
+            		}
+            	});
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         return true;
     }
