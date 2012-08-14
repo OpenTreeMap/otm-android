@@ -123,7 +123,7 @@
 			    <choice type="canopy_condition"/>
 			</field>
 	    </fieldGroup>
-	    <fieldGroup>
+	    <fieldGroup name="Eco Benefits">
 	        <field type="eco" key="tree.eco.annual_co2_reduced" label="Greenhouse Gas" minimumToEdit="99999"/>
 	        <field type="eco" key="tree.eco.annual_stormwater_management" label="Water Benefits" minimumToEdit="99999"/>
 	        <field type="eco" key="tree.eco.annual_energy_conserved" label="Energy Beefits" minimumToEdit="99999"/>
