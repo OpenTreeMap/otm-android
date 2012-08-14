@@ -35,10 +35,10 @@ public class Tile {
 		this.screenY = y;
 	}
 	
-	public void draw(int x, int y, Canvas canvas) {
+	public void draw(Canvas canvas, int x, int y, int offsetX, int offsetY) {
 		Paint paint = new Paint();
 		paint.setAlpha(0x888);
-		canvas.drawBitmap(image, x, y, paint);
+		canvas.drawBitmap(image, x + offsetX, y + offsetY, paint);
 	}
 	
 	public void draw(Canvas canvas, int offsetX, int offsetY) {

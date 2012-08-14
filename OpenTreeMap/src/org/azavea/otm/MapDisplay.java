@@ -48,55 +48,10 @@ public class MapDisplay extends MapActivity {
         sh.setFormat(PixelFormat.TRANSPARENT);
         surfaceView.setMapView(mapView);
 
-//        // Create overlay showing user's location and add to MapView
-//        myLocationOverlay = new MyLocationOverlay(this, mapView);
-//        
-//        List<Overlay> overlays = mapView.getOverlays();
-//        overlays.clear();
-//        overlays.add(myLocationOverlay);
-//        
-//        // Force the MapView to redraw
-//        mapView.invalidate();
-        
-        // For example purposes: manually set location and zoom
-/*        GeoPoint myLoc = myLocationOverlay.getMyLocation();
-        MapController mc = mapView.getController();
-        String coordinates[] = {"30", "71"};
-        double lat = Double.parseDouble(coordinates[0]);
-        double lng = Double.parseDouble(coordinates[1]);
-
-        GeoPoint p = new GeoPoint(
-        (int) (lat * 1E6),
-        (int) (lng * 1E6));
-
-        mc.animateTo(myLoc);
-        mc.setZoom(7);
-        mapView.invalidate(); */
-
         MapController mapController = mapView.getController();
         GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
-        //GeoPoint p = new GeoPoint((int)(75.1642*1E6), (int)(39.9522*1E6));
         mapController.setCenter(p);
         mapController.setZoom(14);
-        
-//        mapView.setOnTouchListener(new OnTouchListener() {
-//        	@Override
-//        	public boolean onTouch(View v, MotionEvent event) {
-//        		// TODO Auto-generated method stub
-//                Projection proj = mapView.getProjection();
-//                GeoPoint projectedTopLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop());
-//                GeoPoint projectedBottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop() - 800);
-//                new WMSAsyncTask(mapView, 0, 0).execute(projectedTopLeft.getLongitudeE6()/1E6, projectedTopLeft.getLatitudeE6()/1E6,
-//                		projectedBottomRight.getLongitudeE6()/1E6, projectedBottomRight.getLatitudeE6()/1E6);
-//                return true;
-//        	}
-//        });
-        
-//        Projection proj = mapView.getProjection();
-//        GeoPoint projectedTopLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop());
-//        GeoPoint projectedBottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop() - 800);
-//        new WMSAsyncTask(mapView, 0, 0).execute(projectedTopLeft.getLongitudeE6()/1E6, projectedTopLeft.getLatitudeE6()/1E6,
-//        		projectedBottomRight.getLongitudeE6()/1E6, projectedBottomRight.getLatitudeE6()/1E6);
     }
 
     @Override
@@ -111,17 +66,6 @@ public class MapDisplay extends MapActivity {
     	//myLocationOverlay.enableMyLocation();
     }
 
-//    @Override
-//    public void onContentChanged() {
-//    	// TODO Auto-generated method stub
-//    	super.onContentChanged();
-//        Projection proj = mapView.getProjection();
-//        GeoPoint projectedTopLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop());
-//        GeoPoint projectedBottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop() - 800);
-//        new WMSAsyncTask(mapView, 0, 0).execute(projectedTopLeft.getLongitudeE6()/1E6, projectedTopLeft.getLatitudeE6()/1E6,
-//        		projectedBottomRight.getLongitudeE6()/1E6, projectedBottomRight.getLatitudeE6()/1E6);    	
-//    }
-    
     @Override
     protected void onPause() {
     	super.onPause();

@@ -37,6 +37,7 @@ public class WMSTileRaster extends SurfaceView {
 	private int initialTouchY;
 	private int panOffsetX;
 	private int panOffsetY;
+	private boolean okToShuffle;
 	
 	public WMSTileRaster(Context context) {
 		super(context);
@@ -76,6 +77,7 @@ public class WMSTileRaster extends SurfaceView {
 	}
 	
 	private void init() {
+		okToShuffle = true;
 		initialized = false;
 		mapView = null;
 		screenOffsetX = 480; // Location of center-tile
@@ -87,10 +89,6 @@ public class WMSTileRaster extends SurfaceView {
 		
 		numTilesX = 1+2;
 		numTilesY = 1+2;
-//		topLeft = new GeoPoint((int)(-75.165708*1E6), (int)(39.952622*1E6));
-//		bottomRight = new GeoPoint((int)(-75.124510*1E6), (int)(40.005234*1E6));
-//		topLeft = new GeoPoint((int)(39976432), (int)(-75186307));
-//		bottomRight = new GeoPoint((int)(39928769), (int)(-75145109));
 
 		
 		//loadTiles();
@@ -113,18 +111,11 @@ public class WMSTileRaster extends SurfaceView {
 	
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
 		Log.d("WMSTileRaster", "Drawing tiles...");
-//		if (mapView != null) {
-//			Projection proj = mapView.getProjection();
-//			topLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop());
-//			bottomRight = proj.fromPixels(mapView.getRight(), mapView.getBottom());
-//			Log.d("WMSTileRaster", topLeft.getLatitudeE6() + ", " + topLeft.getLongitudeE6());
-//			Log.d("WMSTileRaster", bottomRight.getLatitudeE6() + ", " + bottomRight.getLongitudeE6());
-//		}
 		
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * -1 * Tile.HEIGHT, offsetX, offsetY);
 				}
 			}
 		}
@@ -134,47 +125,11 @@ public class WMSTileRaster extends SurfaceView {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		
-		// Works for single tile
-		///////////////////////////////////////////////////////////////////////////////////////////
-//		if (mapView != null) {
-//			Log.d("WMSTileRaster", "mapView is not null");
-//			Projection proj = mapView.getProjection();
-////			int[] mapLocation = new int[2];
-////			mapView.getLocationOnScreen(mapLocation);
-////			Log.d("WMSTileRaster", "mapView = " + mapLocation[0] + ", " + mapLocation[1]);
-//			GeoPoint topLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop() + 800);
-//			GeoPoint bottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop());
-//
-//			if (!topLeft.equals(this.topLeft) || !bottomRight.equals(this.bottomRight)) {
-//				this.topLeft = topLeft;
-//				this.bottomRight = bottomRight;
-//				tile = loadTile();
-//			}
-//		}
-//		
-//		canvas.drawBitmap(tile, 0, 0, paint);
-		//////////////////////////////////////////////////////////////////////////////////////////
-		
-		// PANNING
-		// Need to know where mapview is in relation to our grid
-//		if (mapView != null) {
-//			Log.d("WMSTileRaster", "mapView is not null");
-//			Projection proj = mapView.getProjection();
-//			GeoPoint newTopLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop());
-//			
-//			// Calculate geometric offset
-//			GeoPoint offset = new GeoPoint(topLeft.getLatitudeE6() - newTopLeft.getLatitudeE6(), topLeft.getLongitudeE6() - newTopLeft.getLongitudeE6());
-//			
-//			// Figure out which tile topLeft of viewport is in
-//			
-//			
-//			// How far is topleft of viewport from that tile?
-//			
-//			// If it's within threshold, reinitialize the view
-//		}
-
 		int offsetX = 0;
 		int offsetY = 0;
+
+		Log.d("OFFSETX", ""+panOffsetX);
+		Log.d("OFFSETY", ""+panOffsetY);
 		
 		if (mapView != null) {			
 			Projection proj = mapView.getProjection();
@@ -185,16 +140,88 @@ public class WMSTileRaster extends SurfaceView {
 				bottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop());
 				loadTiles();
 			}
+			
+			
+			int shuffleRight = 0;
+			int shuffleDown = 0;
+			
+			if (panOffsetX > Tile.WIDTH){
+				shuffleRight = -1;
+			}
+			
+			if (panOffsetX < -Tile.WIDTH) {
+				shuffleRight = 1;
+			}
+			
+			if (panOffsetY > Tile.HEIGHT) {
+				shuffleDown = 1;
+			}
+			
+			if (panOffsetY < -Tile.HEIGHT) {
+				shuffleDown = -1;
+			}
+			
+			if ((shuffleRight != 0 || shuffleDown != 0) && okToShuffle) {
+				//okToShuffle = false;
+				synchronized (this) {
+					shuffleTiles(shuffleRight, shuffleDown);
+					tileProvider.moveViewport(shuffleRight, shuffleDown);
+					refreshTiles();
+					panOffsetX = 0;
+					panOffsetY = 0;
+				}
+				//okToShuffle = true;
+			}
+			
 			drawTiles(canvas, offsetX + panOffsetX, offsetY + panOffsetY);
 			initialized = true;
 		}
+	}
+	
+	private void displayTile(int x, int y, Tile t) {
+		Log.d("Display Tile", "grid(" + x + "," + y +") -> x = " + t.getX() + ", y = " + t.getY());
 	}
 	
 	private Bitmap loadTile() {
 		WMSClient wmsClient = new WMSClient();
 		return wmsClient.getTile(topLeft.getLongitudeE6()/1E6, topLeft.getLatitudeE6()/1E6,
 				bottomRight.getLongitudeE6()/1E6, bottomRight.getLatitudeE6()/1E6);
-//		return wmsClient.getTile(topLeft.getLatitudeE6()/1E6, topLeft.getLongitudeE6()/1E6,
-//				bottomRight.getLatitudeE6()/1E6, bottomRight.getLongitudeE6()/1E6);
+	}
+	
+	public void shuffleTiles(int x, int y)
+    {
+            Tile[][] newTiles = new Tile[numTilesX][numTilesY];
+            
+            for(int k=0; k<numTilesX; k++)
+            {
+                    newTiles[k] = new Tile[numTilesY];
+            }
+
+            for(int i=0; i<numTilesX; i++)
+            {
+                    for(int j=0; j<numTilesY; j++)
+                    {
+                            if (i+x<3 && i+x>=0 && j+y<3 && j+y>=0)
+                            {
+                                    newTiles[i][j] = tiles[i+x][j+y];
+                            }
+                            else
+                            {
+                                    newTiles[i][j] = null;
+                            }
+                    }
+            }
+            tiles = newTiles;
+    }       
+	
+	private void refreshTiles() {
+		for(int i=0; i<numTilesX; i++) {
+			for(int j=0; j<numTilesY; j++) {
+				if (tiles[i][j] == null) {
+					tiles[i][j] = tileProvider.getTile(i, j);
+					Log.d("", "Tile " + i + "," + j + " gets screen coords " + tiles[i][j].getX() + "," + tiles[i][j].getY());
+				}
+			}
+		}
 	}
 }
