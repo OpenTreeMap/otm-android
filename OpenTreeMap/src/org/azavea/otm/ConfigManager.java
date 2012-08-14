@@ -27,7 +27,7 @@ import android.util.Log;
 import android.view.View;
 
 
-public class FilterManager {
+public class ConfigManager {
 	private Context context;
 	private RequestGenerator request = new RequestGenerator();
 	
@@ -38,7 +38,7 @@ public class FilterManager {
 	private LinkedHashMap<Integer,Species> species = new LinkedHashMap<Integer,Species>();
 	
 	
-	public FilterManager(Context context) throws Exception {
+	public ConfigManager(Context context) throws Exception {
 		this.context = context;
 		loadSpeciesList();
 		loadFilterDefinitions();

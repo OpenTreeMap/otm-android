@@ -1,6 +1,6 @@
 package org.azavea.otm;
 
-import org.azavea.otm.FilterManager;
+import org.azavea.otm.ConfigManager;
 
 import android.app.Application;
 import android.content.Context;
@@ -17,7 +17,7 @@ public class App extends Application {
 	
 	private static App instance = null;
 	private static LoginManager loginManager = null;
-	private static FilterManager filterManager = null;
+	private static ConfigManager configManager = null;
 	private static SharedPreferences sharedPreferences = null;
 	
 	public static App getInstance() {
@@ -37,18 +37,18 @@ public class App extends Application {
 	/**
 	 * Static access to single search manager instance
 	 */
-	public static FilterManager getFilterManager() {
-		if (filterManager == null) {
+	public static ConfigManager getConfigManager() {
+		if (configManager == null) {
 			checkInstance();
 			try {
-				filterManager = new FilterManager(instance);
+				configManager = new ConfigManager(instance);
 			} catch (Exception e) {
-				Toast.makeText(instance, "Unable to access search manager", 
+				Toast.makeText(instance, "Unable to access config manager", 
 						Toast.LENGTH_LONG).show();
-				Log.e(LOG_TAG, "Unable to create search manager", e);
+				Log.e(LOG_TAG, "Unable to create config manager", e);
 			}
 		}
-		return filterManager;
+		return configManager;
 	}
 	
 	public static SharedPreferences getSharedPreferences() {
