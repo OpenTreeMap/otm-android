@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
+
+	<RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/header"
+	    android:layout_width="fill_parent"
+	    android:layout_height="100dp"
+	    android:layout_alignParentTop="true" >
+
+		<ImageView
+		    android:id="@+id/tree_photo"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginLeft="15dp"
+		    android:layout_marginTop="15dp"
+		    android:src="@drawable/ic_action_search" />
+
+		<TextView
+		    android:id="@+id/address"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignTop="@+id/tree_photo"
+		    android:layout_marginLeft="16dp"
+		    android:layout_toRightOf="@+id/tree_photo"/>
+
+		<TextView
+		    android:id="@+id/species"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignLeft="@+id/address"
+		    android:layout_below="@+id/address"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		<TextView
+		    android:id="@+id/updated_on"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignLeft="@+id/species"
+		    android:layout_below="@+id/species"
+		    android:layout_centerVertical="true" />
+
+		<TextView
+		    android:id="@+id/updated_by"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignLeft="@+id/updated_on"
+		    android:layout_below="@+id/updated_on"/>
+
+	</RelativeLayout>
+
+	<ScrollView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scroller"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@+id/footer" >
+	    
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/detail_list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:focusable="true"
+	    	android:focusableInTouchMode="true" >
+	    </LinearLayout>
+	    
+	</ScrollView>
+
+
+	
+</RelativeLayout>	
