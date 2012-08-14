@@ -105,7 +105,7 @@ public class FilterManager {
 	private void loadFilterDefinitions() throws Exception {
 		// Load the filter definitions from the included XML resource, and parse them 
 		// into filter objects
-		InputStream filterFile = context.getResources().openRawResource(R.raw.filters);
+		InputStream filterFile = context.getResources().openRawResource(R.raw.configuration);
 		try {
 			DocumentBuilder xml = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = xml.parse(filterFile);
