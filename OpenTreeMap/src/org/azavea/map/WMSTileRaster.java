@@ -89,9 +89,6 @@ public class WMSTileRaster extends SurfaceView {
 		
 		numTilesX = 1+2;
 		numTilesY = 1+2;
-
-		
-		//loadTiles();
 		
 		paint = new Paint();
 		paint.setAlpha(0x888);
@@ -99,7 +96,7 @@ public class WMSTileRaster extends SurfaceView {
 	}
 
 	private void loadTiles() {
-		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, mapView.getProjection()); 
+		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY); 
 		tiles = new Tile[numTilesX][numTilesY];
 		for(int x=0; x<numTilesX; x++) {
 			tiles[x] = new Tile[numTilesY];
@@ -115,7 +112,7 @@ public class WMSTileRaster extends SurfaceView {
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * Tile.HEIGHT, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * -1 * Tile.HEIGHT, offsetX, offsetY);
 				}
 			}
 		}
@@ -125,9 +122,6 @@ public class WMSTileRaster extends SurfaceView {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		
-		int offsetX = 0;
-		int offsetY = 0;
-
 		Log.d("OFFSETX", ""+panOffsetX);
 		Log.d("OFFSETY", ""+panOffsetY);
 		
@@ -171,7 +165,7 @@ public class WMSTileRaster extends SurfaceView {
 				}
 			}
 			
-			drawTiles(canvas, offsetX + panOffsetX, offsetY + panOffsetY);
+			drawTiles(canvas, panOffsetX, panOffsetY);
 			initialized = true;
 		}
 	}
@@ -180,31 +174,19 @@ public class WMSTileRaster extends SurfaceView {
 		Log.d("Display Tile", "grid(" + x + "," + y +") -> x = " + t.getX() + ", y = " + t.getY());
 	}
 	
-	private Bitmap loadTile() {
-		WMSClient wmsClient = new WMSClient();
-		return wmsClient.getTile(topLeft.getLongitudeE6()/1E6, topLeft.getLatitudeE6()/1E6,
-				bottomRight.getLongitudeE6()/1E6, bottomRight.getLatitudeE6()/1E6);
-	}
-	
-	public void shuffleTiles(int x, int y)
-    {
+	private void shuffleTiles(int x, int y) {
             Tile[][] newTiles = new Tile[numTilesX][numTilesY];
             
-            for(int k=0; k<numTilesX; k++)
-            {
+            for(int k=0; k<numTilesX; k++) {
                     newTiles[k] = new Tile[numTilesY];
             }
 
-            for(int i=0; i<numTilesX; i++)
-            {
-                    for(int j=0; j<numTilesY; j++)
-                    {
-                            if (i+x<3 && i+x>=0 && j+y<3 && j+y>=0)
-                            {
+            for(int i=0; i<numTilesX; i++) {
+                    for(int j=0; j<numTilesY; j++) {
+                            if (i+x<3 && i+x>=0 && j+y<3 && j+y>=0) {
                                     newTiles[i][j] = tiles[i+x][j+y];
                             }
-                            else
-                            {
+                            else {
                                     newTiles[i][j] = null;
                             }
                     }

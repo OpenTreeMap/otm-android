@@ -18,7 +18,7 @@ public class TileProvider {
 		bottomRight = new GeoPoint(0, 0);
 	}
 	
-	public TileProvider(GeoPoint topLeft, GeoPoint bottomRight, int numTilesX, int numTilesY, Projection proj) {
+	public TileProvider(GeoPoint topLeft, GeoPoint bottomRight, int numTilesX, int numTilesY) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
 
