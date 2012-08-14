@@ -20,4 +20,12 @@ public abstract class Model {
 	public JSONObject getData() {
 		return data;
 	}
+	
+	public Object getField(String key) {
+		try {
+			return data.get(key);
+		} catch (JSONException e) {
+			return null;
+		}
+	}
 }
