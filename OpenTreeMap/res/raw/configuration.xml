@@ -97,21 +97,21 @@
 			    <owner>tree.species</owner>
 			</field>        
 			<field key="tree.dbh" label="Trunk Diameter (in)" mimimumToEdit="0" format="inch">
-			    <keyboard type="decimal"/>
+			    <keyboard type="numberDecimal"/>
 			</field>
 			<field key="tree.height" label="Tree Height (ft)" mimimumToEdit="500" format="feet">
-			    <keyboard type="decimal"/>
+			    <keyboard type="numberDecimal"/>
 			</field>
 			<field key="tree.canopy_height" label="Canopy Height (ft)" mimimumToEdit="500" format="feet">
-			    <keyboard type="decimal"/>
+			    <keyboard type="numberDecimal"/>
 			</field>
 	    </fieldGroup>
 	    <fieldGroup>
 	        <field key="plot_width" label="Plot Width (ft)" mimimumToEdit="0" format="feet">
-			    <keyboard type="decimal"/>
+			    <keyboard type="numberDecimal"/>
 			</field>
 			<field key="plot_length" label="Plot Length (ft)" mimimumToEdit="0" format="feet">
-			    <keyboard type="decimal"/>
+			    <keyboard type="numberDecimal"/>
 			</field>
 			<field key="power_lines" label="Powerlines" mimimumToEdit="0">
 			    <choice type="powerline_conflict_potential"/>
