@@ -1,11 +1,7 @@
 package org.azavea.otm.data;
 
-import java.util.Hashtable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.loopj.android.http.RequestParams;
 
 public class Plot extends Model {
 	public Plot() throws JSONException {
@@ -86,6 +82,14 @@ public class Plot extends Model {
 	
 	public void setSidewalkDamage(String sidewalkDamage) throws JSONException {
 		data.put("sidewalk_damage", sidewalkDamage);
+	}
+	
+	public String getAddress() throws JSONException {
+		return data.getString("address");
+	}
+	
+	public void setAddress(String address) throws JSONException {
+		data.put("address", address);
 	}
 	
 	public String getAddressStreet() throws JSONException {
