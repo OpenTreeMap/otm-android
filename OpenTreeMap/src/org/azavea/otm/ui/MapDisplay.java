@@ -134,7 +134,7 @@ public class MapDisplay extends MapActivity {
 	  switch(requestCode) { 
 	  	case (FILTER_INTENT) : { 
 	  		if (resultCode == Activity.RESULT_OK) { 
-	  			Toast.makeText(this, App.getConfigManager().getActiveFiltersAsQueryString(),
+	  			Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
 	  					Toast.LENGTH_LONG).show();
 	  		} 
 	  		break; 
