@@ -46,12 +46,19 @@ public class MapDisplay extends MapActivity {
         surfaceView.setZOrderOnTop(true);
         SurfaceHolder sh = surfaceView.getHolder();
         sh.setFormat(PixelFormat.TRANSPARENT);
-        surfaceView.setMapView(mapView);
+        //surfaceView.setMapView(mapView);
 
         MapController mapController = mapView.getController();
         GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
         mapController.setCenter(p);
         mapController.setZoom(14);
+    }
+    
+    @Override
+    protected void onStart() {
+    	// TODO Auto-generated method stub
+    	super.onStart();
+    	surfaceView.setMapView(getWindowManager(), mapView);
     }
 
     @Override

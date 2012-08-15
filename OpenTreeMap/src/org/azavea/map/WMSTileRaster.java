@@ -12,6 +12,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,19 +21,24 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 public class WMSTileRaster extends SurfaceView {
 	private Tile[][] tiles;
 	private int numTilesX;
 	private int numTilesY;
+	private int tileWidth;
+	private int tileHeight;
 	private TileProvider tileProvider;
 	
 	private Paint paint;
-	private MapView mapView;
+	private MapView activityMapView;
+	private WindowManager activityWindowManager;
 	private GeoPoint topLeft;
 	private GeoPoint bottomRight;
 	private boolean initialized;
@@ -41,23 +47,30 @@ public class WMSTileRaster extends SurfaceView {
 	private int panOffsetX;
 	private int panOffsetY;
 	
-	public WMSTileRaster(Context context) {
+	public WMSTileRaster(Context context) throws Exception {
 		super(context);
 		init();
 	}
 	
-	public WMSTileRaster(Context context, AttributeSet attrs) {
+	public WMSTileRaster(Context context, AttributeSet attrs) throws Exception {
 		super(context, attrs);
 		init();
 	}
 	
-	public WMSTileRaster(Context context, AttributeSet attrs, int defStyle) {
+	public WMSTileRaster(Context context, AttributeSet attrs, int defStyle) throws Exception {
 		super(context, attrs, defStyle);
 		init();
 	}
 	
-	public void setMapView(MapView mapView) {
-		this.mapView = mapView;
+	public void setMapView(WindowManager windowManager, MapView mapView) {
+		this.activityWindowManager = windowManager;
+		this.activityMapView = mapView;
+		
+		Display display = activityWindowManager.getDefaultDisplay();
+		int screenHeight = display.getHeight();
+		int screenWidth = display.getWidth();
+		tileHeight = screenHeight/(numTilesY - 2);
+		tileWidth = screenWidth/(numTilesX - 2);
 	}
 	
 	@Override
@@ -66,30 +79,70 @@ public class WMSTileRaster extends SurfaceView {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
 			initialTouchX = (int)event.getRawX();
 			initialTouchY = (int)event.getRawY();
-			mapView.onTouchEvent(event);
+			activityMapView.onTouchEvent(event);
 		}
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
 			panOffsetX -= initialTouchX - (int)event.getRawX();
 			panOffsetY -= initialTouchY - (int)event.getRawY();
 			initialTouchX = (int)event.getRawX();
 			initialTouchY = (int)event.getRawY();
-			mapView.onTouchEvent(event);
+			activityMapView.onTouchEvent(event);
 		}
 		//mapView.onTouchEvent(event);
 		return true; // Must be true or ACTION_MOVE isn't detected hence the
 					 // need to manually pass the event to the MapView beforehand
 	}
 	
-	private void init() {
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		
+		if (activityMapView != null) {			
+
+			if (!initialized) {
+				initialSetup();
+			}
+
+			int shuffleRight = determineRightShuffle();
+			
+			int shuffleDown = determineShuffleDown();
+			
+			if ((shuffleRight != 0 || shuffleDown != 0)) {
+				synchronized (this) {
+					shuffleTiles(shuffleRight, shuffleDown);
+					tileProvider.moveViewport(shuffleRight, shuffleDown);
+					refreshTiles();
+					
+					updatePanOffsetX();
+
+					updatePanOffsetY();
+				}
+			}
+			
+			drawTiles(canvas, panOffsetX, panOffsetY);
+			initialized = true;
+		}
+	}
+
+	private void init() throws Exception {
 		initialized = false;
-		mapView = null;
+		activityMapView = null;
 		initialTouchX = 0;
 		initialTouchY = 0;
 		panOffsetX = 0;
 		panOffsetY = 0;
 		
-		numTilesX = 1+2;
-		numTilesY = 1+2;
+		SharedPreferences prefs = App.getSharedPreferences();
+		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString("num_tiles_x", "0"));
+		int numTilesWithoutBorderY = Integer.parseInt(prefs.getString("num_tiles_y", "0"));		
+
+		if (numTilesWithoutBorderX == 0 || numTilesWithoutBorderY == 0) {
+			throw new Exception("Invalid value(s) for num_tiles_x and/or num_tiles_y");
+		}
+
+		// Add border
+		numTilesX = numTilesWithoutBorderX + 2;
+		numTilesY = numTilesWithoutBorderY + 2;
 		
 		paint = new Paint();
 		paint.setAlpha(0x888);
@@ -98,7 +151,7 @@ public class WMSTileRaster extends SurfaceView {
 	}
 
 	private void loadTiles() {
-		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY); 
+		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight); 
 		tiles = new Tile[numTilesX][numTilesY];
 		for(int x=0; x<numTilesX; x++) {
 			tiles[x] = new Tile[numTilesY];
@@ -106,7 +159,9 @@ public class WMSTileRaster extends SurfaceView {
 				tileProvider.getTile(x-1, y-1, new TileHandler(x, y) {
 					@Override
 					public void tileImageReceived(int x, int y, Bitmap image) {
-						tiles[x][y] = new Tile(image);
+						if (image != null) {
+							tiles[x][y] = new Tile(image);
+						}
 					}
 				});
 			}
@@ -117,73 +172,62 @@ public class WMSTileRaster extends SurfaceView {
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, (x-1) * Tile.WIDTH, (y-1) * -1 * Tile.HEIGHT, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (x-1) * tileWidth, (y-1) * -1 * tileHeight, offsetX, offsetY);
 				}
 			}
 		}
 	}
 	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		
-		if (mapView != null) {			
-			Projection proj = mapView.getProjection();
-
-			if (!initialized) {
-				topLeft = proj.fromPixels(mapView.getLeft(), mapView.getTop() + 800);
-				bottomRight = proj.fromPixels(mapView.getLeft() + 480, mapView.getTop());
-				loadTiles();
-				this.postInvalidate();
-			}
-			
-			
-			int shuffleRight = 0;
-			int shuffleDown = 0;
-			
-			if (panOffsetX > Tile.WIDTH) {
-				shuffleRight = -1;
-			}
-			
-			if (panOffsetX < -Tile.WIDTH) {
-				shuffleRight = 1;
-			}
-			
-			if (panOffsetY > Tile.HEIGHT) {
-				shuffleDown = 1;
-			}
-			
-			if (panOffsetY < -Tile.HEIGHT) {
-				shuffleDown = -1;
-			}
-			
-			if ((shuffleRight != 0 || shuffleDown != 0)) {
-				synchronized (this) {
-					shuffleTiles(shuffleRight, shuffleDown);
-					tileProvider.moveViewport(shuffleRight, shuffleDown);
-					refreshTiles();
-					
-					if (panOffsetX >= Tile.WIDTH) {
-						panOffsetX = panOffsetX - Tile.WIDTH;
-					}
-					
-					if (panOffsetX <= -Tile.WIDTH) {
-						panOffsetX = panOffsetX + Tile.WIDTH;
-					}
-
-					if (panOffsetY >= Tile.HEIGHT) {
-						panOffsetY = panOffsetY - Tile.WIDTH;
-					}
-					
-					if (panOffsetY <= -Tile.WIDTH) {
-						panOffsetY = panOffsetY + Tile.WIDTH;
-					}
-				}
-			}
-			
-			drawTiles(canvas, panOffsetX, panOffsetY);
-			initialized = true;
+	private void updatePanOffsetY() {
+		if (panOffsetY >= tileHeight) {
+			panOffsetY = panOffsetY - tileWidth;
 		}
+		
+		if (panOffsetY <= -tileWidth) {
+			panOffsetY = panOffsetY + tileWidth;
+		}
+	}
+
+	private void updatePanOffsetX() {
+		if (panOffsetX >= tileWidth) {
+			panOffsetX = panOffsetX - tileWidth;
+		}
+		
+		if (panOffsetX <= -tileWidth) {
+			panOffsetX = panOffsetX + tileWidth;
+		}
+	}
+
+	private int determineShuffleDown() {
+		int shuffleDown = 0;
+		if (panOffsetY > tileHeight) {
+			shuffleDown = 1;
+		}
+		
+		if (panOffsetY < -tileHeight) {
+			shuffleDown = -1;
+		}
+		return shuffleDown;
+	}
+
+	private int determineRightShuffle() {
+		int shuffleRight = 0;
+		if (panOffsetX > tileWidth) {
+			shuffleRight = -1;
+		}
+		
+		if (panOffsetX < -tileWidth) {
+			shuffleRight = 1;
+		}
+		return shuffleRight;
+	}
+
+	private void initialSetup() {
+		Projection proj = activityMapView.getProjection();
+		topLeft = proj.fromPixels(activityMapView.getLeft(), activityMapView.getTop() + 800);
+		bottomRight = proj.fromPixels(activityMapView.getLeft() + 480, activityMapView.getTop());
+		loadTiles();
+		this.postInvalidate();
 	}
 	
 	private void shuffleTiles(int x, int y) {

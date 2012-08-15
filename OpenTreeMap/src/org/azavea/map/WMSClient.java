@@ -50,8 +50,8 @@ public class WMSClient {
 	// Asynchronous version of the above
 	public static void getTile(double top, double left, double bottom, double right, int height, int width, AsyncHttpResponseHandler response) {
 		AsyncHttpClient client = new AsyncHttpClient();
-		//client.addHeader("Content-Type", "image/png; mode=8bit");
 		String urlString = String.format("http://phillytreemap.org/geoserver/wms?LAYERS=ptm_trees&TRANSPARENT=true&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", top, left, bottom, right, width, height);
+		Log.d("WMSClient", urlString);
 		client.get(urlString, response);
 	}
 }
