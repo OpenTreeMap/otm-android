@@ -1,3 +1,7 @@
 <resources>
-    <color name="tint">#00FF00</color>
+    <color name="tint">#AEC9AB</color>
+    <color name="base">#E9F0EF</color>
+    <color name="text_dark">#163314</color>
+    <color name="text_light">#BDC4BC</color>
+    
 </resources>
