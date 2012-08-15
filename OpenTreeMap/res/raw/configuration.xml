@@ -91,37 +91,28 @@
 	    <fieldGroup>
 	        <field key="geometry" label="" minimumToEdit="99999"/>
 	    </fieldGroup>
-	    <fieldGroup>
+	    <fieldGroup name="Tree Info">
 			<field key="id" label="Tree Number" minimumToEdit="99999"/>
-			<field key="tree.sci_name" label="Scientific Name" minimumToEdit="10000">
-			    <owner>tree.species</owner>
-			</field>        
-			<field key="tree.dbh" label="Trunk Diameter (in)" mimimumToEdit="0" format="inch">
-			    <keyboard type="numberDecimal"/>
-			</field>
-			<field key="tree.height" label="Tree Height (ft)" mimimumToEdit="500" format="feet">
-			    <keyboard type="numberDecimal"/>
-			</field>
-			<field key="tree.canopy_height" label="Canopy Height (ft)" mimimumToEdit="500" format="feet">
-			    <keyboard type="numberDecimal"/>
-			</field>
+			<field key="tree.sci_name" label="Scientific Name" minimumToEdit="10000" 
+			    owner="tree.species" />        
+			<field key="tree.dbh" label="Trunk Diameter (in)" minimumToEdit="0" 
+			    format="inch" keyboard="numberDecimal"/> 
+			<field key="tree.height" label="Tree Height (ft)" minimumToEdit="500" 
+			    format="feet" keyboard="numberDecimal" />
+			<field key="tree.canopy_height" label="Canopy Height (ft)" minimumToEdit="500" 
+			    format="feet" keyboard="numberDecimal"/>
 	    </fieldGroup>
-	    <fieldGroup>
-	        <field key="plot_width" label="Plot Width (ft)" mimimumToEdit="0" format="feet">
-			    <keyboard type="numberDecimal"/>
-			</field>
-			<field key="plot_length" label="Plot Length (ft)" mimimumToEdit="0" format="feet">
-			    <keyboard type="numberDecimal"/>
-			</field>
-			<field key="power_lines" label="Powerlines" mimimumToEdit="0">
-			    <choice type="powerline_conflict_potential"/>
-			</field>
-			<field key="sidewalk_damage" label="Sidewalk" mimimumToEdit="500">
-			    <choice type="sidewalk_damage"/>
-			</field>
-			<field key="tree.canopy_condition" label="Canopy Condition" mimimumToEdit="500">
-			    <choice type="canopy_condition"/>
-			</field>
+	    <fieldGroup name="Plot Info">
+	        <field key="plot_width" label="Plot Width (ft)" minimumToEdit="0" 
+	            format="feet" keyboard="numberDecimal"/>
+			<field key="plot_length" label="Plot Length (ft)" minimumToEdit="0"
+			    format="feet" keyboard="numberDecimal"/>
+			<field key="power_lines" label="Powerlines" minimumToEdit="0" 
+			    choice="powerline_conflict_potential"/>
+			<field key="sidewalk_damage" label="Sidewalk" minimumToEdit="500"
+  				choice="sidewalk_damage"/>
+			<field key="tree.canopy_condition" label="Canopy Condition" minimumToEdit="500"
+			    choice="canopy_condition"/>
 	    </fieldGroup>
 	    <fieldGroup name="Eco Benefits">
 	        <field type="eco" key="tree.eco.annual_co2_reduced" label="Greenhouse Gas" minimumToEdit="99999"/>
