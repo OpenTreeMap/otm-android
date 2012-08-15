@@ -82,7 +82,7 @@ public class MapDisplay extends MapActivity {
             case R.id.temp_view:
             	RequestGenerator rg = new RequestGenerator();
 			try {
-				rg.getPlot(90010, new RestHandler<Plot>(new Plot()) {
+				rg.getPlot(54248, new RestHandler<Plot>(new Plot()) {
 					@Override
 					public void onFailure(Throwable e, String message){
 						Log.e(App.LOG_TAG, "Bad Plot Request" , e);
