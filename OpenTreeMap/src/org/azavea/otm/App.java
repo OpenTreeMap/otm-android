@@ -53,6 +53,23 @@ public class App extends Application {
 		return filterManager;
 	}
 	
+	/**
+	 * Static access to single field manager instance
+	 */
+	public static FieldManager getFieldManager() {
+		if (fieldManager == null) {
+			checkInstance();
+			try {
+				fieldManager = new FieldManager(instance);
+			} catch (Exception e) {
+				Toast.makeText(instance, "Unable to access field manager", 
+						Toast.LENGTH_LONG).show();
+				Log.e(LOG_TAG, "Unable to create field manager", e);
+			}
+		}
+		return fieldManager;
+	}
+	
 	public static SharedPreferences getSharedPreferences() {
 		if (sharedPreferences == null) {
 			checkInstance();
