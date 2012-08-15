@@ -33,9 +33,7 @@
     
     <item type="id" name="species_id"/>
     <item type="id" name="filter_key"/>
-    
-    <string name="base_url">http://207.245.89.246/v1.2/api/v0.1</string>
-    <string name="api_key">APIKEY</string>
+ 
     <string name="no_address">No Address</string>
     <string name="species_missing">Species Missing</string>
     

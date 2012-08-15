@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="base_url">http://10.0.2.2:8000/api/v0.1</string>
-    <string name="api_key">123456</string>
+    <string name="base_url">http://207.245.89.246/v1.2/api/v0.1</string>
+    <string name="api_key">APIKEY</string>
     <string name="num_tiles_x">1</string>
     <string name="num_tiles_y">1</string>
 </resources>
