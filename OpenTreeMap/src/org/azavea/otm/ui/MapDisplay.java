@@ -3,6 +3,7 @@ package org.azavea.otm.ui;
 import java.io.Serializable;
 import java.util.List;
 
+import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
@@ -13,13 +14,17 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -33,6 +38,8 @@ public class MapDisplay extends MapActivity {
 	final private int FILTER_INTENT = 1;
 	
 	private MyLocationOverlay myLocationOverlay;
+	private MapView mapView;
+	private WMSTileRaster surfaceView;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,33 +47,36 @@ public class MapDisplay extends MapActivity {
         setContentView(R.layout.activity_map_display);
 
         // Get a MapView and enable zoom controls
-        MapView mapView = (MapView) findViewById(R.id.mapview1);
+        mapView = (MapView) findViewById(R.id.mapview1);
         mapView.setBuiltInZoomControls(true);
         
-        // Create overlay showing user's location and add to MapView
-        myLocationOverlay = new MyLocationOverlay(this, mapView);
-    	
-        List<Overlay> overlays = mapView.getOverlays();
-        overlays.clear();
-        overlays.add(myLocationOverlay);        
+        Log.d("MapDisplay", "Initializing surfaceView");
+
+        // Get tree-overlay and configure
+        surfaceView = (WMSTileRaster)findViewById(R.id.tileraster);
+        surfaceView.setZOrderOnTop(true);
+        SurfaceHolder sh = surfaceView.getHolder();
+        sh.setFormat(PixelFormat.TRANSPARENT);
+        
+        surfaceView.setMapView(getWindowManager(), this);
+        Log.d("MapDisplay", "Surface view configured");
+        
+        MapController mapController = mapView.getController();
+        GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
+        mapController.setCenter(p);
+        mapController.setZoom(14);
         
         // Force the MapView to redraw
         mapView.invalidate();
-        
-        // For example purposes: manually set location and zoom
-/*        GeoPoint myLoc = myLocationOverlay.getMyLocation();
-        MapController mc = mapView.getController();
-        String coordinates[] = {"30", "71"};
-        double lat = Double.parseDouble(coordinates[0]);
-        double lng = Double.parseDouble(coordinates[1]);
-
-        GeoPoint p = new GeoPoint(
-        (int) (lat * 1E6),
-        (int) (lng * 1E6));
-
-        mc.animateTo(myLoc);
-        mc.setZoom(7);
-        mapView.invalidate(); */
+    }
+    
+    public MapView getMapView() {
+    	return this.mapView;
+    }
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
     }
 
     @Override
@@ -109,13 +119,15 @@ public class MapDisplay extends MapActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-    	myLocationOverlay.enableMyLocation();
+    	//myLocationOverlay.enableMyLocation();
+    	WindowManager wm = getWindowManager();
+    	surfaceView.setMapView(getWindowManager(), this);
     }
     
     @Override
     protected void onPause() {
     	super.onPause();
-    	myLocationOverlay.disableMyLocation();
+    	//myLocationOverlay.disableMyLocation();
     }
     
     @Override
