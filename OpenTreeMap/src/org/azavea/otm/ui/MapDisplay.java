@@ -1,12 +1,10 @@
 package org.azavea.otm.ui;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
@@ -25,7 +23,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 
 public class MapDisplay extends MapActivity {
