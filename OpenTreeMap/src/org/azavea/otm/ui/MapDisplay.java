@@ -1,13 +1,11 @@
 package org.azavea.otm.ui;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
@@ -30,7 +28,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 
 public class MapDisplay extends MapActivity {
@@ -95,7 +92,7 @@ public class MapDisplay extends MapActivity {
             case R.id.temp_view:
             	RequestGenerator rg = new RequestGenerator();
 			try {
-				rg.getPlot(90010, new RestHandler<Plot>(new Plot()) {
+				rg.getPlot(54248, new RestHandler<Plot>(new Plot()) {
 					@Override
 					public void onFailure(Throwable e, String message){
 						Log.e(App.LOG_TAG, "Bad Plot Request" , e);
@@ -149,7 +146,7 @@ public class MapDisplay extends MapActivity {
 	  switch(requestCode) { 
 	  	case (FILTER_INTENT) : { 
 	  		if (resultCode == Activity.RESULT_OK) { 
-	  			Toast.makeText(this, App.getConfigManager().getActiveFiltersAsQueryString(),
+	  			Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
 	  					Toast.LENGTH_LONG).show();
 	  		} 
 	  		break; 

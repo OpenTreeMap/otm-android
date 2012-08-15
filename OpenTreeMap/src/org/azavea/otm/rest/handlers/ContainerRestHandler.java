@@ -5,6 +5,7 @@ import org.json.JSONArray;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+@SuppressWarnings("rawtypes")
 public class ContainerRestHandler<T extends ModelContainer> extends JsonHttpResponseHandler {
 	private T resultObject;
 	
@@ -19,7 +20,5 @@ public class ContainerRestHandler<T extends ModelContainer> extends JsonHttpResp
 	}
 	
 	// Overridden by consuming class
-	public void dataReceived(T responseObject) {
-		
-	}
+	public void dataReceived(T responseObject) {}
 }

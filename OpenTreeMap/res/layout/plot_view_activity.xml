@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/base" >
 
 	<RelativeLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/header"
 	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
-	    android:layout_alignParentTop="true" >
+	    android:layout_alignParentTop="true"
+	    android:background="@color/tint" >
 
 		<ImageView
 		    android:id="@+id/tree_photo"
@@ -26,7 +28,9 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignTop="@+id/tree_photo"
 		    android:layout_marginLeft="16dp"
-		    android:layout_toRightOf="@+id/tree_photo"/>
+		    android:layout_toRightOf="@+id/tree_photo"
+		    android:text="@string/no_address"
+		    android:textColor="@color/text_dark" />
 
 		<TextView
 		    android:id="@+id/species"
@@ -34,7 +38,9 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@+id/address"
 		    android:layout_below="@+id/address"
-		    android:textAppearance="?android:attr/textAppearanceMedium" />
+		    android:text="@string/species_missing"
+		    android:textAppearance="?android:attr/textAppearanceMedium"
+		    android:textColor="@color/text_dark" />
 
 		<TextView
 		    android:id="@+id/updated_on"
@@ -42,14 +48,16 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@+id/species"
 		    android:layout_below="@+id/species"
-		    android:layout_centerVertical="true" />
+		    android:layout_centerVertical="true"
+		    android:textColor="@color/text_dark" />
 
 		<TextView
 		    android:id="@+id/updated_by"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@+id/updated_on"
-		    android:layout_below="@+id/updated_on"/>
+		    android:layout_below="@+id/updated_on"
+		    android:textColor="@color/text_dark" />
 
 	</RelativeLayout>
 
@@ -58,10 +66,10 @@
 	    android:id="@+id/scroller"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:layout_above="@+id/footer" >
+	    android:paddingTop="100dp" >
 	    
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	        android:id="@+id/detail_list"
+	        android:id="@+id/field_list"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -70,7 +78,5 @@
 	    </LinearLayout>
 	    
 	</ScrollView>
-
-
 	
 </RelativeLayout>	

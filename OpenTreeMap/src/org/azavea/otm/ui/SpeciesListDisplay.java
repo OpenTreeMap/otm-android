@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.ConfigManager;
+import org.azavea.otm.FilterManager;
 import org.azavea.otm.adapters.SpeciesAdapter;
 import org.azavea.otm.data.Species;
 import org.json.JSONException;
@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class SpeciesListDisplay extends ListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		ConfigManager search = App.getConfigManager();
+		FilterManager search = App.getFilterManager();
 		
 		if (search.getSpecies().size() > 0) {
 			renderSpeciesList();
@@ -52,7 +52,7 @@ public class SpeciesListDisplay extends ListActivity {
 	}
 	
 	private void renderSpeciesList() {
-		LinkedHashMap<Integer, Species> list = App.getConfigManager().getSpecies();
+		LinkedHashMap<Integer, Species> list = App.getFilterManager().getSpecies();
 		Species[] species = new Species[list.size()];
 		int i = 0;
 		for (Map.Entry<Integer,Species> entry : list.entrySet()) {

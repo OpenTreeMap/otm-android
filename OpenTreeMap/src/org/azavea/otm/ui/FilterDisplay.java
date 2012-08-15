@@ -36,7 +36,7 @@ public class FilterDisplay extends Activity{
         setContentView(R.layout.filter_activity);
 		
 		filter_list = (LinearLayout)findViewById(R.id.filter_list);
-		createFilterUI(App.getConfigManager().getFilters(), filter_list);
+		createFilterUI(App.getFilterManager().getFilters(), filter_list);
     }
 	
 	public void onComplete(View view) {
@@ -46,7 +46,7 @@ public class FilterDisplay extends Activity{
 		for (int i=0; i < filterCount; i++) {
 			View filter_view = filter_list.getChildAt(i);
 			String filterKey = filter_view.getTag(R.id.filter_key).toString();
-			App.getConfigManager().updateFilterFromView(filterKey, filter_view);
+			App.getFilterManager().updateFilterFromView(filterKey, filter_view);
 		}
 		setResult(RESULT_OK);
 		finish();
@@ -151,7 +151,7 @@ public class FilterDisplay extends Activity{
 	private void updateSpecies(BaseFilter filter, Species species) {
 		if (filter == null) {
 			String key = speciesFilter.getTag(R.id.filter_key).toString();
-			filter = App.getConfigManager().getFilter(key);
+			filter = App.getFilterManager().getFilter(key);
 		}
 		String name = "Not filtered";
 		if (species != null) {
@@ -173,7 +173,7 @@ public class FilterDisplay extends Activity{
 	  	case (SPECIES_SELECTOR) : { 
 	  		if (resultCode == Activity.RESULT_OK) {
 	  			int speciesId = data.getIntExtra("species_id", 0);
-	  			updateSpecies(App.getConfigManager().getSpecieById(speciesId));
+	  			updateSpecies(App.getFilterManager().getSpecieById(speciesId));
 	  			
 	  		} 
 	  		break; 
