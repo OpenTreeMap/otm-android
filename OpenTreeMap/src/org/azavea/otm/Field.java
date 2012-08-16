@@ -46,7 +46,7 @@ public class Field {
 	/**
 	 * Field type as defined in the configuration XML
 	 */
-	private String type;
+	public String type;
 	
 	/**
 	 * The keyboard type to use when editing this field
