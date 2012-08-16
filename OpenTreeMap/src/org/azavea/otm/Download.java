@@ -3,11 +3,7 @@ package org.azavea.otm;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RestClient;
 import org.azavea.otm.ui.MapDisplay;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,10 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 
 public class Download extends Activity
 {
-	private RestClient client;
 	private LoginManager loginManager = App.getLoginManager();
 	
     /** Called when the activity is first created. */
@@ -55,7 +53,6 @@ public class Download extends Activity
     
     public void testAuth(View view) {
     	RestClient rc = new RestClient();
-    	User user = loginManager.loggedInUser;
     	rc.getWithAuthentication(this, "/login", "administrator", 
 				"123456", new RequestParams(), new JsonHttpResponseHandler() {
 			@Override
