@@ -119,6 +119,7 @@ public class MapDisplay extends MapActivity {
     	//myLocationOverlay.enableMyLocation();
     	WindowManager wm = getWindowManager();
     	surfaceView.setMapView(getWindowManager(), this);
+    	this.mapView.invalidate();
     }
     
     @Override

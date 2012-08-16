@@ -47,6 +47,7 @@ public class WMSTileRaster extends SurfaceView {
 	private int initialTouchY;
 	private int panOffsetX;
 	private int panOffsetY;
+	private int initialTilesLoaded;
 	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
@@ -131,9 +132,8 @@ public class WMSTileRaster extends SurfaceView {
 	}
 
 	private void init() throws Exception {
-		Log.d("", "init");
 		initialized = false;
-		//activityMapView = null;
+		initialTilesLoaded = 0;
 		initialTouchX = 0;
 		initialTouchY = 0;
 		panOffsetX = 0;
@@ -168,6 +168,10 @@ public class WMSTileRaster extends SurfaceView {
 					public void tileImageReceived(int x, int y, Bitmap image) {
 						if (image != null) {
 							tiles[x][y] = new Tile(image);
+							initialTilesLoaded++;
+							if (initialTilesLoaded == 9) {
+								activityMapDisplay.getMapView().invalidate();
+							}
 						}
 					}
 				});
@@ -221,31 +225,25 @@ public class WMSTileRaster extends SurfaceView {
 		int shuffleRight = 0;
 		if (panOffsetX > tileWidth) {
 			shuffleRight = -1;
-			Log.d("WMSTileRaster", "Left shuffle");
 		}
 		
 		if (panOffsetX < -tileWidth) {
 			shuffleRight = 1;
-			Log.d("WMSTileRaster", "Right shuffle");
 		}
 		return shuffleRight;
 	}
 
 	private void initialSetup() {
 		if (activityMapDisplay != null) {
-			Log.d("WMSTileRaster", "Will try to get MapView");
 			MapView mv = activityMapDisplay.getMapView();
 			if (mv != null) {
-				Log.d("WMSTileRaster", "Got MapView");
 				Projection proj = mv.getProjection();
 				topLeft = proj.fromPixels(mv.getLeft(), mv.getTop() + tileHeight);
 				bottomRight = proj.fromPixels(mv.getLeft() + tileWidth, mv.getTop());
-				Log.d("WMSTileRaster", "Loading tiles!");
 				loadTiles();
 				this.postInvalidate();
 				initialized = true;
 			} else {
-				Log.d("WMSTileRaster", "Failed to initialize");
 				initialized = false;
 			}
 		}

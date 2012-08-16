@@ -1,5 +1,7 @@
 package org.azavea.otm.rest.handlers;
 
+import org.azavea.otm.ui.MapDisplay;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
