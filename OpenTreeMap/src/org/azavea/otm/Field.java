@@ -105,7 +105,11 @@ public class Field {
 	 * Format the value with any units, if provided in the definition
 	 */
 	public String formatUnit(Object value) {
-		if (format != null) {
+		// If there is no value, return an unspecified value
+		if (value == null) {
+			return App.getInstance().getResources()
+					.getString(R.string.unspecified_field_value);
+		} else if (format != null) {
 			return value.toString() + " " + unitFormatter.get(format);
 		}
 		return value.toString();
