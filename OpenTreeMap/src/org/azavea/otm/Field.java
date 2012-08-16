@@ -114,16 +114,19 @@ public class Field {
 		}
 		return value.toString();
 	}
-	
+
+	/**
+	 * Return the value of a key name, which can be nested using . notation.  If the key does not 
+	 * exist, will return an empty string
+	 * @throws JSONException 
+	 */
 	protected Object getValueForKey(String key, JSONObject json) throws JSONException {
 		String[] keys = key.split("\\.");
 		return getValueForKey(keys, 0, json);
 	}
 	
 	/**
-	 * Return the value of a key name, which can be nested using . notation.  If the key does not 
-	 * exist, will return an empty string
-	 * @throws JSONException 
+	 * Return value for keys, which could be nested as an array
 	 */
 	private Object getValueForKey(String[] keys, int index, JSONObject json) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
