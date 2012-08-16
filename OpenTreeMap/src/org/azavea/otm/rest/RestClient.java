@@ -1,40 +1,21 @@
 package org.azavea.otm.rest;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.azavea.otm.App;
-import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
-import org.azavea.otm.data.Plot;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpVersion;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpParams;
-
-import android.content.Context;
-import android.preference.PreferenceManager;
 import android.util.Base64;
-
 import android.util.Log;
 
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 // This class is designed to take care of the base-url
 // and otm api-key for REST requests
@@ -132,7 +113,7 @@ public class RestClient {
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
 		
-		client.post(context, completeUrl, headers, new StringEntity(model.getData().toString()), "application/json", 
+		client.post(context, completeUrl, headers, modelEntity, "application/json", 
 				responseHandler);
 	}
 

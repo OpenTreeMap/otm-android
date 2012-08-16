@@ -7,7 +7,6 @@ import org.azavea.otm.LoginManager;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
