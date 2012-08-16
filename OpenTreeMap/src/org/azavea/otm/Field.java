@@ -128,9 +128,16 @@ public class Field {
 			return getValueForKey(keys, index, child);
 		}
 		if (json.has(keys[index])) {
+			// If the json object contains a null value, it won't return null.
+			// Instead, check if it is null, before we grab the value.
+			if (json.isNull(keys[index])) {
+				return null;
+			}
 			return json.get(keys[index]); 
 		}
-		return "";
+		
+		// Key was not present
+		return null;
 		
 	}
 }
