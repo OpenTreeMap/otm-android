@@ -58,7 +58,7 @@ public class MapDisplay extends MapActivity {
         MapController mapController = mapView.getController();
         GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
         mapController.setCenter(p);
-        mapController.setZoom(14);
+        mapController.setZoom(15);
         
         // Force the MapView to redraw
         mapView.invalidate();

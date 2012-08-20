@@ -36,26 +36,6 @@ public class TileProvider {
 		tileGeoHeight = (diffY) / (numTilesY - 2);
 	}
 	
-	public Tile getTile(int x, int y) {
-		int actualX = x;
-		int actualY = y;
-		double tileLeft = topLeft.getLongitudeE6() + actualX * tileGeoWidth;
-		double tileTop = topLeft.getLatitudeE6() - actualY * tileGeoHeight;
-		double tileRight = bottomRight.getLongitudeE6() + actualX * tileGeoWidth;
-		double tileBottom = bottomRight.getLatitudeE6() - actualY * tileGeoHeight;
-		
-		double left = tileLeft/1E6;
-		double top = tileTop/1E6;
-		double right = tileRight/1E6;
-		double bottom = tileBottom/1E6;
-		
-		Log.d("TileProvider", "Loading with tl = " + left + "," + top + " and br = " + right + "," + bottom);
-		Bitmap tileImage = WMSClient.getTile(left, top, right, bottom, tileHeight, tileWidth);
-		
-
-		return new Tile(tileImage);
-	}
-	
 	public void getTile(int x, int y, TileHandler response) {
 		int actualX = x;
 		int actualY = y;
@@ -74,7 +54,6 @@ public class TileProvider {
 		GeoRect boundingBox = new GeoRect(top, left, bottom, right);
 		response.setBoundingBox(boundingBox);
 		WMSClient.getTile(boundingBox, tileHeight, tileWidth, response);
-		//WMSClient.getTile(left, top, right, bottom, tileHeight, tileWidth, response);
 	}
 	
 	// Note that if the tiles in the grid have been shifted right and down,

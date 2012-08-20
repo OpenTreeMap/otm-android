@@ -8,6 +8,8 @@ import org.azavea.otm.rest.handlers.TileHandler;
 
 import android.util.Log;
 
+// Maintains a hashtable of bounding-boxes and associated
+// response handlers
 public class TileRequestQueue {
 	private Hashtable<GeoRect, TileHandler> tileRequests;
 	
@@ -17,11 +19,9 @@ public class TileRequestQueue {
 	
 	public void addTileRequest(GeoRect rect, TileHandler response) {
 		tileRequests.put(rect, response);
-		Log.d("TileRequestQueue", ""+tileRequests.size());
 	}
 	
 	public void removeTileRequest(GeoRect rect) {
-		Log.d("TileRequestQueue", "Removing: " + rect.getTop() + "," + rect.getLeft());
 		if (tileRequests != null && tileRequests.containsKey(rect)) {
 			tileRequests.remove(rect);
 		}

@@ -29,6 +29,19 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+// WMSTileRaster maintains a grid of tiles,
+// the center of which will be in the center
+// of the screen at time of initialization.
+//
+// As the user pans around, that center tile
+// (and any surrounding tiles that should still
+// be drawn) will be relocated in the grid, a
+// different tile then becoming the center one.
+//
+// Naturally this process results in missing tiles
+// in regions of the grid that now cover previously
+// undrawn parts of the map. These tiles are replaced
+// automatically.
 public class WMSTileRaster extends SurfaceView {
 	private Tile[][] tiles;
 	private int numTilesX;
@@ -36,7 +49,6 @@ public class WMSTileRaster extends SurfaceView {
 	private int tileWidth;
 	private int tileHeight;
 	private TileProvider tileProvider;
-	
 	private Paint paint;
 	private MapDisplay activityMapDisplay;
 	private WindowManager activityWindowManager;
@@ -66,6 +78,13 @@ public class WMSTileRaster extends SurfaceView {
 		init();
 	}
 	
+	// Associate this WMSTileRaster with a
+	// MapView
+	//
+	// *** This should be handled in
+	//     layout XML via a custom attribute
+	//     but that approach is proving elusive
+	//     at the moment ***
 	public void setMapView(WindowManager windowManager, MapDisplay mapDisplay) {
 		this.activityWindowManager = windowManager;
 		this.activityMapDisplay = mapDisplay;
@@ -80,6 +99,13 @@ public class WMSTileRaster extends SurfaceView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
+		handleActionDown(event);
+		handleActionMove(event);
+		return true; // Must be true or ACTION_MOVE isn't detected hence the
+					 // need to manually pass the event to the MapView beforehand
+	}
+
+	private void handleActionDown(MotionEvent event) {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
 			initialTouchX = (int)event.getRawX();
 			initialTouchY = (int)event.getRawY();
@@ -87,6 +113,9 @@ public class WMSTileRaster extends SurfaceView {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
 		}
+	}
+
+	private void handleActionMove(MotionEvent event) {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
 			panOffsetX -= initialTouchX - (int)event.getRawX();
 			panOffsetY -= initialTouchY - (int)event.getRawY();
@@ -96,8 +125,6 @@ public class WMSTileRaster extends SurfaceView {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
 		}
-		return true; // Must be true or ACTION_MOVE isn't detected hence the
-					 // need to manually pass the event to the MapView beforehand
 	}
 	
 	@Override
@@ -116,7 +143,7 @@ public class WMSTileRaster extends SurfaceView {
 			
 			if ((shuffleRight != 0 || shuffleDown != 0)) {
 				synchronized (this) {
-					shuffleTiles(shuffleRight, shuffleDown);
+					relocateTiles(shuffleRight, shuffleDown);
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
 					refreshTiles();
 					
@@ -132,6 +159,7 @@ public class WMSTileRaster extends SurfaceView {
 		}
 	}
 
+	// Initialize this WMSTileRaster
 	private void init() throws Exception {
 		initialized = false;
 		initialTilesLoaded = 0;
@@ -158,6 +186,7 @@ public class WMSTileRaster extends SurfaceView {
 		setWillNotDraw(false);
 	}
 
+	// Initial load of all tiles in grid
 	private void loadTiles() {
 		// Start of this request group so increment the global sequence-id.
 		App.incTileRequestSeqId();
@@ -167,29 +196,38 @@ public class WMSTileRaster extends SurfaceView {
 		for(int x=0; x<numTilesX; x++) {
 			tiles[x] = new Tile[numTilesY];
 			for(int y=0; y<numTilesY; y++) {
-				tileProvider.getTile(x-1, y-1, new TileHandler(x, y) {
-					@Override
-					public void tileImageReceived(int x, int y, Bitmap image) {
-						Log.d("WMSTileRaster", "handler called");
-						if (image != null) {
-							Log.d("WMSTileRaster", "image available");
-							tiles[x][y] = new Tile(image);
-
-							// Remove from queue
-							TileRequestQueue tileRequests = App.getTileRequestQueue();
-							tileRequests.removeTileRequest(this.getBoundingBox());
-							
-							initialTilesLoaded++;
-							if (initialTilesLoaded == 9) {
-								activityMapDisplay.getMapView().invalidate();
-							}
-						}
-					}
-				});
+				createTileRequest(x, y);
 			}
 		}
 	}
-	
+
+	// Issue a request for a tile at screen
+	// coordinates x, y and handle the resultant
+	// response
+	private void createTileRequest(int x, int y) {
+		tileProvider.getTile(x-1, y-1, new TileHandler(x, y) {
+			@Override
+			public void tileImageReceived(int x, int y, Bitmap image) {
+				Log.d("WMSTileRaster", "handler called");
+				if (image != null) {
+					Log.d("WMSTileRaster", "image available");
+					tiles[x][y] = new Tile(image);
+
+					// Remove from queue
+					TileRequestQueue tileRequests = App.getTileRequestQueue();
+					tileRequests.removeTileRequest(this.getBoundingBox());
+					
+					initialTilesLoaded++;
+					if (initialTilesLoaded == 9) {
+						activityMapDisplay.getMapView().invalidate();
+					}
+				}
+			}
+		});
+	}
+
+	// Draw all tiles in grid at specified
+	// offset
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
@@ -199,7 +237,10 @@ public class WMSTileRaster extends SurfaceView {
 			}
 		}
 	}
-	
+
+	// Called when center bounding-box
+	// is moved so that panOffsetY will
+	// be made relative to new bounding-box
 	private void updatePanOffsetY() {
 		if (panOffsetY >= tileHeight) {
 			panOffsetY = panOffsetY - tileHeight;
@@ -210,6 +251,9 @@ public class WMSTileRaster extends SurfaceView {
 		}
 	}
 
+	// Called when center bounding-box
+	// is moved so that panOffsetX will
+	// be made relative to new bounding-box
 	private void updatePanOffsetX() {
 		if (panOffsetX >= tileWidth) {
 			panOffsetX = panOffsetX - tileWidth;
@@ -220,6 +264,8 @@ public class WMSTileRaster extends SurfaceView {
 		}
 	}
 
+	// Get vertical direction in which to
+	// relocate tiles in grid
 	private int determineShuffleDown() {
 		int shuffleDown = 0;
 		if (panOffsetY > tileHeight) {
@@ -232,6 +278,8 @@ public class WMSTileRaster extends SurfaceView {
 		return shuffleDown;
 	}
 
+	// Get horizontal direction in which to
+	// relocate tiles in grid
 	private int determineShuffleRight() {
 		int shuffleRight = 0;
 		if (panOffsetX > tileWidth) {
@@ -244,6 +292,10 @@ public class WMSTileRaster extends SurfaceView {
 		return shuffleRight;
 	}
 
+	// Initial bounding-box setup and
+	// tile-load. This will result in
+	// requests being generated for ALL
+	// grid positions
 	private void initialSetup() {
 		if (activityMapDisplay != null) {
 			MapView mv = activityMapDisplay.getMapView();
@@ -260,7 +312,9 @@ public class WMSTileRaster extends SurfaceView {
 		}
 	}
 	
-	private void shuffleTiles(int x, int y) {
+	// Move usable existing tiles within grid and
+	// make space for new ones
+	private void relocateTiles(int x, int y) {
             Tile[][] newTiles = new Tile[numTilesX][numTilesY];
             
             for(int k=0; k<numTilesX; k++) {
@@ -280,6 +334,8 @@ public class WMSTileRaster extends SurfaceView {
             tiles = newTiles;
     }       
 	
+	// Load new tiles for spaces left in grid
+	// by relocateTiles()
 	private void refreshTiles() {
 		// Set sequence-id for this request-group
 		App.incTileRequestSeqId();
@@ -287,13 +343,6 @@ public class WMSTileRaster extends SurfaceView {
 		for(int i=0; i<numTilesX; i++) {
 			for(int j=0; j<numTilesY; j++) {
 				if (tiles[i][j] == null) {
-//					Log.d("WMSTileRaster", "Loading tile (" + 1*(i-1) + "," + 1*(j-1) + ")");
-//					tiles[i][j] = tileProvider.getTile(i-1, j-1);
-
-// It seems better to block the UI during new-tile load at the moment but
-// this can easily be switched over by commenting out the line above
-// and un-commenting the following block.
-
 					tileProvider.getTile(i-1, j-1, new TileHandler(i, j) {
 						@Override
 						public void tileImageReceived(int x, int y, Bitmap image) {

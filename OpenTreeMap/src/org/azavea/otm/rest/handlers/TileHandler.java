@@ -49,8 +49,6 @@ public class TileHandler extends BinaryHttpResponseHandler {
 		
 		Bitmap image = BitmapFactory.decodeByteArray(arg0, 0, arg0.length);
 		
-		Log.d("Async", "Processing (" + x + "," + y + ")");
-
 		// If this request is still current (i.e. hasn't been
 		// superceded by a later request) and hasn't been
 		// marked as scrapped, call the overridden handler
@@ -71,7 +69,7 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	public void onFailure(Throwable arg0, String arg1) {
 		// TODO Auto-generated method stub
 		super.onFailure(arg0, arg1);
-		Log.d("Async", "Fail(str): " + arg1);
+		Log.d("TileHandler", "Fail(Throwable, String): " + arg1);
 	}
 	
 	public int getX() {
@@ -98,7 +96,9 @@ public class TileHandler extends BinaryHttpResponseHandler {
 		this.seqId = seqId;
 	}
 	
-	// To be overridden
+	// Overridden by the code making the
+	// request. It is that code's job to handle
+	// the response
 	public void tileImageReceived(int x, int y, Bitmap image) {
 	}
 }
