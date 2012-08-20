@@ -1,6 +1,9 @@
 package org.azavea.otm;
 
+import org.azavea.map.TileRequestQueue;
 import org.azavea.otm.FilterManager;
+import org.azavea.otm.rest.handlers.TileHandler;
+import java.util.Hashtable;
 
 import android.app.Application;
 import android.content.Context;
@@ -21,6 +24,10 @@ public class App extends Application {
 	private static FieldManager fieldManager = null;
 	
 	private static SharedPreferences sharedPreferences = null;
+	
+	private static int tileRequestSequenceId = 0;
+	
+	private static TileRequestQueue tileQueue;
 	
 	public static App getInstance() {
 		checkInstance();
@@ -111,5 +118,21 @@ public class App extends Application {
         // Create an instance of login manager immediately, so that
         // the app can try to auto log in on any saved credentials
         getLoginManager();
-    }	 
+    }
+	
+	public static TileRequestQueue getTileRequestQueue() {
+		if (tileQueue == null) {
+			tileQueue = new TileRequestQueue();
+		}
+		
+		return tileQueue;
+	}
+	
+	public static int getTileRequestSeqId() {
+		return tileRequestSequenceId;
+	}
+	
+	public static void incTileRequestSeqId() {
+		tileRequestSequenceId++;
+	}	
 }

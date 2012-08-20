@@ -1,5 +1,7 @@
 package org.azavea.map;
 
+import org.azavea.otm.rest.handlers.TileHandler;
+
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -54,7 +56,7 @@ public class TileProvider {
 		return new Tile(tileImage);
 	}
 	
-	public void getTile(int x, int y, AsyncHttpResponseHandler response) {
+	public void getTile(int x, int y, TileHandler response) {
 		int actualX = x;
 		int actualY = y;
 		double tileLeft = topLeft.getLongitudeE6() + actualX * tileGeoWidth;
@@ -69,7 +71,10 @@ public class TileProvider {
 		
 		Log.d("", "actualX = " + actualX + ", actualY = " + actualY + ", left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
 		
-		WMSClient.getTile(left, top, right, bottom, tileHeight, tileWidth, response);
+		GeoRect boundingBox = new GeoRect(top, left, bottom, right);
+		response.setBoundingBox(boundingBox);
+		WMSClient.getTile(boundingBox, tileHeight, tileWidth, response);
+		//WMSClient.getTile(left, top, right, bottom, tileHeight, tileWidth, response);
 	}
 	
 	// Note that if the tiles in the grid have been shifted right and down,

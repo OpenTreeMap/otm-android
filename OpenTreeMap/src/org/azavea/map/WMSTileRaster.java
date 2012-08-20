@@ -49,6 +49,8 @@ public class WMSTileRaster extends SurfaceView {
 	private int panOffsetY;
 	private int initialTilesLoaded;
 	
+	private static final int BORDER_WIDTH = 2;
+	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
 		init();
@@ -71,8 +73,8 @@ public class WMSTileRaster extends SurfaceView {
 		Display display = activityWindowManager.getDefaultDisplay();
 		int screenHeight = display.getHeight();
 		int screenWidth = display.getWidth();
-		tileHeight = screenHeight/(numTilesY - 2);
-		tileWidth = screenWidth/(numTilesX - 2);
+		tileHeight = screenHeight/(numTilesY - BORDER_WIDTH);
+		tileWidth = screenWidth/(numTilesX - BORDER_WIDTH);
 	}
 	
 	@Override
@@ -115,7 +117,6 @@ public class WMSTileRaster extends SurfaceView {
 			if ((shuffleRight != 0 || shuffleDown != 0)) {
 				synchronized (this) {
 					shuffleTiles(shuffleRight, shuffleDown);
-					Log.d("MOVEVIEWPORT", shuffleRight + "," + shuffleDown);
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
 					refreshTiles();
 					
@@ -148,8 +149,8 @@ public class WMSTileRaster extends SurfaceView {
 		}
 
 		// Add border
-		numTilesX = numTilesWithoutBorderX + 2;
-		numTilesY = numTilesWithoutBorderY + 2;
+		numTilesX = numTilesWithoutBorderX + BORDER_WIDTH;
+		numTilesY = numTilesWithoutBorderY + BORDER_WIDTH;
 		
 		paint = new Paint();
 		paint.setAlpha(0x888);
@@ -158,6 +159,9 @@ public class WMSTileRaster extends SurfaceView {
 	}
 
 	private void loadTiles() {
+		// Start of this request group so increment the global sequence-id.
+		App.incTileRequestSeqId();
+
 		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight); 
 		tiles = new Tile[numTilesX][numTilesY];
 		for(int x=0; x<numTilesX; x++) {
@@ -166,8 +170,15 @@ public class WMSTileRaster extends SurfaceView {
 				tileProvider.getTile(x-1, y-1, new TileHandler(x, y) {
 					@Override
 					public void tileImageReceived(int x, int y, Bitmap image) {
+						Log.d("WMSTileRaster", "handler called");
 						if (image != null) {
+							Log.d("WMSTileRaster", "image available");
 							tiles[x][y] = new Tile(image);
+
+							// Remove from queue
+							TileRequestQueue tileRequests = App.getTileRequestQueue();
+							tileRequests.removeTileRequest(this.getBoundingBox());
+							
 							initialTilesLoaded++;
 							if (initialTilesLoaded == 9) {
 								activityMapDisplay.getMapView().invalidate();
@@ -270,22 +281,31 @@ public class WMSTileRaster extends SurfaceView {
     }       
 	
 	private void refreshTiles() {
+		// Set sequence-id for this request-group
+		App.incTileRequestSeqId();
+		
 		for(int i=0; i<numTilesX; i++) {
 			for(int j=0; j<numTilesY; j++) {
 				if (tiles[i][j] == null) {
-					Log.d("WMSTileRaster", "Loading tile (" + 1*(i-1) + "," + 1*(j-1) + ")");
-					tiles[i][j] = tileProvider.getTile(i-1, j-1);
+//					Log.d("WMSTileRaster", "Loading tile (" + 1*(i-1) + "," + 1*(j-1) + ")");
+//					tiles[i][j] = tileProvider.getTile(i-1, j-1);
 
 // It seems better to block the UI during new-tile load at the moment but
 // this can easily be switched over by commenting out the line above
 // and un-commenting the following block.
 
-//					tileProvider.getTile(i, j, new TileHandler(i-1, j-1) {
-//						@Override
-//						public void tileImageReceived(int x, int y, Bitmap image) {
-//							tiles[x+1][y+1] = new Tile(x, y, image);
-//						}
-//					});
+					tileProvider.getTile(i-1, j-1, new TileHandler(i, j) {
+						@Override
+						public void tileImageReceived(int x, int y, Bitmap image) {
+							tiles[x][y] = new Tile(image);
+							
+							// Remove from queue
+							TileRequestQueue tileRequests = App.getTileRequestQueue();
+							tileRequests.removeTileRequest(this.getBoundingBox());
+
+							activityMapDisplay.getMapView().invalidate();
+						}
+					});
 				}
 			}
 		}
