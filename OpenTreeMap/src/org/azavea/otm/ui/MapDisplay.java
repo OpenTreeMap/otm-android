@@ -132,10 +132,10 @@ public class MapDisplay extends MapActivity {
     
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    	MapView mapView = (MapView) findViewById(R.id.mapview1);
+//    	MapView mapView = (MapView) findViewById(R.id.mapview1);
     	MapController mc = mapView.getController();
-    	mc.setCenter(myLocationOverlay.getMyLocation());
-    	mc.setZoom(7);
+//    	mc.setCenter(myLocationOverlay.getMyLocation());
+    	mc.setZoom(15);
     }
     
 	@Override 

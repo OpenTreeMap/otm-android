@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -48,6 +49,10 @@ public class WMSTileRaster extends SurfaceView {
 	private int panOffsetX;
 	private int panOffsetY;
 	private int initialTilesLoaded;
+	
+	private int initialZoomLevel;
+	private float zoomFactor;
+	private int lastZoomFactor;
 	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
@@ -138,6 +143,9 @@ public class WMSTileRaster extends SurfaceView {
 		initialTouchY = 0;
 		panOffsetX = 0;
 		panOffsetY = 0;
+		initialZoomLevel = 14;
+		zoomFactor = 0;
+		lastZoomFactor = 0;
 		
 		SharedPreferences prefs = App.getSharedPreferences();
 		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString("num_tiles_x", "0"));
@@ -154,6 +162,8 @@ public class WMSTileRaster extends SurfaceView {
 		paint = new Paint();
 		paint.setAlpha(0x888);
 
+		//initZoomPolling();
+		
 		setWillNotDraw(false);
 	}
 
@@ -180,6 +190,10 @@ public class WMSTileRaster extends SurfaceView {
 	}
 	
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
+		Matrix m = canvas.getMatrix();
+		m.preScale((float)zoomFactor+1, (float)zoomFactor+1);
+		canvas.setMatrix(m);
+		
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
@@ -243,10 +257,25 @@ public class WMSTileRaster extends SurfaceView {
 				loadTiles();
 				this.postInvalidate();
 				initialized = true;
+				initZoomPolling();
 			} else {
 				initialized = false;
 			}
 		}
+	}
+	
+	private void initZoomPolling() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					int zoomLevel = activityMapDisplay.getMapView().getZoomLevel();
+					if (initialZoomLevel - zoomLevel != 0) {
+						zoomFactor = (float)Math.pow(2, initialZoomLevel - zoomLevel);
+					}
+				}
+			}
+		}).start();
 	}
 	
 	private void shuffleTiles(int x, int y) {
