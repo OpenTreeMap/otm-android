@@ -73,28 +73,31 @@ public class WMSTileRaster extends SurfaceView {
 		this.activityWindowManager = windowManager;
 		this.activityMapDisplay = mapDisplay;
 		
-		Display display = activityWindowManager.getDefaultDisplay();
-		int screenHeight = display.getHeight();
-		int screenWidth = display.getWidth();
-		tileHeight = screenHeight/(numTilesY - 2);
-		tileWidth = screenWidth/(numTilesX - 2);
+//		Display display = activityWindowManager.getDefaultDisplay();
+//		int screenHeight = display.getHeight();
+//		int screenWidth = display.getWidth();
+//		tileHeight = screenHeight/(numTilesY - 2);
+//		tileWidth = screenWidth/(numTilesX - 2);
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
+		float zoomOffsetX = (tileWidth * zoomFactor - tileWidth) / 2;
+		float zoomOffsetY = (tileHeight * zoomFactor - tileHeight) / 2;
+
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-			initialTouchX = (int)event.getRawX();
-			initialTouchY = (int)event.getRawY();
+			initialTouchX = (int) ((int)event.getRawX() + zoomOffsetX);
+			initialTouchY = (int) ((int)event.getRawY() + zoomOffsetY);
 			if (initialized) {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
 		}
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
-			panOffsetX -= initialTouchX - (int)event.getRawX();
-			panOffsetY -= initialTouchY - (int)event.getRawY();
-			initialTouchX = (int)event.getRawX();
-			initialTouchY = (int)event.getRawY();
+			panOffsetX -= initialTouchX - ((int)event.getRawX() + zoomOffsetX);
+			panOffsetY -= initialTouchY - ((int)event.getRawY() + zoomOffsetY);
+			initialTouchX = (int) ((int)event.getRawX() + zoomOffsetX);
+			initialTouchY = (int) ((int)event.getRawY() + zoomOffsetY);
 			if (initialized) {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
@@ -110,6 +113,12 @@ public class WMSTileRaster extends SurfaceView {
 		if (activityMapDisplay != null) {
 			if (!initialized) {
 				Log.d("WMSTileRaster", "initialSetup()");
+				Log.d("", "THIS HEIGHT  = " + this.getHeight());
+				int screenHeight = this.getHeight();
+				int screenWidth = this.getWidth();
+				tileHeight = screenHeight/(numTilesY - 2);
+				tileWidth = screenWidth/(numTilesX - 2);
+
 				initialSetup();
 			}
 
@@ -191,13 +200,13 @@ public class WMSTileRaster extends SurfaceView {
 	
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
 		Matrix m = canvas.getMatrix();
-		m.preScale((float)zoomFactor+1, (float)zoomFactor+1);
+		m.preScale(zoomFactor, zoomFactor);
 		canvas.setMatrix(m);
 		
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, (x-1) * tileWidth, (y-1) * -1 * tileHeight, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (int)((x-1) * tileWidth * zoomFactor), (int)((y-1) * -1 * tileHeight * zoomFactor), tileWidth, tileHeight, offsetX, offsetY, zoomFactor);
 				}
 			}
 		}
@@ -205,21 +214,23 @@ public class WMSTileRaster extends SurfaceView {
 	
 	private void updatePanOffsetY() {
 		if (panOffsetY >= tileHeight) {
-			panOffsetY = panOffsetY - tileHeight;
+			panOffsetY = (int) (panOffsetY - tileHeight);
 		}
 		
 		if (panOffsetY <= -tileHeight) {
-			panOffsetY = panOffsetY + tileHeight;
+			panOffsetY = (int) (panOffsetY + tileHeight);
 		}
 	}
 
 	private void updatePanOffsetX() {
+		Log.d("", "panOffsetX = " + panOffsetX);
+		Log.d("", "panOffsetY = " + panOffsetY);
 		if (panOffsetX >= tileWidth) {
-			panOffsetX = panOffsetX - tileWidth;
+			panOffsetX = (int) (panOffsetX - tileWidth);
 		}
 		
 		if (panOffsetX <= -tileWidth) {
-			panOffsetX = panOffsetX + tileWidth;
+			panOffsetX = (int) (panOffsetX + tileWidth);
 		}
 	}
 
@@ -237,18 +248,18 @@ public class WMSTileRaster extends SurfaceView {
 
 	private int determineShuffleRight() {
 		int shuffleRight = 0;
-		if (panOffsetX > tileWidth) {
+		if (panOffsetX > tileWidth*zoomFactor) {
 			shuffleRight = -1;
 		}
 		
-		if (panOffsetX < -tileWidth) {
+		if (panOffsetX < -tileWidth*zoomFactor) {
 			shuffleRight = 1;
 		}
 		return shuffleRight;
 	}
 
 	private void initialSetup() {
-		if (activityMapDisplay != null) {
+		if (activityMapDisplay != null ) {
 			MapView mv = activityMapDisplay.getMapView();
 			if (mv != null) {
 				Projection proj = mv.getProjection();
@@ -270,9 +281,8 @@ public class WMSTileRaster extends SurfaceView {
 			public void run() {
 				while(true) {
 					int zoomLevel = activityMapDisplay.getMapView().getZoomLevel();
-					if (initialZoomLevel - zoomLevel != 0) {
-						zoomFactor = (float)Math.pow(2, initialZoomLevel - zoomLevel);
-					}
+					zoomFactor = (float)Math.pow(2, zoomLevel - initialZoomLevel);
+					zoomFactor = zoomFactor==0.0?(float)1.0:zoomFactor;
 				}
 			}
 		}).start();

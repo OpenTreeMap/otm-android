@@ -9,16 +9,11 @@ import android.util.Log;
 import com.google.android.maps.GeoPoint;
 
 public class Tile {
-//	public static final int HEIGHT = 800;
-//	public static final int WIDTH = 480;
+	private Bitmap image;
 	private int zoomOffsetX;
 	private int zoomOffsetY;
 	
-	private Bitmap image;
-	
 	public Tile() {
-		zoomOffsetX = 0;
-		zoomOffsetY = 0;
 	}
 	
 	public Tile(Bitmap image) {
@@ -26,10 +21,20 @@ public class Tile {
 		this.image = image;
 	}
 	
-	public void draw(Canvas canvas, int x, int y, int offsetX, int offsetY) {
+	public void draw(Canvas canvas, int x, int y, int tileWidth, int tileHeight, int offsetX, int offsetY, float zoomFactor) {
 		Paint paint = new Paint();
 		paint.setAlpha(0x888);
-		canvas.drawBitmap(image, x + offsetX + zoomOffsetX, y + offsetY + zoomOffsetY, paint);
+		float zoomOffsetX = 0;
+		float zoomOffsetY = 0;
+		
+		zoomOffsetX = (tileWidth*zoomFactor - tileWidth) / 2;
+		zoomOffsetY = (tileHeight*zoomFactor - tileHeight) / 2;
+		
+		if (zoomFactor == 1.0) {
+			canvas.drawBitmap(image, x + offsetX, y + offsetY, paint);
+		} else { // mapview is 365 high in emulator! pass height and width in, divide by zoom-factor and subtract from coords
+			canvas.drawBitmap(image, (x-zoomOffsetX)/zoomFactor + offsetX/zoomFactor, (y-zoomOffsetY)/zoomFactor + offsetY/zoomFactor, paint);
+		}
 	}
 	
 	public Bitmap getImage() {
