@@ -34,10 +34,12 @@ public class MapDisplay extends MapActivity {
 	private MyLocationOverlay myLocationOverlay;
 	private MapView mapView;
 	private WMSTileRaster surfaceView;
+	private int zoomLevel;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        zoomLevel = 14;
         setContentView(R.layout.activity_map_display);
 
         // Get a MapView and enable zoom controls
@@ -135,7 +137,8 @@ public class MapDisplay extends MapActivity {
 //    	MapView mapView = (MapView) findViewById(R.id.mapview1);
     	MapController mc = mapView.getController();
 //    	mc.setCenter(myLocationOverlay.getMyLocation());
-    	mc.setZoom(15);
+    	zoomLevel++;
+    	mc.setZoom(zoomLevel);
     }
     
 	@Override 

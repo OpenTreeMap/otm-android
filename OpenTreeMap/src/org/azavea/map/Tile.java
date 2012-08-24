@@ -21,7 +21,7 @@ public class Tile {
 		this.image = image;
 	}
 	
-	public void draw(Canvas canvas, int x, int y, int tileWidth, int tileHeight, int offsetX, int offsetY, float zoomFactor) {
+	public void draw(Canvas canvas, int x, int y, int tileWidth, int tileHeight, int offsetX, int offsetY, float zoomFactor, boolean scaledTile) {
 		Paint paint = new Paint();
 		paint.setAlpha(0x888);
 		float zoomOffsetX = 0;
@@ -30,9 +30,9 @@ public class Tile {
 		zoomOffsetX = (tileWidth*zoomFactor - tileWidth) / 2;
 		zoomOffsetY = (tileHeight*zoomFactor - tileHeight) / 2;
 		
-		if (zoomFactor == 1.0) {
+		if (zoomFactor == 1.0 || scaledTile) {
 			canvas.drawBitmap(image, x + offsetX, y + offsetY, paint);
-		} else { // mapview is 365 high in emulator! pass height and width in, divide by zoom-factor and subtract from coords
+		} else {
 			canvas.drawBitmap(image, (x-zoomOffsetX)/zoomFactor + offsetX/zoomFactor, (y-zoomOffsetY)/zoomFactor + offsetY/zoomFactor, paint);
 		}
 	}
