@@ -27,7 +27,7 @@ public class ZoomManager {
 	}
 	
 	public float getWidth() {
-		Log.d("getWidth", "Returning " + width*zoomFactor);
+//		Log.d("getWidth", "Returning " + width*zoomFactor);
 		return width * zoomFactor;
 	}
 	
@@ -36,7 +36,7 @@ public class ZoomManager {
 	}
 	
 	public float getHeight() {
-		Log.d("getHeight", "Returning " + height*zoomFactor);
+//		Log.d("getHeight", "Returning " + height*zoomFactor);
 		return height * zoomFactor;
 	}
 	
@@ -72,7 +72,7 @@ public class ZoomManager {
 		this.zoomLevel = zoomLevel;
 		zoomFactor = (float)Math.pow(2, zoomLevel - initialZoomLevel);
 		zoomFactor = zoomFactor==0.0?(float)1.0:zoomFactor;
-		Log.d("ZoomManager", ""+zoomFactor);
+//		Log.d("ZoomManager", ""+zoomFactor);
 	}
 	
 	public float getZoomFactor() {
