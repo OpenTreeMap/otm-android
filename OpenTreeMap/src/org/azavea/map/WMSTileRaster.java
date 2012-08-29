@@ -1,6 +1,5 @@
 package org.azavea.map;
 
-import java.util.List;
 
 import org.azavea.otm.App;
 import org.azavea.otm.rest.handlers.TileHandler;
@@ -9,25 +8,20 @@ import org.azavea.otm.ui.MapDisplay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
+import android.view.ScaleGestureDetector;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 // WMSTileRaster maintains a grid of tiles,
 // the center of which will be in the center
@@ -51,7 +45,6 @@ public class WMSTileRaster extends SurfaceView {
 	private TileProvider tileProvider;
 	private Paint paint;
 	private MapDisplay activityMapDisplay;
-	private WindowManager activityWindowManager;
 	private GeoPoint topLeft;
 	private GeoPoint bottomRight;
 	private boolean initialized;
@@ -62,6 +55,19 @@ public class WMSTileRaster extends SurfaceView {
 	private int initialTilesLoaded;
 	
 	private static final int BORDER_WIDTH = 2;
+
+	private int initialZoomLevel;
+	
+	private boolean scaledTiles;
+	
+	private ZoomManager zoomManager;
+	
+	private int zoomTolerance;
+	
+	private boolean zoomComplete;
+	
+	private int pinchZoomOffsetX;
+	private int pinchZoomOffsetY;
 	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
@@ -86,54 +92,36 @@ public class WMSTileRaster extends SurfaceView {
 	//     but that approach is proving elusive
 	//     at the moment ***
 	public void setMapView(WindowManager windowManager, MapDisplay mapDisplay) {
-		this.activityWindowManager = windowManager;
 		this.activityMapDisplay = mapDisplay;
-		
-		Display display = activityWindowManager.getDefaultDisplay();
-		int screenHeight = display.getHeight();
-		int screenWidth = display.getWidth();
-		tileHeight = screenHeight/(numTilesY - BORDER_WIDTH);
-		tileWidth = screenWidth/(numTilesX - BORDER_WIDTH);
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		handleActionDown(event);
-		handleActionMove(event);
+
+		if (initialized) {
+			MapView mv = activityMapDisplay.getMapView();
+			mv.onTouchEvent(event);
+			mv.getZoomButtonsController().onTouch(mv, event);
+		}
+
 		return true; // Must be true or ACTION_MOVE isn't detected hence the
-					 // need to manually pass the event to the MapView beforehand
+			     // need to manually pass the event to the MapView beforehand
 	}
 
-	private void handleActionDown(MotionEvent event) {
-		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-			initialTouchX = (int)event.getRawX();
-			initialTouchY = (int)event.getRawY();
-			if (initialized) {
-				activityMapDisplay.getMapView().onTouchEvent(event);
-			}
-		}
-	}
-
-	private void handleActionMove(MotionEvent event) {
-		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
-			panOffsetX -= initialTouchX - (int)event.getRawX();
-			panOffsetY -= initialTouchY - (int)event.getRawY();
-			initialTouchX = (int)event.getRawX();
-			initialTouchY = (int)event.getRawY();
-			if (initialized) {
-				activityMapDisplay.getMapView().onTouchEvent(event);
-			}
-		}
-	}
-	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		
 		if (activityMapDisplay != null) {
 			if (!initialized) {
-				Log.d("WMSTileRaster", "initialSetup()");
+				int mapHeight = this.getHeight();
+				int mapWidth = this.getWidth();
+				tileHeight = mapHeight/(numTilesY - 2);
+				tileWidth = mapWidth/(numTilesX - 2);
+				
+				zoomManager = new ZoomManager(tileWidth, tileHeight, initialZoomLevel);
+				
 				initialSetup();
 			}
 
@@ -144,6 +132,7 @@ public class WMSTileRaster extends SurfaceView {
 			if ((shuffleRight != 0 || shuffleDown != 0)) {
 				synchronized (this) {
 					relocateTiles(shuffleRight, shuffleDown);
+
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
 					refreshTiles();
 					
@@ -154,9 +143,43 @@ public class WMSTileRaster extends SurfaceView {
 			}
 			
 			if (initialized) {
-				drawTiles(canvas, panOffsetX, panOffsetY);
+				if (zoomManager.getZoomFactor() <= zoomTolerance && zoomManager.getZoomFactor() >= (1.0f/(float)zoomTolerance)) {
+					drawTiles(canvas, panOffsetX, panOffsetY);
+					zoomComplete = false;
+				} else {
+					if (zoomComplete) {
+						forceReInit();
+						zoomComplete = false;
+					}
+				}
 			}
 		}
+	}
+
+	public void forceReInit() {
+		OTMMapView mv = activityMapDisplay.getMapView();
+
+		initialZoomLevel = zoomManager.getZoomLevel();
+		zoomManager.setInitialZoomLevel(initialZoomLevel);
+		zoomManager.setZoomLevel(initialZoomLevel);
+		Log.d("XDIFF", "zoomFactor " + zoomManager.getZoomFactor());
+
+		// Reset pan offsets
+		panOffsetX = 0;
+		panOffsetY = 0;
+
+		// Reload tiles using new viewport
+		initializeTiles(mv);
+		Log.d("MapViewChangeListener", "Reloaded tiles");
+		this.postInvalidate();		
+	}
+	
+	private void initializeTiles(MapView mv) {
+		Projection proj = mv.getProjection();
+		topLeft = proj.fromPixels(mv.getLeft(), mv.getTop() + tileHeight);
+		bottomRight = proj.fromPixels(mv.getLeft() + tileWidth, mv.getTop());
+		//tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight);
+		loadTiles();
 	}
 
 	// Initialize this WMSTileRaster
@@ -167,6 +190,12 @@ public class WMSTileRaster extends SurfaceView {
 		initialTouchY = 0;
 		panOffsetX = 0;
 		panOffsetY = 0;
+		initialZoomLevel = 14;
+		scaledTiles = false;
+		zoomTolerance = 2; // Allow one zoom-level before refreshing tiles from server
+		zoomComplete = false;
+		pinchZoomOffsetX = 0;
+		pinchZoomOffsetY = 0;
 		
 		SharedPreferences prefs = App.getSharedPreferences();
 		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString("num_tiles_x", "0"));
@@ -182,7 +211,7 @@ public class WMSTileRaster extends SurfaceView {
 		
 		paint = new Paint();
 		paint.setAlpha(0x888);
-
+		
 		setWillNotDraw(false);
 	}
 
@@ -191,7 +220,9 @@ public class WMSTileRaster extends SurfaceView {
 		// Start of this request group so increment the global sequence-id.
 		App.incTileRequestSeqId();
 
-		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight); 
+		tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight);
+		initialTilesLoaded = 0;
+
 		tiles = new Tile[numTilesX][numTilesY];
 		for(int x=0; x<numTilesX; x++) {
 			tiles[x] = new Tile[numTilesY];
@@ -229,13 +260,18 @@ public class WMSTileRaster extends SurfaceView {
 	// Draw all tiles in grid at specified
 	// offset
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
+		canvas.save();
+		Matrix m = canvas.getMatrix();
+		m.preScale(zoomManager.getZoomFactor(), zoomManager.getZoomFactor());
+		canvas.setMatrix(m);
 		for(int x=0; x<numTilesX; x++) {
 			for(int y=0; y<numTilesY; y++) {
 				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas, (x-1) * tileWidth, (y-1) * -1 * tileHeight, offsetX, offsetY);
+					tiles[x][y].draw(canvas, (int)((x-1) * zoomManager.getWidth()), (int)((y-1) * -1 * zoomManager.getHeight()), tileWidth, tileHeight, offsetX, offsetY, zoomManager.getZoomFactor(), scaledTiles);
 				}
 			}
 		}
+		canvas.restore();
 	}
 
 	// Called when center bounding-box
@@ -243,11 +279,11 @@ public class WMSTileRaster extends SurfaceView {
 	// be made relative to new bounding-box
 	private void updatePanOffsetY() {
 		if (panOffsetY >= tileHeight) {
-			panOffsetY = panOffsetY - tileHeight;
+			panOffsetY = (int) (panOffsetY - tileHeight);
 		}
 		
 		if (panOffsetY <= -tileHeight) {
-			panOffsetY = panOffsetY + tileHeight;
+			panOffsetY = (int) (panOffsetY + tileHeight);
 		}
 	}
 
@@ -256,11 +292,11 @@ public class WMSTileRaster extends SurfaceView {
 	// be made relative to new bounding-box
 	private void updatePanOffsetX() {
 		if (panOffsetX >= tileWidth) {
-			panOffsetX = panOffsetX - tileWidth;
+			panOffsetX = (int) (panOffsetX - tileWidth);
 		}
 		
 		if (panOffsetX <= -tileWidth) {
-			panOffsetX = panOffsetX + tileWidth;
+			panOffsetX = (int) (panOffsetX + tileWidth);
 		}
 	}
 
@@ -268,11 +304,11 @@ public class WMSTileRaster extends SurfaceView {
 	// relocate tiles in grid
 	private int determineShuffleDown() {
 		int shuffleDown = 0;
-		if (panOffsetY > tileHeight) {
+		if (panOffsetY > zoomManager.getHeight()) {
 			shuffleDown = 1;
 		}
 		
-		if (panOffsetY < -tileHeight) {
+		if (panOffsetY < -zoomManager.getHeight()) {
 			shuffleDown = -1;
 		}
 		return shuffleDown;
@@ -282,11 +318,11 @@ public class WMSTileRaster extends SurfaceView {
 	// relocate tiles in grid
 	private int determineShuffleRight() {
 		int shuffleRight = 0;
-		if (panOffsetX > tileWidth) {
+		if (panOffsetX > zoomManager.getWidth()) {
 			shuffleRight = -1;
 		}
 		
-		if (panOffsetX < -tileWidth) {
+		if (panOffsetX < -zoomManager.getWidth()) {
 			shuffleRight = 1;
 		}
 		return shuffleRight;
@@ -297,7 +333,8 @@ public class WMSTileRaster extends SurfaceView {
 	// requests being generated for ALL
 	// grid positions
 	private void initialSetup() {
-		if (activityMapDisplay != null) {
+		if (activityMapDisplay != null ) {
+			setupOnChangeListener();
 			MapView mv = activityMapDisplay.getMapView();
 			if (mv != null) {
 				Projection proj = mv.getProjection();
@@ -306,12 +343,36 @@ public class WMSTileRaster extends SurfaceView {
 				loadTiles();
 				this.postInvalidate();
 				initialized = true;
+				initZoomPolling();
 			} else {
 				initialized = false;
 			}
 		}
 	}
 	
+	private void setupOnChangeListener() {
+		activityMapDisplay.getMapView().setOnChangeListener(new MapViewChangeListener());
+	}
+	
+	private void initZoomPolling() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					OTMMapView mv = activityMapDisplay.getMapView();
+					
+					// Find out how far map is from our viewport
+					Projection proj = mv.getProjection();
+					Point overlayTopLeft = new Point();
+					proj.toPixels(topLeft, overlayTopLeft);
+
+					panOffsetX = overlayTopLeft.x;
+					panOffsetY = (int)(overlayTopLeft.y - (mv.getHeight() * zoomManager.getZoomFactor()));
+				}
+			}
+		}).start();
+	}
+
 	// Move usable existing tiles within grid and
 	// make space for new ones
 	private void relocateTiles(int x, int y) {
@@ -323,7 +384,7 @@ public class WMSTileRaster extends SurfaceView {
 
             for(int i=0; i<numTilesX; i++) {
                     for(int j=0; j<numTilesY; j++) {
-                            if (i+x<3 && i+x>=0 && j+y<3 && j+y>=0) {
+                            if (i+x<numTilesX && i+x>=0 && j+y<numTilesY && j+y>=0) {
                                     newTiles[i][j] = tiles[i+x][j+y];
                             }
                             else {
@@ -356,6 +417,18 @@ public class WMSTileRaster extends SurfaceView {
 						}
 					});
 				}
+			}
+		}
+	}
+	
+	private class MapViewChangeListener implements OTMMapView.OnChangeListener {
+		@Override
+		public void onChange(MapView view, int newZoom, int oldZoom) {
+			if (newZoom != oldZoom) {
+				zoomManager.setZoomLevel(newZoom);
+
+				zoomComplete = true;
+				WMSTileRaster.this.invalidate();
 			}
 		}
 	}

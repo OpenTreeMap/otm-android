@@ -16,10 +16,14 @@ public class TileProvider {
 	private int tileHeight;
 	private double tileGeoWidth; // geographic width of a tile
 	private double tileGeoHeight; // geographic height of a tile
+	private float zoomFactor;
+	private float zoomedGeoWidthOffset;
+	private float zoomedGeoHeightOffset;
 	
 	public TileProvider() {
 		topLeft = new GeoPoint(0, 0);
 		bottomRight = new GeoPoint(0, 0);
+		zoomFactor = 1.0f;
 	}
 	
 	public TileProvider(GeoPoint topLeft, GeoPoint bottomRight, int numTilesX, int numTilesY, int tileWidth, int tileHeight) {
@@ -64,16 +68,22 @@ public class TileProvider {
 		int brLat = bottomRight.getLatitudeE6();
 		int brLon = bottomRight.getLongitudeE6();
 		
-		tlLat -= shiftDown * tileGeoHeight;
+		tlLat -= shiftDown * tileGeoHeight + zoomedGeoHeightOffset;
 
-		tlLon += shiftRight * tileGeoWidth;
+		tlLon += shiftRight * tileGeoWidth - zoomedGeoWidthOffset;
 		
-		brLat -= shiftDown * tileGeoHeight;
+		brLat -= shiftDown * tileGeoHeight - zoomedGeoHeightOffset;
 		
-		brLon += shiftRight * tileGeoWidth;
+		brLon += shiftRight * tileGeoWidth + zoomedGeoWidthOffset;
 		
 		topLeft = new GeoPoint(tlLat, tlLon);
 		bottomRight = new GeoPoint(brLat, brLon);
 		Log.d("", "New viewport: " + tlLat + "," + tlLon + " -> " + brLat + "," + brLon);
+	}
+	
+	public void setZoomFactor(float zoomFactor) {
+		this.zoomFactor = zoomFactor;
+		zoomedGeoHeightOffset = (float) ((tileGeoHeight * zoomFactor - tileGeoHeight) / 2);
+		zoomedGeoWidthOffset = (float) ((tileGeoWidth * zoomFactor - tileGeoWidth) / 2);
 	}
 }

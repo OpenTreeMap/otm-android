@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.azavea.map.OTMMapView;
 import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -32,16 +33,18 @@ public class MapDisplay extends MapActivity {
 	final private int FILTER_INTENT = 1;
 	
 	private MyLocationOverlay myLocationOverlay;
-	private MapView mapView;
+	private OTMMapView mapView;
 	private WMSTileRaster surfaceView;
+	private int zoomLevel;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        zoomLevel = 14;
         setContentView(R.layout.activity_map_display);
 
         // Get a MapView and enable zoom controls
-        mapView = (MapView) findViewById(R.id.mapview1);
+        mapView = (OTMMapView) findViewById(R.id.mapview1);
         mapView.setBuiltInZoomControls(true);
         
         Log.d("MapDisplay", "Initializing surfaceView");
@@ -64,7 +67,7 @@ public class MapDisplay extends MapActivity {
         mapView.invalidate();
     }
     
-    public MapView getMapView() {
+    public OTMMapView getMapView() {
     	return this.mapView;
     }
     
@@ -132,10 +135,12 @@ public class MapDisplay extends MapActivity {
     
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    	MapView mapView = (MapView) findViewById(R.id.mapview1);
-    	MapController mc = mapView.getController();
-    	mc.setCenter(myLocationOverlay.getMyLocation());
-    	mc.setZoom(7);
+    	surfaceView.forceReInit();
+//    	MapView mapView = (MapView) findViewById(R.id.mapview1);
+//    	MapController mc = mapView.getController();
+//    	mc.setCenter(myLocationOverlay.getMyLocation());
+//    	zoomLevel++;
+//    	mc.setZoom(zoomLevel);
     }
     
 	@Override 
