@@ -71,8 +71,8 @@ public class ZoomManager {
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
 		zoomFactor = (float)Math.pow(2, zoomLevel - initialZoomLevel);
-		zoomFactor = zoomFactor==0.0?(float)1.0:zoomFactor;
-//		Log.d("ZoomManager", ""+zoomFactor);
+//		Log.d("MapChangeViewLister", "zoomFactor before ternary equals " + zoomFactor);
+//		zoomFactor = zoomFactor==0.0?(float)1.0:zoomFactor;
 	}
 	
 	public float getZoomFactor() {

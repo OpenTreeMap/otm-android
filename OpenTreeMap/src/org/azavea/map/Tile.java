@@ -30,14 +30,14 @@ public class Tile {
 		zoomOffsetX = (tileWidth*zoomFactor - tileWidth) / 2;
 		zoomOffsetY = (tileHeight*zoomFactor - tileHeight) / 2;
 		
-		if (zoomFactor == 1.0 || scaledTile) {
-			Log.d("Tile", "I'm a basic tile");
-			if (offsetX != 0 || offsetY != 0) {
-				Log.d("Tile", "I have an offset");
-			}
+		if (zoomFactor == 1.0) {// || scaledTile) {
+//			Log.d("Tile", "I'm a basic tile");
+//			if (offsetX != 0 || offsetY != 0) {
+//				Log.d("Tile", "I have an offset");
+//			}
 			canvas.drawBitmap(image, x + offsetX, y + offsetY, paint);
 		} else {
-			Log.d("Tile", "I think I've been scaled... but maybe I haven't");
+//			Log.d("Tile", "I think I've been scaled... but maybe I haven't");
 			canvas.drawBitmap(image, (x-zoomOffsetX)/zoomFactor + offsetX/zoomFactor, (y-zoomOffsetY)/zoomFactor + offsetY/zoomFactor, paint);
 		}
 	}
