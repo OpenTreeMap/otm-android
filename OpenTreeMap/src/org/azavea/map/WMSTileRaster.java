@@ -1,33 +1,33 @@
 package org.azavea.map;
 
-import java.util.List;
-
 import org.azavea.otm.App;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.azavea.otm.rest.handlers.TileHandler;
 import org.azavea.otm.ui.MapDisplay;
+import org.json.JSONException;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Projection;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-
+import android.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewTreeObserver.OnTouchModeChangeListener;
 import android.view.WindowManager;
-import android.widget.Toast;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
+import com.google.android.maps.Projection;
 
 // WMSTileRaster maintains a grid of tiles,
 // the center of which will be in the center
@@ -51,6 +51,7 @@ public class WMSTileRaster extends SurfaceView {
 	private TileProvider tileProvider;
 	private Paint paint;
 	private MapDisplay activityMapDisplay;
+	private Projection proj;
 	private WindowManager activityWindowManager;
 	private GeoPoint topLeft;
 	private GeoPoint bottomRight;
@@ -60,6 +61,10 @@ public class WMSTileRaster extends SurfaceView {
 	private int panOffsetX;
 	private int panOffsetY;
 	private int initialTilesLoaded;
+	private Bitmap touchIcon;
+		
+	private boolean isMoving = false;
+	private GeoPoint touchPoint;
 	
 	private static final int BORDER_WIDTH = 2;
 	
@@ -101,6 +106,7 @@ public class WMSTileRaster extends SurfaceView {
 		super.onTouchEvent(event);
 		handleActionDown(event);
 		handleActionMove(event);
+		handleActionUp(event);
 		return true; // Must be true or ACTION_MOVE isn't detected hence the
 					 // need to manually pass the event to the MapView beforehand
 	}
@@ -109,6 +115,59 @@ public class WMSTileRaster extends SurfaceView {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
 			initialTouchX = (int)event.getRawX();
 			initialTouchY = (int)event.getRawY();
+			
+			if (initialized) {
+				activityMapDisplay.getMapView().onTouchEvent(event);
+			}
+		}
+	}
+	
+	private void handleActionUp(MotionEvent event) {
+		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+			if (isMoving) {
+				//This up event is the end of a move, so don't actually do the click event
+				//but clear the moving flag so we can reuse it 
+				isMoving = false;
+				return;
+			}
+			
+			//get the map coordinates for the touch location
+			GeoPoint touchEvent = proj.fromPixels((int)event.getX(), (int)event.getY());
+			Log.d(App.LOG_TAG, "Touch coords X: " + touchEvent.getLongitudeE6() + ", Y:" + touchEvent.getLatitudeE6());
+
+			final RequestGenerator rg = new RequestGenerator();
+			rg.getPlotsNearLocation(touchEvent.getLatitudeE6()/1E6, touchEvent.getLongitudeE6()/1E6, new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+				
+				@Override
+				public void onFailure(Throwable e, String message){
+					Log.e(App.LOG_TAG, "Error retrieving plots on map touch event: " + e.getMessage());
+					e.printStackTrace();
+				}				
+				
+				@Override
+				public void dataReceived(PlotContainer response) {
+					try {
+						Plot plot = response.getFirst();
+						if (plot != null) {
+							Log.d(App.LOG_TAG, "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+						
+							double plotX = plot.getGeometry().getLonE6();
+							double plotY = plot.getGeometry().getLatE6();
+							
+							touchPoint = new GeoPoint((int)plotY, (int)plotX);
+							invalidate();
+						
+						} else {
+							touchPoint = null;
+							invalidate();
+						}
+					} catch (JSONException e) {
+						Log.e(App.LOG_TAG, "Error retrieving plot info on map touch event: " + e.getMessage());
+						e.printStackTrace();
+					}
+				}
+			});
+			
 			if (initialized) {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
@@ -121,6 +180,7 @@ public class WMSTileRaster extends SurfaceView {
 			panOffsetY -= initialTouchY - (int)event.getRawY();
 			initialTouchX = (int)event.getRawX();
 			initialTouchY = (int)event.getRawY();
+			isMoving = true;
 			if (initialized) {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
@@ -156,6 +216,16 @@ public class WMSTileRaster extends SurfaceView {
 			if (initialized) {
 				drawTiles(canvas, panOffsetX, panOffsetY);
 			}
+			if (touchPoint != null) {
+				//projection of the touch point into screen coordinates happens here
+				//because otherwise the point wouldn't move with the map tiles.
+				
+				//TODO: may want to check if the point is even on screen before drawing
+				Point point = proj.toPixels(touchPoint, null);
+				float centerX = point.x - (touchIcon.getWidth()/2.0f);
+				float centerY = point.y - (touchIcon.getHeight()/2.0f);
+				canvas.drawBitmap(touchIcon, centerX, centerY, null);
+			}
 		}
 	}
 
@@ -183,6 +253,8 @@ public class WMSTileRaster extends SurfaceView {
 		paint = new Paint();
 		paint.setAlpha(0x888);
 
+		touchIcon = BitmapFactory.decodeResource(getResources(), R.drawable.star_on);
+		
 		setWillNotDraw(false);
 	}
 
@@ -300,7 +372,7 @@ public class WMSTileRaster extends SurfaceView {
 		if (activityMapDisplay != null) {
 			MapView mv = activityMapDisplay.getMapView();
 			if (mv != null) {
-				Projection proj = mv.getProjection();
+				proj = mv.getProjection();
 				topLeft = proj.fromPixels(mv.getLeft(), mv.getTop() + tileHeight);
 				bottomRight = proj.fromPixels(mv.getLeft() + tileWidth, mv.getTop());
 				loadTiles();
@@ -333,6 +405,7 @@ public class WMSTileRaster extends SurfaceView {
             }
             tiles = newTiles;
     }       
+	
 	
 	// Load new tiles for spaces left in grid
 	// by relocateTiles()

@@ -1,8 +1,8 @@
 package org.azavea.otm.data;
 
-import java.util.LinkedHashMap;
-
+import java.util.Map;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 public abstract class ModelContainer<T> {
 	protected JSONArray data;
@@ -15,5 +15,5 @@ public abstract class ModelContainer<T> {
 		return data;
 	}
 	
-	public abstract LinkedHashMap<Integer,T> getAll(); 
+	public abstract Map<Integer, T> getAll() throws JSONException; 
 }

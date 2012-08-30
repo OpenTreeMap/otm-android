@@ -12,6 +12,7 @@ import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,7 +63,12 @@ public class FilterManager {
 
 			@Override
 			public void dataReceived(SpeciesContainer container) {
-				species = container.getAll();
+				try {
+					species = (LinkedHashMap<Integer, Species>) container.getAll();
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Error in Species retrieval: " + e.getMessage());
+					e.printStackTrace();
+				}
 				Log.d(App.LOG_TAG, "Species received: " + species.size());
 				if (callback != null) {
 					handleSpeciesCallback(callback, true);

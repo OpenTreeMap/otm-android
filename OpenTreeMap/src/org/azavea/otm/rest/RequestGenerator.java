@@ -5,7 +5,9 @@ import java.io.UnsupportedEncodingException;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
 import android.content.Context;
@@ -40,6 +42,10 @@ public class RequestGenerator {
 	
 	public void getPlot(int id, JsonHttpResponseHandler handler) {
 		client.get("/plots/" + id, null, handler);
+	}
+	
+	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
+		client.get("/locations/" + geoY + "," + geoX + "/plots", null, handler);
 	}
 	
 	public void updatePlot(Context context, int id, Plot plot, 
