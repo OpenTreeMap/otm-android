@@ -47,8 +47,6 @@ public class MapDisplay extends MapActivity {
         mapView = (OTMMapView) findViewById(R.id.mapview1);
         mapView.setBuiltInZoomControls(true);
         
-        Log.d("MapDisplay", "Initializing surfaceView");
-
         // Get tree-overlay and configure
         surfaceView = (WMSTileRaster)findViewById(R.id.tileraster);
         surfaceView.setZOrderOnTop(true);
@@ -56,12 +54,11 @@ public class MapDisplay extends MapActivity {
         sh.setFormat(PixelFormat.TRANSPARENT);
         
         surfaceView.setMapView(getWindowManager(), this);
-        Log.d("MapDisplay", "Surface view configured");
         
         MapController mapController = mapView.getController();
         GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
         mapController.setCenter(p);
-        mapController.setZoom(15);
+        mapController.setZoom(14);
         
         // Force the MapView to redraw
         mapView.invalidate();
@@ -136,11 +133,9 @@ public class MapDisplay extends MapActivity {
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
     	surfaceView.forceReInit();
-//    	MapView mapView = (MapView) findViewById(R.id.mapview1);
-//    	MapController mc = mapView.getController();
-//    	mc.setCenter(myLocationOverlay.getMyLocation());
-//    	zoomLevel++;
-//    	mc.setZoom(zoomLevel);
+    	MapView mapView = (MapView) findViewById(R.id.mapview1);
+    	MapController mc = mapView.getController();
+    	mc.setCenter(myLocationOverlay.getMyLocation());
     }
     
 	@Override 

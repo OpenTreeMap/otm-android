@@ -27,7 +27,6 @@ public class ZoomManager {
 	}
 	
 	public float getWidth() {
-//		Log.d("getWidth", "Returning " + width*zoomFactor);
 		return width * zoomFactor;
 	}
 	
@@ -36,7 +35,6 @@ public class ZoomManager {
 	}
 	
 	public float getHeight() {
-//		Log.d("getHeight", "Returning " + height*zoomFactor);
 		return height * zoomFactor;
 	}
 	
@@ -71,8 +69,6 @@ public class ZoomManager {
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
 		zoomFactor = (float)Math.pow(2, zoomLevel - initialZoomLevel);
-//		Log.d("MapChangeViewLister", "zoomFactor before ternary equals " + zoomFactor);
-//		zoomFactor = zoomFactor==0.0?(float)1.0:zoomFactor;
 	}
 	
 	public float getZoomFactor() {

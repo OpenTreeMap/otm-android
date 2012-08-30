@@ -162,7 +162,6 @@ public class WMSTileRaster extends SurfaceView {
 		initialZoomLevel = zoomManager.getZoomLevel();
 		zoomManager.setInitialZoomLevel(initialZoomLevel);
 		zoomManager.setZoomLevel(initialZoomLevel);
-		Log.d("XDIFF", "zoomFactor " + zoomManager.getZoomFactor());
 
 		// Reset pan offsets
 		panOffsetX = 0;
@@ -170,7 +169,6 @@ public class WMSTileRaster extends SurfaceView {
 
 		// Reload tiles using new viewport
 		initializeTiles(mv);
-		Log.d("MapViewChangeListener", "Reloaded tiles");
 		this.postInvalidate();		
 	}
 	
@@ -178,7 +176,6 @@ public class WMSTileRaster extends SurfaceView {
 		Projection proj = mv.getProjection();
 		topLeft = proj.fromPixels(mv.getLeft(), mv.getTop() + tileHeight);
 		bottomRight = proj.fromPixels(mv.getLeft() + tileWidth, mv.getTop());
-		//tileProvider = new TileProvider(topLeft, bottomRight, numTilesX, numTilesY, tileWidth, tileHeight);
 		loadTiles();
 	}
 
@@ -366,6 +363,7 @@ public class WMSTileRaster extends SurfaceView {
 					Point overlayTopLeft = new Point();
 					proj.toPixels(topLeft, overlayTopLeft);
 
+					Log.d(App.LOG_TAG, "zoomFactor = " + zoomManager.getZoomFactor());
 					panOffsetX = overlayTopLeft.x;
 					panOffsetY = (int)(overlayTopLeft.y - (mv.getHeight() * zoomManager.getZoomFactor()));
 				}
