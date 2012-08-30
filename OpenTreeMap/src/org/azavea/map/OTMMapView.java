@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
+// Adapted from http://bricolsoftconsulting.com/2011/10/31/extending-mapview-to-add-a-change-event/
 public class OTMMapView extends MapView {
 	// ------------------------------------------------------------------------
     // LISTENER DEFINITIONS
