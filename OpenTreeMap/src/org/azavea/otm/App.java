@@ -1,8 +1,12 @@
 package org.azavea.otm;
 
 import org.azavea.map.TileRequestQueue;
+import org.azavea.map.WMSTileCache;
 import org.azavea.otm.FilterManager;
 import org.azavea.otm.rest.handlers.TileHandler;
+
+import com.loopj.android.http.AsyncHttpClient;
+
 import java.util.Hashtable;
 
 import android.app.Application;
@@ -28,6 +32,10 @@ public class App extends Application {
 	private static int tileRequestSequenceId = 0;
 	
 	private static TileRequestQueue tileQueue;
+	
+	private static WMSTileCache tileCache;
+	
+	private static AsyncHttpClient asyncHttpClient;
 	
 	public static App getInstance() {
 		checkInstance();
@@ -99,7 +107,7 @@ public class App extends Application {
 		boolean firstRun = prefs.getBoolean("first_run", true);
 		
 		if (firstRun) {
-			Log.d("App", "First run - transferring preferences...");
+			Log.d(App.LOG_TAG, "First run - transferring preferences...");
 			Editor editor = prefs.edit();
 			Context context = instance.getApplicationContext();
 			editor.putBoolean("first_run", false)
@@ -134,5 +142,22 @@ public class App extends Application {
 	
 	public static void incTileRequestSeqId() {
 		tileRequestSequenceId++;
-	}	
+	}
+	
+	public static WMSTileCache getTileCache() {
+		if (tileCache == null) {
+			Log.d(App.LOG_TAG, "Creating cache");
+			tileCache = new WMSTileCache(getAsyncHttpClient(), 18);
+		}
+		
+		return tileCache;
+	}
+	
+	public static AsyncHttpClient getAsyncHttpClient() {
+		if (asyncHttpClient == null) {
+			asyncHttpClient = new AsyncHttpClient();
+		}
+		
+		return asyncHttpClient;
+	}
 }

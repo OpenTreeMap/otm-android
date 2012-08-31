@@ -66,25 +66,23 @@ public class WMSClient {
 
 		// If it has, see if screen-coords are what we want
 		if (th != null) {
-			Log.d("WMSClient", "Existing request");
-			// If they aren't, get rid of this request - it is no longer needed
+			// If they aren't we just need to change them
 			if (th.getX() != response.getX() && th.getY() != response.getY()) {
 				// Change screen-coords and make this request current
 				th.setX(response.getX());
 				th.setY(response.getY());
 			} else {
-				Log.d("WMSClient", "Existing request usable");
 				// The existing request will do what we need so
 				// give it the latest sequence-id
 				th.setSeqId(App.getTileRequestSeqId());
 			}
 		} else {
-			Log.d("WMSClient", "Nothing found. Creating new request");
 			// Nothing found for the given bounding-box so make a new request
-			AsyncHttpClient client = new AsyncHttpClient();
+			AsyncHttpClient client = App.getAsyncHttpClient();
 			String urlString = String.format("http://phillytreemap.org/geoserver/wms?LAYERS=ptm&TRANSPARENT=true&FORMAT=image/png8&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", boundingBox.getLeft(), boundingBox.getTop(), boundingBox.getRight(), boundingBox.getBottom(), width, height);
-			Log.d("WMSClient", urlString);
-			client.get(urlString, response);
+			Log.d(App.LOG_TAG, urlString);
+			App.getTileCache().get(urlString, response);
+//			client.get(urlString, response);
 			tileQueue.addTileRequest(boundingBox, response);
 		}
 

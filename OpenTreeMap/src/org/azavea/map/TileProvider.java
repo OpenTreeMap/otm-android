@@ -1,5 +1,6 @@
 package org.azavea.map;
 
+import org.azavea.otm.App;
 import org.azavea.otm.rest.handlers.TileHandler;
 
 import android.graphics.Bitmap;
@@ -53,7 +54,7 @@ public class TileProvider {
 		double right = tileRight/1E6;
 		double bottom = tileBottom/1E6;
 		
-		Log.d("", "actualX = " + actualX + ", actualY = " + actualY + ", left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
+		Log.d(App.LOG_TAG, "actualX = " + actualX + ", actualY = " + actualY + ", left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
 		
 		GeoRect boundingBox = new GeoRect(top, left, bottom, right);
 		response.setBoundingBox(boundingBox);
@@ -78,7 +79,7 @@ public class TileProvider {
 		
 		topLeft = new GeoPoint(tlLat, tlLon);
 		bottomRight = new GeoPoint(brLat, brLon);
-		Log.d("", "New viewport: " + tlLat + "," + tlLon + " -> " + brLat + "," + brLon);
+		Log.d(App.LOG_TAG, "New viewport: " + tlLat + "," + tlLon + " -> " + brLat + "," + brLon);
 	}
 	
 	public void setZoomFactor(float zoomFactor) {
