@@ -9,7 +9,6 @@ import org.azavea.otm.rest.handlers.TileHandler;
 import org.azavea.otm.ui.MapDisplay;
 import org.json.JSONException;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
 import android.R;
@@ -239,10 +238,6 @@ public class WMSTileRaster extends SurfaceView {
 
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
 					refreshTiles();
-
-//					updatePanOffsetX();
-//
-//					updatePanOffsetY();
 				}
 			}
 

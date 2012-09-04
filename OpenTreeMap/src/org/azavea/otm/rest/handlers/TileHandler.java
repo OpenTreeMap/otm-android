@@ -61,15 +61,15 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	public void onFailure(Throwable arg0) {
 		// TODO Auto-generated method stub
 		super.onFailure(arg0);
-		Log.d("Async", "Fail: " + arg0.getMessage());
-		Log.d("Async", "Could not get tile (" + x + "," + y + ")");
+		Log.d(App.LOG_TAG, "Fail: " + arg0.getMessage());
+		Log.d(App.LOG_TAG, "Could not get tile (" + x + "," + y + ")");
 	}
 	
 	@Override
 	public void onFailure(Throwable arg0, String arg1) {
 		// TODO Auto-generated method stub
 		super.onFailure(arg0, arg1);
-		Log.d("TileHandler", "Fail(Throwable, String): " + arg1);
+		Log.d(App.LOG_TAG, "Fail(Throwable, String): " + arg1);
 	}
 	
 	public int getX() {
