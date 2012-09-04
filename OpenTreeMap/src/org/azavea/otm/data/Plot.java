@@ -37,7 +37,7 @@ public class Plot extends Model {
 	}
 	
 	public long getWidth() throws JSONException {
-		return getLongOrDefault("plot_width", (long) 0);
+		return getLongOrDefault("plot_width", 0l);
 	}
 	
 	public void setWidth(long width) throws JSONException {
@@ -45,7 +45,7 @@ public class Plot extends Model {
 	}
 	
 	public long getLength() throws JSONException {
-		return getLongOrDefault("plot_length", (long) 0);
+		return getLongOrDefault("plot_length", 0l);
 	}
 	
 	public void setLength(long length) throws JSONException {
@@ -141,6 +141,9 @@ public class Plot extends Model {
 	}
 	
 	public Tree getTree() throws JSONException {
+		if (data.isNull("tree")) {
+			return null;
+		}
 		Tree retTree = new Tree();
 		retTree.setData(data.getJSONObject("tree"));
 		return retTree;

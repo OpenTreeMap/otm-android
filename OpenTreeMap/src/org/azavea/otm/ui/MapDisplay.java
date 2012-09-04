@@ -5,6 +5,7 @@ import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.Tree;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +21,8 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -113,8 +117,6 @@ public class MapDisplay extends MapActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-    	//myLocationOverlay.enableMyLocation();
-    	WindowManager wm = getWindowManager();
     	surfaceView.setMapView(getWindowManager(), this);
     	this.mapView.invalidate();
     }
@@ -129,7 +131,43 @@ public class MapDisplay extends MapActivity {
     public boolean isRouteDisplayed() {
     	return false;
     }
-    
+
+	public void showPopup(Plot plot) {
+		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		TextView plotSpecies = (TextView) findViewById(R.id.plotSpecies);
+		TextView plotAddress = (TextView) findViewById(R.id.plotAddress);
+		TextView plotDiameter = (TextView) findViewById(R.id.plotDiameter);
+		TextView plotUpdatedBy = (TextView) findViewById(R.id.plotUpdatedBy);
+		//set default text
+		plotDiameter.setText(R.string.dbh_missing);
+		plotSpecies.setText(R.string.species_missing);
+		plotAddress.setText(R.string.address_missing);
+		try {
+	        GeoPoint p = new GeoPoint((int)(plot.getGeometry().getLatE6()), (int)(plot.getGeometry().getLonE6()));
+	        mapView.getController().stopAnimation(false);
+	        mapView.getController().animateTo(p);
+			plotUpdatedBy.setText(plot.getLastUpdatedBy());
+	        if (plot.getAddress().length() != 0) {
+	        	plotAddress.setText(plot.getAddress());
+	        }
+			Tree tree = plot.getTree();
+			if (tree != null) {
+				plotSpecies.setText(tree.getSpeciesName());
+				if (tree.getDbh() != 0) {
+					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + R.string.dbh_units);
+				} 
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		plotPopup.setVisibility(View.VISIBLE);
+	}
+
+	public void hidePopup() {
+		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		plotPopup.setVisibility(View.INVISIBLE);
+		
+	}
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
     	surfaceView.forceReInit();
@@ -151,4 +189,6 @@ public class MapDisplay extends MapActivity {
 	    } 
 	  } 
 	}
+
+
 }
