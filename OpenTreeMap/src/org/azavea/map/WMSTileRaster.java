@@ -451,7 +451,7 @@ public class WMSTileRaster extends SurfaceView {
 				loadTiles();
 				this.postInvalidate();
 				initialized = true;
-				initZoomPolling();
+				initPanPolling();
 			} else {
 				initialized = false;
 			}
@@ -463,7 +463,7 @@ public class WMSTileRaster extends SurfaceView {
 				new MapViewChangeListener());
 	}
 
-	private void initZoomPolling() {
+	private void initPanPolling() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
