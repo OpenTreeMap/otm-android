@@ -9,9 +9,11 @@ import org.azavea.otm.rest.handlers.TileHandler;
 import org.azavea.otm.ui.MapDisplay;
 import org.json.JSONException;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
 import android.R;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -150,7 +152,11 @@ public class WMSTileRaster extends SurfaceView {
 					(int) event.getY());
 			Log.d(App.LOG_TAG, "Touch coords X: " + touchEvent.getLongitudeE6()
 					+ ", Y:" + touchEvent.getLatitudeE6());
-
+			
+			final ProgressDialog dialog = ProgressDialog.show(activityMapDisplay, "", 
+                    "Loading. Please wait...", true);
+			dialog.show();
+			
 			final RequestGenerator rg = new RequestGenerator();
 			rg.getPlotsNearLocation(
 					touchEvent.getLatitudeE6() / 1E6,
@@ -159,42 +165,39 @@ public class WMSTileRaster extends SurfaceView {
 
 						@Override
 						public void onFailure(Throwable e, String message) {
+							dialog.hide();
+							invalidate();
 							Log.e(App.LOG_TAG,
 									"Error retrieving plots on map touch event: "
 											+ e.getMessage());
 							e.printStackTrace();
 						}
-
+				
 						@Override
 						public void dataReceived(PlotContainer response) {
 							try {
 								Plot plot = response.getFirst();
 								if (plot != null) {
-									Log.d(App.LOG_TAG, "Using Plot (id: "
-											+ plot.getId()
-											+ ") with coords X: "
-											+ plot.getGeometry().getLon()
-											+ ", Y:"
-											+ plot.getGeometry().getLat());
-
-									double plotX = plot.getGeometry()
-											.getLonE6();
-									double plotY = plot.getGeometry()
-											.getLatE6();
-
-									touchPoint = new GeoPoint((int) plotY,
-											(int) plotX);
-									invalidate();
-
+									Log.d(App.LOG_TAG, "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+								
+									double plotX = plot.getGeometry().getLonE6();
+									double plotY = plot.getGeometry().getLatE6();
+									
+									touchPoint = new GeoPoint((int)plotY, (int)plotX);
+									activityMapDisplay.showPopup(plot);
+								
 								} else {
 									touchPoint = null;
-									invalidate();
+									activityMapDisplay.hidePopup();
 								}
 							} catch (JSONException e) {
 								Log.e(App.LOG_TAG,
 										"Error retrieving plot info on map touch event: "
 												+ e.getMessage());
 								e.printStackTrace();
+							} finally {
+								dialog.hide();
+								invalidate();
 							}
 						}
 					});

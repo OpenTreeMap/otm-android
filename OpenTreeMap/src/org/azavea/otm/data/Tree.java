@@ -17,7 +17,7 @@ public class Tree extends Model {
 	}
 
 	public long getDbh() throws JSONException {
-		return data.getLong("dbh");
+		return getLongOrDefault("dbh", 0l);
 	}
 
 	public void setDbh(double dbh) throws JSONException {

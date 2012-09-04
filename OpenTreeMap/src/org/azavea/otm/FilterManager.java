@@ -65,13 +65,14 @@ public class FilterManager {
 			public void dataReceived(SpeciesContainer container) {
 				try {
 					species = (LinkedHashMap<Integer, Species>) container.getAll();
+					Log.d(App.LOG_TAG, "Species received: " + species.size());
+					if (callback != null) {
+						handleSpeciesCallback(callback, true);
+					}
 				} catch (JSONException e) {
+					//TODO: do we need to do something to notify the user that species weren't retrieved?
 					Log.e(App.LOG_TAG, "Error in Species retrieval: " + e.getMessage());
 					e.printStackTrace();
-				}
-				Log.d(App.LOG_TAG, "Species received: " + species.size());
-				if (callback != null) {
-					handleSpeciesCallback(callback, true);
 				}
 			}		
 			
