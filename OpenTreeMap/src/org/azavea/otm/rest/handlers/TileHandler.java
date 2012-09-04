@@ -17,6 +17,7 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	private boolean valid;
 	private int seqId;
 	private GeoRect boundingBox;
+	private String url;
 	
 	public TileHandler() {
 		super();
@@ -53,23 +54,25 @@ public class TileHandler extends BinaryHttpResponseHandler {
 		// superceded by a later request) and hasn't been
 		// marked as scrapped, call the overridden handler
 		if (valid && seqId == App.getTileRequestSeqId()) {
+			if (url != null) {
+				App.getTileCache().put(url, image);
+			}
 			tileImageReceived(x, y, image);
 		}
 	}
 	
 	@Override
 	public void onFailure(Throwable arg0) {
-		// TODO Auto-generated method stub
 		super.onFailure(arg0);
-		Log.d(App.LOG_TAG, "Fail: " + arg0.getMessage());
+
+		Log.d(App.LOG_TAG, "Tile-load failed: " + arg0.getMessage());
 		Log.d(App.LOG_TAG, "Could not get tile (" + x + "," + y + ")");
 	}
 	
 	@Override
 	public void onFailure(Throwable arg0, String arg1) {
-		// TODO Auto-generated method stub
 		super.onFailure(arg0, arg1);
-		Log.d(App.LOG_TAG, "Fail(Throwable, String): " + arg1);
+		Log.d(App.LOG_TAG, "Tile-load failed (Throwable, String): " + arg1);
 	}
 	
 	public int getX() {
@@ -90,6 +93,10 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	
 	public void scrap() {
 		valid = false;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public void setSeqId(int seqId) {
