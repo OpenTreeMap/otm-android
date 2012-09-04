@@ -64,7 +64,9 @@ public class WMSTileRaster extends SurfaceView {
 	private int panOffsetY;
 	private int initialTilesLoaded;
 	private Bitmap touchIcon;
-
+	private int numTilesOffsetX;
+	private int numTilesOffsetY;
+	
 	private boolean isMoving = false;
 	private GeoPoint touchPoint;
 
@@ -82,7 +84,7 @@ public class WMSTileRaster extends SurfaceView {
 
 	private int pinchZoomOffsetX;
 	private int pinchZoomOffsetY;
-
+	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
 		init();
@@ -223,8 +225,10 @@ public class WMSTileRaster extends SurfaceView {
 			}
 
 			int shuffleRight = determineShuffleRight();
+			Log.d(App.LOG_TAG, "shuffleRight = " + shuffleRight);
 
 			int shuffleDown = determineShuffleDown();
+			Log.d(App.LOG_TAG, "shuffleDown = " + shuffleDown);
 
 			if ((shuffleRight != 0 || shuffleDown != 0)) {
 				synchronized (this) {
@@ -233,16 +237,16 @@ public class WMSTileRaster extends SurfaceView {
 					tileProvider.moveViewport(shuffleRight, shuffleDown);
 					refreshTiles();
 
-					updatePanOffsetX();
-
-					updatePanOffsetY();
+//					updatePanOffsetX();
+//
+//					updatePanOffsetY();
 				}
 			}
 
 			if (initialized) {
 				if (zoomManager.getZoomFactor() <= zoomTolerance
 						&& zoomManager.getZoomFactor() >= (1.0f / (float) zoomTolerance)) {
-					drawTiles(canvas, panOffsetX, panOffsetY);
+					drawTiles(canvas, (int)(panOffsetX - (zoomManager.getWidth() * numTilesOffsetX)), (int)(panOffsetY - (float)(zoomManager.getHeight() * numTilesOffsetY)));
 					zoomComplete = false;
 				} else {
 					if (zoomComplete) {
@@ -304,7 +308,10 @@ public class WMSTileRaster extends SurfaceView {
 		zoomComplete = false;
 		pinchZoomOffsetX = 0;
 		pinchZoomOffsetY = 0;
-
+		
+		numTilesOffsetX = 0;
+		numTilesOffsetY = 0;
+		
 		SharedPreferences prefs = App.getSharedPreferences();
 		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString(
 				"num_tiles_x", "0"));
@@ -391,43 +398,22 @@ public class WMSTileRaster extends SurfaceView {
 		canvas.restore();
 	}
 
-	// Called when center bounding-box
-	// is moved so that panOffsetY will
-	// be made relative to new bounding-box
-	private void updatePanOffsetY() {
-		if (panOffsetY >= tileHeight) {
-			panOffsetY = (int) (panOffsetY - tileHeight);
-		}
-
-		if (panOffsetY <= -tileHeight) {
-			panOffsetY = (int) (panOffsetY + tileHeight);
-		}
-	}
-
-	// Called when center bounding-box
-	// is moved so that panOffsetX will
-	// be made relative to new bounding-box
-	private void updatePanOffsetX() {
-		if (panOffsetX >= tileWidth) {
-			panOffsetX = (int) (panOffsetX - tileWidth);
-		}
-
-		if (panOffsetX <= -tileWidth) {
-			panOffsetX = (int) (panOffsetX + tileWidth);
-		}
-	}
-
 	// Get vertical direction in which to
 	// relocate tiles in grid
 	private int determineShuffleDown() {
 		int shuffleDown = 0;
-		if (panOffsetY > zoomManager.getHeight()) {
+		
+		int currentNumTilesOffset = panOffsetY / (int)zoomManager.getHeight();
+		if (currentNumTilesOffset > numTilesOffsetY) {
 			shuffleDown = 1;
+			numTilesOffsetY++;
+		}
+		
+		if (currentNumTilesOffset < numTilesOffsetY) {
+			shuffleDown = -1;
+			numTilesOffsetY--;
 		}
 
-		if (panOffsetY < -zoomManager.getHeight()) {
-			shuffleDown = -1;
-		}
 		return shuffleDown;
 	}
 
@@ -435,13 +421,18 @@ public class WMSTileRaster extends SurfaceView {
 	// relocate tiles in grid
 	private int determineShuffleRight() {
 		int shuffleRight = 0;
-		if (panOffsetX > zoomManager.getWidth()) {
+			
+		int currentNumTilesOffset = panOffsetX / (int)zoomManager.getWidth();
+		if (currentNumTilesOffset > numTilesOffsetX) {
 			shuffleRight = -1;
+			numTilesOffsetX++;
 		}
-
-		if (panOffsetX < -zoomManager.getWidth()) {
+		
+		if (currentNumTilesOffset < numTilesOffsetX) {
 			shuffleRight = 1;
+			numTilesOffsetX--;
 		}
+		
 		return shuffleRight;
 	}
 
