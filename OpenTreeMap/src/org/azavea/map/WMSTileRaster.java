@@ -68,7 +68,6 @@ public class WMSTileRaster extends SurfaceView {
 	private int numTilesOffsetX;
 	private int numTilesOffsetY;
 	
-	private boolean isMoving = false;
 	private GeoPoint touchPoint;
 
 	private static final int BORDER_WIDTH = 2;
@@ -83,8 +82,7 @@ public class WMSTileRaster extends SurfaceView {
 
 	private boolean zoomComplete;
 
-	private int pinchZoomOffsetX;
-	private int pinchZoomOffsetY;
+	private long downTime;
 	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
@@ -132,22 +130,22 @@ public class WMSTileRaster extends SurfaceView {
 
 	private void handleActionDown(MotionEvent event) {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-			if (initialized) {
-				activityMapDisplay.getMapView().onTouchEvent(event);
-			}
+			// Store the time of this event.
+			// We'll use it in handleActionUp
+			// to determine if the user has been
+			// panning or selecting.
+			downTime = event.getEventTime();
 		}
 	}
-
+	
 	private void handleActionUp(MotionEvent event) {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-			if (isMoving) {
-				// This up event is the end of a move, so don't actually do the
-				// click event
-				// but clear the moving flag so we can reuse it
-				isMoving = false;
-				return;
+			// Figure out of this event is the end of a move or not
+			long upTime = event.getEventTime();
+			if (upTime - downTime > 250) {
+				return; // The user has been panning, not selecting a tree
 			}
-
+			
 			// get the map coordinates for the touch location
 			GeoPoint touchEvent = proj.fromPixels((int) event.getX(),
 					(int) event.getY());
@@ -278,6 +276,10 @@ public class WMSTileRaster extends SurfaceView {
 		// Reset pan offsets
 		panOffsetX = 0;
 		panOffsetY = 0;
+		
+		// Reset tile offsets
+		numTilesOffsetX = 0;
+		numTilesOffsetY = 0;
 
 		// Reload tiles using new viewport
 		initializeTiles(mv);
@@ -304,12 +306,10 @@ public class WMSTileRaster extends SurfaceView {
 		zoomTolerance = 2; // Allow one zoom-level before refreshing tiles from
 							// server
 		zoomComplete = false;
-		pinchZoomOffsetX = 0;
-		pinchZoomOffsetY = 0;
 		
 		numTilesOffsetX = 0;
 		numTilesOffsetY = 0;
-		
+
 		SharedPreferences prefs = App.getSharedPreferences();
 		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString(
 				"num_tiles_x", "0"));
