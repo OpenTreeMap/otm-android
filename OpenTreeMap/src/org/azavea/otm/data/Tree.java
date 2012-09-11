@@ -1,5 +1,8 @@
 package org.azavea.otm.data;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -150,5 +153,18 @@ public class Tree extends Model {
 
 	public void setStewardName(String stewardName) throws JSONException {
 		data.put("steward_name", stewardName);
+	}
+	
+	public ArrayList<Integer> getImageIdList() throws JSONException {	
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		if (data.isNull("images")) {
+			return null;
+		}
+		JSONArray ids = data.getJSONArray("images");
+		for (int i=0; i<ids.length(); i++) {
+			JSONObject image = ids.getJSONObject(i);
+			idList.add((Integer) image.getInt("id"));
+		}
+		return idList;
 	}
 }
