@@ -1,5 +1,7 @@
 package org.azavea.otm.ui;
 
+import java.util.ArrayList;
+
 import org.azavea.map.OTMMapView;
 import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
@@ -12,15 +14,16 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +31,8 @@ import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 
 
 public class MapDisplay extends MapActivity {
@@ -40,6 +43,7 @@ public class MapDisplay extends MapActivity {
 	private OTMMapView mapView;
 	private WMSTileRaster surfaceView;
 	private int zoomLevel;
+	private RelativeLayout plotPopup;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class MapDisplay extends MapActivity {
         surfaceView.setZOrderOnTop(true);
         SurfaceHolder sh = surfaceView.getHolder();
         sh.setFormat(PixelFormat.TRANSPARENT);
+        
+		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
         
         surfaceView.setMapView(getWindowManager(), this);
         
@@ -133,15 +139,14 @@ public class MapDisplay extends MapActivity {
     }
 
 	public void showPopup(Plot plot) {
-		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		TextView plotSpecies = (TextView) findViewById(R.id.plotSpecies);
 		TextView plotAddress = (TextView) findViewById(R.id.plotAddress);
 		TextView plotDiameter = (TextView) findViewById(R.id.plotDiameter);
 		TextView plotUpdatedBy = (TextView) findViewById(R.id.plotUpdatedBy);
 		//set default text
-		plotDiameter.setText(R.string.dbh_missing);
-		plotSpecies.setText(R.string.species_missing);
-		plotAddress.setText(R.string.address_missing);
+		plotDiameter.setText(getString(R.string.dbh_missing));
+		plotSpecies.setText(getString(R.string.species_missing));
+		plotAddress.setText(getString(R.string.address_missing));
 		try {
 	        GeoPoint p = new GeoPoint((int)(plot.getGeometry().getLatE6()), (int)(plot.getGeometry().getLonE6()));
 	        mapView.getController().stopAnimation(false);
@@ -154,8 +159,12 @@ public class MapDisplay extends MapActivity {
 			if (tree != null) {
 				plotSpecies.setText(tree.getSpeciesName());
 				if (tree.getDbh() != 0) {
-					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + R.string.dbh_units);
+					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
+				ArrayList<Integer> imageIds = tree.getImageIdList();
+				if (imageIds != null && imageIds.size() > 0) {
+					showImage(imageIds.get(0).intValue(), plot.getId());
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -168,6 +177,26 @@ public class MapDisplay extends MapActivity {
 		plotPopup.setVisibility(View.INVISIBLE);
 		
 	}
+	
+	public void showImage(int imageId, int plotId) {
+		RequestGenerator rg = new RequestGenerator();
+		String[] allowedTypes = new String[] { "image/jpeg", "image/png", "image/gif" };
+		rg.getImage(plotId, imageId, new BinaryHttpResponseHandler(allowedTypes) {
+			@Override
+			public void onSuccess(byte[] imageData) {
+				Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+				Bitmap scaledImage = Bitmap.createScaledBitmap(image, 80, 80, true);
+				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
+				plotImage.setImageBitmap(scaledImage);
+			}
+			
+			@Override
+			public void onFailure(Throwable e, byte[] imageData) {
+				e.printStackTrace();
+			}
+		});
+	}
+	
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
     	surfaceView.forceReInit();
