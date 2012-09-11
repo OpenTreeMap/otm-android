@@ -4,5 +4,6 @@
     <color name="text_dark">#163314</color>
     <color name="text_light">#BDC4BC</color>
     <color name="popup_background">#ffffff</color>
+    <color name="no_image_background">#CCCCCC</color>
     
 </resources>
