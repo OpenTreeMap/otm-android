@@ -14,6 +14,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class RequestGenerator {
@@ -42,6 +43,10 @@ public class RequestGenerator {
 	
 	public void getPlot(int id, JsonHttpResponseHandler handler) {
 		client.get("/plots/" + id, null, handler);
+	}
+	
+	public void getImage(int plotId, int imageId, BinaryHttpResponseHandler binaryHttpResponseHandler) {
+		client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
 	}
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
