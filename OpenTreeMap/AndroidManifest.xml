@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application android:name="App" android:label="@string/app_name">
-        <uses-library android:name="com.google.android.maps" />
+        <uses-library android:name="com.google.android.maps" android:required="false" />
         <activity
             android:label="@string/app_name"
             android:name=".ui.TabLayout"

@@ -1,7 +1,4 @@
 eclipse.preferences.version=1
 org.eclipse.jdt.apt.aptEnabled=true
 org.eclipse.jdt.apt.genSrcDir=.apt_generated
-org.eclipse.jdt.apt.processorOptions/bin_dir=/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/bin/classes
-org.eclipse.jdt.apt.processorOptions/logfile=/home/local/AZVA-INT/mdelaney/projects/otm/android/OpenTreeMapTests/AnnotationProcessor.log
-org.eclipse.jdt.apt.processorOptions/target_api_level=8
 org.eclipse.jdt.apt.reconcileEnabled=false
