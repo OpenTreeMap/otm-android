@@ -10,9 +10,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="AndroidMock/AndroidMockGenerator.jar"/>
-	<classpathentry kind="lib" path="AndroidMock/AndroidMockRuntime.jar"/>
-	<classpathentry kind="lib" path="AndroidMock/android_framework_mocks.jar"/>
 	<classpathentry kind="lib" path="../OpenTreeMap/libs/android-async-http-1.4.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
