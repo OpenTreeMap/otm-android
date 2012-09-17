@@ -36,7 +36,7 @@ public class TreeInfoDisplay extends MapActivity{
         try {
         	Plot plot = new Plot();
 			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
-			
+
 			treeLocation = getTreeLocation(plot);
 			
 			showPositionOnMap();

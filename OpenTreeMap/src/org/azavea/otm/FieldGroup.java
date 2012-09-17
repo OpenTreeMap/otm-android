@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -58,12 +59,16 @@ public class FieldGroup {
 	 * Render a field group and its child fields for viewing
 	 * @throws JSONException 
 	 */
-	public View renderForDisplay(LayoutInflater layout, Model model) throws JSONException {
+	public View renderForDisplay(LayoutInflater layout, Model model) {
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
         ((TextView)group.findViewById(R.id.group_name)).setText(this.title);
-		for (Entry<String, Field> field : fields.entrySet()) {
-			group.addView(field.getValue().renderForDisplay(layout, model));
+        for (Entry<String, Field> field : fields.entrySet()) {
+        	try {
+        		group.addView(field.getValue().renderForDisplay(layout, model));
+        	} catch (JSONException e) {
+        		Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
+        	}
 		}
         return group;
 	}
