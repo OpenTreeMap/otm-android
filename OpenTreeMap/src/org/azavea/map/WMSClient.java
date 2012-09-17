@@ -10,6 +10,7 @@ import org.azavea.map.TileRequestQueue;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -81,8 +82,10 @@ public class WMSClient {
 			Log.d(App.LOG_TAG, "Nothing found. Creating new request");
 
 			// Nothing found for the given bounding-box so make a new request
+			SharedPreferences prefs = App.getSharedPreferences();
+			String wmsUrl = prefs.getString("wms_url", "");
 			AsyncHttpClient client = App.getAsyncHttpClient();
-			String urlString = String.format("http://207.245.89.246/geoserver/wms?LAYERS=ptm_stage&TRANSPARENT=true&FORMAT=image/png8&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", boundingBox.getLeft(), boundingBox.getTop(), boundingBox.getRight(), boundingBox.getBottom(), width, height);
+			String urlString = String.format(wmsUrl + "?LAYERS=ptm_stage&TRANSPARENT=true&FORMAT=image/png8&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", boundingBox.getLeft(), boundingBox.getTop(), boundingBox.getRight(), boundingBox.getBottom(), width, height);
 			Log.d(App.LOG_TAG, urlString);
 			App.getTileCache().get(urlString, response);
 			tileQueue.addTileRequest(boundingBox, response);
