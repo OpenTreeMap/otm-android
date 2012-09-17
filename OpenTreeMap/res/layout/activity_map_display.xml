@@ -40,7 +40,8 @@
         android:layout_centerHorizontal="true"
         android:background="@color/popup_background"
         android:minHeight="100dp"
-        android:visibility="invisible" >
+        android:visibility="invisible"
+        android:onClick="showFullTreeInfo" >
 
         <ImageView
             android:id="@+id/plotImage"

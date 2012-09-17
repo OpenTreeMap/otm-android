@@ -44,6 +44,7 @@ public class MapDisplay extends MapActivity {
 	private WMSTileRaster surfaceView;
 	private int zoomLevel;
 	private RelativeLayout plotPopup;
+	private Plot infoPlot; // The Plot we're currently showing a popup for, if any
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +163,7 @@ public class MapDisplay extends MapActivity {
 					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
 				ArrayList<Integer> imageIds = tree.getImageIdList();
+
 				if (imageIds != null && imageIds.size() > 0) {
 					showImage(imageIds.get(0).intValue(), plot.getId());
 				}
@@ -169,13 +171,19 @@ public class MapDisplay extends MapActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		infoPlot = plot;
 		plotPopup.setVisibility(View.VISIBLE);
 	}
 
 	public void hidePopup() {
 		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		plotPopup.setVisibility(View.INVISIBLE);
-		
+		infoPlot = null;
+	}
+
+	@Override
+	public void onBackPressed() {
+		hidePopup();
 	}
 	
 	public void showImage(int imageId, int plotId) {
@@ -197,12 +205,22 @@ public class MapDisplay extends MapActivity {
 		});
 	}
 	
+	// onClick handler for tree-details popup touch-event
+	public void showFullTreeInfo(View view) {
+		// Show TreeInfoDisplay with current plot
+		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
+		viewPlot.putExtra("plot", infoPlot.getData().toString());
+		startActivity(viewPlot);
+
+//		Toast.makeText(this.getApplicationContext(), "Place-marker", 3000).show();
+	}
+	
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    	surfaceView.forceReInit();
-//    	MapView mapView = (MapView) findViewById(R.id.mapview1);
-//    	MapController mc = mapView.getController();
-//    	mc.setCenter(myLocationOverlay.getMyLocation());
+//    	surfaceView.forceReInit();
+    	OTMMapView mapView = (OTMMapView) findViewById(R.id.mapview1);
+    	MapController mc = mapView.getController();
+    	mc.setCenter(myLocationOverlay.getMyLocation());
     }
     
 	@Override 

@@ -19,8 +19,10 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	private GeoRect boundingBox;
 	private String url;
 	
+	private static String[] allowedTypes = new String[] { "image/jpeg", "image/png", "image/png; mode=8bit", "image/gif" };
+	
 	public TileHandler() {
-		super();
+		super(allowedTypes);
 		valid = true;
 		seqId = App.getTileRequestSeqId();
 	}

@@ -82,7 +82,7 @@ public class WMSClient {
 
 			// Nothing found for the given bounding-box so make a new request
 			AsyncHttpClient client = App.getAsyncHttpClient();
-			String urlString = String.format("http://phillytreemap.org/geoserver/wms?LAYERS=ptm&TRANSPARENT=true&FORMAT=image/png8&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", boundingBox.getLeft(), boundingBox.getTop(), boundingBox.getRight(), boundingBox.getBottom(), width, height);
+			String urlString = String.format("http://207.245.89.246/geoserver/wms?LAYERS=ptm_stage&TRANSPARENT=true&FORMAT=image/png8&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&BBOX=%f,%f,%f,%f&WIDTH=%d&HEIGHT=%d", boundingBox.getLeft(), boundingBox.getTop(), boundingBox.getRight(), boundingBox.getBottom(), width, height);
 			Log.d(App.LOG_TAG, urlString);
 			App.getTileCache().get(urlString, response);
 			tileQueue.addTileRequest(boundingBox, response);
