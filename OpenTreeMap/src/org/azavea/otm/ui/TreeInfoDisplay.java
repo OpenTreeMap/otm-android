@@ -52,7 +52,7 @@ public class TreeInfoDisplay extends MapActivity{
 			Log.e(App.LOG_TAG, "Failed to create tree view", e);
 		}
     }
-
+    
     private GeoPoint getTreeLocation(Plot plot) {
     	try {
 			double lon = plot.getGeometry().getLonE6();
@@ -67,6 +67,7 @@ public class TreeInfoDisplay extends MapActivity{
 		OTMMapView mapView = (OTMMapView)findViewById(R.id.map_vignette);
 		mapView.getOverlays().add(new TreeLocationOverlay());
 		mapView.getController().animateTo(treeLocation);
+		mapView.getController().setZoom(16);
 	}
 
 	private void setTreeHeaderValues(Plot plot) throws JSONException {

@@ -55,12 +55,9 @@ public class WMSTileRaster extends SurfaceView {
 	private Paint paint;
 	private MapDisplay activityMapDisplay;
 	private Projection proj;
-	private WindowManager activityWindowManager;
 	private GeoPoint topLeft;
 	private GeoPoint bottomRight;
 	private boolean initialized;
-	private int initialTouchX;
-	private int initialTouchY;
 	private int panOffsetX;
 	private int panOffsetY;
 	private int initialTilesLoaded;
@@ -297,14 +294,12 @@ public class WMSTileRaster extends SurfaceView {
 	private void init() throws Exception {
 		initialized = false;
 		initialTilesLoaded = 0;
-		initialTouchX = 0;
-		initialTouchY = 0;
 		panOffsetX = 0;
 		panOffsetY = 0;
 		initialZoomLevel = 14;
 		scaledTiles = false;
 		zoomTolerance = 2; // Allow one zoom-level before refreshing tiles from
-							// server
+						   // server
 		zoomComplete = false;
 		
 		numTilesOffsetX = 0;
@@ -476,8 +471,7 @@ public class WMSTileRaster extends SurfaceView {
 					proj.toPixels(topLeft, overlayTopLeft);
 
 					panOffsetX = overlayTopLeft.x;
-					panOffsetY = (int) (overlayTopLeft.y - (mv.getHeight() * zoomManager
-							.getZoomFactor()));
+					panOffsetY = (int) (overlayTopLeft.y - (mv.getHeight() * zoomManager.getZoomFactor()));
 				}
 			}
 		}).start();

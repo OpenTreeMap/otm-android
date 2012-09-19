@@ -63,13 +63,15 @@ public class FieldGroup {
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
         ((TextView)group.findViewById(R.id.group_name)).setText(this.title);
-        for (Entry<String, Field> field : fields.entrySet()) {
-        	try {
-        		group.addView(field.getValue().renderForDisplay(layout, model));
-        	} catch (JSONException e) {
-        		Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
-        	}
-		}
+        if (this.title != null) {
+	        for (Entry<String, Field> field : fields.entrySet()) {
+	        	try {
+	        		group.addView(field.getValue().renderForDisplay(layout, model));
+	        	} catch (JSONException e) {
+	        		Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
+	        	}
+			}
+        }
         return group;
 	}
 }

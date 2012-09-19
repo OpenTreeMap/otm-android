@@ -16,6 +16,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class RequestGenerator {
 	private RestClient client;
@@ -51,6 +52,12 @@ public class RequestGenerator {
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
 		client.get("/locations/" + geoY + "," + geoX + "/plots", null, handler);
+	}
+	
+	public void getNPlotsNearLocation(double geoY, double geoX, int maxPlots, ContainerRestHandler<PlotContainer> handler) {
+		RequestParams params = new RequestParams();
+		params.put("max_plots", Integer.toString(maxPlots));
+		client.get("/locations/" + geoY + "," + geoX + "/plots", params, handler);
 	}
 	
 	public void updatePlot(Context context, int id, Plot plot, 

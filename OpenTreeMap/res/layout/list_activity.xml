@@ -1,8 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/textView1"
+    <RadioGroup
+        android:id="@+id/listOptions"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/list_text" />
+        android:layout_height="wrap_content" >
 
+        <RadioButton
+            android:id="@+id/radioNearby"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:text="Nearby" />
+        
+        <RadioButton
+	        android:id="@+id/radioRecent"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Recent" />
+
+	    <RadioButton
+	        android:id="@+id/radioPending"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Pending" />
+    </RadioGroup>
+
+    <ListView
+        android:id="@+id/listItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+    </ListView>
+
+</LinearLayout>

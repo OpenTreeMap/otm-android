@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.azavea.map.OTMMapView;
 import org.azavea.map.WMSTileRaster;
@@ -13,6 +14,8 @@ import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,7 +47,7 @@ public class MapDisplay extends MapActivity {
 	private WMSTileRaster surfaceView;
 	private int zoomLevel;
 	private RelativeLayout plotPopup;
-	private Plot infoPlot; // The Plot we're currently showing a popup for, if any
+	private Plot currentPlot; // The Plot we're currently showing a popup for, if any
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,11 @@ public class MapDisplay extends MapActivity {
     	super.onPause();
     	//myLocationOverlay.disableMyLocation();
     }
+
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    }
     
     @Override
     public boolean isRouteDisplayed() {
@@ -171,14 +179,14 @@ public class MapDisplay extends MapActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		infoPlot = plot;
+		currentPlot = plot;
 		plotPopup.setVisibility(View.VISIBLE);
 	}
 
 	public void hidePopup() {
 		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		plotPopup.setVisibility(View.INVISIBLE);
-		infoPlot = null;
+		currentPlot = null;
 	}
 
 	@Override
@@ -209,15 +217,12 @@ public class MapDisplay extends MapActivity {
 	public void showFullTreeInfo(View view) {
 		// Show TreeInfoDisplay with current plot
 		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
-		viewPlot.putExtra("plot", infoPlot.getData().toString());
+		viewPlot.putExtra("plot", currentPlot.getData().toString());
 		startActivity(viewPlot);
-
-//		Toast.makeText(this.getApplicationContext(), "Place-marker", 3000).show();
 	}
 	
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {
-//    	surfaceView.forceReInit();
     	OTMMapView mapView = (OTMMapView) findViewById(R.id.mapview1);
     	MapController mc = mapView.getController();
     	mc.setCenter(myLocationOverlay.getMyLocation());
@@ -236,6 +241,4 @@ public class MapDisplay extends MapActivity {
 	    } 
 	  } 
 	}
-
-
 }

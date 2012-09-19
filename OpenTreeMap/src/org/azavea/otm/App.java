@@ -1,5 +1,6 @@
 package org.azavea.otm;
 
+import org.azavea.lists.NearbyList;
 import org.azavea.map.TileRequestQueue;
 import org.azavea.map.WMSTileCache;
 import org.azavea.otm.FilterManager;
@@ -26,6 +27,7 @@ public class App extends Application {
 	private static LoginManager loginManager = null;
 	private static FilterManager filterManager = null;
 	private static FieldManager fieldManager = null;
+	private static NearbyList nearbyList = null;
 	
 	private static SharedPreferences sharedPreferences = null;
 	
@@ -160,5 +162,13 @@ public class App extends Application {
 		}
 		
 		return asyncHttpClient;
+	}
+	
+	public static NearbyList getNearbyList() {
+		if (nearbyList == null) {
+			nearbyList = new NearbyList();
+		}
+		
+		return nearbyList;
 	}
 }
