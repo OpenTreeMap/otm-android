@@ -68,8 +68,6 @@ public class ListDisplay extends Activity implements ListObserver {
         	@Override
         	public void onItemClick(AdapterView<?> a, View v, int i, long l) {
         		Intent viewPlot = new Intent(ListDisplay.this, TreeInfoDisplay.class);
-//        		Object[] plots = infoList.getListValues();
-//        		Plot selectedPlot = (Plot)plots[i];
         		Plot selectedPlot = ((DisplayablePlot)a.getItemAtPosition(i)).getPlot();
         		viewPlot.putExtra("plot", selectedPlot.getData().toString());
         		ListDisplay.this.startActivity(viewPlot);
@@ -83,7 +81,6 @@ public class ListDisplay extends Activity implements ListObserver {
         adapter = new ArrayAdapter<DisplayableModel>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, infoList.getDisplayValues());
         
-		// Assign adapter to ListView
 		listView.setAdapter(adapter);
 
 		adapter.notifyDataSetChanged();
