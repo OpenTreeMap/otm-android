@@ -109,7 +109,6 @@ public class App extends Application {
 		boolean firstRun = prefs.getBoolean("first_run", true);
 		
 		if (firstRun) {
-			Log.d(App.LOG_TAG, "First run - transferring preferences...");
 			Editor editor = prefs.edit();
 			Context context = instance.getApplicationContext();
 			editor.putBoolean("first_run", false)
@@ -118,6 +117,7 @@ public class App extends Application {
 				  .putString("api_key", context.getString(R.string.api_key))
 				  .putString("num_tiles_x", context.getString(R.string.num_tiles_x))
 				  .putString("num_tiles_y", context.getString(R.string.num_tiles_y))
+				  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
 				  .commit();
 		}
 	}

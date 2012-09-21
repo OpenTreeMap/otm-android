@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.azavea.lists.InfoList;
 import org.azavea.lists.ListObserver;
+import org.azavea.lists.NearbyList;
 import org.azavea.lists.data.DisplayableModel;
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
@@ -39,28 +40,42 @@ public class ListDisplay extends Activity implements ListObserver {
         listView = (ListView)findViewById(R.id.listItems);
         radioGroup = (RadioGroup)findViewById(R.id.listOptions);
         
-        dialog = ProgressDialog.show(this, "", 
+        dialog = ProgressDialog.show(ListDisplay.this, "", 
                 "Loading. Please wait...", true);
-		dialog.show();
-
+		
+		infoList = App.getNearbyList();
+		infoList.addObserver(this);
+		infoList.setupLocationUpdating(getApplicationContext());
+		listView.setOnItemClickListener(getOnClickListener());
+		
+		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				processRadioButtonSelection();
+			}
+		});
+		
 		processRadioButtonSelection();
         
         update();
     }
 
 	private void processRadioButtonSelection() {
-        int selectedRadioButton = radioGroup.getCheckedRadioButtonId();
-		switch(selectedRadioButton) {
-        	case R.id.radioNearby: infoList = App.getNearbyList();
-		   	   					   infoList.addObserver(this);
-		   	   					   infoList.setupLocationUpdating(getApplicationContext());
-        					   	   listView.setOnItemClickListener(getOnClickListener());
+		dialog.show();
+		int selectedRadioButton = radioGroup.getCheckedRadioButtonId();
+        NearbyList nearbyList = (NearbyList)infoList;
+        switch(selectedRadioButton) {
+        	case R.id.radioNearby: nearbyList.setFilterRecent(false);
+        						   nearbyList.setFilterPending(false);
         					   	   break;
-//        case R.id.radioPending: infoList = App.getPendingList();
-//        	break;
-//        case R.id.radioRecent: infoList = App.getRecentList();
-//        	break;
+        	case R.id.radioPending: nearbyList.setFilterRecent(false);
+        							nearbyList.setFilterPending(true);
+        							break;
+        	case R.id.radioRecent: nearbyList.setFilterRecent(true);
+        					   	   nearbyList.setFilterPending(false);
+        					   	   break;
         }
+        nearbyList.update();
 	}
 	
 	public ListView.OnItemClickListener getOnClickListener() {
@@ -76,15 +91,14 @@ public class ListDisplay extends Activity implements ListObserver {
 	}
 	
 	public void update() {
-		dialog.show();
-
         adapter = new ArrayAdapter<DisplayableModel>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, infoList.getDisplayValues());
         
 		listView.setAdapter(adapter);
 
 		adapter.notifyDataSetChanged();
+
+		Log.d(App.LOG_TAG, "Hide dialog");
 		dialog.hide();
 	}
 }
-

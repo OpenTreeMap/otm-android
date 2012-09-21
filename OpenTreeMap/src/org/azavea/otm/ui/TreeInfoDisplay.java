@@ -5,6 +5,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.Tree;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeInfoDisplay extends MapActivity{
-	private GeoPoint treeLocation;
+	private GeoPoint plotLocation;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +38,12 @@ public class TreeInfoDisplay extends MapActivity{
         	Plot plot = new Plot();
 			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
 
-			treeLocation = getTreeLocation(plot);
+			plotLocation = getPlotLocation(plot);
 			
 			showPositionOnMap();
 
-			setTreeHeaderValues(plot);
+			Log.d(App.LOG_TAG, "Setting header values");
+			setHeaderValues(plot);
 			
 			for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
 				fieldList.addView(group.renderForDisplay(layout, plot));
@@ -53,7 +55,7 @@ public class TreeInfoDisplay extends MapActivity{
 		}
     }
     
-    private GeoPoint getTreeLocation(Plot plot) {
+    private GeoPoint getPlotLocation(Plot plot) {
     	try {
 			double lon = plot.getGeometry().getLonE6();
 			double lat = plot.getGeometry().getLatE6();
@@ -66,13 +68,18 @@ public class TreeInfoDisplay extends MapActivity{
 	private void showPositionOnMap() {
 		OTMMapView mapView = (OTMMapView)findViewById(R.id.map_vignette);
 		mapView.getOverlays().add(new TreeLocationOverlay());
-		mapView.getController().animateTo(treeLocation);
+		mapView.getController().animateTo(plotLocation);
 		mapView.getController().setZoom(16);
 	}
 
-	private void setTreeHeaderValues(Plot plot) throws JSONException {
+	private void setHeaderValues(Plot plot) throws JSONException {
 		setText(R.id.address, plot.getAddress());
-		setText(R.id.species, plot.getTree().getSpeciesName());
+		
+		Tree tree = plot.getTree();
+		if (tree != null) {
+			setText(R.id.species, tree.getSpeciesName());
+		}
+		
 		setText(R.id.updated_on, "Last updated on " + plot.getLastUpdated());
 		setText(R.id.updated_by, "By " + plot.getLastUpdatedBy());
 	}
@@ -97,7 +104,7 @@ public class TreeInfoDisplay extends MapActivity{
 			if (!shadow) {
 				
 				Point point = new Point();
-				mapView.getProjection().toPixels(treeLocation, point);
+				mapView.getProjection().toPixels(plotLocation, point);
 				
 				Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_forest2);
 				int x = point.x - bmp.getWidth() / 2;

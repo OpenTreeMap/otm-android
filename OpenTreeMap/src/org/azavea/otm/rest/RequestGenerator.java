@@ -11,6 +11,7 @@ import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -54,9 +55,14 @@ public class RequestGenerator {
 		client.get("/locations/" + geoY + "," + geoX + "/plots", null, handler);
 	}
 	
-	public void getNPlotsNearLocation(double geoY, double geoX, int maxPlots, ContainerRestHandler<PlotContainer> handler) {
+	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending, ContainerRestHandler<PlotContainer> handler) {
+		SharedPreferences sharedPrefs = App.getSharedPreferences();
+		String maxPlots = sharedPrefs.getString("max_nearby_plots", "10");
+		
 		RequestParams params = new RequestParams();
-		params.put("max_plots", Integer.toString(maxPlots));
+		params.put("max_plots", maxPlots);
+		params.put("filter_recent", Boolean.toString(recent));
+		params.put("filter_pending", Boolean.toString(pending));
 		client.get("/locations/" + geoY + "," + geoX + "/plots", params, handler);
 	}
 	

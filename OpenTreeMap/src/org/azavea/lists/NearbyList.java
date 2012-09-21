@@ -34,15 +34,21 @@ public class NearbyList implements InfoList {
 	private double lon;
 	private ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
 	private LocationManager locationManager;
+	private boolean filterRecent;
+	private boolean filterPending;
 	
 	public NearbyList() {
 		lat = 40;
 		lon = -75.2;
+		filterRecent = false;
+		filterPending = false;
 	}
 	
 	public NearbyList(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
+		filterRecent = false;
+		filterPending = false;
 	}
 	
 	public void setupLocationUpdating(Context applicationContext) {
@@ -80,7 +86,15 @@ public class NearbyList implements InfoList {
 		
 		setInitialLocation();
 	}
-
+	
+	public void setFilterRecent(boolean filterRecent) {
+		this.filterRecent = filterRecent;
+	}
+	
+	public void setFilterPending(boolean filterPending) {
+		this.filterPending = filterPending;
+	}
+	
 	@Override
 	public DisplayablePlot[] getDisplayValues() {
 		ArrayList<DisplayablePlot> listValues = new ArrayList<DisplayablePlot>();
@@ -104,7 +118,6 @@ public class NearbyList implements InfoList {
 					distance = getDisplayDistance(p);
 					listValues.add(new DisplayablePlot(p, mainInfo + ", " + supplementaryInfo + ", " + distance));
 				}
-				Log.d(App.LOG_TAG, "Number of display-items: " + listValues.size());
 			}
 		} catch (JSONException e) {
 			Log.d(App.LOG_TAG, "JSONException e: " + e.getMessage());
@@ -125,22 +138,16 @@ public class NearbyList implements InfoList {
 		update();
 	}
 	
-	private void update() {
+	public void update() {
 		RequestGenerator rg = new RequestGenerator();
-		rg.getNPlotsNearLocation(lat, lon, 10, new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+		rg.getPlotsNearLocation(lat, lon, filterRecent, filterPending, new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
 			@Override
 			public void dataReceived(PlotContainer responseObject) {
 				super.dataReceived(responseObject);
 				nearbyPlots = responseObject;
-				try {
-					Log.d(App.LOG_TAG, "Number of nearby plots = " + nearbyPlots.getAll().size());
-				} catch (JSONException e) {
-					
-				}
+				notifyObservers();
 			}
 		});
-		
-		notifyObservers();
 	}
 	
 	private void notifyObservers() {

@@ -5,4 +5,5 @@
     <string name="api_key">APIKEY</string>
     <string name="num_tiles_x">1</string>
     <string name="num_tiles_y">1</string>
+    <string name="max_nearby_plots">10</string>
 </resources>
