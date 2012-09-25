@@ -6,4 +6,52 @@
     <color name="popup_background">#ffffff</color>
     <color name="no_image_background">#CCCCCC</color>
     
+    <color
+        name="white">#fff</color>
+    <color
+        name="purple_start">#9b256b</color>
+    <color
+        name="purple_end">#5d2761</color>
+        
+    <!-- 427BBA, 0f93b8 -->
+    <color
+        name="blue_start">#0f93b8</color>
+    <color
+        name="blue_end">#0f93b8</color>
+    <color
+        name="lgrey_start">#BFC0C0</color>
+    <color
+        name="lgrey_end">#AEB2B7</color>
+    <color
+        name="dgrey_start">#4E4F50</color>
+    <color
+        name="dgrey_end">#2C3137</color>
+    <color
+        name="item_grey_start">#B4B8BA</color>
+    <color
+        name="item_grey_end">#62707C</color>
+     <color
+        name="black_start">#333333</color>
+    <color
+        name="black_end">#181818</color>
+     <color
+        name="grey_start">#CBCBCB</color>
+    <color
+        name="grey_end">#8C9DAE</color>
+    <color
+        name="blue_badges_mayor">#095b72</color>
+    <color
+        name="vlgrey">#EEEEEE</color>
+    <color
+        name="color_score_list_adapter_highlight">#EEEEEE</color>
+    <color
+        name="color_score_mayor_section_background">#DDDDDD</color>
+    <color 
+        name="color_bright_green">#a6da00</color>
+    <color
+        name="tip_detail_actions_background">#c7c7c7</color>
+    <color
+        name="user_details_activity_general">#FF555555</color>
+    <color
+        name="transparent">#00000000</color>
 </resources>

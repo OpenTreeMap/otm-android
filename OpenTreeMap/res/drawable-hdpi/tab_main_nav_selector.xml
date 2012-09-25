@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+  <!-- Copyright (c) Mark Wyszomierski, 2010. -->
+
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  
+  <item
+    android:state_selected="true"
+    android:drawable="@drawable/tab_main_nav_on" />
+  <item
+    android:state_selected="false"
+    android:drawable="@drawable/tab_main_nav_off" />
+    
+</selector> 

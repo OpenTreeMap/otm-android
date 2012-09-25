@@ -17,6 +17,8 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.azavea.otm.R;
+
 /**
  * A global singleton object to maintain application state
  */

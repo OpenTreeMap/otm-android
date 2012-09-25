@@ -1,34 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:foursquared="http://schemas.android.com/apk/res/org.azavea.otm"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/org.azavea.otm">
 
-    <RadioGroup
-        android:id="@+id/listOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/radioNearby"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="Nearby" />
-        
-        <RadioButton
-	        android:id="@+id/radioRecent"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Recent" />
-
-	    <RadioButton
-	        android:id="@+id/radioPending"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Pending" />
-    </RadioGroup>
-
+    <com.joelapenna.foursquared.widget.SegmentedButton
+      android:id="@+id/segmented"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      foursquared:gradientColorOnStart="#4cc39d"
+      foursquared:gradientColorOnEnd="#3aa27c"
+      foursquared:gradientColorOffStart="#3b9e7d"
+      foursquared:gradientColorOffEnd="#2e8465"
+      foursquared:gradientColorSelectedStart="#FF00AA"
+      foursquared:gradientColorSelectedEnd="#FF00AA"
+      foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue"
+      foursquared:strokeColor="#32906e"
+      foursquared:strokeWidth="1dip"
+      foursquared:cornerRadius="4dip"
+      foursquared:btnPaddingTop="7dip"
+      foursquared:btnPaddingBottom="7dip" /> 
+    
     <ListView
         android:id="@+id/listItems"
         android:layout_width="match_parent"

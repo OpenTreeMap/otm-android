@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+  <!-- Copyright 2010 Mark Wyszomierski -->
+  
+<shape
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:shape="rectangle">
+
+  <gradient
+    android:startColor="#767676"
+    android:endColor="#4d4d4d"
+    android:angle="270" 
+    />
+    
+    <!--
+    0f99bd
+    096c96
+    
+    767676
+    4d4d4d
+    -->
+
+</shape>

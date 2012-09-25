@@ -43,4 +43,8 @@
     <string name="dbh_units">Inches</string>
     <string name="address_missing">Address Missing</string>
     
+    <string name="toggle_nearby">Nearby</string>
+    <string name="toggle_recent">Recent</string>
+    <string name="toggle_pending">Pending</string>
+    
 </resources>

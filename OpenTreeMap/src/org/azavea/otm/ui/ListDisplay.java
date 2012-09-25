@@ -12,6 +12,9 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 
+import com.joelapenna.foursquared.widget.SegmentedButton;
+import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -37,8 +40,22 @@ public class ListDisplay extends Activity implements ListObserver {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
         
+        // Create the segmented buttons
+        SegmentedButton buttons = (SegmentedButton)findViewById(R.id.segmented);
+        buttons.clearButtons();
+        buttons.addButtons(
+                getString(R.string.toggle_nearby),
+                getString(R.string.toggle_pending),
+                getString(R.string.toggle_recent));
+        
+        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
+            @Override
+            public void onClick(int index) {
+            	processRadioButtonSelection(index);
+            }
+        });
+        
         listView = (ListView)findViewById(R.id.listItems);
-        radioGroup = (RadioGroup)findViewById(R.id.listOptions);
         
         dialog = ProgressDialog.show(ListDisplay.this, "", 
                 "Loading. Please wait...", true);
@@ -48,32 +65,24 @@ public class ListDisplay extends Activity implements ListObserver {
 		infoList.setupLocationUpdating(getApplicationContext());
 		listView.setOnItemClickListener(getOnClickListener());
 		
-		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				processRadioButtonSelection();
-			}
-		});
-		
-		processRadioButtonSelection();
+		processRadioButtonSelection(0);
         
         update();
     }
 
-	private void processRadioButtonSelection() {
+	private void processRadioButtonSelection(int index) {
 		dialog.show();
-		int selectedRadioButton = radioGroup.getCheckedRadioButtonId();
         NearbyList nearbyList = (NearbyList)infoList;
-        switch(selectedRadioButton) {
-        	case R.id.radioNearby: nearbyList.setFilterRecent(false);
-        						   nearbyList.setFilterPending(false);
-        					   	   break;
-        	case R.id.radioPending: nearbyList.setFilterRecent(false);
-        							nearbyList.setFilterPending(true);
-        							break;
-        	case R.id.radioRecent: nearbyList.setFilterRecent(true);
-        					   	   nearbyList.setFilterPending(false);
-        					   	   break;
+        switch(index) {
+        	case 0: nearbyList.setFilterRecent(false);
+        		    nearbyList.setFilterPending(false);
+        			break;
+        	case 1: nearbyList.setFilterRecent(true);
+        		    nearbyList.setFilterPending(false);
+        		    break;
+        	case 2: nearbyList.setFilterRecent(false);
+        			nearbyList.setFilterPending(true);
+        			break;
         }
         nearbyList.update();
 	}
