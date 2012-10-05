@@ -1,0 +1,113 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+       <org.azavea.views.NotifyingScrollView
+           android:id="@+id/userFieldsScroll"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           onScrollToBotton="addMoreEdits" >
+
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical"
+		        android:focusable="true"
+		    	android:focusableInTouchMode="true" 
+		    	android:weightSum="1.0"
+		    	android:gravity="center">
+			    	
+			    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			        android:id="@+id/user_fields"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:focusable="true"
+			    	android:focusableInTouchMode="true" 
+			    	android:weightSum="1.0"
+			    	android:gravity="center"/>
+
+		        
+		        <LinearLayout
+					 xmlns:android="http://schemas.android.com/apk/res/android"
+					 android:layout_height="wrap_content"
+					 android:layout_width="fill_parent"
+					 android:orientation="horizontal"
+					 android:weightSum="1.0"
+					 android:gravity="center">
+
+					 <Button
+					     android:id="@+id/logout"
+					     android:layout_width="0dip"
+					     android:layout_height="wrap_content"
+					     android:layout_weight=".85"
+					     android:text="@string/logoutButton"
+					     android:onClick="logoutUser"
+					     />
+
+				</LinearLayout>
+ 		        
+		        <LinearLayout
+					 xmlns:android="http://schemas.android.com/apk/res/android"
+					 android:layout_height="wrap_content"
+					 android:layout_width="fill_parent"
+					 android:orientation="horizontal"
+					 android:weightSum="1.0"
+					 android:gravity="center">
+
+					 <Button
+					     android:id="@+id/change_password"
+					     android:layout_width="0dip"
+					     android:layout_height="wrap_content"
+					     android:layout_weight=".85"
+					     android:text="@string/change_password"
+					     />
+
+				</LinearLayout>
+						        
+		        <LinearLayout
+					 xmlns:android="http://schemas.android.com/apk/res/android"
+					 android:layout_height="wrap_content"
+					 android:layout_width="fill_parent"
+					 android:orientation="horizontal"
+					 android:weightSum="1.0"
+					 android:gravity="center">
+
+					 <Button
+					     android:id="@+id/change_profile_picture"
+					     android:layout_width="0dip"
+					     android:layout_height="wrap_content"
+					     android:layout_weight=".85"
+					     android:text="@string/change_picture"
+					     />
+
+				</LinearLayout>		        
+
+		         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			        android:id="@+id/user_edits"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:focusable="true"
+			    	android:focusableInTouchMode="true" 
+			    	android:weightSum="1.0"
+			    	android:gravity="center">
+
+       		        <TextView
+       		            android:id="@+id/textView1"
+       		            android:layout_width="fill_parent"
+       		            android:layout_height="wrap_content"
+       		            android:layout_marginLeft="10dip"
+       		            android:layout_marginTop="20dip"
+       		            android:text="@string/recent_edits_caption" />
+
+		         </LinearLayout>
+					         
+		    </LinearLayout>
+
+
+
+       </org.azavea.views.NotifyingScrollView>
+
+</LinearLayout>

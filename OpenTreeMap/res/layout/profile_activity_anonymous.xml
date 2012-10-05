@@ -1,0 +1,38 @@
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/loginMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:gravity="center"
+            android:text="@string/profile_text" />
+
+	      	<LinearLayout
+	      	    xmlns:android="http://schemas.android.com/apk/res/android"
+	      	    android:layout_width="fill_parent"
+	      	    android:layout_height="wrap_content"
+	      	    android:layout_alignParentLeft="true"
+	      	    android:layout_below="@+id/loginMessage"
+	      	    android:layout_marginTop="22dp"
+	      	    android:orientation="horizontal"
+	      	    android:gravity="center"
+	      	    android:weightSum="1.0" >
+
+	      	    <Button
+	      	        android:id="@+id/login"
+	      	        android:layout_width="0dip"
+	      	        android:layout_height="wrap_content"
+	      	        android:layout_weight=".85"
+	      	        android:onClick="showLogin"
+	      	        android:text="@string/loginButtonText" />
+	      	</LinearLayout>
+            
+    </RelativeLayout>
