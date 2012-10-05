@@ -100,26 +100,6 @@ public class MapDisplay extends MapActivity {
             	Intent filter = new Intent(this, FilterDisplay.class);
             	startActivityForResult(filter, FILTER_INTENT);
             	break;
-            case R.id.temp_view:
-            	RequestGenerator rg = new RequestGenerator();
-			try {
-				rg.getPlot(54248, new RestHandler<Plot>(new Plot()) {
-					@Override
-					public void onFailure(Throwable e, String message){
-						Log.e(App.LOG_TAG, "Bad Plot Request" , e);
-					}
-					
-            		@Override
-            		public void dataReceived(Plot plot) {
-            			Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
-            			viewPlot.putExtra("plot", plot.getData().toString());
-            			startActivity(viewPlot);
-            		}
-            	});
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
         }
         return true;
     }
