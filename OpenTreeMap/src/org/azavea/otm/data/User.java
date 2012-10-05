@@ -24,6 +24,10 @@ public class User extends Model {
 		setZipcode(zipcode);
 	}
 	
+	public int getId() throws JSONException {
+		return data.getInt("id");
+	}
+	
 	public String getUserName() throws JSONException {
 		return data.getString("username");
 	}

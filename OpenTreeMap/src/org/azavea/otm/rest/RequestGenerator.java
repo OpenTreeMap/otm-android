@@ -1,6 +1,8 @@
 package org.azavea.otm.rest;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
@@ -81,6 +83,20 @@ public class RequestGenerator {
 		}
 	}
 
+	public void getUserEdits(Context context, User user, int offset, int count, AsyncHttpResponseHandler handler) 
+			throws JSONException {
+		if (user != null) {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("offset", Integer.toString(offset));
+			params.put("length", Integer.toString(count));
+			
+			client.getWithAuthentication(context, "/user/" + user.getId() + "/edits", 
+					loginManager.loggedInUser.getUserName(), 
+					loginManager.loggedInUser.getPassword(),
+					new RequestParams(params), handler);
+		}
+	}
+	
 	public void addUser(Context context, User user, AsyncHttpResponseHandler handler) 
 			throws JSONException, UnsupportedEncodingException {
 		client.postWithAuthentication(context, "/user/", 
