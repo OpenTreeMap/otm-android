@@ -27,7 +27,7 @@
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
     <string name="about_text">About OpenTreemap</string>
-    <string name="profile_text">Profile</string>
+    <string name="profile_text">You have to login or register to see the profiles page</string>
     <string name="list_text">All the lists</string>
     <string name="filter_species_hint">Filter species...</string>
     
@@ -46,5 +46,10 @@
     <string name="toggle_nearby">Nearby</string>
     <string name="toggle_recent">Recent</string>
     <string name="toggle_pending">Pending</string>
+    <string name="loginButtonText">Login or Register</string>
+    <string name="logoutButton">Logout</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_picture">Change Profile Picture</string>
+    <string name="recent_edits_caption">My Recent Edits</string>
     
 </resources>
