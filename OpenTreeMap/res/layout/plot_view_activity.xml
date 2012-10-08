@@ -59,24 +59,16 @@
 		    android:layout_below="@+id/updated_on"
 		    android:textColor="@color/text_dark" />
 	</RelativeLayout>
-
-	<org.azavea.map.OTMMapView
-		android:id="@+id/map_vignette"
-		android:layout_width="fill_parent"
-		android:layout_height="100dp"
-		android:layout_below="@+id/header"
-		android:enabled="true"
-		android:clickable="false"
-		android:apiKey="0oNSfjh7cn05XmJ-qgSrPTdUch8X2L9BMYmKdHA" />
 	
 	<ScrollView
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/scroller"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:layout_below="@+id/map_vignette"
+	    android:layout_below="@+id/header"
 	    android:paddingTop="10dp" >
-	    
+	   
+	    	
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/field_list"
 	        android:layout_width="fill_parent"
@@ -84,6 +76,15 @@
 	        android:orientation="vertical"
 	        android:focusable="true"
 	    	android:focusableInTouchMode="true" >
+	    	
+		<org.azavea.map.OTMMapView
+			android:id="@+id/map_vignette"
+			android:layout_width="fill_parent"
+			android:layout_height="100dp"
+			android:enabled="true"
+			android:clickable="false"
+			android:apiKey="0oNSfjh7cn05XmJ-qgSrPTdUch8X2L9BMYmKdHA" />
+	            	
 	    </LinearLayout>
 	    
 	</ScrollView>
