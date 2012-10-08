@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeInfoDisplay extends TreeDisplay{
+	final private static int EDIT_REQUEST = 1;
 	
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -72,8 +73,10 @@ public class TreeInfoDisplay extends TreeDisplay{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_plot:
-            	Intent filter = new Intent(this, FilterDisplay.class);
-            	startActivityForResult(filter, 1);
+            	Intent editPlot = new Intent(this, TreeEditDisplay.class);
+            	editPlot.putExtra("plot", plot.getData().toString());
+            	editPlot.putExtra("user", this.currentUser.getData().toString());
+            	startActivityForResult(editPlot, EDIT_REQUEST);
             	break;
         }
         return true;
