@@ -193,6 +193,7 @@ public class MapDisplay extends MapActivity {
 		// Show TreeInfoDisplay with current plot
 		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
 		viewPlot.putExtra("plot", currentPlot.getData().toString());
+		viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
 		startActivity(viewPlot);
 	}
 	

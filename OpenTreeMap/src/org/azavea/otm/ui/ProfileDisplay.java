@@ -140,6 +140,10 @@ public class ProfileDisplay extends Activity {
 												if (edit.getPlot() != null) {
 							            			Intent viewPlot = new Intent(v.getContext(), TreeInfoDisplay.class);
 							            			viewPlot.putExtra("plot", edit.getPlot().getData().toString());
+
+							            			// TODO: Login user check/prompt
+							            			Log.d("mjm", "Logged in: " + App.getLoginManager().isLoggedIn());
+							            			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
 							            			startActivity(viewPlot);
 												}
 											} catch (Exception e) {
