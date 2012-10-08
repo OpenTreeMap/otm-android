@@ -52,5 +52,7 @@
     <string name="change_password">Change Password</string>
     <string name="change_picture">Change Profile Picture</string>
     <string name="recent_edits_caption">My Recent Edits</string>
+    <string name="unspecified_eco_value">0.0</string>
+    <string name="unspecified_eco_field_money">$0.00</string>
     
 </resources>

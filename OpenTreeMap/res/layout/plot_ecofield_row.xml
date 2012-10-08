@@ -23,6 +23,7 @@
          android:layout_marginBottom="5dp"
          android:gravity="center_vertical"
          android:paddingLeft="25dp"
+         android:text="@string/unspecified_eco_value"
          android:textColor="@color/text_dark"
          android:textSize="12dip" />
 
@@ -33,6 +34,8 @@
          android:layout_marginBottom="5dp"
          android:gravity="center_vertical"
          android:paddingLeft="25dp"
+         android:text="@string/unspecified_eco_field_money"
          android:textColor="@color/text_dark"
          android:textSize="12dip" />
+
 </LinearLayout>
