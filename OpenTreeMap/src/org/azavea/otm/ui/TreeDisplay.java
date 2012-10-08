@@ -2,10 +2,9 @@ package org.azavea.otm.ui;
 
 import org.azavea.map.OTMMapView;
 import org.azavea.otm.App;
-import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.Tree;
+import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,24 +12,18 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeDisplay extends MapActivity{
 	protected GeoPoint plotLocation;
 	protected Plot plot;
+	protected User currentUser;
 	
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -40,7 +33,13 @@ public class TreeDisplay extends MapActivity{
 
 			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
 	
-			Log.d("mjm", plot.getLastUpdatedBy());
+			
+	        // This activity is running in a new process because it has a map on it.
+	        // This means it doesn't share application context with the rest of the 
+	        // app, meaning we have to pass contextual state in, like logged in user.
+			currentUser = new User();
+	        currentUser.setData(new JSONObject(getIntent().getStringExtra("user")));
+	        
 			plotLocation = getPlotLocation(plot);
 			
 		} catch (JSONException e) {
