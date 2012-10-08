@@ -1,7 +1,6 @@
 package org.azavea.otm.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.azavea.map.OTMMapView;
 import org.azavea.map.WMSTileRaster;
@@ -10,18 +9,14 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
 import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -72,7 +67,7 @@ public class MapDisplay extends MapActivity {
         MapController mapController = mapView.getController();
         GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
         mapController.setCenter(p);
-        mapController.setZoom(14);
+        mapController.setZoom(zoomLevel);
         
         // Force the MapView to redraw
         mapView.invalidate();
