@@ -40,6 +40,7 @@ public class FilterManager {
 	
 	
 	public FilterManager(Context context) throws Exception {
+		Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
 		this.context = context;
 		loadSpeciesList();
 		loadFilterDefinitions();
