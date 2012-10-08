@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -19,6 +20,7 @@ public class FieldGroup {
 	
 	private String title;
 	private Map<String,Field> fields = new LinkedHashMap<String, Field>();
+	private enum DisplayMode { VIEW, EDIT};
 	
 	public FieldGroup() {
 		this.title = "";
@@ -55,23 +57,55 @@ public class FieldGroup {
 		return fields;
 	}
 
-	/**
-	 * Render a field group and its child fields for viewing
-	 * @throws JSONException 
-	 */
-	public View renderForDisplay(LayoutInflater layout, Model model) {
+	private View render(LayoutInflater layout, Model model, DisplayMode mode, User user) {
+
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
+		View fieldView = null;
+		
         ((TextView)group.findViewById(R.id.group_name)).setText(this.title);
         if (this.title != null) {
 	        for (Entry<String, Field> field : fields.entrySet()) {
 	        	try {
-	        		group.addView(field.getValue().renderForDisplay(layout, model));
+	        		switch (mode) {
+	        			case VIEW:
+	        				fieldView = field.getValue().renderForDisplay(layout, model);
+	        				break;
+	        			case EDIT:
+	        				fieldView= field.getValue().renderForEdit(layout, model, user);
+	        				break;
+	        		}
+	        		
+	        		if (fieldView != null) {
+	        			group.addView(fieldView);
+	        		}
+	        		
 	        	} catch (JSONException e) {
 	        		Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
 	        	}
 			}
         }
-        return group;
+        if (group.getChildCount() > 0 ) {
+        	return group;
+        } else { 
+        	return null;
+        }
 	}
+	
+	/**
+	 * Render a field group and its child fields for viewing
+	 * @throws JSONException 
+	 */
+	public View renderForDisplay(LayoutInflater layout, Model model) {
+		return render(layout, model, DisplayMode.VIEW, null); 
+
+	}
+	
+	/**
+	 * Render a field group and its child fields for editing
+	 * @throws JSONException 
+	 */
+	public View renderForEdit(LayoutInflater layout, Model model, User user) {
+        return render(layout, model, DisplayMode.EDIT, user);
+	}	
 }

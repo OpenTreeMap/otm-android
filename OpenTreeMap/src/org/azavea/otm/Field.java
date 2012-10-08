@@ -3,12 +3,16 @@ package org.azavea.otm;
 import java.util.HashMap;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Node;
 
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Field {
@@ -97,8 +101,32 @@ public class Field {
         return container;
 	}
 	
-	public View renderForEdit() {
-		return null;
+	public View renderForEdit(LayoutInflater layout, Model model, User user) throws JSONException {
+		View container = null;
+		
+		if (user.getReputation() >= this.minimumToEdit) {
+			container = layout.inflate(R.layout.plot_field_edit_row, null);
+			Object value = getValueForKey(this.key, model.getData());
+	        ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
+	        EditText edit = ((EditText)container.findViewById(R.id.field_value));
+	        edit.setText(value != null ? value.toString() : "" );
+	        
+	        // InputType is not an enum, so we can't parse arbitrary text to get a value.  Therefore
+	        // we have to manually support specific instances
+	        
+	        if (this.keyboardResource.equals("numberDecimal")) {
+        		edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+	        } else if (this.keyboardResource.equalsIgnoreCase("number")) {
+	        	edit.setInputType(InputType.TYPE_CLASS_NUMBER);
+	        } else if (this.keyboardResource.equalsIgnoreCase("text")) {
+	        	edit.setInputType(InputType.TYPE_CLASS_TEXT);
+	        } else if (this.keyboardResource.equalsIgnoreCase("dateTime")) {
+	        	edit.setInputType(InputType.TYPE_CLASS_DATETIME);
+	        } 
+	        
+		}
+        
+		return container;
 	}
 	
 	/**
@@ -120,9 +148,14 @@ public class Field {
 	 * exist, will return an empty string
 	 * @throws JSONException 
 	 */
-	protected Object getValueForKey(String key, JSONObject json) throws JSONException {
-		String[] keys = key.split("\\.");
-		return getValueForKey(keys, 0, json);
+	protected Object getValueForKey(String key, JSONObject json) {
+		try {
+			String[] keys = key.split("\\.");
+			return getValueForKey(keys, 0, json);
+		} catch (Exception e) {
+			Log.w(App.LOG_TAG, "Could not find key: " + key + " on plot/tree object");
+			return null;
+		}
 	}
 	
 	/**
