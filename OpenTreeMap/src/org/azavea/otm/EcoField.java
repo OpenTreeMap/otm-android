@@ -27,17 +27,18 @@ public class EcoField extends Field {
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
         
         // Extract the value of this type of eco benefit
-        String value = getValueForKey(this.key + VALUE_KEY, model.getData()).toString();
-        String units = getValueForKey(this.key + UNIT_KEY, model.getData()).toString();
-        ((TextView)container.findViewById(R.id.field_value))
-        	.setText(value + " " + units);
-        
-        // The dollar amount of the benefit
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
-        Double amount = (Double)getValueForKey(this.key + AMOUNT_KEY, model.getData());
-        ((TextView)container.findViewById(R.id.field_money))
-        	.setText(currency.format(amount));
-    	
+        Object value = getValueForKey(this.key + VALUE_KEY, model.getData());
+        Object units = getValueForKey(this.key + UNIT_KEY, model.getData());
+        if (value != null) {
+	        ((TextView)container.findViewById(R.id.field_value))
+	        	.setText(value + " " + units);
+	        
+	        // The dollar amount of the benefit
+	        NumberFormat currency = NumberFormat.getCurrencyInstance();
+	        Double amount = (Double)getValueForKey(this.key + AMOUNT_KEY, model.getData());
+	        ((TextView)container.findViewById(R.id.field_money))
+	        	.setText(currency.format(amount));
+        }
         return container;
 	}
 }
