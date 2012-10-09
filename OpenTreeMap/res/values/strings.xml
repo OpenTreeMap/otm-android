@@ -41,7 +41,8 @@
     
     <item type="id" name="species_id"/>
     <item type="id" name="filter_key"/>
- 
+ 	<item type="id" name="choice_button_value_tag"/>
+ 	    
     <string name="no_address">No Address</string>
     <string name="species_missing">Species Missing</string>
     <string name="dbh_missing">Diameter Missing</string>
