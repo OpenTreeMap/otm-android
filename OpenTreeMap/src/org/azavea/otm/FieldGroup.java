@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.w3c.dom.Node;
@@ -109,5 +110,11 @@ public class FieldGroup {
 	 */
 	public View renderForEdit(LayoutInflater layout, Model model, User user) {
         return render(layout, model, DisplayMode.EDIT, user);
+	}
+
+	public void update(Model model) throws Exception {
+		for (Entry<String, Field> field : fields.entrySet()) {
+			field.getValue().update(model);
+		}
 	}	
 }
