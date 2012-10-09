@@ -23,7 +23,7 @@
 		    <option type="int" value="2">Needs Pruning</option>
 		    <option type="int" value="3">Should Be Removed</option>
 		    <option type="int" value="4">Pest or Disease present</option>
-		    <option type="int" value="5">Guard Shoudl be Removed</option>
+		    <option type="int" value="5">Guard Should be Removed</option>
 		    <option type="int" value="6">Stakes and Ties Should be Removed</option>
 		    <option type="int" value="7">Construction Work in the Area</option>
 		    <option type="int" value="8">Touching Wires</option>
@@ -31,12 +31,12 @@
 			<option type="int" value="10">Impropertly Pruned or Topped</option>
 		</choice>
 		<choice key="bool_set">
-		    <option type="bool" value="True">Yes</option>
-		    <option type="bool" value="False">No</option>
+		    <option type="bool" value="1">Yes</option>
+		    <option type="bool" value="0">No</option>
 		</choice>
 		<choice key="canopy_condition">
 		    <option type="int" value="1">Full - No Gaps</option>
-		    <option type="int" value="2">Small Gaps (up to 25% missing)"</option>
+		    <option type="int" value="2">Small Gaps (up to 25% missing)</option>
 		    <option type="int" value="3">Moderate Gaps (up to 50% missing)</option>
 		    <option type="int" value="4">Large Gaps (up to 75% missing)</option>
 		    <option type="int" value="5">Little or None (up to 100% missing)</option>
@@ -80,7 +80,7 @@
 		</choice>
 		<choice key="sidewalk_damage">
 		    <option type="int" value="1">Minor or No Damage</option>
-		    <option type="int" value="2">Raised More Than 3/4 Ince</option>
+		    <option type="int" value="2">Raised More Than 3/4 Inch</option>
 		</choice>
 		<choice key="status">
 		    <option type="int" value="1">Height (in feet)</option>
