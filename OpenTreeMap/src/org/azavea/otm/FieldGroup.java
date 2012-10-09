@@ -62,6 +62,7 @@ public class FieldGroup {
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
 		View fieldView = null;
+		int renderedFieldCount = 0;
 		
         ((TextView)group.findViewById(R.id.group_name)).setText(this.title);
         if (this.title != null) {
@@ -77,6 +78,7 @@ public class FieldGroup {
 	        		}
 	        		
 	        		if (fieldView != null) {
+	        			renderedFieldCount++;
 	        			group.addView(fieldView);
 	        		}
 	        		
@@ -85,7 +87,7 @@ public class FieldGroup {
 	        	}
 			}
         }
-        if (group.getChildCount() > 0 ) {
+        if (renderedFieldCount > 0 ) {
         	return group;
         } else { 
         	return null;
