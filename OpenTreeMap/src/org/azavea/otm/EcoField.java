@@ -17,7 +17,7 @@ public class EcoField extends Field {
 	
 	protected EcoField(String key, String label, int minimumToEdit, 
 			String keyboard, String format, String type)	{
-		super(key, label, minimumToEdit, keyboard, format, type);
+		super(key, label, minimumToEdit, keyboard, format, type, null);
 	}
 	
 	@Override
