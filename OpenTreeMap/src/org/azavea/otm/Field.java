@@ -1,7 +1,6 @@
 package org.azavea.otm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,15 +17,15 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class Field {
+	
+
 	private HashMap<String,String> unitFormatter = new HashMap<String,String>(){
 		private static final long serialVersionUID = 1L;
-
 	{
 		put("inch", "in");
 		put("feet", "ft");
@@ -34,8 +33,15 @@ public class Field {
 		put("mile", "mi");
 	}};
 
-	private String[] choiceItems;
-	private int[] choiceValues;
+	// If this field has a choice list, these are the strings to display as choices
+	private ArrayList<String> choiceItems = new ArrayList<String>();
+	
+	// If this field has a choice list, these are the integer values 
+	// associated with the choice
+	private ArrayList<Integer> choiceValues = new ArrayList<Integer>();
+	
+	// This is the view control, either button or EditText, which has the user value
+	private View valueView = null;
 	
 	/**
 	 * The property name from Plot which will contain the data to display
@@ -69,7 +75,7 @@ public class Field {
 	public String keyboardResource = "text";
 	
 	/**
-	 * The choice name if this is a user selectable field
+	 * The choice name if this is a user select-able field
 	 */
 	public String choiceName = null;
 	
@@ -134,15 +140,18 @@ public class Field {
 	        EditText edit = (EditText)container.findViewById(R.id.field_value);
 	        Button choiceButton = (Button)container.findViewById(R.id.choice_select);
 	        
+	        // Show the correct type of input for this field
 	        if (this.choiceName != null) {
 	        	edit.setVisibility(View.GONE);
 	        	choiceButton.setVisibility(View.VISIBLE);
+	        	this.valueView = choiceButton;
 	        	setupChoiceDisplay(choiceButton, value);
 	        } else {
 	        	String safeValue = value != null ? value.toString() : ""; 
 	        	edit.setVisibility(View.VISIBLE);
 	        	choiceButton.setVisibility(View.GONE);
 		        edit.setText(safeValue);
+	        	this.valueView = edit;
 	        	
 	        	if (this.keyboardResource != null) {
 					setFieldKeyboard(edit); 
@@ -155,52 +164,59 @@ public class Field {
 
 	private void setupChoiceDisplay(final Button choiceButton, Object value) {
 		Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
-		Map<Integer,Choice> choiceList = choices.getChoices();
+		Map<Integer,Choice> choiceMap = choices.getChoices();
 		
 		String label = "Unspecified";
 		final int v = value == null ? -1 : Integer.parseInt(value.toString()); 
 		
 		if (value != null) {
-			Choice currentChoice = choiceList.get(v);
+			Choice currentChoice = choiceMap.get(v);
 			if (currentChoice != null) {
 				label = currentChoice.getText();
 			}
 		}
     	choiceButton.setText(label);
-		
-		this.choiceItems = new String[choiceList.size()];
-		this.choiceValues = new int[choiceList.size()];
-		
-		int i = 0;
-		for (Entry<Integer, Choice> entry: choiceList.entrySet()) {
-			this.choiceItems[i] = entry.getValue().getText();
-			this.choiceValues[i] = entry.getKey();
-			i++;
+    	choiceButton.setTag(R.id.choice_button_value_tag, value);
+			
+		for (Entry<Integer, Choice> entry: choiceMap.entrySet()) {
+			this.choiceItems.add(entry.getValue().getText());
+			this.choiceValues.add(entry.getKey());
 		}
 
-		final Field editedField = this;
+		handleChoiceDisplay(choiceButton, this);
 		
+	}
+
+	private void handleChoiceDisplay(final Button choiceButton,
+			final Field editedField) {
 		choiceButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View view) {
 				// Determine which item should be selected by default
-				int checkedChoiceIndex = Arrays.asList(editedField.choiceValues).indexOf(v);
+				Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
+				int checkedChoiceIndex = -1;
+
+				if (currentValue != null) {
+					int val = Integer.parseInt(currentValue.toString());					
+					checkedChoiceIndex = editedField.choiceValues.indexOf(val);
+				} 
+
 				new AlertDialog.Builder(choiceButton.getContext())
 					.setTitle(editedField.label)
-					.setSingleChoiceItems(editedField.choiceItems, checkedChoiceIndex, 
+					.setSingleChoiceItems(editedField.choiceItems.toArray(new String[0]), checkedChoiceIndex, 
 							new DialogInterface.OnClickListener() {
 						
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								choiceButton.setText(editedField.choiceItems[which]);
+								choiceButton.setText(editedField.choiceItems.get(which));
+								choiceButton.setTag(R.id.choice_button_value_tag, editedField.choiceValues.get(which));
 								dialog.dismiss();
 							}
 						})
 					.create().show();				
 			}
 		});
-		
 	}
 
 	private void setFieldKeyboard(EditText edit) {
@@ -237,7 +253,12 @@ public class Field {
 	protected Object getValueForKey(String key, JSONObject json) {
 		try {
 			String[] keys = key.split("\\.");
-			return getValueForKey(keys, 0, json);
+			NestedJsonAndKey found = getValueForKey(keys, 0, json);
+			if (found != null) {
+				return found.get();
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
 			Log.w(App.LOG_TAG, "Could not find key: " + key + " on plot/tree object");
 			return null;
@@ -247,7 +268,7 @@ public class Field {
 	/**
 	 * Return value for keys, which could be nested as an array
 	 */
-	private Object getValueForKey(String[] keys, int index, JSONObject json) throws JSONException {
+	private NestedJsonAndKey getValueForKey(String[] keys, int index, JSONObject json) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
 			JSONObject child = json.getJSONObject(keys[index]);
 			index++;
@@ -257,7 +278,44 @@ public class Field {
 		if (json.isNull(keys[index])) {
 			return null;
 		}
-		return json.get(keys[index]); 
+		return new NestedJsonAndKey(json, keys[index]);
+	}
+	
+	
+	private void setValueForKey(String key, JSONObject json, Object value) throws Exception {
+		try {
+			String[] keys = key.split("\\.");
+			NestedJsonAndKey found = getValueForKey(keys, 0, json);
+			if (found != null) {
+				found.set(value);
+			}
+			
+		} catch (Exception e) {
+			Log.w(App.LOG_TAG, "Could not set value key: " + key + " on plot/tree object");
+			throw e;
+		}		
+	}
+
+	public void update(Model model) throws Exception {
+		// If there is no valueView, this field was not rendered for edit
+		if (this.valueView != null) {
+			Object currentValue = getEditedValue();
+			setValueForKey(this.key, model.getData(), currentValue);
+		}
+	}
+
+	private Object getEditedValue() throws Exception {
+		if (this.valueView != null) {
+			
+			if (this.valueView instanceof EditText) {
+				return ((EditText) valueView).getText();
+			} else if (this.valueView instanceof Button) {
+				return this.valueView.getTag(R.id.choice_button_value_tag);
+			} else {
+				throw new Exception("Unknown ValueView type for field editing");
+			}
+		} 
+		return null;
 		
 	}
 }
