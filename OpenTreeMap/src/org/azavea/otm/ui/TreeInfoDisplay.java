@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,10 @@ public class TreeInfoDisplay extends TreeDisplay{
 		setHeaderValues(plot);
 		showPositionOnMap();
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-			fieldList.addView(group.renderForDisplay(layout, plot));
+			View fieldGroup = group.renderForDisplay(layout, plot);
+			if (fieldGroup != null) {
+				fieldList.addView(fieldGroup);
+			}
 		}
     }
     
