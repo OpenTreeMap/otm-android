@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,9 @@ public class Field {
 		put("mile", "mi");
 	}};
 
+	// Any choices associated with this field, keyed by value
+	private Map<Integer,Choice> choiceMap;
+	
 	// If this field has a choice list, these are the strings to display as choices
 	private ArrayList<String> choiceItems = new ArrayList<String>();
 	
@@ -119,18 +123,28 @@ public class Field {
 		}
 	}
 	
+	/* 
+	 * Render a view to display the given model field in view mode
+	 */
 	public View renderForDisplay(LayoutInflater layout, Model model) throws JSONException {
+		loadChoices();
+		Log.d("mjm", "working " + this.key);
 		View container = layout.inflate(R.layout.plot_field_row, null);
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
         ((TextView)container.findViewById(R.id.field_value))
         	.setText(formatUnit(getValueForKey(this.key, model.getData())));
+        
         return container;
 	}
-	
+
+	/* 
+	 * Render a view to display the given model field in edit mode
+	 */
 	public View renderForEdit(LayoutInflater layout, Model model, User user) 
 			throws JSONException {
 		
 		View container = null;
+		loadChoices();
 		
 		if (user.getReputation() >= this.minimumToEdit) {
 			container = layout.inflate(R.layout.plot_field_edit_row, null);
@@ -147,7 +161,8 @@ public class Field {
 	        	this.valueView = choiceButton;
 	        	setupChoiceDisplay(choiceButton, value);
 	        } else {
-	        	String safeValue = value != null ? value.toString() : ""; 
+	        	String safeValue = (value != null && !value.equals(null)) 
+	        			? value.toString() : ""; 
 	        	edit.setVisibility(View.VISIBLE);
 	        	choiceButton.setVisibility(View.GONE);
 		        edit.setText(safeValue);
@@ -162,29 +177,47 @@ public class Field {
 		return container;
 	}
 
-	private void setupChoiceDisplay(final Button choiceButton, Object value) {
+	public boolean hasChoices() {
+		if (this.choiceMap == null || this.choiceMap.size() ==0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void loadChoices() {
 		Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
-		Map<Integer,Choice> choiceMap = choices.getChoices();
+		if (choices != null && !choices.equals(null)) {
+			this.choiceMap = choices.getChoices();
+	
+	    	if (this.choiceItems.size() == 0) {
+				for (Entry<Integer, Choice> entry: choiceMap.entrySet()) {
+					this.choiceItems.add(entry.getValue().getText());
+					this.choiceValues.add(entry.getKey());
+				}
+	    	}
+		} else {
+			Log.w(App.LOG_TAG, "Unable to load specified choices: " + this.choiceName);
+		}
+	}
+
+	
+	private void setupChoiceDisplay(final Button choiceButton, Object value) {
 		
-		String label = "Unspecified";
-		final int v = value == null ? -1 : Integer.parseInt(value.toString()); 
+		choiceButton.setText(R.string.unspecified_field_value);
+		final int v = (value == null || value.equals(null)) 
+				? -1 : Integer.parseInt(value.toString()); 
 		
 		if (value != null) {
 			Choice currentChoice = choiceMap.get(v);
 			if (currentChoice != null) {
-				label = currentChoice.getText();
+				choiceButton.setText(currentChoice.getText());
 			}
 		}
-    	choiceButton.setText(label);
+		
     	choiceButton.setTag(R.id.choice_button_value_tag, value);
-			
-		for (Entry<Integer, Choice> entry: choiceMap.entrySet()) {
-			this.choiceItems.add(entry.getValue().getText());
-			this.choiceValues.add(entry.getKey());
-		}
 
 		handleChoiceDisplay(choiceButton, this);
-		
 	}
 
 	private void handleChoiceDisplay(final Button choiceButton,
@@ -197,7 +230,7 @@ public class Field {
 				Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
 				int checkedChoiceIndex = -1;
 
-				if (currentValue != null) {
+				if (currentValue != null && !currentValue.equals(null)) {
 					int val = Integer.parseInt(currentValue.toString());					
 					checkedChoiceIndex = editedField.choiceValues.indexOf(val);
 				} 
@@ -236,18 +269,27 @@ public class Field {
 	 */
 	public String formatUnit(Object value) {
 		// If there is no value, return an unspecified value
-		if (value == null) {
+		if (value == null || value.equals(null)) {
 			return App.getInstance().getResources()
 					.getString(R.string.unspecified_field_value);
+		} else if (hasChoices()) {
+			// If there are choices for this field, display the choice
+			// text, not the value
+			int v = Integer.parseInt(value.toString());
+			Choice choice = this.choiceMap.get(v);
+			if (choice != null) {
+				return choice.getText();
+			}
+			
 		} else if (format != null) {
 			return value.toString() + " " + unitFormatter.get(format);
-		}
+		} 
 		return value.toString();
 	}
 
 	/**
 	 * Return the value of a key name, which can be nested using . notation.  If the key does not 
-	 * exist, will return an empty string
+	 * exist or the value of the key, it will return a null value
 	 * @throws JSONException 
 	 */
 	protected Object getValueForKey(String key, JSONObject json) {
@@ -275,10 +317,13 @@ public class Field {
 			return getValueForKey(keys, index, child);
 		}
 		
-		if (json.isNull(keys[index])) {
+		// We care to distinguish between a null value and a missing key.
+		if (json.has(keys[index])) {
+			return new NestedJsonAndKey(json, keys[index]);	
+		} else {
 			return null;
 		}
-		return new NestedJsonAndKey(json, keys[index]);
+		
 	}
 	
 	
@@ -288,6 +333,8 @@ public class Field {
 			NestedJsonAndKey found = getValueForKey(keys, 0, json);
 			if (found != null) {
 				found.set(value);
+			} else {
+				Log.w(App.LOG_TAG, "Specified key does not exist, cannot set value: " + key);
 			}
 			
 		} catch (Exception e) {
@@ -306,11 +353,38 @@ public class Field {
 
 	private Object getEditedValue() throws Exception {
 		if (this.valueView != null) {
+			// For proper JSON encoding of types, we'll use the keyboard type
+			// to cast the edited value to the desired Java type.  Choice buttons
+			// are assumed to always be int
+			Log.d("mjm", " edit key " + this.key);
 			
 			if (this.valueView instanceof EditText) {
-				return ((EditText) valueView).getText();
+				EditText text = (EditText)valueView;
+				if (hasNoValue(text.getText().toString())) {
+					return null;
+				}
+				Log.d("mjm", "v :" + text.getText().toString());
+				int inputType = text.getInputType();
+				
+				if ((inputType & InputType.TYPE_CLASS_TEXT) == InputType.TYPE_CLASS_TEXT) {
+					return text.getText().toString();
+					
+				} else if ((inputType & InputType.TYPE_NUMBER_FLAG_DECIMAL) == InputType.TYPE_NUMBER_FLAG_DECIMAL) {
+					return Double.parseDouble(text.getText().toString());
+					
+				} else if ((inputType & InputType.TYPE_CLASS_NUMBER) == InputType.TYPE_CLASS_NUMBER) {
+					return Integer.parseInt(text.getText().toString());
+					
+				}
+				
+				return text.getText().toString();
+				
 			} else if (this.valueView instanceof Button) {
-				return this.valueView.getTag(R.id.choice_button_value_tag);
+				Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
+				if (choiceVal != null && !choiceVal.equals(null)) {
+					return Integer.parseInt(choiceVal.toString());
+				}
+				
 			} else {
 				throw new Exception("Unknown ValueView type for field editing");
 			}
@@ -318,4 +392,13 @@ public class Field {
 		return null;
 		
 	}
+
+	/**
+	 * Check if the value of an edit text has any kind of value
+	 * 
+	 */
+	private boolean hasNoValue(String text) {
+		return text.equals(null) || text == null || text.trim().equals("");
+	}
+
 }
