@@ -7,9 +7,11 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.EditEntry;
 import org.azavea.otm.data.EditEntryContainer;
+import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.azavea.otm.rest.handlers.RestHandler;
 import org.azavea.views.NotifyingScrollView;
 import org.json.JSONException;
 
@@ -102,6 +104,7 @@ public class ProfileDisplay extends Activity {
 	}
 
 	public void renderRecentEdits(final LayoutInflater layout) {
+		// Don't load additional edits if there are edits currently loading
 		if (loadingRecentEdits == true) {
 			return;
 		}
@@ -114,52 +117,8 @@ public class ProfileDisplay extends Activity {
 
 						@Override
 						public void dataReceived(EditEntryContainer container) {
-							LinkedHashMap<Integer, EditEntry> edits;
 							try {
-								edits = (LinkedHashMap<Integer, EditEntry>) container.getAll();
-								loadedEdits.putAll(edits);
-								
-								
-								LinearLayout scroll = (LinearLayout) findViewById(R.id.user_edits);
-								for (EditEntry edit: edits.values()) {
-									// Create a view for this edit entry, and add a click handler to it
-									View row = layout.inflate(R.layout.recent_edit_row, null);
-									
-									((TextView) row.findViewById(R.id.edit_type)).setText(capitalize(edit.getName()));
-									String editTime = new SimpleDateFormat("MMMMM dd, yyyy 'at' h:mm a").format(edit.getEditTime());
-									((TextView) row.findViewById(R.id.edit_time)).setText(editTime);
-									((TextView) row.findViewById(R.id.edit_value)).setText("+" + Integer.toString(edit.getValue()));
-									
-									row.setTag(edit.getId());
-									((RelativeLayout) row.findViewById(R.id.edit_row)).setOnClickListener(new View.OnClickListener() {
-										
-										@Override
-										public void onClick(View v) {
-											try {
-												EditEntry edit = loadedEdits.get(v.getTag());
-												if (edit.getPlot() != null) {
-							            			Intent viewPlot = new Intent(v.getContext(), TreeInfoDisplay.class);
-							            			viewPlot.putExtra("plot", edit.getPlot().getData().toString());
-
-							            			// TODO: Login user check/prompt
-							            			Log.d("mjm", "Logged in: " + App.getLoginManager().isLoggedIn());
-							            			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
-							            			startActivity(viewPlot);
-												}
-											} catch (Exception e) {
-												String msg = "Unable to display tree/plot info";
-												Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
-												Log.e(App.LOG_TAG, msg, e);
-											} 
-											
-										}
-									});
-									scroll.addView(row);
-								}
-								
-								// Increment the paging
-								editRequestCount += EDITS_TO_REQUEST;
-								
+								addEditEntriesToView(layout, container);
 								
 							} catch (JSONException e) {
 								Log.e(App.LOG_TAG, "Could not parse user edits response", e);
@@ -168,6 +127,60 @@ public class ProfileDisplay extends Activity {
 							} finally {
 								loadingRecentEdits = false;
 							}
+						}
+
+						private void addEditEntriesToView(final LayoutInflater layout,
+								EditEntryContainer container) throws JSONException {
+							
+							LinkedHashMap<Integer, EditEntry> edits = 
+									(LinkedHashMap<Integer, EditEntry>) container.getAll();
+							loadedEdits.putAll(edits);
+							
+							LinearLayout scroll = (LinearLayout) findViewById(R.id.user_edits);
+							for (EditEntry edit: edits.values()) {
+								// Create a view for this edit entry, and add a click handler to it
+								View row = layout.inflate(R.layout.recent_edit_row, null);
+								
+								((TextView) row.findViewById(R.id.edit_type)).setText(capitalize(edit.getName()));
+								String editTime = new SimpleDateFormat("MMMMM dd, yyyy 'at' h:mm a").format(edit.getEditTime());
+								((TextView) row.findViewById(R.id.edit_time)).setText(editTime);
+								((TextView) row.findViewById(R.id.edit_value)).setText("+" + Integer.toString(edit.getValue()));
+								
+								row.setTag(edit.getId());
+								
+								setPlotClickHandler(row);
+								
+								scroll.addView(row);
+							}
+							
+							// Increment the paging
+							editRequestCount += EDITS_TO_REQUEST;
+						}
+
+						private void setPlotClickHandler(View row) {
+							
+							((RelativeLayout) row.findViewById(R.id.edit_row)).setOnClickListener(new View.OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									try {
+										// TODO: Login user check/prompt
+										
+										EditEntry edit = loadedEdits.get(v.getTag());
+										if (edit.getPlot() != null) {
+							    			final Intent viewPlot = new Intent(v.getContext(), TreeInfoDisplay.class);
+							    			viewPlot.putExtra("plot", edit.getPlot().getData().toString());
+							    			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
+							    			startActivity(viewPlot);
+							    			
+										}
+									} catch (Exception e) {
+										String msg = "Unable to display tree/plot info";
+										Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+										Log.e(App.LOG_TAG, msg, e);
+									} 
+								}
+							});
 						}		
 						
 						@Override
