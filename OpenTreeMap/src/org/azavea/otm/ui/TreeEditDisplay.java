@@ -53,10 +53,12 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		try {
 
+			Log.d("mjm", plot.getData().toString());
 			for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
 				group.update(plot);
 			}
-
+			Log.d("mjm", "after " + plot.getData().toString());
+					
 			RequestGenerator rg = new RequestGenerator();
 			rg.updatePlot(App.getInstance(), plot.getId(), plot,
 					new RestHandler<Plot>(new Plot()) {
