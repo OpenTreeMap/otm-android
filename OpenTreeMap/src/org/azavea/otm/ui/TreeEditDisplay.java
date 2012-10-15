@@ -1,12 +1,18 @@
 package org.azavea.otm.ui;
 
+import java.util.Map.Entry;
+
 import org.azavea.otm.App;
+import org.azavea.otm.Field;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.EditEntryContainer;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.Species;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,10 +23,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class TreeEditDisplay extends TreeDisplay {
+
+	protected static final int SPECIES_SELECTOR = 0;
+	private Field speciesField;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,12 +41,45 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		showPositionOnMap();
 
+		// Add all the fields to the display for edit mode
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
 			View fieldGroup = group.renderForEdit(layout, plot, currentUser);
 			if (fieldGroup != null) {
 				fieldList.addView(fieldGroup);
 			}
 		}
+		
+		setupSpeciesSelector();
+	}
+
+	/**
+	 * Species selector has its own activity and workflow.  If it's enabled for
+	 * this implementation, it should have a field with an owner of tree.species.
+	 * Since Activities with results can only be started from within other 
+	 * activities, this is created here, and applied to the view contained by the
+	 * field class
+	 */
+	private void setupSpeciesSelector() {
+
+		OnClickListener speciesClickListener = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent speciesSelector = new Intent(App.getInstance(), SpeciesListDisplay.class);
+				startActivityForResult(speciesSelector, SPECIES_SELECTOR);
+			}
+		};
+
+		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
+			for (Entry<String, Field> fieldEntry : group.getFields().entrySet()) {
+				Field field = fieldEntry.getValue();
+				if (field.owner != null && field.owner.equals("tree.species")) {
+					speciesField = field;
+					speciesField.attachClickListener(speciesClickListener);
+				}
+			}
+		}
+				
 	}
 
 	/**
@@ -53,11 +96,9 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		try {
 
-			Log.d("mjm", plot.getData().toString());
 			for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
 				group.update(plot);
 			}
-			Log.d("mjm", "after " + plot.getData().toString());
 					
 			RequestGenerator rg = new RequestGenerator();
 			rg.updatePlot(App.getInstance(), plot.getId(), plot,
@@ -98,4 +139,30 @@ public class TreeEditDisplay extends TreeDisplay {
 		return true;
 	}
 
+	
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+	  super.onActivityResult(requestCode, resultCode, data); 
+	  switch(requestCode) { 
+	  	case (SPECIES_SELECTOR) : { 
+	  		if (resultCode == Activity.RESULT_OK) {
+	  			CharSequence speciesJSON = data.getCharSequenceExtra("species");
+	  			if (speciesJSON != null && !speciesJSON.equals(null)) {
+	  				Species species = new Species();
+	  				try {
+	  					
+						species.setData(new JSONObject(speciesJSON.toString()));
+						speciesField.setValue(species);
+						
+					} catch (JSONException e) {
+						String msg = "Unable to retrieve selected species";
+						Log.e(App.LOG_TAG, msg, e);
+						Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+					}
+	  			}
+	  		}
+	  		break; 
+	    } 
+	  } 
+	}
 }
