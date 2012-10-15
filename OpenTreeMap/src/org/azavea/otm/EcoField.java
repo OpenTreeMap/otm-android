@@ -15,9 +15,11 @@ public class EcoField extends Field {
 	private static final String UNIT_KEY = ".unit";
 	private static final String AMOUNT_KEY = ".dollars";
 	
+	// Eco fields are calculated, not edited, so they have much less
+	// information in their definition.
 	protected EcoField(String key, String label, int minimumToEdit, 
 			String keyboard, String format, String type)	{
-		super(key, label, minimumToEdit, keyboard, format, type, null);
+		super(key, label, minimumToEdit, keyboard, format, type, null, null);
 	}
 	
 	@Override
