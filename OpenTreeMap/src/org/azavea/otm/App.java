@@ -4,11 +4,7 @@ import org.azavea.lists.NearbyList;
 import org.azavea.map.TileRequestQueue;
 import org.azavea.map.WMSTileCache;
 import org.azavea.otm.FilterManager;
-import org.azavea.otm.rest.handlers.TileHandler;
-
 import com.loopj.android.http.AsyncHttpClient;
-
-import java.util.Hashtable;
 
 import android.app.Application;
 import android.content.Context;
