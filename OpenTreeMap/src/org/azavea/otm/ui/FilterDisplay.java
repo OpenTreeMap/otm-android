@@ -11,10 +11,12 @@ import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class FilterDisplay extends Activity{
@@ -172,9 +175,20 @@ public class FilterDisplay extends Activity{
 	  switch(requestCode) { 
 	  	case (SPECIES_SELECTOR) : { 
 	  		if (resultCode == Activity.RESULT_OK) {
-	  			int speciesId = data.getIntExtra("species_id", 0);
-	  			updateSpecies(App.getFilterManager().getSpecieById(speciesId));
-	  			
+	  			CharSequence speciesJSON = data.getCharSequenceExtra("species");
+	  			if (speciesJSON != null && !speciesJSON.equals(null)) {
+	  				Species species = new Species();
+	  				try {
+	  					
+						species.setData(new JSONObject(speciesJSON.toString()));
+						updateSpecies(species);	
+						
+					} catch (JSONException e) {
+						String msg = "Unable to retrieve selected species";
+						Log.e(App.LOG_TAG, msg, e);
+						Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+					}	
+	  			}
 	  		} 
 	  		break; 
 	    } 
