@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,17 +14,20 @@ import org.w3c.dom.Node;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Field {
 	
+
+	private static final String TREE_SPECIES = "tree.species";
 
 	private HashMap<String,String> unitFormatter = new HashMap<String,String>(){
 		private static final long serialVersionUID = 1L;
@@ -83,8 +87,14 @@ public class Field {
 	 */
 	public String choiceName = null;
 	
+	/**
+	 *  Refers to a key in the json which determines this field.  Currently
+	 *  it is only setup to support species list picker
+	 */
+	public String owner = null;
+	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
-			String format, String type, String choice) {
+			String format, String type, String choice, String owner) {
 		this.key = key;
 		this.label = label;
 		this.minimumToEdit = minimumToEdit;
@@ -92,6 +102,7 @@ public class Field {
 		this.format = format;
 		this.type = type;
 		this.choiceName = choice;
+		this.owner = owner;
 	}
 	
 	public static Field makeField(Node fieldNode) {
@@ -115,11 +126,15 @@ public class Field {
 		
 		node = fieldNode.getAttributes().getNamedItem("choice");
 		String choice = node == null ? null : node.getNodeValue();
+
+		node = fieldNode.getAttributes().getNamedItem("owner");
+		String owner = node == null ? null : node.getNodeValue();
 		
 		if (type != null && type.equals("eco")) {
 			return new EcoField(key, label, minimumToEdit, keyboardResource, format, type);
 		} else {
-			return new Field(key, label, minimumToEdit, keyboardResource, format, type, choice);
+			return new Field(key, label, minimumToEdit, keyboardResource, format, 
+					type, choice, owner);
 		}
 	}
 	
@@ -128,7 +143,7 @@ public class Field {
 	 */
 	public View renderForDisplay(LayoutInflater layout, Model model) throws JSONException {
 		loadChoices();
-		Log.d("mjm", "working " + this.key);
+
 		View container = layout.inflate(R.layout.plot_field_row, null);
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
         ((TextView)container.findViewById(R.id.field_value))
@@ -160,6 +175,13 @@ public class Field {
 	        	choiceButton.setVisibility(View.VISIBLE);
 	        	this.valueView = choiceButton;
 	        	setupChoiceDisplay(choiceButton, value);
+	        	
+	        } else if (this.owner != null) {
+	        	edit.setVisibility(View.GONE);
+	        	choiceButton.setVisibility(View.VISIBLE);
+	        	this.valueView = choiceButton;
+	        	setupOwnedField(choiceButton, value, model);
+	        	
 	        } else {
 	        	String safeValue = (value != null && !value.equals(null)) 
 	        			? value.toString() : ""; 
@@ -175,6 +197,25 @@ public class Field {
 		}
         
 		return container;
+	}
+
+	private void setupOwnedField(Button choiceButton, Object value, Model model) {
+		if (this.owner.equals(TREE_SPECIES)) {
+			JSONObject json  = model.getData();
+			Object speciesId = getValueForKey(this.owner, json);
+			
+			if (speciesId != null) {
+				// Set the button text to the common and sci name, which should be there
+				// if a species Id is set.  We can grab these straight from the tree object
+				// since the species list may still be loading
+				String sciName = (String)getValueForKey("tree.sci_name", json);
+				String commonName = (String)getValueForKey("tree.species_name", json);
+				choiceButton.setText(commonName + "\n" + sciName);
+			} else {
+				choiceButton.setText(R.string.unspecified_field_value);
+			}
+		}
+		
 	}
 
 	public boolean hasChoices() {
@@ -347,7 +388,14 @@ public class Field {
 		// If there is no valueView, this field was not rendered for edit
 		if (this.valueView != null) {
 			Object currentValue = getEditedValue();
-			setValueForKey(this.key, model.getData(), currentValue);
+			
+			// If this field is owned by another field, save the current
+			// value to the owner, not to the displayed field
+			String updateKey = this.key;
+			if (this.owner != null) {
+				updateKey = this.owner;
+			} 
+			setValueForKey(updateKey, model.getData(), currentValue);
 		}
 	}
 
@@ -356,14 +404,13 @@ public class Field {
 			// For proper JSON encoding of types, we'll use the keyboard type
 			// to cast the edited value to the desired Java type.  Choice buttons
 			// are assumed to always be int
-			Log.d("mjm", " edit key " + this.key);
 			
 			if (this.valueView instanceof EditText) {
 				EditText text = (EditText)valueView;
 				if (hasNoValue(text.getText().toString())) {
 					return null;
 				}
-				Log.d("mjm", "v :" + text.getText().toString());
+				
 				int inputType = text.getInputType();
 				
 				if ((inputType & InputType.TYPE_CLASS_TEXT) == InputType.TYPE_CLASS_TEXT) {
@@ -399,6 +446,46 @@ public class Field {
 	 */
 	private boolean hasNoValue(String text) {
 		return text.equals(null) || text == null || text.trim().equals("");
+	}
+
+	public void attachClickListener(OnClickListener speciesClickListener) {
+		if (this.valueView != null) {
+			this.valueView.setOnClickListener(speciesClickListener);
+		}
+	}
+
+	/**
+	 * Manual setting of the field value from an external client.  The only
+	 * current use case for this is setting the species value on a species 
+	 * selector from the calling activity.
+	 */
+	public void setValue(Object value) {
+		if (this.owner != null && this.owner.equals(TREE_SPECIES)) {
+			
+			try {
+				Species species = (Species)value;
+				
+				if (this.valueView != null) {
+				
+					Button speciesButton = (Button)this.valueView;
+				
+					if (species != null) {
+						
+						speciesButton.setTag(R.id.choice_button_value_tag, species.getId());
+						String label = species.getCommonName() + "\n" + species.getScientificName();
+						speciesButton.setText(label);
+				
+					}
+				}
+				
+			} catch (JSONException e) {
+				Log.e(App.LOG_TAG, "Unable to set new species on tree", e);
+				Toast.makeText(App.getInstance(), "Unable to set new species on tree", 
+						Toast.LENGTH_LONG).show();
+				
+			}
+		}
+		
 	}
 
 }
