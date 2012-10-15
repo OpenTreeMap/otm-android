@@ -126,13 +126,9 @@ public class SpeciesListDisplay extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Species selection = (Species)l.getItemAtPosition(position);
 		Intent result = new Intent();
-		// The underlying JSONObject of Species is not serializable, so just 
-		// return the information to use for querying
-		try {
-			result.putExtra("species_id", selection.getId());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
+		result.putExtra("species", selection.getData().toString());
+		
 		setResult(RESULT_OK, result);
 		finish();
 	}	    
