@@ -80,6 +80,10 @@ public class WMSTileRaster extends SurfaceView {
 	private boolean zoomComplete;
 
 	private long downTime;
+
+	private boolean poll;
+	
+	private boolean drawTiles;
 	
 	public WMSTileRaster(Context context) throws Exception {
 		super(context);
@@ -137,6 +141,8 @@ public class WMSTileRaster extends SurfaceView {
 	
 	private void handleActionUp(MotionEvent event) {
 		if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+			poll = false;
+			
 			// Figure out of this event is the end of a move or not
 			long upTime = event.getEventTime();
 			if (upTime - downTime > 250) {
@@ -181,7 +187,6 @@ public class WMSTileRaster extends SurfaceView {
 									
 									touchPoint = new GeoPoint((int)plotY, (int)plotX);
 									activityMapDisplay.showPopup(plot);
-								
 								} else {
 									touchPoint = null;
 									activityMapDisplay.hidePopup();
@@ -198,9 +203,20 @@ public class WMSTileRaster extends SurfaceView {
 						}
 					});
 
+			updatePanPosition();
+			
 			if (initialized) {
 				activityMapDisplay.getMapView().onTouchEvent(event);
 			}
+			
+		} else if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
+			poll = true;
+		} else if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
+			if (event.getPointerCount() > 1) {
+				drawTiles = false;
+			} else {
+				drawTiles = true;
+			}			
 		}
 	}
 
@@ -304,6 +320,10 @@ public class WMSTileRaster extends SurfaceView {
 		
 		numTilesOffsetX = 0;
 		numTilesOffsetY = 0;
+		
+		poll = false;
+		
+		drawTiles = true;
 
 		SharedPreferences prefs = App.getSharedPreferences();
 		int numTilesWithoutBorderX = Integer.parseInt(prefs.getString(
@@ -373,22 +393,24 @@ public class WMSTileRaster extends SurfaceView {
 	// Draw all tiles in grid at specified
 	// offset
 	private void drawTiles(Canvas canvas, int offsetX, int offsetY) {
-		canvas.save();
-		Matrix m = canvas.getMatrix();
-		m.preScale(zoomManager.getZoomFactor(), zoomManager.getZoomFactor());
-		canvas.setMatrix(m);
-		for (int x = 0; x < numTilesX; x++) {
-			for (int y = 0; y < numTilesY; y++) {
-				if (tiles[x][y] != null) {
-					tiles[x][y].draw(canvas,
-							(int) ((x - 1) * zoomManager.getWidth()),
-							(int) ((y - 1) * -1 * zoomManager.getHeight()),
-							tileWidth, tileHeight, offsetX, offsetY,
-							zoomManager.getZoomFactor(), scaledTiles);
+		if (drawTiles) {
+			canvas.save();
+			Matrix m = canvas.getMatrix();
+			m.preScale(zoomManager.getZoomFactor(), zoomManager.getZoomFactor());
+			canvas.setMatrix(m);
+			for (int x = 0; x < numTilesX; x++) {
+				for (int y = 0; y < numTilesY; y++) {
+					if (tiles[x][y] != null) {
+						tiles[x][y].draw(canvas,
+								(int) ((x - 1) * zoomManager.getWidth()),
+								(int) ((y - 1) * -1 * zoomManager.getHeight()),
+								tileWidth, tileHeight, offsetX, offsetY,
+								zoomManager.getZoomFactor(), scaledTiles);
+					}
 				}
 			}
+			canvas.restore();
 		}
-		canvas.restore();
 	}
 
 	// Get vertical direction in which to
@@ -458,20 +480,26 @@ public class WMSTileRaster extends SurfaceView {
 				new MapViewChangeListener());
 	}
 
+	private void updatePanPosition() {
+		OTMMapView mv = activityMapDisplay.getMapView();
+		
+		// Find out how far map is from our viewport
+		Projection proj = mv.getProjection();
+		Point overlayTopLeft = new Point();
+		proj.toPixels(topLeft, overlayTopLeft);
+
+		panOffsetX = overlayTopLeft.x;
+		panOffsetY = (int) (overlayTopLeft.y - (mv.getHeight() * zoomManager.getZoomFactor()));
+	}
+	
 	private void initPanPolling() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
-					OTMMapView mv = activityMapDisplay.getMapView();
-
-					// Find out how far map is from our viewport
-					Projection proj = mv.getProjection();
-					Point overlayTopLeft = new Point();
-					proj.toPixels(topLeft, overlayTopLeft);
-
-					panOffsetX = overlayTopLeft.x;
-					panOffsetY = (int) (overlayTopLeft.y - (mv.getHeight() * zoomManager.getZoomFactor()));
+					if (poll) {
+						updatePanPosition();
+					}
 				}
 			}
 		}).start();
@@ -535,6 +563,8 @@ public class WMSTileRaster extends SurfaceView {
 
 				zoomComplete = true;
 				WMSTileRaster.this.invalidate();
+				drawTiles = true;
+				updatePanPosition();
 			}
 		}
 	}
