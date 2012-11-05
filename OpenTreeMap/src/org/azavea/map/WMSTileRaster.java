@@ -9,6 +9,7 @@ import org.azavea.otm.rest.handlers.TileHandler;
 import org.azavea.otm.ui.MapDisplay;
 import org.json.JSONException;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
 import android.R;
@@ -28,6 +29,9 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceView;
 import android.view.ViewTreeObserver.OnTouchModeChangeListener;
 import android.view.WindowManager;
+import android.widget.ZoomButtonsController;
+import android.widget.ZoomButtonsController.OnZoomListener;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Projection;
@@ -469,12 +473,38 @@ public class WMSTileRaster extends SurfaceView {
 				this.postInvalidate();
 				initialized = true;
 				initPanPolling();
+				setupBuiltInZoomListener();
 			} else {
 				initialized = false;
 			}
 		}
 	}
 
+	private void setupBuiltInZoomListener() {
+		if (initialized) {
+			ZoomButtonsController zbc = activityMapDisplay.getMapView().getZoomButtonsController();
+			MapController mc = activityMapDisplay.getMapView().getController();
+			zbc.setOnZoomListener(new OnZoomListener() {
+				@Override
+				public void onVisibilityChanged(boolean arg0) {
+				
+				}
+
+				@Override
+				public void onZoom(boolean zoomIn) {
+					MapController mc = activityMapDisplay.getMapView().getController();
+					drawTiles = false;
+					poll = true;
+					if (zoomIn) {
+						mc.zoomIn();
+					} else {
+						mc.zoomOut();
+					}
+				}
+			});
+		}
+	}
+	
 	private void setupOnChangeListener() {
 		activityMapDisplay.getMapView().setOnChangeListener(
 				new MapViewChangeListener());
@@ -568,4 +598,6 @@ public class WMSTileRaster extends SurfaceView {
 			}
 		}
 	}
+	
+	
 }
