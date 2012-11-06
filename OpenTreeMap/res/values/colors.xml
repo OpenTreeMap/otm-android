@@ -6,6 +6,9 @@
     <color name="popup_background">#ffffff</color>
     <color name="no_image_background">#CCCCCC</color>
     
+    <color name="warning_action">#ff8080</color>
+	<color name="warning_action_end">#d23c3c</color>    
+    
     <color
         name="white">#fff</color>
     <color
@@ -54,4 +57,5 @@
         name="user_details_activity_general">#FF555555</color>
     <color
         name="transparent">#00000000</color>
+    
 </resources>
