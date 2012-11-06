@@ -112,6 +112,14 @@ public class RequestGenerator {
 	public void getAllSpecies(JsonHttpResponseHandler handler) {
 		client.get("/species", null, handler);
 	}
+
+	public void deleteCurrentTreeOnPlot(Context context, int plotId, JsonHttpResponseHandler handler)
+			throws JSONException {
+		
+		client.deleteWithAuthentication(context, "/plot/" + plotId + "/tree", 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), 
+				handler);
+	}
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
