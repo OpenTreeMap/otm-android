@@ -162,4 +162,20 @@ public class Plot extends Model {
 	public void setGeometry(Geometry geom) throws JSONException {
 		data.put("geometry", geom.getData());
 	}
+	
+	public boolean canEditPlot() throws JSONException {
+		return data.getJSONObject("perm").getJSONObject("plot").getBoolean("can_edit");
+	}
+	
+	public boolean canEditTree() throws JSONException {
+		return data.getJSONObject("perm").getJSONObject("tree").getBoolean("can_edit");
+	}
+	
+	public boolean canDeletePlot() throws JSONException {
+		return data.getJSONObject("perm").getJSONObject("plot").getBoolean("can_delete");
+	}
+	
+	public boolean canDeleteTree() throws JSONException {
+		return data.getJSONObject("perm").getJSONObject("tree").getBoolean("can_delete");
+	}	
 }
