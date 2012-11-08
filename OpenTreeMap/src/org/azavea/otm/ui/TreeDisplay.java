@@ -12,6 +12,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ public class TreeDisplay extends MapActivity{
 	protected GeoPoint plotLocation;
 	protected Plot plot;
 	protected User currentUser;
+	public int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;
 	
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
