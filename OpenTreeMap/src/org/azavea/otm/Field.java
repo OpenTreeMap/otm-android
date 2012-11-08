@@ -336,7 +336,7 @@ public class Field {
 	protected Object getValueForKey(String key, JSONObject json) {
 		try {
 			String[] keys = key.split("\\.");
-			NestedJsonAndKey found = getValueForKey(keys, 0, json);
+			NestedJsonAndKey found = getValueForKey(keys, 0, json, false);
 			if (found != null) {
 				return found.get();
 			} else {
@@ -351,11 +351,16 @@ public class Field {
 	/**
 	 * Return value for keys, which could be nested as an array
 	 */
-	private NestedJsonAndKey getValueForKey(String[] keys, int index, JSONObject json) throws JSONException {
+	private NestedJsonAndKey getValueForKey(String[] keys, int index, 
+			JSONObject json, boolean createNodeIfEmpty) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
-			JSONObject child = json.getJSONObject(keys[index]);
+			JSONObject child;
+			if (json.get(keys[index]) == null && createNodeIfEmpty) {
+				child = new JSONObject();
+			}
+			child= json.getJSONObject(keys[index]);
 			index++;
-			return getValueForKey(keys, index, child);
+			return getValueForKey(keys, index, child, createNodeIfEmpty);
 		}
 		
 		// We care to distinguish between a null value and a missing key.
@@ -371,7 +376,7 @@ public class Field {
 	private void setValueForKey(String key, JSONObject json, Object value) throws Exception {
 		try {
 			String[] keys = key.split("\\.");
-			NestedJsonAndKey found = getValueForKey(keys, 0, json);
+			NestedJsonAndKey found = getValueForKey(keys, 0, json, true);
 			if (found != null) {
 				found.set(value);
 			} else {
