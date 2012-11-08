@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Plot extends Model {
-	public Plot() throws JSONException {
+	public Plot() {
 		data = new JSONObject();
 	}
 	
@@ -164,18 +164,40 @@ public class Plot extends Model {
 	}
 	
 	public boolean canEditPlot() throws JSONException {
-		return data.getJSONObject("perm").getJSONObject("plot").getBoolean("can_edit");
+		return getPermission("plot", "can_edit");
 	}
 	
 	public boolean canEditTree() throws JSONException {
-		return data.getJSONObject("perm").getJSONObject("tree").getBoolean("can_edit");
+		return getPermission("tree", "can_edit");
 	}
 	
 	public boolean canDeletePlot() throws JSONException {
-		return data.getJSONObject("perm").getJSONObject("plot").getBoolean("can_delete");
+		return getPermission("plot", "can_delete");
 	}
 	
 	public boolean canDeleteTree() throws JSONException {
-		return data.getJSONObject("perm").getJSONObject("tree").getBoolean("can_delete");
-	}	
+		return getPermission("tree", "can_delete");
+	}
+	
+	/**
+	 * Get a plot or tree permission from a plot json
+	 * @param name: "tree" or "plot"
+	 * @param editType "can_edit" or "can_delete"
+	 * @return
+	 */
+	private boolean getPermission(String name, String editType) {
+		try {
+			if (data.has("perm")) {
+				JSONObject perm = data.getJSONObject("perm");
+				
+				if (perm.has(name)) {
+					JSONObject json = perm.getJSONObject(name);
+					return json.getBoolean(editType);
+				}
+			}
+			return false;
+		} catch (JSONException e) {
+			return false;
+		}
+	}
 }
