@@ -6,6 +6,8 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,8 +26,14 @@ public class TreeInfoDisplay extends TreeDisplay{
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.plot_view_activity);
+    	loadPlotInfo();
+    }
+    
+    private void loadPlotInfo() {
+    	
     	
         LinearLayout fieldList = (LinearLayout)findViewById(R.id.field_list);
+        fieldList.removeAllViewsInLayout();
         LayoutInflater layout = ((Activity)this).getLayoutInflater();
 
         
@@ -39,7 +47,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 			}
 		}
     }
-    
    
 	private void setHeaderValues(Plot plot) {
 		try {
@@ -48,12 +55,14 @@ public class TreeInfoDisplay extends TreeDisplay{
 			Tree tree = plot.getTree();
 			if (tree != null) {
 				setText(R.id.species, tree.getSpeciesName());
+			} else {
+				setText(R.id.species, getResources().getString(R.string.species_missing));
 			}
 			
 			setText(R.id.updated_on, "Last updated on " + plot.getLastUpdated());
 			setText(R.id.updated_by, "By " + plot.getLastUpdatedBy());
 		} catch (JSONException e) {
-			Toast.makeText(this, "Could access plot information for display", 
+			Toast.makeText(this, "Could not access plot information for display", 
 					Toast.LENGTH_SHORT).show();
 			Log.e(App.LOG_TAG, "Failed to create tree view", e);
 		}
@@ -85,4 +94,40 @@ public class TreeInfoDisplay extends TreeDisplay{
         }
         return true;
     }
+    
+    @Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+	  super.onActivityResult(requestCode, resultCode, data); 
+	  switch(requestCode) { 
+	  	case (EDIT_REQUEST) : { 
+	  		
+	  		if (resultCode == Activity.RESULT_OK) { 
+	  			// The tree/plot has been updated, possibly deleted.
+	  			String plotJSON = data.getStringExtra("plot");
+	  			if (plotJSON != null) {
+	  				
+	  				// The plot has been edited, reload the info page
+	  				plot = new Plot();
+	  				try {
+	  					Log.d("mjm", plotJSON);
+						plot.setData(new JSONObject(plotJSON));
+						loadPlotInfo();
+						
+					} catch (JSONException e) {
+						Log.e(App.LOG_TAG, "Unable to load edited plot");
+						finish();
+					}
+	  			}
+	  			
+  			} else if (resultCode == RESULT_PLOT_DELETED){
+  				// If the plot is deleted, finish back to the caller
+  				finish();
+  				
+	  		} else if (resultCode == Activity.RESULT_CANCELED) {
+	  			// Do nothing?
+	  		}
+	  		break; 
+	    } 
+	  } 
+	}    
 }
