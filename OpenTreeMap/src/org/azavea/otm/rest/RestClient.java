@@ -126,8 +126,10 @@ public class RestClient {
 	 */
 	public void deleteWithAuthentication(Context context, String url, String username, 
 			String password, AsyncHttpResponseHandler responseHandler) {
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl += "?apikey=" + getApiKey();
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
-		client.delete(context, getAbsoluteUrl(url), headers, responseHandler);
+		client.delete(context, completeUrl, headers, responseHandler);
 	}
 	
 	private RequestParams prepareParams(RequestParams params) {
