@@ -62,9 +62,9 @@
     
     <string name="delete">Delete</string>
     <string name="delete_tree">Delete Tree</string>
-    <string name="delete_plot">Delete Plot</string>
+    <string name="delete_plot">Delete Planting Site</string>
     <string name="confirm_delete">Confirm Delete</string>
-    <string name="confirm_delete_plot_msg">Are you sure you want to delete this Tree Plot?</string>
+    <string name="confirm_delete_plot_msg">Are you sure you want to delete this Planting Site?</string>
     <string name="confirm_delete_tree_msg">Are you sure you want to delete this Tree?</string>
     
     
