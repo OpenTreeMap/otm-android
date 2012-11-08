@@ -144,8 +144,16 @@ public class RequestGenerator {
 
 	public void deleteCurrentTreeOnPlot(Context context, int plotId, JsonHttpResponseHandler handler)
 			throws JSONException {
-		
-		client.deleteWithAuthentication(context, "/plot/" + plotId + "/tree", 
+
+		client.deleteWithAuthentication(context, "/plots/" + plotId + "/tree", 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), 
+				handler);
+	}
+	
+	public void deletePlot(Context context, int plotId, JsonHttpResponseHandler handler)
+			throws JSONException {
+
+		client.deleteWithAuthentication(context, "/plots/" + plotId, 
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), 
 				handler);
 	}
