@@ -54,10 +54,24 @@ public class RequestGenerator {
 	}
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
-		client.get("/locations/" + geoY + "," + geoX + "/plots", null, handler);
+		String url = "/locations/" + geoY + "," + geoX + "/plots";
+		try {
+			if (loginManager.isLoggedIn()) {
+				client.getWithAuthentication(App.getInstance(), url, 
+						loginManager.loggedInUser.getUserName(), 
+						loginManager.loggedInUser.getPassword(), 
+						null, handler);
+			} else {
+				client.get(url, null, handler);	
+			}
+		} catch (JSONException e) {
+			// If user json error, request with no auth
+			client.get(url, null, handler);
+		}
 	}
 	
-	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending, ContainerRestHandler<PlotContainer> handler) {
+	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending, 
+			ContainerRestHandler<PlotContainer> handler) {
 		SharedPreferences sharedPrefs = App.getSharedPreferences();
 		String maxPlots = sharedPrefs.getString("max_nearby_plots", "10");
 		
@@ -65,7 +79,22 @@ public class RequestGenerator {
 		params.put("max_plots", maxPlots);
 		params.put("filter_recent", Boolean.toString(recent));
 		params.put("filter_pending", Boolean.toString(pending));
-		client.get("/locations/" + geoY + "," + geoX + "/plots", params, handler);
+		
+		String url = "/locations/" + geoY + "," + geoX + "/plots";
+		
+		try {
+			if (loginManager.isLoggedIn()) {
+				client.getWithAuthentication(App.getInstance(), url, 
+						loginManager.loggedInUser.getUserName(), 
+						loginManager.loggedInUser.getPassword(), 
+						params, handler);
+			} else {
+				client.get(url, params, handler);	
+			}
+		} catch (JSONException e) {
+			// If user json error, request with no auth
+			client.get(url, params, handler);
+		}		
 	}
 	
 	public void updatePlot(Context context, int id, Plot plot, 
@@ -93,7 +122,7 @@ public class RequestGenerator {
 			client.getWithAuthentication(context, "/user/" + user.getId() + "/edits", 
 					loginManager.loggedInUser.getUserName(), 
 					loginManager.loggedInUser.getPassword(),
-					new RequestParams(params), handler);
+						new RequestParams(params), handler);
 		}
 	}
 	
