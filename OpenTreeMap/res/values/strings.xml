@@ -66,6 +66,7 @@
     <string name="confirm_delete">Confirm Delete</string>
     <string name="confirm_delete_plot_msg">Are you sure you want to delete this Planting Site?</string>
     <string name="confirm_delete_tree_msg">Are you sure you want to delete this Tree?</string>
+    <string name="change_tree_picture">Change Tree Picture</string>
     
     
     

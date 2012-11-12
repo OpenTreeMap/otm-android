@@ -31,10 +31,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.graphics.Bitmap;
 
 public class TreeEditDisplay extends TreeDisplay {
 
 	protected static final int SPECIES_SELECTOR = 0;
+	protected static final int TREE_PHOTO = 1;
+	
 	private Field speciesField;
 
 	final ProgressDialog deleteDialog = new ProgressDialog(App.getInstance());
@@ -108,6 +111,8 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 		setupSpeciesSelector();
 		
+		setupChangePhotoButton(layout, fieldList);
+		
 		setupDeleteButtons(layout, fieldList);		
 	}
 	
@@ -141,6 +146,15 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	}
 	
+	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
+		View actionPanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+		
+		actionPanel.findViewById(R.id.edit_tree_picture).setVisibility(View.VISIBLE);
+		fieldList.addView(actionPanel);
+		
+	}
+	
+	
 	public void confirmDelete(int messageResource, final Callback callback) {
 		final Activity thisActivity = this;
 		
@@ -166,6 +180,11 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	}
 
+	public void changeTreePhoto(View view) {
+		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, TREE_PHOTO);
+	}
+	
 	public void deleteTree(View view) {
 		Callback confirm = new Callback() {
 			
@@ -324,6 +343,29 @@ public class TreeEditDisplay extends TreeDisplay {
 	  		}
 	  		break; 
 	    } 
-	  } 
+	  	case (TREE_PHOTO) : { 
+		  	if (resultCode == Activity.RESULT_OK) {
+		  		Log.d(App.LOG_TAG, "Got tree photo.");
+		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
+		  		
+		  		/*CharSequence speciesJSON = data.getCharSequenceExtra("species");
+	  			if (speciesJSON != null && !speciesJSON.equals(null)) {
+	  				Species species = new Species();
+	  				try {
+	  					
+						species.setData(new JSONObject(speciesJSON.toString()));
+						speciesField.setValue(species);
+						
+					} catch (JSONException e) {
+						String msg = "Unable to retrieve selected species";
+						Log.e(App.LOG_TAG, msg, e);
+						Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+					}
+	  			}
+	  			*/
+	  		}
+	  		break; 
+	    } 
+	  }
 	}
 }

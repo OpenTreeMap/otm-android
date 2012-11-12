@@ -15,11 +15,13 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.graphics.Bitmap;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 
 public class RequestGenerator {
 	private RestClient client;
@@ -52,6 +54,11 @@ public class RequestGenerator {
 	public void getImage(int plotId, int imageId, BinaryHttpResponseHandler binaryHttpResponseHandler) {
 		client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
 	}
+	
+	public void addTreePhoto(int plotId, Bitmap bm) {
+		
+	}
+	
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
 		String url = "/locations/" + geoY + "," + geoX + "/plots";
