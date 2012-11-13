@@ -25,7 +25,7 @@
 			android:layout_height="100dp"
 			android:enabled="true"
 			android:clickable="false"
-			android:apiKey="0oNSfjh7cn05XmJ-qgSrPTdUch8X2L9BMYmKdHA" />
+			android:apiKey="@string/maps_apikey" />
 	            	
 	    </LinearLayout>
 	    
