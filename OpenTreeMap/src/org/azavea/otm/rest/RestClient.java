@@ -160,6 +160,8 @@ public class RestClient {
 		Log.d("sqh", value);
 		localClient.addHeader(header, value);
 		
+		// Fuh..
+		localClient.setTimeout(20000);
 		// And finally...
 		localClient.post(context, completeUrl, bae, contentType, responseHandler);
 	}
