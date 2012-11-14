@@ -173,8 +173,6 @@ public class RequestGenerator {
 			JsonHttpResponseHandler handler)
 			throws JSONException {
 		
-		Log.d("sqh", "requestGenerator.addTreePhoto");
-		
 		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm, 
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
 				handler);

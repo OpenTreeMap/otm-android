@@ -90,16 +90,12 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.d("sqh", response.toString());
 			try {
 				if (response.get("status").equals("success")) {
-					//deleteDialog.dismiss();
-					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();
-					//setResult(RESULT_PLOT_DELETED);
-					//finish();
-					
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
 				} else {
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
 					Log.d("sqh", "photo response no success");
 				}
 			} catch (JSONException e) {
-				//deleteDialog.dismiss();
 				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
 			}
 		};
@@ -107,6 +103,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.d("sqh", "addTreePhotoHandler.onFailure");
 			Log.d("sqh", errorResponse.toString());
 			Log.d("sqh", e.getMessage());
+			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
@@ -116,7 +113,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.d("sqh", "e.getMessage: " + e.getMessage());
 			Log.d("sqh", "e.getCause: " + e.getCause());
 			e.printStackTrace();
-			
+			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();					
 		};
 		public void onFinish() {
 			Log.d("sqh", "addTreePhotoHandler.onFinish");
@@ -383,9 +380,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	  		break; 
 	    } 
 	  	case (TREE_PHOTO) : {
-			Log.d(App.LOG_TAG, "TREE_PHOTO case in onActivityResult");
 		  	if (resultCode == Activity.RESULT_OK) {
-		  		Log.d(App.LOG_TAG, "Got tree photo.");
 		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
 		  		RequestGenerator rc = new RequestGenerator();
 				try {

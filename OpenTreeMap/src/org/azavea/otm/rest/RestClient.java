@@ -127,41 +127,38 @@ public class RestClient {
 	
 	
 	
+	// This overloading of the postWithAuthentication method takes a bitmap, and posts
+	// it as an PNG HTTP Entity.
 	public void postWithAuthentication(Context context, String url, Bitmap bm, String username,
 			String password, JsonHttpResponseHandler responseHandler) {
-		String contentType = "image/png";
+		
 		String completeUrl = getAbsoluteUrl(url);
 		completeUrl += "?apikey=" + getApiKey();
 		
-		// Debugging
-		Log.d("sqh", "in restclient.postWithAuthentication (photo)");
-		//Log.d("SQH", "debug - uname: " + username);
-		//Log.d("SQH", "debug - pwd: " + password);
-		//Log.d("SQH", "doing post. (photo)");
-		Log.d("sqh", completeUrl);
-		Log.d("sqh", "beginning antics");
-		// We need to coerce the bitmap into a BAE so that we can post it.
+		// Content type also needs to be pinned down in the Bitmap.compress
+		// call, which is why I haven't exposed it as a parameter.
+		String contentType = "image/png";
+				
+		// We need to coerce the bitmap into a ByteArrayEntity so that we can post it.
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
 		bm.compress(CompressFormat.PNG, 0, bos); 
 		byte[] bitmapdata = bos.toByteArray();
 		ByteArrayEntity bae = new ByteArrayEntity(bitmapdata);
-		Log.d("sqh", String.format("byte array length %d", bitmapdata.length));
 		
-		// This client needs headers because there is no post method that takes both
-		// an entity and headers.  I assert that we don't get anything by having one
-		// global client object because AHC instantiation is so easy.  Maybe I am wrong.
+		// This client needs authentication headers because there is no post method that takes both
+		// an entity and headers.  I assert that we don't get anything for free anyway by having one
+		// global AsyncHttpClient object because instantiation of that class is so easy.
 		AsyncHttpClient localClient = new AsyncHttpClient();
 		String credentials = String.format("%s:%s", username, password);
-		Log.d("sqh", "credentials: " + credentials);
 		String encoded = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 		String header = "Authorization";
 		String value = String.format("%s %s", "Basic", encoded);
-		Log.d("sqh", header);
-		Log.d("sqh", value);
 		localClient.addHeader(header, value);
 		
-		// Fuh..
+		// This is nominally in ms, but that doesn't seem to bear out.
+		// Default is 10s, which can cause a timeout exception.
 		localClient.setTimeout(20000);
+		
 		// And finally...
 		localClient.post(context, completeUrl, bae, contentType, responseHandler);
 	}
