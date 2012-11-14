@@ -125,52 +125,43 @@ public class RestClient {
 				responseHandler);
 	}	
 	
-	public void postWithAuthentication(Context context, String url, RequestParams params, String username, String password, String contentType,  JsonHttpResponseHandler responseHandler) {
-		Log.d("sqh", "in restclient.postWithAuthentication (photo)");
-		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
-		Log.d("SQH", "debug - uname: " + username);
-		Log.d("SQH", "debug - pwd: " + password);
-		Header[] headers = {createBasicAuthenticationHeader(username, password)};	
-		Log.d("SQH", "doing post. (photo)");
-		Log.d("sqh", completeUrl);
-		client.post(context, completeUrl, headers, params, contentType, responseHandler);
-
-		//client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
-	    //client.post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) 
-	}
 	
-	public void postWithAuthentication(Context context, String url, Bitmap bm, String username, String password, String contentType,  JsonHttpResponseHandler responseHandler) {
+	
+	public void postWithAuthentication(Context context, String url, Bitmap bm, String username,
+			String password, JsonHttpResponseHandler responseHandler) {
+		String contentType = "image/png";
 		String completeUrl = getAbsoluteUrl(url);
 		completeUrl += "?apikey=" + getApiKey();
 		
 		// Debugging
 		Log.d("sqh", "in restclient.postWithAuthentication (photo)");
-		Log.d("SQH", "debug - uname: " + username);
-		Log.d("SQH", "debug - pwd: " + password);
-		Log.d("SQH", "doing post. (photo)");
+		//Log.d("SQH", "debug - uname: " + username);
+		//Log.d("SQH", "debug - pwd: " + password);
+		//Log.d("SQH", "doing post. (photo)");
 		Log.d("sqh", completeUrl);
-		
+		Log.d("sqh", "beginning antics");
 		// We need to coerce the bitmap into a BAE so that we can post it.
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
-		bm.compress(CompressFormat.PNG, 75, bos); 
+		bm.compress(CompressFormat.PNG, 0, bos); 
 		byte[] bitmapdata = bos.toByteArray();
 		ByteArrayEntity bae = new ByteArrayEntity(bitmapdata);
+		Log.d("sqh", String.format("byte array length %d", bitmapdata.length));
 		
 		// This client needs headers because there is no post method that takes both
 		// an entity and headers.  I assert that we don't get anything by having one
 		// global client object because AHC instantiation is so easy.  Maybe I am wrong.
-		AsyncHttpClient client = new AsyncHttpClient();
+		AsyncHttpClient localClient = new AsyncHttpClient();
 		String credentials = String.format("%s:%s", username, password);
+		Log.d("sqh", "credentials: " + credentials);
 		String encoded = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 		String header = "Authorization";
 		String value = String.format("%s %s", "Basic", encoded);
 		Log.d("sqh", header);
 		Log.d("sqh", value);
-		client.addHeader(header, value);
+		localClient.addHeader(header, value);
 		
 		// And finally...
-		client.post(context, completeUrl, bae, contentType, responseHandler);
+		localClient.post(context, completeUrl, bae, contentType, responseHandler);
 	}
 
 	

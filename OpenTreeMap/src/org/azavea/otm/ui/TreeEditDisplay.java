@@ -89,18 +89,18 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.d("sqh", "addTreePhotoHandler.onSuccess");
 			Log.d("sqh", response.toString());
 			try {
-				if (response.getBoolean("ok")) {
+				if (response.get("status").equals("success")) {
 					//deleteDialog.dismiss();
-					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();
 					//setResult(RESULT_PLOT_DELETED);
 					//finish();
 					
 				} else {
-					Log.d("sqh", "photo response boolean not ok");
+					Log.d("sqh", "photo response no success");
 				}
 			} catch (JSONException e) {
 				//deleteDialog.dismiss();
-				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_SHORT).show();
+				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
 			}
 		};
 		public void onFailure(Throwable e, JSONObject errorResponse) {

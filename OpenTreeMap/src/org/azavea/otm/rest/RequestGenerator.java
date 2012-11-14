@@ -169,24 +169,16 @@ public class RequestGenerator {
 				handler);
 	}
 
-	public void addTreePhoto(Context context, int plotId, Bitmap bm, JsonHttpResponseHandler handler)
+	public void addTreePhoto(Context context, int plotId, Bitmap bm, 
+			JsonHttpResponseHandler handler)
 			throws JSONException {
 		
 		Log.d("sqh", "requestGenerator.addTreePhoto");
-		RequestParams params = new RequestParams();
 		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
-		bm.compress(CompressFormat.PNG, 75, bos); 
-		byte[] bitmapdata = bos.toByteArray();
-		ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
-		
-		params.put("tree_photo", bs);
-		
-		
-		Log.d("sqh", "calling postWithAuthentication with for photo");
-		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", params, 
-				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), "image/png",
+		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm, 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
 				handler);
+		
 	}
 
 	
