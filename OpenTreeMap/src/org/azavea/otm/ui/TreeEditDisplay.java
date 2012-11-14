@@ -84,6 +84,45 @@ public class TreeEditDisplay extends TreeDisplay {
 		};
 	};
 	
+	private JsonHttpResponseHandler addTreePhotoHandler = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject response) {
+			Log.d("sqh", "addTreePhotoHandler.onSuccess");
+			Log.d("sqh", response.toString());
+			try {
+				if (response.getBoolean("ok")) {
+					//deleteDialog.dismiss();
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_SHORT).show();
+					//setResult(RESULT_PLOT_DELETED);
+					//finish();
+					
+				} else {
+					Log.d("sqh", "photo response boolean not ok");
+				}
+			} catch (JSONException e) {
+				//deleteDialog.dismiss();
+				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_SHORT).show();
+			}
+		};
+		public void onFailure(Throwable e, JSONObject errorResponse) {
+			Log.d("sqh", "addTreePhotoHandler.onFailure");
+			Log.d("sqh", errorResponse.toString());
+			Log.d("sqh", e.getMessage());
+		};
+		
+		protected void handleFailureMessage(Throwable e, String responseBody) {
+			Log.d("sqh", "addTreePhotoHandler.handleFailureMessage");
+			Log.d("sqh", "e.toString " + e.toString());
+			Log.d("sqh", "responseBody: " + responseBody);
+			Log.d("sqh", "e.getMessage: " + e.getMessage());
+			Log.d("sqh", "e.getCause: " + e.getCause());
+			e.printStackTrace();
+			
+		};
+		public void onFinish() {
+			Log.d("sqh", "addTreePhotoHandler.onFinish");
+		}
+	};
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initializeEditPage();
@@ -343,26 +382,17 @@ public class TreeEditDisplay extends TreeDisplay {
 	  		}
 	  		break; 
 	    } 
-	  	case (TREE_PHOTO) : { 
+	  	case (TREE_PHOTO) : {
+			Log.d(App.LOG_TAG, "TREE_PHOTO case in onActivityResult");
 		  	if (resultCode == Activity.RESULT_OK) {
 		  		Log.d(App.LOG_TAG, "Got tree photo.");
 		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
-		  		
-		  		/*CharSequence speciesJSON = data.getCharSequenceExtra("species");
-	  			if (speciesJSON != null && !speciesJSON.equals(null)) {
-	  				Species species = new Species();
-	  				try {
-	  					
-						species.setData(new JSONObject(speciesJSON.toString()));
-						speciesField.setValue(species);
-						
-					} catch (JSONException e) {
-						String msg = "Unable to retrieve selected species";
-						Log.e(App.LOG_TAG, msg, e);
-						Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-					}
-	  			}
-	  			*/
+		  		RequestGenerator rc = new RequestGenerator();
+				try {
+					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
+				}
 	  		}
 	  		break; 
 	    } 

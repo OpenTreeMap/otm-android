@@ -1,8 +1,11 @@
 package org.azavea.otm.rest;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.http.Header;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.azavea.otm.App;
@@ -10,11 +13,14 @@ import org.azavea.otm.data.Model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.util.Base64;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 // This class is designed to take care of the base-url
@@ -62,6 +68,8 @@ public class RestClient {
 		RequestParams reqParams = prepareParams(params);
 		client.post(getAbsoluteUrl(url), reqParams, responseHandler);
 	}
+	
+	
 	
 	public void put(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
@@ -115,8 +123,57 @@ public class RestClient {
 		
 		client.post(context, completeUrl, headers, modelEntity, "application/json", 
 				responseHandler);
+	}	
+	
+	public void postWithAuthentication(Context context, String url, RequestParams params, String username, String password, String contentType,  JsonHttpResponseHandler responseHandler) {
+		Log.d("sqh", "in restclient.postWithAuthentication (photo)");
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl += "?apikey=" + getApiKey();
+		Log.d("SQH", "debug - uname: " + username);
+		Log.d("SQH", "debug - pwd: " + password);
+		Header[] headers = {createBasicAuthenticationHeader(username, password)};	
+		Log.d("SQH", "doing post. (photo)");
+		Log.d("sqh", completeUrl);
+		client.post(context, completeUrl, headers, params, contentType, responseHandler);
+
+		//client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
+	    //client.post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) 
+	}
+	
+	public void postWithAuthentication(Context context, String url, Bitmap bm, String username, String password, String contentType,  JsonHttpResponseHandler responseHandler) {
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl += "?apikey=" + getApiKey();
+		
+		// Debugging
+		Log.d("sqh", "in restclient.postWithAuthentication (photo)");
+		Log.d("SQH", "debug - uname: " + username);
+		Log.d("SQH", "debug - pwd: " + password);
+		Log.d("SQH", "doing post. (photo)");
+		Log.d("sqh", completeUrl);
+		
+		// We need to coerce the bitmap into a BAE so that we can post it.
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+		bm.compress(CompressFormat.PNG, 75, bos); 
+		byte[] bitmapdata = bos.toByteArray();
+		ByteArrayEntity bae = new ByteArrayEntity(bitmapdata);
+		
+		// This client needs headers because there is no post method that takes both
+		// an entity and headers.  I assert that we don't get anything by having one
+		// global client object because AHC instantiation is so easy.  Maybe I am wrong.
+		AsyncHttpClient client = new AsyncHttpClient();
+		String credentials = String.format("%s:%s", username, password);
+		String encoded = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+		String header = "Authorization";
+		String value = String.format("%s %s", "Basic", encoded);
+		Log.d("sqh", header);
+		Log.d("sqh", value);
+		client.addHeader(header, value);
+		
+		// And finally...
+		client.post(context, completeUrl, bae, contentType, responseHandler);
 	}
 
+	
 	public void delete(String url, AsyncHttpResponseHandler responseHandler) {
 		client.delete(getAbsoluteUrl(url), responseHandler);
 	}

@@ -1,11 +1,14 @@
 package org.azavea.otm.rest;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
+import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
@@ -16,6 +19,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -164,6 +168,29 @@ public class RequestGenerator {
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), 
 				handler);
 	}
+
+	public void addTreePhoto(Context context, int plotId, Bitmap bm, JsonHttpResponseHandler handler)
+			throws JSONException {
+		
+		Log.d("sqh", "requestGenerator.addTreePhoto");
+		RequestParams params = new RequestParams();
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+		bm.compress(CompressFormat.PNG, 75, bos); 
+		byte[] bitmapdata = bos.toByteArray();
+		ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
+		
+		params.put("tree_photo", bs);
+		
+		
+		Log.d("sqh", "calling postWithAuthentication with for photo");
+		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", params, 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), "image/png",
+				handler);
+	}
+
+	
+	
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
