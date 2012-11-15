@@ -92,7 +92,7 @@ public class TreeEditDisplay extends TreeDisplay {
 				if (response.get("status").equals("success")) {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
 				} else {
-					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
+					Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
 					Log.d("AddTreePhoto", "photo response no success");
 				}
 			} catch (JSONException e) {

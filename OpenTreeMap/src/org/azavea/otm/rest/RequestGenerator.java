@@ -31,6 +31,8 @@ public class RequestGenerator {
 	private RestClient client;
 	LoginManager loginManager = App.getLoginManager();
 	
+	private static int PHOTOUPLOADTIMEOUT = 30000;
+	
 	public RequestGenerator() {
 		client = new RestClient();
 	}
@@ -168,13 +170,18 @@ public class RequestGenerator {
 	public void addTreePhoto(Context context, int plotId, Bitmap bm, 
 			JsonHttpResponseHandler handler)
 			throws JSONException {
-		int TIMEOUT = 30000;
 		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm, 
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
-				handler, TIMEOUT);
-		
+				handler, PHOTOUPLOADTIMEOUT);
 	}
 
+	public void addProfilePhoto(Context context, Bitmap bm, JsonHttpResponseHandler handler)
+			throws JSONException {
+		client.postWithAuthentication(context, "/user/" + loginManager.loggedInUser.getId() + "/photo/profile", bm, 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
+				handler, PHOTOUPLOADTIMEOUT);
+		
+	}
 	
 	
 	

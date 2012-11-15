@@ -14,9 +14,13 @@ import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.azavea.views.NotifyingScrollView;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +33,9 @@ import android.widget.Toast;
 public class ProfileDisplay extends Activity {
 
 	private final RequestGenerator client = new RequestGenerator();
+	private final int SHOW_LOGIN = 0;
 	private final int EDITS_TO_REQUEST = 5;
+	private final int PROFILE_PHOTO = 7;
 	private int editRequestCount = 0;
 	private boolean loadingRecentEdits = false; 
 	private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer,EditEntry>();
@@ -100,7 +106,7 @@ public class ProfileDisplay extends Activity {
 
 	public void showLogin(View button) {
 		Intent login = new Intent(this, LoginActivity.class);
-		startActivityForResult(login, 0);
+		startActivityForResult(login, SHOW_LOGIN);
 	}
 
 	public void renderRecentEdits(final LayoutInflater layout) {
@@ -206,7 +212,17 @@ public class ProfileDisplay extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			Log.d(App.LOG_TAG, "Reload profile for new user login");
-			loadProfile();
+			if (requestCode == SHOW_LOGIN) {
+				loadProfile();				
+			} else if (requestCode == PROFILE_PHOTO) {
+				Bitmap bm = (Bitmap) data.getExtras().get("data");
+		  		RequestGenerator rc = new RequestGenerator();
+				try {
+					rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Error profile tree photo.", e);
+				}
+			}
 		} else if (resultCode == RESULT_CANCELED) {
 			// Nothing?
 		}
@@ -222,4 +238,45 @@ public class ProfileDisplay extends Activity {
 		}
 		return capitalized;
 	}
+	
+	public void changeProfilePhoto(View view) {
+		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, PROFILE_PHOTO);
+	}
+	
+	
+	//TODO There is a lot of debugging in this function for development purposes. remove.
+	//TODO Possible to DRY this up WRT the same handler for tree photos?
+	private JsonHttpResponseHandler addProfilePhotoHandler = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject response) {
+			Log.d("AddProfilePhoto", "addTreePhotoHandler.onSuccess");
+			Log.d("AddProfilePhoto", response.toString());
+			try {
+				if (response.get("status").equals("success")) {
+					Toast.makeText(App.getInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();		
+				} else {
+					Toast.makeText(App.getInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
+					Log.d("AddProfilePhoto", "photo response no success");
+				}
+			} catch (JSONException e) {
+				Toast.makeText(App.getInstance(), "Unable to add profile photo", Toast.LENGTH_LONG).show();
+			}
+		};
+		public void onFailure(Throwable e, JSONObject errorResponse) {
+			Log.e("AddProfilePhoto", "addTreePhotoHandler.onFailure");
+			Log.e("AddProfilePhoto", errorResponse.toString());
+			Log.e("AddProfilePhoto", e.getMessage());
+			Toast.makeText(App.getInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
+		};
+		
+		protected void handleFailureMessage(Throwable e, String responseBody) {
+			Log.e("addProfilePhoto", "addTreePhotoHandler.handleFailureMessage");
+			Log.e("addProfilePhoto", "e.toString " + e.toString());
+			Log.e("addProfilePhoto", "responseBody: " + responseBody);
+			Log.e("addProfilePhoto", "e.getMessage: " + e.getMessage());
+			Log.e("addProfilePhoto", "e.getCause: " + e.getCause());
+			e.printStackTrace();
+			Toast.makeText(App.getInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();					
+		};
+	};
 }
