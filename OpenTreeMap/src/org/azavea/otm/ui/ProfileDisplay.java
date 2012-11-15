@@ -19,9 +19,15 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +42,7 @@ public class ProfileDisplay extends Activity {
 	private final int SHOW_LOGIN = 0;
 	private final int EDITS_TO_REQUEST = 5;
 	private final int PROFILE_PHOTO = 7;
+	private final int PROFILE_PHOTO_FROM_GALLERY = 8;
 	private int editRequestCount = 0;
 	private boolean loadingRecentEdits = false; 
 	private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer,EditEntry>();
@@ -222,6 +229,24 @@ public class ProfileDisplay extends Activity {
 				} catch (JSONException e) {
 					Log.e(App.LOG_TAG, "Error profile tree photo.", e);
 				}
+			} else if (requestCode == PROFILE_PHOTO_FROM_GALLERY) {
+				Uri selectedImage = data.getData();
+	            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+	            Cursor cursor = getContentResolver().query(
+	                               selectedImage, filePathColumn, null, null, null);
+	            cursor.moveToFirst();
+
+	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	            String filePath = cursor.getString(columnIndex);
+	            cursor.close();
+	            RequestGenerator rc = new RequestGenerator();
+	            Bitmap bm = BitmapFactory.decodeFile(filePath);
+	            try {
+					rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Error profile tree photo.", e);
+				}
 			}
 		} else if (resultCode == RESULT_CANCELED) {
 			// Nothing?
@@ -237,11 +262,6 @@ public class ProfileDisplay extends Activity {
 		    capitalized +=  " " + capLetter + tokens[i].substring(1, tokens[i].length());
 		}
 		return capitalized;
-	}
-	
-	public void changeProfilePhoto(View view) {
-		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(intent, PROFILE_PHOTO);
 	}
 	
 	
@@ -279,4 +299,26 @@ public class ProfileDisplay extends Activity {
 			Toast.makeText(App.getInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();					
 		};
 	};
+	
+	public void changeProfilePhoto(View view) {
+		Log.d("sqh", "changeProfilePhoto");
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		       			startActivityForResult(intent, PROFILE_PHOTO);
+		           }
+		       });
+		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   Intent intent = new Intent(Intent.ACTION_PICK, 
+		        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		       			startActivityForResult(intent, PROFILE_PHOTO_FROM_GALLERY);
+		           }
+		       });
+
+		AlertDialog alert = builder.create();
+		alert.show();
+		
+	}
 }
