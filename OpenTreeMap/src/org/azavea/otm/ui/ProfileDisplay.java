@@ -265,7 +265,7 @@ public class ProfileDisplay extends Activity {
 	}
 	
 	
-	//TODO There is a lot of debugging in this function for development purposes. remove.
+	//TODO There is a lot of debugging in this function for development purposes. 
 	//TODO Possible to DRY this up WRT the same handler for tree photos?
 	private JsonHttpResponseHandler addProfilePhotoHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
