@@ -1,11 +1,14 @@
 package org.azavea.otm.rest;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
+import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
@@ -15,11 +18,14 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 
 public class RequestGenerator {
 	private RestClient client;
@@ -52,6 +58,7 @@ public class RequestGenerator {
 	public void getImage(int plotId, int imageId, BinaryHttpResponseHandler binaryHttpResponseHandler) {
 		client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
 	}
+	
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
 		String url = "/locations/" + geoY + "," + geoX + "/plots";
@@ -157,6 +164,19 @@ public class RequestGenerator {
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(), 
 				handler);
 	}
+
+	public void addTreePhoto(Context context, int plotId, Bitmap bm, 
+			JsonHttpResponseHandler handler)
+			throws JSONException {
+		int TIMEOUT = 30000;
+		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm, 
+				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
+				handler, TIMEOUT);
+		
+	}
+
+	
+	
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);

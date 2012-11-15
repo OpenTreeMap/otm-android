@@ -31,10 +31,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.graphics.Bitmap;
 
 public class TreeEditDisplay extends TreeDisplay {
 
 	protected static final int SPECIES_SELECTOR = 0;
+	protected static final int TREE_PHOTO = 1;
+	
 	private Field speciesField;
 
 	final ProgressDialog deleteDialog = new ProgressDialog(App.getInstance());
@@ -81,6 +84,39 @@ public class TreeEditDisplay extends TreeDisplay {
 		};
 	};
 	
+	private JsonHttpResponseHandler addTreePhotoHandler = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject response) {
+			Log.d("AddTreePhoto", "addTreePhotoHandler.onSuccess");
+			Log.d("AddTreePhoto", response.toString());
+			try {
+				if (response.get("status").equals("success")) {
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
+				} else {
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
+					Log.d("AddTreePhoto", "photo response no success");
+				}
+			} catch (JSONException e) {
+				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
+			}
+		};
+		public void onFailure(Throwable e, JSONObject errorResponse) {
+			Log.e("AddTreePhoto", "addTreePhotoHandler.onFailure");
+			Log.e("AddTreePhoto", errorResponse.toString());
+			Log.e("AddTreePhoto", e.getMessage());
+			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
+		};
+		
+		protected void handleFailureMessage(Throwable e, String responseBody) {
+			Log.e("addTreePhoto", "addTreePhotoHandler.handleFailureMessage");
+			Log.e("addTreePhoto", "e.toString " + e.toString());
+			Log.e("addTreePhoto", "responseBody: " + responseBody);
+			Log.e("addTreePhoto", "e.getMessage: " + e.getMessage());
+			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
+			e.printStackTrace();
+			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();					
+		};
+	};
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initializeEditPage();
@@ -107,6 +143,8 @@ public class TreeEditDisplay extends TreeDisplay {
 		}
 		
 		setupSpeciesSelector();
+		
+		setupChangePhotoButton(layout, fieldList);
 		
 		setupDeleteButtons(layout, fieldList);		
 	}
@@ -141,6 +179,13 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	}
 	
+	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
+		View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+		fieldList.addView(thePanel);
+		
+	}
+	
+	
 	public void confirmDelete(int messageResource, final Callback callback) {
 		final Activity thisActivity = this;
 		
@@ -166,6 +211,11 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	}
 
+	public void changeTreePhoto(View view) {
+		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, TREE_PHOTO);
+	}
+	
 	public void deleteTree(View view) {
 		Callback confirm = new Callback() {
 			
@@ -324,6 +374,18 @@ public class TreeEditDisplay extends TreeDisplay {
 	  		}
 	  		break; 
 	    } 
-	  } 
+	  	case (TREE_PHOTO) : {
+		  	if (resultCode == Activity.RESULT_OK) {
+		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
+		  		RequestGenerator rc = new RequestGenerator();
+				try {
+					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
+				}
+	  		}
+	  		break; 
+	    } 
+	  }
 	}
 }
