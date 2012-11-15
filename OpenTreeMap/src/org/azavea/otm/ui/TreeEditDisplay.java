@@ -86,38 +86,35 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	private JsonHttpResponseHandler addTreePhotoHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
-			Log.d("sqh", "addTreePhotoHandler.onSuccess");
-			Log.d("sqh", response.toString());
+			Log.d("AddTreePhoto", "addTreePhotoHandler.onSuccess");
+			Log.d("AddTreePhoto", response.toString());
 			try {
 				if (response.get("status").equals("success")) {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
 				} else {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
-					Log.d("sqh", "photo response no success");
+					Log.d("AddTreePhoto", "photo response no success");
 				}
 			} catch (JSONException e) {
 				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
 			}
 		};
 		public void onFailure(Throwable e, JSONObject errorResponse) {
-			Log.d("sqh", "addTreePhotoHandler.onFailure");
-			Log.d("sqh", errorResponse.toString());
-			Log.d("sqh", e.getMessage());
-			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
+			Log.e("AddTreePhoto", "addTreePhotoHandler.onFailure");
+			Log.e("AddTreePhoto", errorResponse.toString());
+			Log.e("AddTreePhoto", e.getMessage());
+			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
-			Log.d("sqh", "addTreePhotoHandler.handleFailureMessage");
-			Log.d("sqh", "e.toString " + e.toString());
-			Log.d("sqh", "responseBody: " + responseBody);
-			Log.d("sqh", "e.getMessage: " + e.getMessage());
-			Log.d("sqh", "e.getCause: " + e.getCause());
+			Log.e("addTreePhoto", "addTreePhotoHandler.handleFailureMessage");
+			Log.e("addTreePhoto", "e.toString " + e.toString());
+			Log.e("addTreePhoto", "responseBody: " + responseBody);
+			Log.e("addTreePhoto", "e.getMessage: " + e.getMessage());
+			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
 			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();					
 		};
-		public void onFinish() {
-			Log.d("sqh", "addTreePhotoHandler.onFinish");
-		}
 	};
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -183,10 +180,8 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 	
 	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
-		View actionPanel = layout.inflate(R.layout.plot_edit_photo_button, null);
-		
-		actionPanel.findViewById(R.id.edit_tree_picture).setVisibility(View.VISIBLE);
-		fieldList.addView(actionPanel);
+		View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+		fieldList.addView(thePanel);
 		
 	}
 	

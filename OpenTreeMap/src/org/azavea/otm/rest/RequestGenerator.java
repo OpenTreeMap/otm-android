@@ -59,10 +59,6 @@ public class RequestGenerator {
 		client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
 	}
 	
-	public void addTreePhoto(int plotId, Bitmap bm) {
-		
-	}
-	
 	
 	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
 		String url = "/locations/" + geoY + "," + geoX + "/plots";
@@ -172,10 +168,10 @@ public class RequestGenerator {
 	public void addTreePhoto(Context context, int plotId, Bitmap bm, 
 			JsonHttpResponseHandler handler)
 			throws JSONException {
-		
+		int TIMEOUT = 30000;
 		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm, 
 				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
-				handler);
+				handler, TIMEOUT);
 		
 	}
 
