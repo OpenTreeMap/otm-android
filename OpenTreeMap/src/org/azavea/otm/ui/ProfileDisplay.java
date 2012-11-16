@@ -41,8 +41,8 @@ public class ProfileDisplay extends Activity {
 	private final RequestGenerator client = new RequestGenerator();
 	private final int SHOW_LOGIN = 0;
 	private final int EDITS_TO_REQUEST = 5;
-	private final int PROFILE_PHOTO = 7;
-	private final int PROFILE_PHOTO_FROM_GALLERY = 8;
+	private final int PROFILE_PHOTO_USING_CAMERA = 7;
+	private final int PROFILE_PHOTO_USING_GALLERY = 8;
 	private int editRequestCount = 0;
 	private boolean loadingRecentEdits = false; 
 	private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer,EditEntry>();
@@ -215,38 +215,46 @@ public class ProfileDisplay extends Activity {
 		App.getLoginManager().logOut();
 		loadProfile();
 	}
+	
+	private void changeProfilePhotoUsingCamera(Intent data) {
+		Bitmap bm = (Bitmap) data.getExtras().get("data");
+  		RequestGenerator rc = new RequestGenerator();
+		try {
+			rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
+		} catch (JSONException e) {
+			Log.e(App.LOG_TAG, "Error profile tree photo.", e);
+		}
+	}
+	
+	private void changeProfilePhotoUsingGallery(Intent data) {
+		Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(
+                           selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        RequestGenerator rc = new RequestGenerator();
+        Bitmap bm = BitmapFactory.decodeFile(filePath);
+        try {
+			rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
+		} catch (JSONException e) {
+			Log.e(App.LOG_TAG, "Error profile tree photo.", e);
+		}
+	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			Log.d(App.LOG_TAG, "Reload profile for new user login");
 			if (requestCode == SHOW_LOGIN) {
 				loadProfile();				
-			} else if (requestCode == PROFILE_PHOTO) {
-				Bitmap bm = (Bitmap) data.getExtras().get("data");
-		  		RequestGenerator rc = new RequestGenerator();
-				try {
-					rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
-				} catch (JSONException e) {
-					Log.e(App.LOG_TAG, "Error profile tree photo.", e);
-				}
-			} else if (requestCode == PROFILE_PHOTO_FROM_GALLERY) {
-				Uri selectedImage = data.getData();
-	            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-	            Cursor cursor = getContentResolver().query(
-	                               selectedImage, filePathColumn, null, null, null);
-	            cursor.moveToFirst();
-
-	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	            String filePath = cursor.getString(columnIndex);
-	            cursor.close();
-	            RequestGenerator rc = new RequestGenerator();
-	            Bitmap bm = BitmapFactory.decodeFile(filePath);
-	            try {
-					rc.addProfilePhoto(App.getInstance(), bm, addProfilePhotoHandler);
-				} catch (JSONException e) {
-					Log.e(App.LOG_TAG, "Error profile tree photo.", e);
-				}
+			} else if (requestCode == PROFILE_PHOTO_USING_CAMERA) {
+				changeProfilePhotoUsingCamera(data);
+			} else if (requestCode == PROFILE_PHOTO_USING_GALLERY) {
+				changeProfilePhotoUsingGallery(data);					
 			}
 		} else if (resultCode == RESULT_CANCELED) {
 			// Nothing?
@@ -306,14 +314,14 @@ public class ProfileDisplay extends Activity {
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		       			startActivityForResult(intent, PROFILE_PHOTO);
+		       			startActivityForResult(intent, PROFILE_PHOTO_USING_CAMERA);
 		           }
 		       });
 		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   Intent intent = new Intent(Intent.ACTION_PICK, 
 		        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		       			startActivityForResult(intent, PROFILE_PHOTO_FROM_GALLERY);
+		       			startActivityForResult(intent, PROFILE_PHOTO_USING_GALLERY);
 		           }
 		       });
 
