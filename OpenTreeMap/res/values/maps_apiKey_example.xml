@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Replace with your development key:
+    
     <string name="maps_apikey">[Your Dev API Key]</string>
     
-    
+    <!-- Replace with your development key:
     	https://developers.google.com/android/maps-api-signup
     	
-    	and save as new file maps_apiKey.xml, which is ignored from source 
+    	and save as new file: res/values/maps_apiKey.xml, which is ignored from source 
     -->
 </resources>
