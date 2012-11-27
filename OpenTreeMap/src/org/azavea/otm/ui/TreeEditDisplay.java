@@ -50,6 +50,13 @@ public class TreeEditDisplay extends TreeDisplay {
 			Toast.makeText(App.getInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
 			Log.e(App.LOG_TAG, "Unable to delete tree.");
 		}				
+
+		@Override
+		protected void handleFailureMessage(Throwable e, String responseBody) {
+			deleteDialog.dismiss();
+			Toast.makeText(App.getInstance(), "Failure: Unable to delete tree", Toast.LENGTH_SHORT).show();
+			Log.e(App.LOG_TAG, "Unable to delete tree.", e);
+		}
 		
 		@Override
 		public void dataReceived(Plot response) {
