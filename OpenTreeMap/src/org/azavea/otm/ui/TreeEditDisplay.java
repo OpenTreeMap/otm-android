@@ -40,7 +40,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	private Field speciesField;
 
-	final ProgressDialog deleteDialog = new ProgressDialog(App.getInstance());
+	ProgressDialog deleteDialog = null;
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
@@ -204,7 +204,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	deleteDialog.show(thisActivity, "", "Deleting...", true);
+            	deleteDialog = ProgressDialog.show(thisActivity, "", "Deleting...", true);
 				Message resultMessage = new Message();
 		    	Bundle data = new Bundle();
 		    	data.putBoolean("confirm", true);
