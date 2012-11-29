@@ -329,4 +329,8 @@ public class ProfileDisplay extends Activity {
 		alert.show();
 		
 	}
+	
+	public void changePassword(View view) {
+		startActivity(new Intent(this, ChangePassword.class));
+	}
 }

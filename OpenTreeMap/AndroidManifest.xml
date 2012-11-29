@@ -73,6 +73,10 @@
             android:name=".RequestGeneratorUi"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".ui.ChangePassword"
+            android:label="@string/app_name">
+        </activity>
     </application>
 
 </manifest>
