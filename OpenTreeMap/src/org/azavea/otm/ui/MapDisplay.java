@@ -141,7 +141,15 @@ public class MapDisplay extends MapActivity {
 	        }
 			Tree tree = plot.getTree();
 			if (tree != null) {
-				plotSpecies.setText(tree.getSpeciesName());
+			
+				String speciesName;
+				try {
+					speciesName = tree.getSpeciesName();
+				} catch (JSONException e) {
+					speciesName = "No species name";
+				}
+				plotSpecies.setText(speciesName);
+			
 				if (tree.getDbh() != 0) {
 					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
