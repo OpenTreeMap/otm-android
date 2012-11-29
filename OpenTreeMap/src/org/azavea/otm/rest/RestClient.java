@@ -106,6 +106,24 @@ public class RestClient {
 		client.put(context, completeUrl, headers, modelEntity, "application/json", response);
 	}
 	
+	public void putWithAuthentication(Context context,
+			  String url,
+			  String username,
+			  String password,
+			  Model model,
+			  AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
+
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl += "?apikey=" + getApiKey();
+		Header[] headers = {createBasicAuthenticationHeader(username, password)};
+		StringEntity modelEntity = new StringEntity(model.getData().toString());
+		
+		client.put(context, completeUrl, headers, modelEntity, "application/json", response);
+}
+
+	
+	
+	
 	/**
 	 * Executes a post request and adds basic authentication headers to the request.
 	 */

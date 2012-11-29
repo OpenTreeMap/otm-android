@@ -9,6 +9,7 @@ import java.util.Map;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Password;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
@@ -183,7 +184,14 @@ public class RequestGenerator {
 		
 	}
 	
+	public void changePassword(Context context, String newPassword, JsonHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException {
+		Model password = new Password(newPassword);
 	
+		client.putWithAuthentication(context, 
+				"/user/" + loginManager.loggedInUser.getId() + "/password", 
+				loginManager.loggedInUser.getUserName(), 
+				loginManager.loggedInUser.getPassword(),  password, handler);
+	}
 	
 	private void handleBadResponse(JSONException e) {
 		Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
