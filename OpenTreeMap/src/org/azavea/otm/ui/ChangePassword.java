@@ -3,8 +3,13 @@ package org.azavea.otm.ui;
 import java.io.UnsupportedEncodingException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.Handler.Callback;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -21,15 +26,15 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ChangePassword extends Activity{
+	private String newPassword;
+	LoginManager loginManager = App.getLoginManager();
+	
 	private JsonHttpResponseHandler changePasswordResponseHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
 			try {
 				if (response.getString("status").equals("success")) {
-					//TODO:
-					//So that they can change passwords again, and so that
-					// the authenticated REST requests continue to work:
-					//loginManager.loggedInUser.setPassword(...);
-					alert(R.string.password_changed);
+					loginManager.loggedInUser.setPassword(newPassword);
+					notifyUserPasswordChangedAndFinish();
 				} else {
 					Log.e("ChangePassword", "Non success status in response");
 					Log.e("ChangePassword", response.toString());
@@ -59,6 +64,23 @@ public class ChangePassword extends Activity{
 		};
 		
 	};
+	
+	private void notifyUserPasswordChangedAndFinish() {
+		final Activity thisActivity = this;
+		new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle(R.string.password_changed)
+        .setMessage(R.string.password_changed)
+        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	thisActivity.finish();
+            }
+        })
+        .show();
+		
+
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +127,9 @@ public class ChangePassword extends Activity{
 	}
 	
 	private void changePassword() throws UnsupportedEncodingException, JSONException {
-		String pNew = ((EditText)findViewById(R.id.newPassword1)).getText().toString();
+		newPassword = ((EditText)findViewById(R.id.newPassword1)).getText().toString();
 		RequestGenerator rc = new RequestGenerator();
-		rc.changePassword(App.getInstance(), pNew, changePasswordResponseHandler);
+		rc.changePassword(App.getInstance(), newPassword, changePasswordResponseHandler);
 	}
 		
 	public void handleChangePasswordClick(View view) {
