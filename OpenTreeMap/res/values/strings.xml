@@ -97,4 +97,5 @@
     <string name="done_registering_msg">Registration successful.</string>
     <string name="problem_creating_account">There was a problem creating your account.</string>
     <string name="problem_setting_profile_picture">There was a problem setting your profile picture.</string>
+	<string name="username_is_taken">Sorry, that username is taken.</string>
 </resources>
