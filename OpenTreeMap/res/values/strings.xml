@@ -89,8 +89,12 @@
     <string name="zip_code">zip code</string>
     <string name="add_profile_picture">add profile picture</string>
     <string name="register">register</string>
-   
-    
-    
-    
+    <string name="Register">Register</string>
+   	<string name="all_fields_required">All fields are required.</string>
+    <string name="invalid_email">Invalid email address</string>
+    <string name="invalid_zip_code">That zip code was not valid.</string>
+    <string name="done_registering">Registration successful</string>
+    <string name="done_registering_msg">Registration successful.</string>
+    <string name="problem_creating_account">There was a problem creating your account.</string>
+    <string name="problem_setting_profile_picture">There was a problem setting your profile picture.</string>
 </resources>

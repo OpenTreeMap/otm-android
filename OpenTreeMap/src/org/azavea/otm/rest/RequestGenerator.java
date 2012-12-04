@@ -201,4 +201,8 @@ public class RequestGenerator {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void register(Context context, User user, JsonHttpResponseHandler handler) throws UnsupportedEncodingException {
+		client.post(context, "/user/", user, handler);
+	}
 }

@@ -6,6 +6,7 @@ import org.azavea.otm.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -72,4 +73,8 @@ public class LoginActivity extends Activity {
 			} 
 		});
 	} 
+	
+	public void register(View view) {
+		startActivity(new Intent(this, Register.class));
+	}
 }

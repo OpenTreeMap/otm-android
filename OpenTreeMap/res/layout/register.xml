@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <EditText
-        android:id="@+id/emailAddress"
+        android:id="@+id/register_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -16,7 +16,7 @@
     </EditText>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/register_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -24,7 +24,7 @@
         android:hint="@string/password" />
 
     <EditText
-        android:id="@+id/verifyPassword"
+        android:id="@+id/register_password2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -32,7 +32,7 @@
         android:hint="@string/verify_password" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/register_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 	    <EditText
-	        android:id="@+id/firstName"
+	        android:id="@+id/register_firstName"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:ems="10"
@@ -51,7 +51,7 @@
 	     	android:layout_weight="1"/>
 	
 	    <EditText
-	        android:id="@+id/lastName"
+	        android:id="@+id/register_lastName"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:ems="10" 
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/zip"
+        android:id="@+id/register_zip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" 
@@ -75,14 +75,14 @@
         android:layout_height="wrap_content" >
 
         <ImageView
-            android:id="@+id/profilePic"
+            android:id="@+id/register_profilePic"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:src="@drawable/dlg_background"
             android:contentDescription="@string/add_profile_picture" />
 
         <Button
-            android:id="@+id/addProfilePicture"
+            android:id="@+id/register_addProfilePicture"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:text="@string/add_profile_picture" />
@@ -100,6 +100,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/register" 
             android:layout_centerInParent="true"
+            android:onClick="handleRegisterClick"
             />       
     </RelativeLayout>
 

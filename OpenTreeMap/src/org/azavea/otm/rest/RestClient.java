@@ -63,6 +63,13 @@ public class RestClient {
 		completeUrl += id + "?apikey=" + getApiKey();
 		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
+
+	public void post(Context context, String url, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl += "?apikey=" + getApiKey();
+		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
+	}
+
 	
 	public void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		RequestParams reqParams = prepareParams(params);

@@ -37,5 +37,13 @@
         android:layout_below="@+id/login"
         android:onClick="cancel"
         android:text="@string/cancel" />
+    <Button
+        android:id="@+id/register"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/cancel"
+        android:onClick="register"
+        android:text="@string/Register" />
     
 </RelativeLayout>
