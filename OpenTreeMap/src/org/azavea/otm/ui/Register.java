@@ -1,7 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.io.UnsupportedEncodingException;
-
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
@@ -25,13 +23,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
-//TODO handle taken username
-
 public class Register extends Activity{
 	private String username;
 	private String password;	
 	private Bitmap profilePicture;
+	
+	/**
+	 * Response handlers
+	 */
 	private JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
 			if (responseIsSuccess(response)) {
@@ -73,59 +72,9 @@ public class Register extends Activity{
 		}
 	};
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register);
-		setDebuggingValues();
-	}
-	
-	private void setDebuggingValues() {
-		EditText e = (EditText)findViewById(R.id.register_password);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_password2);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_email);
-		e.setText("barney");
-		e = (EditText)findViewById(R.id.register_username);
-		e.setText("a");
-		e = (EditText)findViewById(R.id.register_firstName);
-		e.setText("Donkey");
-		e = (EditText)findViewById(R.id.register_lastName);
-		e.setText("Kong");
-		e = (EditText)findViewById(R.id.register_zip);
-		e.setText("19143");
-	}
-	private void notifyUserThatAcctCreatedAndReturnToProfile() {
-		final Activity thisActivity = this;
-		new AlertDialog.Builder(this)
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setTitle(R.string.done_registering)
-        .setMessage(R.string.done_registering_msg)
-        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            	startActivity(new Intent(App.getInstance(), ProfileDisplay.class));
-            }
-        })
-        .show();
-	};
-	
-	private boolean isEmpty(String field) {
-		return field.length() == 0;
-	}
-	//TODO do we need an email regex?
-	private boolean validEmail(String email) {
-		return true;
-	}
-	private boolean strongPassword(String password) {
-		return password.length() >= 6;
-	}
-	private boolean validZipCode(String zipcode) {
-		//this is a number field so we only need to validate length
-		return zipcode.length() == 5;
-	}
+	/*
+	 * Click handlers
+	 */
 	public void handleRegisterClick(View view) {
 		password 	= ((EditText)findViewById(R.id.register_password)).getText().toString();
 		username 	= ((EditText)findViewById(R.id.register_username)).getText().toString();
@@ -167,13 +116,83 @@ public class Register extends Activity{
 				alert(R.string.problem_creating_account);	
 			}
 		}
+	}	
+
+	public void handleProfilePictureClick() {
+		
+	}
+
+	/*
+	 * Activity overrides
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.register);
+		setDebuggingValues();
 	}
 	
+	/* 
+	 * Helper functions to display info to the  user
+	 */
+	private void notifyUserThatAcctCreatedAndReturnToProfile() {
+		final Activity thisActivity = this;
+		new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle(R.string.done_registering)
+        .setMessage(R.string.done_registering_msg)
+        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	startActivity(new Intent(App.getInstance(), ProfileDisplay.class));
+            }
+        })
+        .show();
+	};
 	private void alert(int msg) {
 		String s = this.getString(msg);
 		Toast.makeText(App.getInstance(), s, Toast.LENGTH_LONG).show();		
 	}
+
 	
+	/* 
+	 * Debugging 
+	 */
+	private void setDebuggingValues() {
+		EditText e = (EditText)findViewById(R.id.register_password);
+		e.setText("123456");
+		e = (EditText)findViewById(R.id.register_password2);
+		e.setText("123456");
+		e = (EditText)findViewById(R.id.register_email);
+		e.setText("barney");
+		e = (EditText)findViewById(R.id.register_username);
+		e.setText("a");
+		e = (EditText)findViewById(R.id.register_firstName);
+		e.setText("Donkey");
+		e = (EditText)findViewById(R.id.register_lastName);
+		e.setText("Kong");
+		e = (EditText)findViewById(R.id.register_zip);
+		e.setText("19143");
+	}
+	
+	/*
+	 * Helper functions for the above.
+	 */
+	private static boolean isEmpty(String field) {
+		return field.length() == 0;
+	}
+	private static boolean validEmail(String email) {
+		//TODO do we need an email regex?
+		return true;
+	}
+	private static boolean strongPassword(String password) {
+		return password.length() >= 6;
+	}
+	private static boolean validZipCode(String zipcode) {
+		//this is a number field so we only need to validate length
+		return zipcode.length() == 5;
+	}
 	private static boolean responseIsSuccess(JSONObject response) {
 		String status = "";
 		try {
@@ -183,18 +202,11 @@ public class Register extends Activity{
 		}
 		return status.equals("success");
 	}	
-
 	private static boolean responseIsConflict(Throwable t, JSONObject response) {
 		String msg = t.getMessage();
 		Log.d("Register", msg);
 		return msg.equals("CONFLICT");
 	}	
-
-	
-	public void handleProfilePictureClick() {
-		
-	}
-
 	private void sendProfilePicture() {
 		RequestGenerator rc = new RequestGenerator();
 		try {
@@ -205,7 +217,6 @@ public class Register extends Activity{
 			e.printStackTrace();
 		}
 	}
-	
 	private void login() {
 		LoginManager loginManager = App.getLoginManager();
 		loginManager.logIn(this, username, password, new Callback() {
