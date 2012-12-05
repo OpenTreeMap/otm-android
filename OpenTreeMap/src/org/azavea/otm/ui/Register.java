@@ -1,5 +1,9 @@
 package org.azavea.otm.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
@@ -16,6 +20,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -222,14 +228,25 @@ public class Register extends ProfileActivity{
 		}
 	}
 	private static Bitmap scaleBitmap(Bitmap bm) {
-		// scale the bitmap isotropically
 		int width = bm.getWidth();
 		int height = bm.getHeight();
 		int newWidth = PROFILE_PIC_WIDTH;
 		float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
 		return Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
 	}
+	private static Bitmap isoScaleBitmapToWidthAndRotate(Bitmap bm, int rotation, int width) {
+	    int height = bm.getHeight();
+        int newWidth = width;
+        float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
+        bm = Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
+        
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
 
+        return Bitmap.createBitmap(bm, 0, 0,
+                          width, height, matrix, true);
+	}
+	
 	/* 
 	 * Debugging 
 	 */
@@ -276,12 +293,37 @@ public class Register extends ProfileActivity{
 
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String filePath = cursor.getString(columnIndex);
+        
         cursor.close();
         Bitmap fullSizeBitmap = BitmapFactory.decodeFile(filePath);
-        profilePicture = scaleBitmap(fullSizeBitmap);
+        //int rotation = getImageRotationUsingEXIF(selectedImage);
+        //profilePicture = isoScaleBitmapToWidthAndRotate(fullSizeBitmap, rotation, PROFILE_PIC_WIDTH);
+        
+        profilePicture  = scaleBitmap(fullSizeBitmap);
         ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
 		iv.setImageBitmap(profilePicture);
     }
 
-	
+	private static int getImageRotationUsingEXIF(Uri selectedImage) {
+	   File imageFile = new File(selectedImage.toString());
+	   ExifInterface exif;
+		try {
+			exif = new ExifInterface(imageFile.getAbsolutePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+	   int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	   int rotate = 0;
+	   switch(orientation) {
+	     case ExifInterface.ORIENTATION_ROTATE_270:
+	         rotate-=90;
+	     case ExifInterface.ORIENTATION_ROTATE_180:
+	         rotate-=90;
+	     case ExifInterface.ORIENTATION_ROTATE_90:
+	         rotate-=90;
+	   }
+	   return rotate;
+	}
 }
