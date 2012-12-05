@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="maps_apikey">[Your Dev API Key]</string>
+    <string name="maps_apikey">0KKkhfkGFFslTpIQHh-S2-Wy-iJwy1QO622oJ7Q</string>
     
     <!-- Replace with your development key:
     	https://developers.google.com/android/maps-api-signup
