@@ -4,12 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Message;
-import android.os.Handler.Callback;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;

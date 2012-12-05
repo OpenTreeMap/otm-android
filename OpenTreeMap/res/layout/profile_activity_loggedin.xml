@@ -81,7 +81,7 @@
 					     android:layout_height="wrap_content"
 					     android:layout_weight=".85"
 					     android:text="@string/change_picture"
-					     android:onClick="changeProfilePhoto"
+					     android:onClick="handleChangeProfilePhotoClick"
 					     />
 
 				</LinearLayout>		        

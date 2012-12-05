@@ -1,9 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
@@ -17,16 +13,10 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler.Callback;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -34,76 +24,25 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Register extends ProfileActivity{
-	private final static int PROFILE_PIC_WIDTH = 100;
 	private String username;
 	private String password;	
 	private Bitmap profilePicture;
 	private LoginManager loginManager = App.getLoginManager();
 	
+	
 	/*
-	 * Response handlers
+	 * Activity overrides
 	 */
-	private JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
-		public void onSuccess(JSONObject response) {
-			if (responseIsSuccess(response)) {
-				// TODO, ??? what is the difference between passing in app context versus
-				// activity context?
-				loginManager.logIn(App.getInstance(), username, password, postLogin);
-			}else {
-				Log.e("Register", response.toString());
-				alert(R.string.problem_creating_account);
-			}
-		}
-		public void onFailure(Throwable e, JSONObject response) {
-			if (responseIsConflict(e, response)) {
-				alert(R.string.username_is_taken);
-			} else {
-				Log.e("Register", response.toString() + "\n" + e.getMessage());
-				alert(R.string.problem_creating_account);
-			}
-		}
-	};
-	private JsonHttpResponseHandler profilePictureResponseHandler = new JsonHttpResponseHandler() {
-		public void onSuccess(JSONObject response) {				
-			if (! responseIsSuccess(response)) {
-				alert(R.string.problem_setting_profile_picture);
-				Log.e("Register", "problem setting profile picture");
-				Log.e("Register", response.toString());
-			}
-			notifyUserThatAcctCreatedAndReturnToProfile();
-		}
-		
-		public void onFailure(Throwable e, JSONObject response) {
-			alert(R.string.problem_setting_profile_picture);
-			Log.e("Register", "problem setting profile picture");
-			Log.e("Register", response.toString());
-			Log.e("Register", e.getMessage());
-		}
-	};
-	private Callback postLogin = new Callback() {
-		@Override
-		public boolean handleMessage(Message msg) {
-			Bundle data = msg.getData();
-			if(data.getBoolean("success")) {
-				User u = loginManager.loggedInUser;
-				if (null == profilePicture) {
-					notifyUserThatAcctCreatedAndReturnToProfile();
-				} else {
-					sendProfilePicture();
-				}
-				return true;
-			} else {
-				Toast.makeText(App.getInstance(), 
-						data.getString("message"), 
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-		}
-		
-	};
-
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.register);
+		setDebuggingValues();
+	}
+	
 	/*
-	 * Click handlers
+	 * UI Event Handlers 
 	 */
 	public void handleRegisterClick(View view) {
 		password 	= ((EditText)findViewById(R.id.register_password)).getText().toString();
@@ -136,8 +75,7 @@ public class Register extends ProfileActivity{
 				Log.e("Register", "error in User JSON.");
 				e.printStackTrace();
 				alert(R.string.problem_creating_account);
-			}
-			
+			}		
 			try {
 				rc.register(App.getInstance(), model, registrationResponseHandler);
 			} catch (Exception e) {
@@ -148,19 +86,78 @@ public class Register extends ProfileActivity{
 		}
 	}	
 
-	public void handleProfilePictureClick() {
-		
-	}
-
+	
 	/*
-	 * Activity overrides
+	 * Response handlers
+	 */
+	private JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject response) {
+			if (responseIsSuccess(response)) {
+				// TODO, ??? what is the difference between passing in app context versus
+				// activity context?
+				loginManager.logIn(App.getInstance(), username, password, afterLoginSendProfilePictureAndFinish);
+			}else {
+				Log.e("Register", response.toString());
+				alert(R.string.problem_creating_account);
+			}
+		}
+		public void onFailure(Throwable e, JSONObject response) {
+			if (responseIsConflict(e, response)) {
+				alert(R.string.username_is_taken);
+			} else {
+				Log.e("Register", response.toString() + "\n" + e.getMessage());
+				alert(R.string.problem_creating_account);
+			}
+		}
+	};
+	private JsonHttpResponseHandler profilePictureResponseHandler = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject response) {				
+			if (! responseIsSuccess(response)) {
+				alert(R.string.problem_setting_profile_picture);
+				Log.e("Register", "problem setting profile picture");
+				Log.e("Register", response.toString());
+			}
+			notifyUserThatAcctCreatedAndReturnToProfile();
+		}
+		
+		public void onFailure(Throwable e, JSONObject response) {
+			alert(R.string.problem_setting_profile_picture);
+			Log.e("Register", "problem setting profile picture");
+			Log.e("Register", response.toString());
+			Log.e("Register", e.getMessage());
+		}
+	};
+	private Callback afterLoginSendProfilePictureAndFinish = new Callback() {
+		@Override
+		public boolean handleMessage(Message msg) {
+			Bundle data = msg.getData();
+			if(data.getBoolean("success")) {
+				if (null == profilePicture) {
+					notifyUserThatAcctCreatedAndReturnToProfile();
+				} else {
+					sendProfilePicture();
+				}
+				return true;
+			} else {
+				alert(R.string.problem_creating_account);
+				return false;
+			}
+		}
+		
+	};
+
+	
+	/* 
+	 * Picture Activity overrides
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register);
-		setDebuggingValues();
+	protected void submitBitmap(Bitmap bm) {
+		profilePicture = bm;
+		Log.d("Register", String.format("Bitmap dimensions: %d x %d",bm.getWidth(), bm.getHeight()));
+		ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
+		iv.setImageBitmap(profilePicture);
+		
+		// this will be submitted later, when the user sends the registration request.
 	}
 	
 	/* 
@@ -185,9 +182,8 @@ public class Register extends ProfileActivity{
 	}
 
 	
-	
 	/*
-	 * Other helper functions for the above.
+	 * Form validation functions
 	 */
 	private static boolean isEmpty(String field) {
 		return field.length() == 0;
@@ -212,6 +208,10 @@ public class Register extends ProfileActivity{
 		}
 		return status.equals("success");
 	}	
+	
+	/*
+	 * Other helper functions
+	 */
 	private static boolean responseIsConflict(Throwable t, JSONObject response) {
 		String msg = t.getMessage();
 		Log.d("Register", msg);
@@ -227,25 +227,7 @@ public class Register extends ProfileActivity{
 			e.printStackTrace();
 		}
 	}
-	private static Bitmap scaleBitmap(Bitmap bm) {
-		int width = bm.getWidth();
-		int height = bm.getHeight();
-		int newWidth = PROFILE_PIC_WIDTH;
-		float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
-		return Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
-	}
-	private static Bitmap isoScaleBitmapToWidthAndRotate(Bitmap bm, int rotation, int width) {
-	    int height = bm.getHeight();
-        int newWidth = width;
-        float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
-        bm = Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
-        
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rotation);
-
-        return Bitmap.createBitmap(bm, 0, 0,
-                          width, height, matrix, true);
-	}
+	
 	
 	/* 
 	 * Debugging 
@@ -256,7 +238,7 @@ public class Register extends ProfileActivity{
 		e = (EditText)findViewById(R.id.register_password2);
 		e.setText("123456");
 		e = (EditText)findViewById(R.id.register_email);
-		e.setText("barney");
+		e.setText("barney@lighthouse.com");
 		e = (EditText)findViewById(R.id.register_username);
 		e.setText("a");
 		e = (EditText)findViewById(R.id.register_firstName);
@@ -265,65 +247,5 @@ public class Register extends ProfileActivity{
 		e.setText("Kong");
 		e = (EditText)findViewById(R.id.register_zip);
 		e.setText("19143");
-	}
-	
-	/* 
-	 * ProfileActivity overrides
-	 */
-	@Override
-	protected void changeProfilePhotoUsingCamera(Intent data) {
-		profilePicture  = scaleBitmap((Bitmap) data.getExtras().get("data"));
-		ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
-		iv.setImageBitmap(profilePicture);
-		Log.d("Register", String.format("Bitmap size: %d x %d",  
-				profilePicture.getWidth(),
-				profilePicture.getHeight()));
-	}
-	
-	@Override
-	//TODO DRY this up with the parent class by creating a get image from gallery
-	// function.
-	protected void changeProfilePhotoUsingGallery(Intent data) {
-		Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(
-                           selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        
-        cursor.close();
-        Bitmap fullSizeBitmap = BitmapFactory.decodeFile(filePath);
-        //int rotation = getImageRotationUsingEXIF(selectedImage);
-        //profilePicture = isoScaleBitmapToWidthAndRotate(fullSizeBitmap, rotation, PROFILE_PIC_WIDTH);
-        
-        profilePicture  = scaleBitmap(fullSizeBitmap);
-        ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
-		iv.setImageBitmap(profilePicture);
-    }
-
-	private static int getImageRotationUsingEXIF(Uri selectedImage) {
-	   File imageFile = new File(selectedImage.toString());
-	   ExifInterface exif;
-		try {
-			exif = new ExifInterface(imageFile.getAbsolutePath());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return 0;
-		}
-	   int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-	   int rotate = 0;
-	   switch(orientation) {
-	     case ExifInterface.ORIENTATION_ROTATE_270:
-	         rotate-=90;
-	     case ExifInterface.ORIENTATION_ROTATE_180:
-	         rotate-=90;
-	     case ExifInterface.ORIENTATION_ROTATE_90:
-	         rotate-=90;
-	   }
-	   return rotate;
 	}
 }

@@ -10,8 +10,6 @@ import org.azavea.otm.R;
 import org.azavea.otm.FilterManager;
 import org.azavea.otm.adapters.SpeciesAdapter;
 import org.azavea.otm.data.Species;
-import org.json.JSONException;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
