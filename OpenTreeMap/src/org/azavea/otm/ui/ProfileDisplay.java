@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -133,7 +132,6 @@ public class ProfileDisplay extends ProfileActivity {
 							}
 						}
 
-						@SuppressLint("SimpleDateFormat")
 						private void addEditEntriesToView(final LayoutInflater layout,
 								EditEntryContainer container) throws JSONException {
 							
