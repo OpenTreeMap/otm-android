@@ -10,36 +10,39 @@ import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler.Callback;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Register extends Activity{
+public class Register extends ProfileActivity{
+	private final static int PROFILE_PIC_WIDTH = 100;
 	private String username;
 	private String password;	
 	private Bitmap profilePicture;
+	private LoginManager loginManager = App.getLoginManager();
 	
-	/**
+	/*
 	 * Response handlers
 	 */
 	private JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
 			if (responseIsSuccess(response)) {
-				login();					
-				if (null == profilePicture) {
-					notifyUserThatAcctCreatedAndReturnToProfile();	
-				}else {
-					sendProfilePicture();
-				}
+				// TODO, ??? what is the difference between passing in app context versus
+				// activity context?
+				loginManager.logIn(App.getInstance(), username, password, postLogin);
 			}else {
 				Log.e("Register", response.toString());
 				alert(R.string.problem_creating_account);
@@ -70,6 +73,27 @@ public class Register extends Activity{
 			Log.e("Register", response.toString());
 			Log.e("Register", e.getMessage());
 		}
+	};
+	private Callback postLogin = new Callback() {
+		@Override
+		public boolean handleMessage(Message msg) {
+			Bundle data = msg.getData();
+			if(data.getBoolean("success")) {
+				User u = loginManager.loggedInUser;
+				if (null == profilePicture) {
+					notifyUserThatAcctCreatedAndReturnToProfile();
+				} else {
+					sendProfilePicture();
+				}
+				return true;
+			} else {
+				Toast.makeText(App.getInstance(), 
+						data.getString("message"), 
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
+		}
+		
 	};
 
 	/*
@@ -137,7 +161,6 @@ public class Register extends Activity{
 	 * Helper functions to display info to the  user
 	 */
 	private void notifyUserThatAcctCreatedAndReturnToProfile() {
-		final Activity thisActivity = this;
 		new AlertDialog.Builder(this)
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setTitle(R.string.done_registering)
@@ -156,28 +179,9 @@ public class Register extends Activity{
 	}
 
 	
-	/* 
-	 * Debugging 
-	 */
-	private void setDebuggingValues() {
-		EditText e = (EditText)findViewById(R.id.register_password);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_password2);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_email);
-		e.setText("barney");
-		e = (EditText)findViewById(R.id.register_username);
-		e.setText("a");
-		e = (EditText)findViewById(R.id.register_firstName);
-		e.setText("Donkey");
-		e = (EditText)findViewById(R.id.register_lastName);
-		e.setText("Kong");
-		e = (EditText)findViewById(R.id.register_zip);
-		e.setText("19143");
-	}
 	
 	/*
-	 * Helper functions for the above.
+	 * Other helper functions for the above.
 	 */
 	private static boolean isEmpty(String field) {
 		return field.length() == 0;
@@ -207,7 +211,7 @@ public class Register extends Activity{
 		Log.d("Register", msg);
 		return msg.equals("CONFLICT");
 	}	
-	private void sendProfilePicture() {
+	private void sendProfilePicture() {	
 		RequestGenerator rc = new RequestGenerator();
 		try {
 			rc.addProfilePhoto(App.getInstance(), profilePicture, profilePictureResponseHandler);
@@ -217,14 +221,67 @@ public class Register extends Activity{
 			e.printStackTrace();
 		}
 	}
-	private void login() {
-		LoginManager loginManager = App.getLoginManager();
-		loginManager.logIn(this, username, password, new Callback() {
-			@Override
-			public boolean handleMessage(Message msg) {
-				return false;
-			}
-		});
+	private static Bitmap scaleBitmap(Bitmap bm) {
+		// scale the bitmap isotropically
+		int width = bm.getWidth();
+		int height = bm.getHeight();
+		int newWidth = PROFILE_PIC_WIDTH;
+		float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
+		return Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
 	}
+
+	/* 
+	 * Debugging 
+	 */
+	private void setDebuggingValues() {
+		EditText e = (EditText)findViewById(R.id.register_password);
+		e.setText("123456");
+		e = (EditText)findViewById(R.id.register_password2);
+		e.setText("123456");
+		e = (EditText)findViewById(R.id.register_email);
+		e.setText("barney");
+		e = (EditText)findViewById(R.id.register_username);
+		e.setText("a");
+		e = (EditText)findViewById(R.id.register_firstName);
+		e.setText("Donkey");
+		e = (EditText)findViewById(R.id.register_lastName);
+		e.setText("Kong");
+		e = (EditText)findViewById(R.id.register_zip);
+		e.setText("19143");
+	}
+	
+	/* 
+	 * ProfileActivity overrides
+	 */
+	@Override
+	protected void changeProfilePhotoUsingCamera(Intent data) {
+		profilePicture  = scaleBitmap((Bitmap) data.getExtras().get("data"));
+		ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
+		iv.setImageBitmap(profilePicture);
+		Log.d("Register", String.format("Bitmap size: %d x %d",  
+				profilePicture.getWidth(),
+				profilePicture.getHeight()));
+	}
+	
+	@Override
+	//TODO DRY this up with the parent class by creating a get image from gallery
+	// function.
+	protected void changeProfilePhotoUsingGallery(Intent data) {
+		Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(
+                           selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        Bitmap fullSizeBitmap = BitmapFactory.decodeFile(filePath);
+        profilePicture = scaleBitmap(fullSizeBitmap);
+        ImageView iv = (ImageView)findViewById(R.id.register_profilePic);
+		iv.setImageBitmap(profilePicture);
+    }
+
 	
 }

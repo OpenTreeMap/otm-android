@@ -85,7 +85,8 @@
             android:id="@+id/register_addProfilePicture"
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:text="@string/add_profile_picture" />
+            android:text="@string/add_profile_picture"
+            android:onClick="handleChangeProfilePhotoClick" />
 
     </LinearLayout>
 
