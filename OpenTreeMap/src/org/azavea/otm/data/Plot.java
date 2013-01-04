@@ -200,4 +200,12 @@ public class Plot extends Model {
 			return false;
 		}
 	}
+
+	public boolean hasTree() {
+		return !data.isNull("tree");
+	}
+
+	public void createTree() throws JSONException {
+		this.setTree(new Tree());
+	}
 }
