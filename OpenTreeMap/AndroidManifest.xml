@@ -79,7 +79,8 @@
         </activity>
         <activity
             android:name=".ui.Register"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
         </activity>
     </application>
 
