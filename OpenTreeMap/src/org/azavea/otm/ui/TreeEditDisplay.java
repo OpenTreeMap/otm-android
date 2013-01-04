@@ -301,8 +301,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 
 	private void save() {
-		final ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Saving...", true, true);
+		ProgressDialog dialog = ProgressDialog.show(this, "", "Saving...", true);
 
 		try {
 
