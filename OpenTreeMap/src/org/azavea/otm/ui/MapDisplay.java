@@ -155,8 +155,9 @@ public class MapDisplay extends MapActivity {
 				} 
 				ArrayList<Integer> imageIds = tree.getImageIdList();
 
+				// Always retrieve the most recent image
 				if (imageIds != null && imageIds.size() > 0) {
-					showImage(imageIds.get(0).intValue(), plot.getId());
+					showImage(imageIds.get(imageIds.size() - 1).intValue(), plot.getId());
 				}
 			}
 		} catch (JSONException e) {
