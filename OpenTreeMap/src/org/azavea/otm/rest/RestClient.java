@@ -60,13 +60,13 @@ public class RestClient {
 	
 	public void post(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += id + "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
 
 	public void post(Context context, String url, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
 
@@ -80,7 +80,7 @@ public class RestClient {
 	
 	public void put(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += id + "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		client.put(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
 	
@@ -106,7 +106,7 @@ public class RestClient {
 									  AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += id + "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
 		
@@ -121,16 +121,13 @@ public class RestClient {
 			  AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
 		
 		client.put(context, completeUrl, headers, modelEntity, "application/json", response);
-}
+	}
 
-	
-	
-	
 	/**
 	 * Executes a post request and adds basic authentication headers to the request.
 	 */
@@ -142,7 +139,7 @@ public class RestClient {
 									   AsyncHttpResponseHandler responseHandler) throws UnsupportedEncodingException {
 		
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
 		
@@ -158,7 +155,7 @@ public class RestClient {
 			String password, JsonHttpResponseHandler responseHandler, int timeout) {
 		
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		
 		// Content type also needs to be pinned down in the Bitmap.compress
 		// call, which is why I haven't exposed it as a parameter.
@@ -189,7 +186,7 @@ public class RestClient {
 	public void deleteWithAuthentication(Context context, String url, String username, 
 			String password, AsyncHttpResponseHandler responseHandler) {
 		String completeUrl = getAbsoluteUrl(url);
-		completeUrl += "?apikey=" + getApiKey();
+		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		client.delete(context, completeUrl, headers, responseHandler);
 	}
@@ -207,6 +204,13 @@ public class RestClient {
 		reqParams.put("apikey", apiKey);
 		
 		return reqParams;
+	}
+	
+	private String prepareUrl(String url) {
+		// Not all methods of AsynchHttpClients take a requestParams.
+		// Sometimes we will need to put the api key and other data
+		// directly in the URL.
+		return url + "?apikey=" + getApiKey(); 
 	}
 	
 	private String getBaseUrl() {
