@@ -10,7 +10,7 @@ public class Tree extends Model {
 	public Tree() {
 		data = new JSONObject();
 	}
-	
+
 	public int getId() throws JSONException {
 		return data.getInt("id");
 	}
@@ -26,7 +26,7 @@ public class Tree extends Model {
 	public void setDbh(double dbh) throws JSONException {
 		data.put("dbh", dbh);
 	}
-
+	
 	public String getDateRemoved() throws JSONException {
 		return data.getString("date_removed");
 	}
@@ -39,6 +39,13 @@ public class Tree extends Model {
 		return data.getString("species_name");
 	}
 
+	public String getSpeciesName(String defaultText) throws JSONException {
+		if (data.isNull("species_name")) {
+			return defaultText;
+		}
+		return getSpeciesName();
+	}
+	
 	public void setSpeciesName(String speciesName) throws JSONException {
 		data.put("species_name", speciesName);
 	}

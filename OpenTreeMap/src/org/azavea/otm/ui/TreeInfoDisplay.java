@@ -54,10 +54,11 @@ public class TreeInfoDisplay extends TreeDisplay{
 			setText(R.id.address, plot.getAddress());
 			
 			Tree tree = plot.getTree();
+			String defaultText = getResources().getString(R.string.species_missing);
 			if (tree != null) {
-				setText(R.id.species, tree.getSpeciesName());
+				setText(R.id.species, tree.getSpeciesName(defaultText));
 			} else {
-				setText(R.id.species, getResources().getString(R.string.species_missing));
+				setText(R.id.species, defaultText);
 			}
 			
 			setText(R.id.updated_on, "Last updated on " + plot.getLastUpdated());
