@@ -169,12 +169,9 @@ public class TreeEditDisplay extends TreeDisplay {
 		try {
 			if (plot.canDeletePlot()) {
 				plotVis = View.VISIBLE;
-				Log.d("mjm", "can do plot");
-				
 			}
 			if (plot.canDeleteTree()) {
 				treeVis = View.VISIBLE;
-				Log.d("mjm", "can do tree");
 			}
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Cannot access plot permissions", e);

@@ -29,6 +29,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     	loadPlotInfo();
     }
     
+    
     private void loadPlotInfo() {
     	
     	
@@ -109,7 +110,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  				// The plot has been edited, reload the info page
 	  				plot = new Plot();
 	  				try {
-	  					Log.d("mjm", plotJSON);
 						plot.setData(new JSONObject(plotJSON));
 						loadPlotInfo();
 						
