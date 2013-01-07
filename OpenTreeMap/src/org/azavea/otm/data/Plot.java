@@ -1,9 +1,24 @@
 package org.azavea.otm.data;
 
+import java.util.ArrayList;
+
+import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.loopj.android.http.BinaryHttpResponseHandler;
+
 public class Plot extends Model {
+	/**
+	 * When Requesting a plot tree photo, these are the valid image types
+	 */
+	public static String[] IMAGE_TYPES = new String[] { 
+		"image/jpeg", "image/png", "image/gif" 
+	};
+	
 	public Plot() {
 		data = new JSONObject();
 	}
@@ -199,5 +214,46 @@ public class Plot extends Model {
 		} catch (JSONException e) {
 			return false;
 		}
+	}
+
+	public boolean hasTree() {
+		return !data.isNull("tree");
+	}
+
+	public void createTree() throws JSONException {
+		this.setTree(new Tree());
+	}
+	
+	/**
+	 * Get the most recent tree photo for this plot, by way of an asynchronous
+	 * response handler.  Use static helper methods on Plot to decode a photo 
+	 * response
+	 * @param binary image handler which will receive callback from
+	 * async http request
+	 * @throws JSONException
+	 */
+	public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException{
+		// TODO: If there is no tree, should we auto call fail on the handler?
+		if (this.hasTree()) {
+			ArrayList<Integer> imageIds = this.getTree().getImageIdList();
+			if (imageIds != null && imageIds.size() > 0) {
+				// Always retrieve the most recent image
+				int imageId = imageIds.get(imageIds.size() - 1).intValue();
+				
+				RequestGenerator rg = new RequestGenerator();
+				rg.getImage(this.getId(), imageId, handler);
+			}
+		}
+	}
+
+	/**
+	 * Create standard sized bitmap image from tree photo data
+	 * @param imageData
+	 * @return
+	 */
+	public static Bitmap createTreeThumbnail(byte[] imageData) {
+		Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+		// Use an 80x80px image thumbnail
+		return Bitmap.createScaledBitmap(image, 80, 80, true);
 	}
 }

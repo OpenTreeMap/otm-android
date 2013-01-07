@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
 import org.json.JSONException;
@@ -355,10 +356,13 @@ public class Field {
 			JSONObject json, boolean createNodeIfEmpty) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
 			JSONObject child;
-			if (json.get(keys[index]) == null && createNodeIfEmpty) {
+			if (json.get(keys[index]).equals(null) && createNodeIfEmpty) {
 				child = new JSONObject();
+				json.put(keys[index], child);
+			} else {
+				child= json.getJSONObject(keys[index]);
 			}
-			child= json.getJSONObject(keys[index]);
+			
 			index++;
 			return getValueForKey(keys, index, child, createNodeIfEmpty);
 		}
@@ -366,6 +370,9 @@ public class Field {
 		// We care to distinguish between a null value and a missing key.
 		if (json.has(keys[index])) {
 			return new NestedJsonAndKey(json, keys[index]);	
+		} else if (createNodeIfEmpty == true) {
+			// Create an empty node for this key
+			return new NestedJsonAndKey(json.put(keys[index], ""), keys[index]);
 		} else {
 			return null;
 		}
@@ -400,6 +407,15 @@ public class Field {
 			if (this.owner != null) {
 				updateKey = this.owner;
 			} 
+			// If the model doesn't have they key, add it.  This creates
+			// a tree when tree values are added to a plot with no tree
+			Plot p = (Plot)model;
+			if (updateKey.split("[.]")[0].equals("tree") 
+					&& !p.hasTree()
+					&& currentValue != null) {
+				p.createTree();
+			}
+
 			setValueForKey(updateKey, model.getData(), currentValue);
 		}
 	}

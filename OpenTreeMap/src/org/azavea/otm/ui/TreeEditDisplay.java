@@ -159,7 +159,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	/**
 	 * Delete options for tree and plot are available under certain situations
 	 * as reported from the /plot API endpoint as attributes of a plot/user
-	 * combo.
+	 * combo.  Don't give delete tree option if a tree isn't present
 	 */
 	private void setupDeleteButtons(LayoutInflater layout, LinearLayout fieldList) {
 		View actionPanel = layout.inflate(R.layout.plot_edit_delete_buttons, null);
@@ -169,12 +169,9 @@ public class TreeEditDisplay extends TreeDisplay {
 		try {
 			if (plot.canDeletePlot()) {
 				plotVis = View.VISIBLE;
-				Log.d("mjm", "can do plot");
-				
 			}
-			if (plot.canDeleteTree()) {
+			if (plot.canDeleteTree() && plot.getTree() != null) {
 				treeVis = View.VISIBLE;
-				Log.d("mjm", "can do tree");
 			}
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Cannot access plot permissions", e);
@@ -304,8 +301,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 
 	private void save() {
-		final ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Saving...", true, true);
+		ProgressDialog dialog = ProgressDialog.show(this, "", "Saving...", true);
 
 		try {
 

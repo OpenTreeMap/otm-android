@@ -1,22 +1,19 @@
 package org.azavea.otm.ui;
 
-import java.util.ArrayList;
-
 import org.azavea.map.OTMMapView;
 import org.azavea.map.WMSTileRaster;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
-import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -43,6 +40,13 @@ public class MapDisplay extends MapActivity {
 	private int zoomLevel;
 	private RelativeLayout plotPopup;
 	private Plot currentPlot; // The Plot we're currently showing a popup for, if any
+	
+	// Pop-up view items
+	TextView plotSpeciesView;
+	TextView plotAddressView;
+	TextView plotDiameterView;
+	TextView plotUpdatedByView;
+	ImageView plotImageView;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class MapDisplay extends MapActivity {
         
         // Force the MapView to redraw
         mapView.invalidate();
+        
+        setPopupViews();
     }
     
     public OTMMapView getMapView() {
@@ -122,22 +128,29 @@ public class MapDisplay extends MapActivity {
     	return false;
     }
 
+    private void setPopupViews() {
+    	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
+    	plotAddressView = (TextView) findViewById(R.id.plotAddress);
+    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
+    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
+    	plotImageView = (ImageView) findViewById(R.id.plotImage);
+    }
+    
 	public void showPopup(Plot plot) {
-		TextView plotSpecies = (TextView) findViewById(R.id.plotSpecies);
-		TextView plotAddress = (TextView) findViewById(R.id.plotAddress);
-		TextView plotDiameter = (TextView) findViewById(R.id.plotDiameter);
-		TextView plotUpdatedBy = (TextView) findViewById(R.id.plotUpdatedBy);
+
 		//set default text
-		plotDiameter.setText(getString(R.string.dbh_missing));
-		plotSpecies.setText(getString(R.string.species_missing));
-		plotAddress.setText(getString(R.string.address_missing));
+		plotDiameterView.setText(getString(R.string.dbh_missing));
+		plotSpeciesView.setText(getString(R.string.species_missing));
+		plotAddressView.setText(getString(R.string.address_missing));
+		plotImageView.setImageResource(R.drawable.ic_action_search);
+		
 		try {
 	        GeoPoint p = new GeoPoint((int)(plot.getGeometry().getLatE6()), (int)(plot.getGeometry().getLonE6()));
 	        mapView.getController().stopAnimation(false);
 	        mapView.getController().animateTo(p);
-			plotUpdatedBy.setText(plot.getLastUpdatedBy());
+			plotUpdatedByView.setText(plot.getLastUpdatedBy());
 	        if (plot.getAddress().length() != 0) {
-	        	plotAddress.setText(plot.getAddress());
+	        	plotAddressView.setText(plot.getAddress());
 	        }
 			Tree tree = plot.getTree();
 			if (tree != null) {
@@ -148,16 +161,14 @@ public class MapDisplay extends MapActivity {
 				} catch (JSONException e) {
 					speciesName = "No species name";
 				}
-				plotSpecies.setText(speciesName);
+				plotSpeciesView.setText(speciesName);
 			
 				if (tree.getDbh() != 0) {
-					plotDiameter.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
+					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
-				ArrayList<Integer> imageIds = tree.getImageIdList();
-
-				if (imageIds != null && imageIds.size() > 0) {
-					showImage(imageIds.get(0).intValue(), plot.getId());
-				}
+				
+				showImage(plot);
+			
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -177,26 +188,24 @@ public class MapDisplay extends MapActivity {
 		hidePopup();
 	}
 	
-	public void showImage(int imageId, int plotId) {
-		RequestGenerator rg = new RequestGenerator();
-		String[] allowedTypes = new String[] { "image/jpeg", "image/png", "image/gif" };
-		rg.getImage(plotId, imageId, new BinaryHttpResponseHandler(allowedTypes) {
+	private void showImage(Plot plot) throws JSONException {
+		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
-				Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-				Bitmap scaledImage = Bitmap.createScaledBitmap(image, 80, 80, true);
+				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
 				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
 				plotImage.setImageBitmap(scaledImage);
 			}
 			
 			@Override
 			public void onFailure(Throwable e, byte[] imageData) {
-				e.printStackTrace();
+				// Log the error, but not important enough to bother the user
+				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
 			}
 		});
 	}
 	
-	// onClick handler for tree-details popup touch-event
+	// onClick handler for tree-details pop-up touch event
 	public void showFullTreeInfo(View view) {
 		// Show TreeInfoDisplay with current plot
 		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
