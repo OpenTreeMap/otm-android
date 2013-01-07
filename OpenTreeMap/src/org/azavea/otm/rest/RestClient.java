@@ -9,6 +9,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 
 import android.content.Context;
@@ -34,12 +35,14 @@ public class RestClient {
 	
 	private SharedPreferences prefs;
 	
+	private String appVersion;
 	
 	public RestClient() {
-		client = new AsyncHttpClient();
 		prefs = App.getSharedPreferences();
 		baseUrl = getBaseUrl();
 		apiKey = getApiKey();
+		appVersion = getAppVersion();
+		client = createHttpClient();
 	}
 
 	// Dependency injection to support mocking
@@ -234,10 +237,20 @@ public class RestClient {
 		return new BasicHeader("Authorization", String.format("%s %s", "Basic", encoded));
 	}
 	
-	private AsyncHttpClient createAutheniticatedHttpClient(String username, String password) {
+	private AsyncHttpClient createHttpClient() {
 		AsyncHttpClient client = new AsyncHttpClient();
+		client.addHeader("platform-ver-build", appVersion);
+		return client;
+	}
+	
+	private AsyncHttpClient createAutheniticatedHttpClient(String username, String password) {
+		AsyncHttpClient client = createHttpClient();
 		Header header = createBasicAuthenticationHeader(username, password);
 		client.addHeader(header.getName(), header.getValue());
 		return client;
+	}
+	
+	private String getAppVersion() {
+		return prefs.getString("platform_ver_build", "");
 	}
 }
