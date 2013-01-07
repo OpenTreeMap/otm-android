@@ -8,45 +8,61 @@ import org.azavea.otm.data.Tree;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.BinaryHttpResponseHandler;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeInfoDisplay extends TreeDisplay{
 	final private static int EDIT_REQUEST = 1;
+	ImageView plotImage;
 	
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.plot_view_activity);
+    	plotImage = (ImageView) findViewById(R.id.plot_photo);
     	loadPlotInfo();
     }
     
     
-    private void loadPlotInfo() {
+    private void loadPlotInfo()  {
     	
-    	
-        LinearLayout fieldList = (LinearLayout)findViewById(R.id.field_list);
-        fieldList.removeAllViewsInLayout();
-        LayoutInflater layout = ((Activity)this).getLayoutInflater();
+    	try {
+    		LinearLayout fieldList = (LinearLayout)findViewById(R.id.field_list);
+            fieldList.removeAllViewsInLayout();
+            LayoutInflater layout = ((Activity)this).getLayoutInflater();
 
+            
+    		Log.d(App.LOG_TAG, "Setting header values");
+    		setHeaderValues(plot);
+    		showPositionOnMap();
+    		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
+    			View fieldGroup = group.renderForDisplay(layout, plot);
+    			if (fieldGroup != null) {
+    				fieldList.addView(fieldGroup);
+    			}
+    		}
+    		
+    		showImage(plot);
+    	}
+    	catch (Exception e) {
+    		Log.e(App.LOG_TAG, "Unable to render tree view", e);
+    		Toast.makeText(App.getInstance(), 
+    				"Unable to render view for display", Toast.LENGTH_SHORT).show();
+    		finish();
+    	}
         
-		Log.d(App.LOG_TAG, "Setting header values");
-		setHeaderValues(plot);
-		showPositionOnMap();
-		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-			View fieldGroup = group.renderForDisplay(layout, plot);
-			if (fieldGroup != null) {
-				fieldList.addView(fieldGroup);
-			}
-		}
     }
    
 	private void setHeaderValues(Plot plot) {
@@ -78,6 +94,25 @@ public class TreeInfoDisplay extends TreeDisplay{
 		}
 	}
 
+	private void showImage(Plot plot) throws JSONException {
+		// Default if there is no image returned
+		plotImage.setImageResource(R.drawable.ic_action_search);
+		
+		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
+			@Override
+			public void onSuccess(byte[] imageData) {
+				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
+				plotImage.setImageBitmap(scaledImage);
+			}
+			
+			@Override
+			public void onFailure(Throwable e, byte[] imageData) {
+				// Log the error, but not important enough to bother the user
+				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+			}
+		});
+	}
+	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_plot_edit_display, menu);
