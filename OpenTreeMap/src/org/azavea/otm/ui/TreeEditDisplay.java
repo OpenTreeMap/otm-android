@@ -346,8 +346,8 @@ public class TreeEditDisplay extends TreeDisplay {
 			case R.id.save_edits:
 				save();
 				break;
-			case R.id.cancel_edits:deleteDialog.dismiss();
-				cancel();
+			case R.id.cancel_edits:
+				cancel();	
 				break;
 		}
 		return true;
