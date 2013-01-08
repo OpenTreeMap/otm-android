@@ -7,6 +7,7 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 public class MapDisplay extends MapActivity {
 
 	final private int FILTER_INTENT = 1;
+	final private int INFO_INTENT = 2;
 	
 	private MyLocationOverlay myLocationOverlay;
 	private OTMMapView mapView;
@@ -214,7 +216,7 @@ public class MapDisplay extends MapActivity {
 		if (App.getLoginManager().isLoggedIn()) {
 			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
 		}
-		startActivity(viewPlot);
+		startActivityForResult(viewPlot, INFO_INTENT);
 	}
 	
     // onClick handler for "My Location" button
@@ -228,13 +230,28 @@ public class MapDisplay extends MapActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
 	  super.onActivityResult(requestCode, resultCode, data); 
 	  switch(requestCode) { 
-	  	case (FILTER_INTENT) : { 
+	  	case FILTER_INTENT : 
 	  		if (resultCode == Activity.RESULT_OK) { 
 	  			Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
 	  					Toast.LENGTH_LONG).show();
 	  		} 
 	  		break; 
-	    } 
+	  	case INFO_INTENT:
+	  		if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
+
+	  			try {
+	  				// The plot was updated, so update the pop-up with any new data
+		  			Plot updatedPlot = new Plot();
+		  			String plotJSON = data.getExtras().getString("plot");
+					updatedPlot.setData(new JSONObject(plotJSON));
+					showPopup(updatedPlot);
+					
+				} catch (JSONException e) {
+					Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+					hidePopup();
+				}
+	  		}
+	  		break;
 	  } 
 	}
 }
