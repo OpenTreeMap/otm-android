@@ -173,6 +173,7 @@ public class Tree extends Model {
 		JSONArray images;
 		if (data.isNull("images")) {
 			images = new JSONArray();
+			data.put("images", images);
 		} else {
 			images = data.getJSONArray("images");	
 		}
