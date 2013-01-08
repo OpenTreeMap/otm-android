@@ -39,7 +39,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	protected static final int TREE_PHOTO = 1;
 	
 	private Field speciesField;
-	private boolean photoHasBeenChanged = false;
+	private boolean photoHasBeenChanged;
 	private ProgressDialog deleteDialog = null;
 	private ProgressDialog saveDialog = null;
 	private ProgressDialog savePhotoDialog = null;
@@ -101,6 +101,7 @@ public class TreeEditDisplay extends TreeDisplay {
 				if (response.get("status").equals("success")) {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
 					plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
+					photoHasBeenChanged = true;
 					savePhotoDialog.dismiss();
 					
 				} else {
@@ -133,6 +134,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		photoHasBeenChanged = false;
 		initializeEditPage();
 	}
 
@@ -428,7 +430,6 @@ public class TreeEditDisplay extends TreeDisplay {
 				try {
 					savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
 					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
-					this.photoHasBeenChanged = true;
 				} catch (JSONException e) {
 					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
 					savePhotoDialog.dismiss();
