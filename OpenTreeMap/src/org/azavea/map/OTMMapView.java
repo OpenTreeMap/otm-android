@@ -1,5 +1,5 @@
 package org.azavea.map;
-
+/*
 import java.util.Timer;
 
 import android.content.Context;
@@ -110,3 +110,4 @@ public class OTMMapView extends MapView {
         return (getZoomLevel() != mLastZoomLevel);
     }
 }
+*/

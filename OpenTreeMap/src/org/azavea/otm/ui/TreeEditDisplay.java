@@ -139,7 +139,7 @@ public class TreeEditDisplay extends TreeDisplay {
 		LinearLayout fieldList = (LinearLayout) findViewById(R.id.field_list);
 		LayoutInflater layout = ((Activity) this).getLayoutInflater();
 
-		showPositionOnMap();
+		//showPositionOnMap();
 
 		// Add all the fields to the display for edit mode
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {

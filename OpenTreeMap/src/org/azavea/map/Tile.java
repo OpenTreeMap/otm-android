@@ -6,8 +6,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.google.android.maps.GeoPoint;
-
+//import com.google.android.maps.GeoPoint;
+/*
 public class Tile {
 	private Bitmap image;
 	private int zoomOffsetX;
@@ -61,3 +61,4 @@ public class Tile {
 		zoomOffsetY = newHeight - oldHeight;
 	}
 }
+*/

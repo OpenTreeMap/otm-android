@@ -1,5 +1,5 @@
 package org.azavea.map;
-
+/*
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -48,3 +48,4 @@ public class WMSOverlay extends Overlay {
 		return super.draw(canvas, mapView, false, when);
 	}
 }
+*/

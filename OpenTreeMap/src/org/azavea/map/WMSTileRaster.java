@@ -1,5 +1,5 @@
 package org.azavea.map;
-
+/*
 import org.azavea.otm.App;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
@@ -601,3 +601,4 @@ public class WMSTileRaster extends SurfaceView {
 	
 	
 }
+*/

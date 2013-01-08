@@ -1,5 +1,5 @@
 package org.azavea.map;
-
+/*
 import org.azavea.otm.App;
 import org.azavea.otm.rest.handlers.TileHandler;
 
@@ -88,3 +88,4 @@ public class TileProvider {
 		zoomedGeoWidthOffset = (float) ((tileGeoWidth * zoomFactor - tileGeoWidth) / 2);
 	}
 }
+*/
