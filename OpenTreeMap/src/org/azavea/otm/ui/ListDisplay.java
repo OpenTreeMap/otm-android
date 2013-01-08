@@ -10,6 +10,7 @@ import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.User;
 import org.json.JSONException;
 
 import com.joelapenna.foursquared.widget.SegmentedButton;
@@ -92,8 +93,17 @@ public class ListDisplay extends Activity implements ListObserver {
         	@Override
         	public void onItemClick(AdapterView<?> a, View v, int i, long l) {
         		Intent viewPlot = new Intent(ListDisplay.this, TreeInfoDisplay.class);
+        		
         		Plot selectedPlot = ((DisplayablePlot)a.getItemAtPosition(i)).getPlot();
         		viewPlot.putExtra("plot", selectedPlot.getData().toString());
+        		
+        		User user = App.getLoginManager().loggedInUser;
+        		if (user != null) {
+        			viewPlot.putExtra("user", user.getData().toString());
+        		} else {
+        			// extra "user" will be null, which is handled in the activity.
+        		}
+        		
         		ListDisplay.this.startActivity(viewPlot);
         	}
         };

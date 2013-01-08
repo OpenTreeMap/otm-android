@@ -123,10 +123,15 @@ public class TreeInfoDisplay extends TreeDisplay{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_plot:
-            	Intent editPlot = new Intent(this, TreeEditDisplay.class);
-            	editPlot.putExtra("plot", plot.getData().toString());
-            	editPlot.putExtra("user", this.currentUser.getData().toString());
-            	startActivityForResult(editPlot, EDIT_REQUEST);
+            	if (this.currentUser != null) {
+            		Intent editPlot = new Intent(this, TreeEditDisplay.class);
+                	editPlot.putExtra("plot", plot.getData().toString());
+                	editPlot.putExtra("user", this.currentUser.getData().toString());
+                	startActivityForResult(editPlot, EDIT_REQUEST);	
+            	} else {
+            		Toast.makeText(TreeInfoDisplay.this, "You must be logged in to do that.", 
+        					Toast.LENGTH_SHORT).show();
+            	}
             	break;
         }
         return true;

@@ -40,8 +40,11 @@ public class TreeDisplay extends MapActivity{
 	        // This activity is running in a new process because it has a map on it.
 	        // This means it doesn't share application context with the rest of the 
 	        // app, meaning we have to pass contextual state in, like logged in user.
-			currentUser = new User();
-	        currentUser.setData(new JSONObject(getIntent().getStringExtra("user")));
+			String userData = getIntent().getStringExtra("user");
+			if (userData != null) {
+				currentUser = new User();
+		        currentUser.setData(new JSONObject(userData));
+			}
 	        
 			plotLocation = getPlotLocation(plot);
 			
