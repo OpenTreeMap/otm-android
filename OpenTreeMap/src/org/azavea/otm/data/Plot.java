@@ -244,28 +244,7 @@ public class Plot extends Model {
 				rg.getImage(this.getId(), imageId, handler);
 			}
 		}
-	}
-
-	/**
-	 * Flag a tree photo as changed during an edit session.
-	 * @param isDirty
-	 * @throws JSONException
-	 */
-	public void setPhotoDirty(boolean isDirty) throws JSONException {
-		data.put("dirty_photo", isDirty);
-	}
-	
-	
-	public boolean isPhotoDirty() {
-		if (!data.isNull("dirty_photo")) {
-			try {
-				return data.getBoolean("dirty_photo");
-			} catch (JSONException e) {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		
 	}
 	
 	/**
@@ -288,6 +267,5 @@ public class Plot extends Model {
 			
 			tree.addImageToList(image);
 		}
-		
 	}
 }
