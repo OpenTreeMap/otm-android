@@ -191,11 +191,16 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 	
 	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
-		View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
-		fieldList.addView(thePanel);
-		
+		try {
+			// You can only change a tree picture if there is a tree
+			if (plot.getTree() != null) {
+				View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+				fieldList.addView(thePanel);
+			}	
+		} catch(Exception e) {
+			Log.e(App.LOG_TAG,"Error getting tree, not allowing photo to be taken", e);
+		}
 	}
-	
 	
 	public void confirmDelete(int messageResource, final Callback callback) {
 		final Activity thisActivity = this;
