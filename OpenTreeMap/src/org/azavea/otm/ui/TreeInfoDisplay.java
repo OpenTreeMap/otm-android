@@ -139,7 +139,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  	case (EDIT_REQUEST) : { 
 	  		
 	  		if (resultCode == Activity.RESULT_OK) { 
-	  			// The tree/plot has been updated, possibly deleted.
+	  			// The tree/plot has been updated
 	  			String plotJSON = data.getStringExtra("plot");
 	  			if (plotJSON != null) {
 	  				
@@ -148,6 +148,11 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  				try {
 						plot.setData(new JSONObject(plotJSON));
 						loadPlotInfo();
+						
+						// Pass along the updated plot
+						Intent updatedPlot = new Intent();
+						updatedPlot.putExtra("plot", plotJSON);
+						setResult(TreeDisplay.RESULT_PLOT_EDITED, updatedPlot);
 						
 					} catch (JSONException e) {
 						Log.e(App.LOG_TAG, "Unable to load edited plot");
