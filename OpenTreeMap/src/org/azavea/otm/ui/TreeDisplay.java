@@ -25,7 +25,8 @@ public class TreeDisplay extends MapActivity{
 	protected GeoPoint plotLocation;
 	protected Plot plot;
 	protected User currentUser;
-	public int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;
+	public static int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;
+	public static int RESULT_PLOT_EDITED = Activity.RESULT_FIRST_USER + 2;
 	
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
