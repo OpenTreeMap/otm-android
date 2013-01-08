@@ -139,7 +139,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  	case (EDIT_REQUEST) : { 
 	  		
 	  		if (resultCode == Activity.RESULT_OK) { 
-	  			// The tree/plot has been updated
+	  			// The tree/plot has been updated, or the tree has been deleted
 	  			String plotJSON = data.getStringExtra("plot");
 	  			if (plotJSON != null) {
 	  				
@@ -162,6 +162,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  			
   			} else if (resultCode == RESULT_PLOT_DELETED){
   				// If the plot is deleted, finish back to the caller
+  				setResult(RESULT_PLOT_DELETED);
   				finish();
   				
 	  		} else if (resultCode == Activity.RESULT_CANCELED) {

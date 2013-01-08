@@ -250,6 +250,9 @@ public class MapDisplay extends MapActivity {
 					Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
 					hidePopup();
 				}
+	  		} else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
+	  			hidePopup();
+	  			// TODO: Do we need to refresh the map tile?
 	  		}
 	  		break;
 	  } 
