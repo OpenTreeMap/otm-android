@@ -41,6 +41,8 @@ public class TreeEditDisplay extends TreeDisplay {
 	private Field speciesField;
 	private boolean photoHasBeenChanged = false;
 	private ProgressDialog deleteDialog = null;
+	private ProgressDialog saveDialog = null;
+	private ProgressDialog savePhotoDialog = null;
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
@@ -99,6 +101,8 @@ public class TreeEditDisplay extends TreeDisplay {
 				if (response.get("status").equals("success")) {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
 					plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
+					savePhotoDialog.dismiss();
+					
 				} else {
 					Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
 					Log.d("AddTreePhoto", "photo response no success");
@@ -112,6 +116,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.e("AddTreePhoto", errorResponse.toString());
 			Log.e("AddTreePhoto", e.getMessage());
 			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
+			savePhotoDialog.dismiss();
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
@@ -122,6 +127,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
 			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();					
+			savePhotoDialog.dismiss();
 		};
 	};
 	
@@ -321,7 +327,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 
 	private void save() {
-		ProgressDialog dialog = ProgressDialog.show(this, "", "Saving...", true);
+		saveDialog = ProgressDialog.show(this, "", "Saving...", true);
 
 		try {
 
@@ -337,6 +343,7 @@ public class TreeEditDisplay extends TreeDisplay {
 							// The tree was updated, so return to the info page, and bring along
 							// the data for the new plot, which was the response from the update
 							setResultOk(updatedPlot);
+							saveDialog.dismiss();
 							finish();
 						}
 
@@ -346,8 +353,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.e(App.LOG_TAG, "Could not save edited plot info", e);
 			Toast.makeText(App.getInstance(), "Could not save tree info",
 					Toast.LENGTH_LONG).show();
-		} finally {
-			dialog.dismiss();
+			saveDialog.dismiss();
 		}
 	}
 
@@ -415,10 +421,12 @@ public class TreeEditDisplay extends TreeDisplay {
 		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
 		  		RequestGenerator rc = new RequestGenerator();
 				try {
+					savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
 					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
 					this.photoHasBeenChanged = true;
 				} catch (JSONException e) {
 					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
+					savePhotoDialog.dismiss();
 				}
 	  		}
 	  		break; 
