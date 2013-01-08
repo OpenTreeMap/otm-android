@@ -39,8 +39,8 @@ public class TreeEditDisplay extends TreeDisplay {
 	protected static final int TREE_PHOTO = 1;
 	
 	private Field speciesField;
-
-	ProgressDialog deleteDialog = null;
+	private boolean photoHasBeenChanged = false;
+	private ProgressDialog deleteDialog = null;
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
@@ -97,7 +97,9 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.d("AddTreePhoto", response.toString());
 			try {
 				if (response.get("status").equals("success")) {
-					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();		
+					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
+					plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
+					plot.setPhotoDirty(true);
 				} else {
 					Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
 					Log.d("AddTreePhoto", "photo response no success");
@@ -120,7 +122,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.e("addTreePhoto", "e.getMessage: " + e.getMessage());
 			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
-			Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();					
+			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();					
 		};
 	};
 	
@@ -293,11 +295,30 @@ public class TreeEditDisplay extends TreeDisplay {
 	}
 
 	/**
-	 * Cancel the editing and return to the view profile, unchanged
+	 * By default cancel() will finish the activity
 	 */
 	public void cancel() {
-		setResult(RESULT_CANCELED);
-		finish();
+		cancel(true);
+	}
+	
+	/**
+	 * Cancel the editing and return to the view profile, unchanged.
+	 * @param doFinish - if the back button was pushed, finished will
+	 * be called for you
+	 */
+	public void cancel(boolean doFinish) {
+		// If the user cancels this activity, but has actually already 
+		// changed the photo, we'll consider than an edit so the calling
+		// activity will know to refresh the dirty photo
+		if (this.photoHasBeenChanged) {
+			setResultOk(plot);
+		} else {
+			setResult(RESULT_CANCELED);
+		}
+		
+		if (doFinish) {
+			finish();
+		}
 	}
 
 	private void save() {
@@ -314,12 +335,9 @@ public class TreeEditDisplay extends TreeDisplay {
 					new RestHandler<Plot>(new Plot()) {
 						@Override
 						public void dataReceived(Plot updatedPlot) {
-							Intent resultIntent = new Intent();
-							
 							// The tree was updated, so return to the info page, and bring along
 							// the data for the new plot, which was the response from the update
-							resultIntent.putExtra("plot", updatedPlot.getData().toString());
-							setResult(RESULT_OK, resultIntent);
+							setResultOk(updatedPlot);
 							finish();
 						}
 
@@ -334,6 +352,16 @@ public class TreeEditDisplay extends TreeDisplay {
 		}
 	}
 
+	/**
+	 * Set the result code to OK and set the updated plot as an intent extra
+	 * @param updatedPlot
+	 */
+	private void setResultOk(Plot updatedPlot) {
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra("plot", updatedPlot.getData().toString());
+		setResult(RESULT_OK, resultIntent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_edit_tree_display, menu);
@@ -353,6 +381,12 @@ public class TreeEditDisplay extends TreeDisplay {
 		return true;
 	}
 
+
+    @Override
+    public void onBackPressed() {
+    	cancel(false);
+        super.onBackPressed();
+    }
 	
 	@Override 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
@@ -383,6 +417,7 @@ public class TreeEditDisplay extends TreeDisplay {
 		  		RequestGenerator rc = new RequestGenerator();
 				try {
 					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+					this.photoHasBeenChanged = true;
 				} catch (JSONException e) {
 					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
 				}
