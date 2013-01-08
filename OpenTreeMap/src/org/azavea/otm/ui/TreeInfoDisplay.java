@@ -97,7 +97,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	private void showImage(Plot plot) throws JSONException {
 		// Default if there is no image returned
 		plotImage.setImageResource(R.drawable.ic_action_search);
-		
+
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {

@@ -112,11 +112,12 @@ public class TreeEditDisplay extends TreeDisplay {
 				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
 			}
 		};
+		
 		public void onFailure(Throwable e, JSONObject errorResponse) {
 			Log.e("AddTreePhoto", "addTreePhotoHandler.onFailure");
 			Log.e("AddTreePhoto", errorResponse.toString());
 			Log.e("AddTreePhoto", e.getMessage());
-			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
+			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 		
@@ -127,7 +128,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			Log.e("addTreePhoto", "e.getMessage: " + e.getMessage());
 			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
-			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();					
+			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 	};
