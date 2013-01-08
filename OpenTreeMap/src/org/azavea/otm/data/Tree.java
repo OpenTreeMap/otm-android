@@ -162,6 +162,23 @@ public class Tree extends Model {
 		data.put("steward_name", stewardName);
 	}
 	
+	/**
+	 * Add an image definition to the list of available images.  This is
+	 * useful after a new image is added to the server, without having to
+	 * request the plot/tree again
+	 * @param image
+	 * @throws JSONException
+	 */
+	public void addImageToList(JSONObject image) throws JSONException {
+		JSONArray images;
+		if (data.isNull("images")) {
+			images = new JSONArray();
+		} else {
+			images = data.getJSONArray("images");	
+		}
+		images.put(image);
+	}
+	
 	public ArrayList<Integer> getImageIdList() throws JSONException {	
 		ArrayList<Integer> idList = new ArrayList<Integer>();
 		if (data.isNull("images")) {
@@ -174,4 +191,5 @@ public class Tree extends Model {
 		}
 		return idList;
 	}
+	
 }

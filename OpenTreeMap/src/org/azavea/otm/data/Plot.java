@@ -223,7 +223,7 @@ public class Plot extends Model {
 	public void createTree() throws JSONException {
 		this.setTree(new Tree());
 	}
-	
+		
 	/**
 	 * Get the most recent tree photo for this plot, by way of an asynchronous
 	 * response handler.  Use static helper methods on Plot to decode a photo 
@@ -247,6 +247,28 @@ public class Plot extends Model {
 	}
 
 	/**
+	 * Flag a tree photo as changed during an edit session.
+	 * @param isDirty
+	 * @throws JSONException
+	 */
+	public void setPhotoDirty(boolean isDirty) throws JSONException {
+		data.put("dirty_photo", isDirty);
+	}
+	
+	
+	public boolean isPhotoDirty() {
+		if (!data.isNull("dirty_photo")) {
+			try {
+				return data.getBoolean("dirty_photo");
+			} catch (JSONException e) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Create standard sized bitmap image from tree photo data
 	 * @param imageData
 	 * @return
@@ -255,5 +277,17 @@ public class Plot extends Model {
 		Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
 		// Use an 80x80px image thumbnail
 		return Bitmap.createScaledBitmap(image, 80, 80, true);
+	}
+
+	public void assignNewTreePhoto(String title, int photoId) throws JSONException {
+		Tree tree = this.getTree();
+		if (tree != null) {
+			JSONObject image = new JSONObject();
+			image.put("title", title);
+			image.put("id", photoId);
+			
+			tree.addImageToList(image);
+		}
+		
 	}
 }
