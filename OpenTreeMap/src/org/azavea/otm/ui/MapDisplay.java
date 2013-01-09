@@ -16,12 +16,22 @@ package org.azavea.otm.ui;
  * limitations under the License.
  */
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
+import com.google.android.gms.maps.model.UrlTileProvider;
+
 import org.azavea.otm.R;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -30,6 +40,35 @@ import android.os.Bundle;
  * installed/enabled/updated on a user's device.
  */
 public class MapDisplay extends android.support.v4.app.FragmentActivity {
+    private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
+    
+    private static final double[] TILE_ORIGIN = {-20037508.34789244, 20037508.34789244};
+    private static final int ORIG_X = 0;
+    private static final int ORIG_Y = 1;
+    
+    private static final double MAP_SIZE = 20037508.34789244 * 2;
+    
+    //TODO break out the base url and whatever else we need to parameterize...
+    private static final String GEOSERVER_FORMAT =
+    		"http://phillytreemap.org/geoserver/wms" +
+    		"?service=WMS" +
+    		"&version=1.1.1" +  			
+    		"&request=GetMap" +
+    		"&layers=ptm" +
+    		"&bbox=%f,%f,%f,%f" +
+    		"&width=256" +
+    		"&height=256" +
+    		"&srs=EPSG:900913" +
+    		"&format=image/png" +				
+    		"&transparent=true";			
+    	    
+    // array indexes for bounding box arrays.
+    private static final int MINX = 0;
+    private static final int MAXX = 1;
+    private static final int MINY = 2;
+    private static final int MAXY = 3;
+
+    
     /**
      * Note that this may be null if the Google Play services APK is not available.
      */
@@ -39,13 +78,13 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_display_2);
-        //setUpMapIfNeeded();
+        setUpMapIfNeeded();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //setUpMapIfNeeded();
+        setUpMapIfNeeded();
     }
 
     /**
@@ -84,11 +123,44 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, 12));
+        
+        TileProvider tileProvider = new UrlTileProvider(256,256) {
+            @Override
+            public synchronized URL getTileUrl(int x, int y, int zoom) {
+            	double[] bbox = getBoundingBox(x, y, zoom);
+                String s = String.format(Locale.US, GEOSERVER_FORMAT, bbox[MINX], 
+                		bbox[MINY], bbox[MAXX], bbox[MAXY]);
+                Log.d("TILES", s);
+                URL url = null;
+                try {
+                    url = new URL(s);
+                } catch (MalformedURLException e) {
+                    throw new AssertionError(e);
+                }
+                return url;
+            }
+        };
+        
+        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+    }
+        
+    private double[] getBoundingBox(int x, int y, int zoom) {
+    	double tileSize = MAP_SIZE / Math.pow(2, zoom);
+    	double minx = TILE_ORIGIN[ORIG_X] + x * tileSize;
+    	double maxx = TILE_ORIGIN[ORIG_X] + (x+1) * tileSize;
+    	double miny = TILE_ORIGIN[ORIG_Y] - (y+1) * tileSize;
+    	double maxy = TILE_ORIGIN[ORIG_Y] - y * tileSize;
+  
+    	double[] bbox = new double[4];
+    	bbox[MINX] = minx;
+    	bbox[MINY] = miny;
+    	bbox[MAXX] = maxx;
+    	bbox[MAXY] = maxy;
+    	
+    	return bbox;
     }
 }
-
-
 
 /*
 import org.azavea.map.OTMMapView;
