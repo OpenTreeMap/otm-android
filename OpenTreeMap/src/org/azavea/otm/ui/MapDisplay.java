@@ -28,8 +28,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import org.azavea.map.WMSTileProvider;
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
@@ -38,6 +40,8 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -221,7 +225,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
     	plotImageView = (ImageView) findViewById(R.id.plotImage);
     }
 
-	/*private void showImage(Plot plot) throws JSONException {
+	private void showImage(Plot plot) throws JSONException {
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
@@ -236,7 +240,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
 			}
 		});
-	}*/
+	}
 	  
     
     private void setUpMap() {
@@ -262,7 +266,19 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));    
     }
         
-   
+    // onClick handler for tree-details pop-up touch event
+ 	public void showFullTreeInfo(View view) {
+ 		// Show TreeInfoDisplay with current plot
+ 		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
+ 		viewPlot.putExtra("plot", currentPlot.getData().toString());
+ 		
+ 		if (App.getLoginManager().isLoggedIn()) {
+ 			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
+ 		}
+ 		startActivity(viewPlot);
+ 	}
+    
+    
 }
 
 /*
@@ -397,17 +413,7 @@ public class MapDisplay extends MapActivity {
 	
 	
 	
-	// onClick handler for tree-details pop-up touch event
-	public void showFullTreeInfo(View view) {
-		// Show TreeInfoDisplay with current plot
-		Intent viewPlot = new Intent(MapDisplay.this, TreeInfoDisplay.class);
-		viewPlot.putExtra("plot", currentPlot.getData().toString());
-		
-		if (App.getLoginManager().isLoggedIn()) {
-			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
-		}
-		startActivity(viewPlot);
-	}
+	
 	
     // onClick handler for "My Location" button
     public void showMyLocation(View view) {

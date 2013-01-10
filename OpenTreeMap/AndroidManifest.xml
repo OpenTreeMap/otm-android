@@ -51,12 +51,12 @@
         <activity
             android:name=".ui.TreeInfoDisplay"
             android:label="@string/app_name"
-            android:process=":OTMTreeInfoProcess" >
+       	 >
         </activity>
         <activity
             android:name=".ui.TreeEditDisplay"
             android:label="@string/app_name"
-            android:process=":OTMTreeEditProcess" >
+       	>
         </activity>                        
         <activity
             android:name=".ui.FilterDisplay"
