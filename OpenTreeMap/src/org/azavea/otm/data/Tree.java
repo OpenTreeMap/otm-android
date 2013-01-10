@@ -2,15 +2,23 @@ package org.azavea.otm.data;
 
 import java.util.ArrayList;
 
+import org.azavea.otm.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Tree extends Model {
+	private Plot plot = null;
+	
 	public Tree() {
 		data = new JSONObject();
 	}
 
+	public Tree(Plot parentPlot) {
+		data = new JSONObject();
+		plot = parentPlot;
+	}
+	
 	public int getId() throws JSONException {
 		return data.getInt("id");
 	}
@@ -19,8 +27,23 @@ public class Tree extends Model {
 		data.put("id", id);
 	}
 
-	public long getDbh() throws JSONException {
-		return getLongOrDefault("dbh", 0l);
+	public double getDbh() throws JSONException {
+		return getDbh(false);
+	}
+	
+	public double getDbh(boolean getCurrentOnly) throws JSONException {
+		if (getCurrentOnly) {
+			return getDoubleOrDefault("dbh", 0d);
+		}
+		
+		// Use the field value, which could be a recent pending value
+		Object value = Field.getValueForKey("tree.dbh", plot);
+		if (value != null) {
+			return Double.parseDouble(value.toString());
+		} else {
+			return 0d;
+		}
+		
 	}
 
 	public void setDbh(double dbh) throws JSONException {
@@ -36,7 +59,26 @@ public class Tree extends Model {
 	}
 
 	public String getSpeciesName() throws JSONException {
-		return data.getString("species_name");
+		return getSpeciesName(false);
+	}
+	
+	/**
+	 * Get the current or pending value for species name
+	 * @param getCurrentOnly, if True return the actual saved value, otherwise return
+	 * pending value if it exists
+	 * @return
+	 * @throws JSONException
+	 */
+	public String getSpeciesName(boolean getCurrentOnly) throws JSONException {
+		if (getCurrentOnly) {
+			return data.getString("species_name");
+		}
+		Object value = Field.getValueForKey("tree.species_name", plot);
+		if (value != null) {
+			return value.toString();
+		} else {
+			return null;
+		}
 	}
 
 	public String getSpeciesName(String defaultText) throws JSONException {

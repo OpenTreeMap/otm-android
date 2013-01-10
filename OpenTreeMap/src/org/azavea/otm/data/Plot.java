@@ -168,7 +168,7 @@ public class Plot extends Model {
 		if (data.isNull("tree")) {
 			return null;
 		}
-		Tree retTree = new Tree();
+		Tree retTree = new Tree(this);
 		retTree.setData(data.getJSONObject("tree"));
 		return retTree;
 	}

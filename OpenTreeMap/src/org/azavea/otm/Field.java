@@ -330,7 +330,7 @@ public class Field {
 		return value.toString();
 	}
 
-	protected Object getValueForKey(String key, Plot plot) throws JSONException {
+	public static Object getValueForKey(String key, Plot plot) throws JSONException {
 		PendingEditDescription pending = plot.getPendingEditForKey(key);
 		if (pending != null) {
 			return plot.getPendingEditForKey(key).getLatestValue();
@@ -344,7 +344,7 @@ public class Field {
 	 * exist or the value of the key, it will return a null value
 	 * @throws JSONException 
 	 */
-	protected Object getValueForKey(String key, JSONObject json) {
+	protected static Object getValueForKey(String key, JSONObject json) {
 		try {
 			String[] keys = key.split("\\.");
 			NestedJsonAndKey found = getValueForKey(keys, 0, json, false);
@@ -362,7 +362,7 @@ public class Field {
 	/**
 	 * Return value for keys, which could be nested as an array
 	 */
-	private NestedJsonAndKey getValueForKey(String[] keys, int index, 
+	private static NestedJsonAndKey getValueForKey(String[] keys, int index, 
 			JSONObject json, boolean createNodeIfEmpty) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
 			JSONObject child;
