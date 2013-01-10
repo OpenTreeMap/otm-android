@@ -38,6 +38,7 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -49,6 +50,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	private final int zoomLevel = 12;
@@ -296,116 +298,43 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         }
         return true;
     }
-
-}
-
-/*
-
-public class MapDisplay extends MapActivity {
-
-	
-	private MyLocationOverlay myLocationOverlay;
-	private OTMMapView mapView;
-	private WMSTileRaster surfaceView;
-	private int zoomLevel;
-	
-	
-	// Pop-up view items
-	
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        zoomLevel = 14;
-        setContentView(R.layout.activity_map_display);
-
-        // Get a MapView and enable zoom controls
-        mapView = (OTMMapView) findViewById(R.id.mapview1);
-        mapView.setBuiltInZoomControls(true);
-        
-        // Get tree-overlay and configure
-        surfaceView = (WMSTileRaster)findViewById(R.id.tileraster);
-        surfaceView.setZOrderOnTop(true);
-        SurfaceHolder sh = surfaceView.getHolder();
-        sh.setFormat(PixelFormat.TRANSPARENT);
-        
-        
-        surfaceView.setMapView(getWindowManager(), this);
-        
-        MapController mapController = mapView.getController();
-        GeoPoint p = new GeoPoint((int)(39.952622*1E6), (int)(-75.165708*1E6));
-        mapController.setCenter(p);
-        mapController.setZoom(zoomLevel);
-        
-        // Force the MapView to redraw
-        mapView.invalidate();
-        
-        
-    }
     
-    public OTMMapView getMapView() {
-    	return this.mapView;
-    }
     
-    @Override
-    protected void onStart() {
-    	super.onStart();
-    }
-
-    
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	surfaceView.setMapView(getWindowManager(), this);
-    	this.mapView.invalidate();
-    }
-    
-    @Override
-    protected void onPause() {
-    	super.onPause();
-    	//myLocationOverlay.disableMyLocation();
-    }
-
-    @Override
-    protected void onDestroy() {
-    	super.onDestroy();
-    }
-    
-    @Override
-    public boolean isRouteDisplayed() {
-    	return false;
-    }
-
-    
-
-	@Override
-	public void onBackPressed() {
-		hidePopup();
-	}
-	
-	
-	
-	
-	
-    // onClick handler for "My Location" button
+ 	@Override 
+ 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+ 	  super.onActivityResult(requestCode, resultCode, data); 
+ 	  switch(requestCode) { 
+ 	  	case (FILTER_INTENT) : { 
+ 	  		// This is debugging code!
+ 	  		// TODO Make filters work.
+ 	  		if (resultCode == Activity.RESULT_OK) { 
+ 	  			String activeFilters = App.getFilterManager().getActiveFiltersAsQueryString();
+ 	  			if (!activeFilters.equals("")) {
+ 	  				Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
+ 	  						Toast.LENGTH_LONG).show();
+ 	  			} else {
+ 	  				Toast.makeText(this,  "No filters", Toast.LENGTH_LONG).show();
+ 	  			}
+ 	  		} 
+ 	  		break; 
+ 	    } 
+ 	  } 
+ 	}
+ 	
+ 	// TODO Make this work
+ 	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
+    /*
     	OTMMapView mapView = (OTMMapView) findViewById(R.id.mapview1);
     	MapController mc = mapView.getController();
     	mc.setCenter(myLocationOverlay.getMyLocation());
+    */
     }
-    
-	@Override 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
-	  super.onActivityResult(requestCode, resultCode, data); 
-	  switch(requestCode) { 
-	  	case (FILTER_INTENT) : { 
-	  		if (resultCode == Activity.RESULT_OK) { 
-	  			Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
-	  					Toast.LENGTH_LONG).show();
-	  		} 
-	  		break; 
-	    } 
-	  } 
+
+    @Override
+	public void onBackPressed() {
+		hidePopup();
 	}
+
+
 }
-*/
