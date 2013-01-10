@@ -12,6 +12,15 @@ import android.graphics.BitmapFactory;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
 public class Plot extends Model {
+	
+	private PendingStatus hasPending = PendingStatus.Unset;
+	
+	enum PendingStatus {
+		Pending,
+		NoPending,
+		Unset
+	}
+	
 	/**
 	 * When Requesting a plot tree photo, these are the valid image types
 	 */
@@ -194,6 +203,46 @@ public class Plot extends Model {
 		return getPermission("tree", "can_delete");
 	}
 	
+	/***
+	 * Does this plot have current pending edits?
+	 * @throws JSONException
+	 */
+	public boolean hasPendingEdits() throws JSONException {
+		// Use the cache if available, this might be called a lot
+		if (hasPending != PendingStatus.Unset) {
+			return hasPending == PendingStatus.Pending;
+		}
+		
+		boolean pendings = false;
+		if (!data.isNull("pending_edits")) {
+			if (data.getJSONObject("pending_edits").length() > 0) {
+				pendings = true;
+			}
+		}
+		
+		// Cache for this instance
+		hasPending = pendings ? PendingStatus.Pending : PendingStatus.NoPending;
+		return pendings;
+	}
+	
+	/**
+	 * Get a pending edit description for a given field key for a plot or
+	 * tree
+	 * @param key - name of field key
+	 * @return An object representing a pending edit description for the field, or
+	 * null if there are no pending edits
+	 * @throws JSONException
+	 */
+	public PendingEditDescription getPendingEditForKey(String key) throws JSONException {
+		if (this.hasPendingEdits()) {
+			JSONObject edits = data.getJSONObject("pending_edits");
+			if (!edits.isNull(key)) {
+				return new PendingEditDescription(key, edits.getJSONObject(key));
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Get a plot or tree permission from a plot json
 	 * @param name: "tree" or "plot"
@@ -244,7 +293,6 @@ public class Plot extends Model {
 				rg.getImage(this.getId(), imageId, handler);
 			}
 		}
-		
 	}
 	
 	/**
