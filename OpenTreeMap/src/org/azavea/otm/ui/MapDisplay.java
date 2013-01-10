@@ -24,8 +24,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -40,17 +38,22 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MapDisplay extends android.support.v4.app.FragmentActivity {
+	private final int zoomLevel = 12;
+	final private int FILTER_INTENT = 1;
+	
 	TextView plotSpeciesView;
 	TextView plotAddressView;
 	TextView plotDiameterView;
@@ -123,55 +126,54 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         mMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng point) {									
-					Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-					
-					//final ProgressDialog dialog = ProgressDialog.show(activityMapDisplay, "", 
-		            //       "Loading. Please wait...", true);
-					//dialog.show();
-					
-					final RequestGenerator rg = new RequestGenerator();
-					rg.getPlotsNearLocation(
-							point.latitude,
-							point.longitude,
-							new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
-
-								@Override
-								public void onFailure(Throwable e, String message) {
-									//dialog.hide();
-									//invalidate();
-									Log.e("TREE_CLICK",
-											"Error retrieving plots on map touch event: "
-													+ e.getMessage());
-									e.printStackTrace();
+				Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+				
+				final ProgressDialog dialog = ProgressDialog.show(MapDisplay.this, "", 
+	                  "Loading. Please wait...", true);
+				dialog.show();
+				
+				final RequestGenerator rg = new RequestGenerator();
+				rg.getPlotsNearLocation(
+					point.latitude,
+					point.longitude,
+					new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+	
+						@Override
+						public void onFailure(Throwable e, String message) {
+							dialog.hide();
+							//invalidate();
+							Log.e("TREE_CLICK",
+									"Error retrieving plots on map touch event: "
+											+ e.getMessage());
+							e.printStackTrace();
+						}
+				
+						@Override
+						public void dataReceived(PlotContainer response) {
+							try {
+								Plot plot = response.getFirst();
+								if (plot != null) {
+									Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+									// ???
+									//double plotX = plot.getGeometry().getLonE6();
+									//double plotY = plot.getGeometry().getLatE6();
+									//touchPoint = new GeoPoint((int)plotY, (int)plotX);
+									showPopup(plot);
+								} else {
+									//touchPoint = null;
+									hidePopup();
 								}
-						
-								@Override
-								public void dataReceived(PlotContainer response) {
-									try {
-										Plot plot = response.getFirst();
-										if (plot != null) {
-											Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
-											//double plotX = plot.getGeometry().getLonE6();
-											//double plotY = plot.getGeometry().getLatE6();
-											//touchPoint = new GeoPoint((int)plotY, (int)plotX);
-											showPopup(plot);
-										} else {
-											//touchPoint = null;
-											hidePopup();
-										}
-									} catch (JSONException e) {
-										Log.e("TREE_CLICK",
-												"Error retrieving plot info on map touch event: "
-														+ e.getMessage());
-										e.printStackTrace();
-									} finally {
-										//dialog.hide();
-										//invalidate();
-									}
-								}
-							});
-
-					//updatePanPosition();
+							} catch (JSONException e) {
+								Log.e("TREE_CLICK",
+										"Error retrieving plot info on map touch event: "
+												+ e.getMessage());
+								e.printStackTrace();
+							} finally {
+								dialog.hide();
+								//invalidate();  ???
+							}
+						}
+					});
 			}
         });
     }
@@ -244,7 +246,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	  
     
     private void setUpMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, 12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, zoomLevel));
         
         TileProvider tileProvider = new WMSTileProvider(256,256) {
         	
@@ -277,44 +279,30 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
  		}
  		startActivity(viewPlot);
  	}
-    
-    
+ 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_map_display, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_filter:
+            	Intent filter = new Intent(this, FilterDisplay.class);
+            	startActivityForResult(filter, FILTER_INTENT);
+            	break;
+        }
+        return true;
+    }
+
 }
 
 /*
-import org.azavea.map.OTMMapView;
-import org.azavea.map.WMSTileRaster;
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.Tree;
-import org.json.JSONException;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MyLocationOverlay;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-
 
 public class MapDisplay extends MapActivity {
 
-	final private int FILTER_INTENT = 1;
 	
 	private MyLocationOverlay myLocationOverlay;
 	private OTMMapView mapView;
@@ -364,22 +352,6 @@ public class MapDisplay extends MapActivity {
     	super.onStart();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_map_display, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_filter:
-            	Intent filter = new Intent(this, FilterDisplay.class);
-            	startActivityForResult(filter, FILTER_INTENT);
-            	break;
-        }
-        return true;
-    }
     
     @Override
     protected void onResume() {
