@@ -28,16 +28,34 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
-import com.google.android.gms.maps.model.UrlTileProvider;
 
 import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.data.Tree;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class MapDisplay extends android.support.v4.app.FragmentActivity {
-    private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
+	TextView plotSpeciesView;
+	TextView plotAddressView;
+	TextView plotDiameterView;
+	TextView plotUpdatedByView;
+	ImageView plotImageView;
+	private RelativeLayout plotPopup;
+	private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
+	
+	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
     
     private static final String GEOSERVER_FORMAT =
     		"http://phillytreemap.org/geoserver/wms" +
@@ -59,6 +77,8 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_display_2);
         setUpMapIfNeeded();
+		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		setPopupViews();
     }
 
     @Override
@@ -98,17 +118,127 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         
         mMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
 			@Override
-			public void onMapClick(LatLng point) {				
+			public void onMapClick(LatLng point) {									
+					Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+					
+					//final ProgressDialog dialog = ProgressDialog.show(activityMapDisplay, "", 
+		            //       "Loading. Please wait...", true);
+					//dialog.show();
+					
+					final RequestGenerator rg = new RequestGenerator();
+					rg.getPlotsNearLocation(
+							point.latitude,
+							point.longitude,
+							new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+
+								@Override
+								public void onFailure(Throwable e, String message) {
+									//dialog.hide();
+									//invalidate();
+									Log.e("TREE_CLICK",
+											"Error retrieving plots on map touch event: "
+													+ e.getMessage());
+									e.printStackTrace();
+								}
+						
+								@Override
+								public void dataReceived(PlotContainer response) {
+									try {
+										Plot plot = response.getFirst();
+										if (plot != null) {
+											Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+											//double plotX = plot.getGeometry().getLonE6();
+											//double plotY = plot.getGeometry().getLatE6();
+											//touchPoint = new GeoPoint((int)plotY, (int)plotX);
+											showPopup(plot);
+										} else {
+											//touchPoint = null;
+											hidePopup();
+										}
+									} catch (JSONException e) {
+										Log.e("TREE_CLICK",
+												"Error retrieving plot info on map touch event: "
+														+ e.getMessage());
+										e.printStackTrace();
+									} finally {
+										//dialog.hide();
+										//invalidate();
+									}
+								}
+							});
+
+					//updatePanPosition();
 			}
         });
     }
+    
+	public void showPopup(Plot plot) {
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
+		//set default text
+		plotDiameterView.setText(getString(R.string.dbh_missing));
+		plotSpeciesView.setText(getString(R.string.species_missing));
+		plotAddressView.setText(getString(R.string.address_missing));
+		plotImageView.setImageResource(R.drawable.ic_action_search);
+		
+		try {
+	        plotUpdatedByView.setText(plot.getLastUpdatedBy());
+	        if (plot.getAddress().length() != 0) {
+	        	plotAddressView.setText(plot.getAddress());
+	        }
+			Tree tree = plot.getTree();
+			if (tree != null) {
+				String speciesName;
+				try {
+					speciesName = tree.getSpeciesName();
+				} catch (JSONException e) {
+					speciesName = "No species name";
+				}
+				plotSpeciesView.setText(speciesName);
+			
+				if (tree.getDbh() != 0) {
+					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
+				} 
+				//showImage(plot);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		currentPlot = plot;
+		plotPopup.setVisibility(View.VISIBLE);
+	}
+
+	public void hidePopup() {
+		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		plotPopup.setVisibility(View.INVISIBLE);
+		currentPlot = null;
+	}
+
+	private void setPopupViews() {
+    	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
+    	plotAddressView = (TextView) findViewById(R.id.plotAddress);
+    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
+    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
+    	plotImageView = (ImageView) findViewById(R.id.plotImage);
+    }
+
+	/*private void showImage(Plot plot) throws JSONException {
+		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
+			@Override
+			public void onSuccess(byte[] imageData) {
+				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
+				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
+				plotImage.setImageBitmap(scaledImage);
+			}
+			
+			@Override
+			public void onFailure(Throwable e, byte[] imageData) {
+				// Log the error, but not important enough to bother the user
+				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+			}
+		});
+	}*/
+	  
+    
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, 12));
         
@@ -174,15 +304,10 @@ public class MapDisplay extends MapActivity {
 	private OTMMapView mapView;
 	private WMSTileRaster surfaceView;
 	private int zoomLevel;
-	private RelativeLayout plotPopup;
-	private Plot currentPlot; // The Plot we're currently showing a popup for, if any
+	
 	
 	// Pop-up view items
-	TextView plotSpeciesView;
-	TextView plotAddressView;
-	TextView plotDiameterView;
-	TextView plotUpdatedByView;
-	ImageView plotImageView;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -200,7 +325,6 @@ public class MapDisplay extends MapActivity {
         SurfaceHolder sh = surfaceView.getHolder();
         sh.setFormat(PixelFormat.TRANSPARENT);
         
-		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
         
         surfaceView.setMapView(getWindowManager(), this);
         
@@ -212,7 +336,7 @@ public class MapDisplay extends MapActivity {
         // Force the MapView to redraw
         mapView.invalidate();
         
-        setPopupViews();
+        
     }
     
     public OTMMapView getMapView() {
@@ -264,82 +388,14 @@ public class MapDisplay extends MapActivity {
     	return false;
     }
 
-    private void setPopupViews() {
-    	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
-    	plotAddressView = (TextView) findViewById(R.id.plotAddress);
-    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
-    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
-    	plotImageView = (ImageView) findViewById(R.id.plotImage);
-    }
     
-	public void showPopup(Plot plot) {
-
-		//set default text
-		plotDiameterView.setText(getString(R.string.dbh_missing));
-		plotSpeciesView.setText(getString(R.string.species_missing));
-		plotAddressView.setText(getString(R.string.address_missing));
-		plotImageView.setImageResource(R.drawable.ic_action_search);
-		
-		try {
-	        GeoPoint p = new GeoPoint((int)(plot.getGeometry().getLatE6()), (int)(plot.getGeometry().getLonE6()));
-	        mapView.getController().stopAnimation(false);
-	        mapView.getController().animateTo(p);
-			plotUpdatedByView.setText(plot.getLastUpdatedBy());
-	        if (plot.getAddress().length() != 0) {
-	        	plotAddressView.setText(plot.getAddress());
-	        }
-			Tree tree = plot.getTree();
-			if (tree != null) {
-			
-				String speciesName;
-				try {
-					speciesName = tree.getSpeciesName();
-				} catch (JSONException e) {
-					speciesName = "No species name";
-				}
-				plotSpeciesView.setText(speciesName);
-			
-				if (tree.getDbh() != 0) {
-					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
-				} 
-				
-				showImage(plot);
-			
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		currentPlot = plot;
-		plotPopup.setVisibility(View.VISIBLE);
-	}
-
-	public void hidePopup() {
-		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
-		plotPopup.setVisibility(View.INVISIBLE);
-		currentPlot = null;
-	}
 
 	@Override
 	public void onBackPressed() {
 		hidePopup();
 	}
 	
-	private void showImage(Plot plot) throws JSONException {
-		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
-			@Override
-			public void onSuccess(byte[] imageData) {
-				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
-				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
-				plotImage.setImageBitmap(scaledImage);
-			}
-			
-			@Override
-			public void onFailure(Throwable e, byte[] imageData) {
-				// Log the error, but not important enough to bother the user
-				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
-			}
-		});
-	}
+	
 	
 	// onClick handler for tree-details pop-up touch event
 	public void showFullTreeInfo(View view) {
