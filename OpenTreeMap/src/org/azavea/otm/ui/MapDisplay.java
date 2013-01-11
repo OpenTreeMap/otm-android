@@ -24,6 +24,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -31,6 +33,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
@@ -65,6 +68,8 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	ImageView plotImageView;
 	private RelativeLayout plotPopup;
 	private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
+	
+	private Marker plotMarker;
 	
 	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
     
@@ -129,7 +134,9 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
         
         mMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
 			@Override
-			public void onMapClick(LatLng point) {									
+			public void onMapClick(LatLng point) {		
+				
+				
 				Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
 				
 				final ProgressDialog dialog = ProgressDialog.show(MapDisplay.this, "", 
@@ -208,7 +215,10 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 				if (tree.getDbh() != 0) {
 					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
-				//showImage(plot);
+				showImage(plot);
+				Geometry foo = plot.getGeometry();
+				
+				zoomToAndMarkCurrentPlot(new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon()));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -337,5 +347,13 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 		hidePopup();
 	}
 
+	private void zoomToAndMarkCurrentPlot(LatLng point) {
+		mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+		if (plotMarker != null) {
+			plotMarker.remove();
+		}
+		plotMarker = mMap.addMarker(new MarkerOptions().position(point).title(""));
+	}
 
+    
 }
