@@ -1,8 +1,6 @@
 package org.azavea.otm;
 
 import org.azavea.lists.NearbyList;
-import org.azavea.map.TileRequestQueue;
-import org.azavea.map.WMSTileCache;
 import org.azavea.otm.FilterManager;
 import com.loopj.android.http.AsyncHttpClient;
 
@@ -31,9 +29,6 @@ public class App extends Application {
 	
 	private static int tileRequestSequenceId = 0;
 	
-	private static TileRequestQueue tileQueue;
-	
-	private static WMSTileCache tileCache;
 	
 	private static AsyncHttpClient asyncHttpClient;
 	
@@ -129,14 +124,6 @@ public class App extends Application {
         getLoginManager();
     }
 	
-	public static TileRequestQueue getTileRequestQueue() {
-		if (tileQueue == null) {
-			tileQueue = new TileRequestQueue();
-		}
-		
-		return tileQueue;
-	}
-	
 	public static int getTileRequestSeqId() {
 		return tileRequestSequenceId;
 	}
@@ -145,14 +132,6 @@ public class App extends Application {
 		tileRequestSequenceId++;
 	}
 	
-	public static WMSTileCache getTileCache() {
-		if (tileCache == null) {
-			Log.d(App.LOG_TAG, "Creating cache");
-			tileCache = new WMSTileCache(getAsyncHttpClient(), 18);
-		}
-		
-		return tileCache;
-	}
 	
 	public static AsyncHttpClient getAsyncHttpClient() {
 		if (asyncHttpClient == null) {

@@ -1,6 +1,6 @@
 package org.azavea.otm.ui;
 
-import org.azavea.map.OTMMapView;
+//import org.azavea.map.OTMMapView;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
@@ -8,9 +8,7 @@ import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -21,8 +19,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-public class TreeDisplay extends MapActivity{
-	protected GeoPoint plotLocation;
+public class TreeDisplay extends Activity{
+	protected LatLng plotLocation;
 	protected Plot plot;
 	protected User currentUser;
 	public static int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;
@@ -55,31 +53,31 @@ public class TreeDisplay extends MapActivity{
 		}
     }
     
-    protected GeoPoint getPlotLocation(Plot plot) {
+    protected LatLng getPlotLocation(Plot plot) {
     	try {
 			double lon = plot.getGeometry().getLonE6();
 			double lat = plot.getGeometry().getLatE6();
-			return new GeoPoint((int)lat, (int)lon);
+			return new LatLng((int)lat, (int)lon);
     	} catch (Exception e) {
     		return null;
     	}
     }
     
-	protected void showPositionOnMap() {
+	/*protected void showPositionOnMap() {
 		OTMMapView mapView = (OTMMapView)findViewById(R.id.map_vignette);
 		if (mapView != null) {
 			mapView.getOverlays().add(new TreeLocationOverlay());
 			mapView.getController().animateTo(plotLocation);
 			mapView.getController().setZoom(16);
 		}
-	}
+	}*/
 
-	@Override
+	/*@Override
 	protected boolean isRouteDisplayed() {
 		return false;
-	}
+	}*/
 	
-	private class TreeLocationOverlay extends com.google.android.maps.Overlay {
+	/*private class TreeLocationOverlay extends com.google.android.maps.Overlay {
 		@Override
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 			super.draw(canvas, mapView, shadow);
@@ -96,5 +94,5 @@ public class TreeDisplay extends MapActivity{
 				canvas.drawBitmap(bmp, x, y, null);
 			}
 		}
-	}
+	}*/
 }

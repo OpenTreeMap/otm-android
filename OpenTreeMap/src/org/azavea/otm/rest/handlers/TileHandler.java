@@ -1,4 +1,4 @@
-package org.azavea.otm.rest.handlers;
+/*package org.azavea.otm.rest.handlers;
 
 import org.azavea.map.GeoRect;
 import org.azavea.map.TileRequestQueue;
@@ -111,3 +111,4 @@ public class TileHandler extends BinaryHttpResponseHandler {
 	public void tileImageReceived(int x, int y, Bitmap image) {
 	}
 }
+*/

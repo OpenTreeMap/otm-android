@@ -46,7 +46,7 @@ public class TreeInfoDisplay extends TreeDisplay{
             
     		Log.d(App.LOG_TAG, "Setting header values");
     		setHeaderValues(plot);
-    		showPositionOnMap();
+    		//showPositionOnMap();
     		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
     			View fieldGroup = group.renderForDisplay(layout, plot);
     			if (fieldGroup != null) {
