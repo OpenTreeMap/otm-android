@@ -44,8 +44,12 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -332,14 +336,16 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
  	  } 
  	}
  	
- 	// TODO Make this work
  	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    /*
-    	OTMMapView mapView = (OTMMapView) findViewById(R.id.mapview1);
-    	MapController mc = mapView.getController();
-    	mc.setCenter(myLocationOverlay.getMyLocation());
-    */
+    	Context context = MapDisplay.this;
+    	LocationManager locationManager = 
+    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+    	Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+    			lastKnownLocation.getLatitude(),
+    			lastKnownLocation.getLongitude()
+    	), zoomLevel+2));	
     }
     
     @Override
@@ -348,7 +354,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	}
 
 	private void zoomToAndMarkCurrentPlot(LatLng point) {
-		mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+		mMap.animateCamera(CameraUpdateFactory.newLatLng(point));
 		if (plotMarker != null) {
 			plotMarker.remove();
 		}
