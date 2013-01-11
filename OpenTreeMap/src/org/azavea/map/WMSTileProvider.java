@@ -25,8 +25,20 @@ public abstract class WMSTileProvider extends UrlTileProvider {
     	super(x, y);
     }
     
+    public static final String GEOSERVER_FORMAT =
+    		"http://phillytreemap.org/geoserver/wms" +
+    		"?service=WMS" +
+    		"&version=1.1.1" +  			
+    		"&request=GetMap" +
+    		"&layers=ptm" +
+    		"&bbox=%f,%f,%f,%f" +
+    		"&width=256" +
+    		"&height=256" +
+    		"&srs=EPSG:900913" +
+    		"&format=image/png" +				
+    		"&transparent=true";			
     
-    // Return a web mercator bounding box given tile x/y indexes and a zoom
+    // Return a web Mercator bounding box given tile x/y indexes and a zoom
     // level.
 	protected double[] getBoundingBox(int x, int y, int zoom) {
     	double tileSize = MAP_SIZE / Math.pow(2, zoom);

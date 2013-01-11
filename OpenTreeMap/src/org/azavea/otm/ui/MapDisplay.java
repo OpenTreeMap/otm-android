@@ -77,19 +77,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	
 	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
     
-    private static final String GEOSERVER_FORMAT =
-    		"http://phillytreemap.org/geoserver/wms" +
-    		"?service=WMS" +
-    		"&version=1.1.1" +  			
-    		"&request=GetMap" +
-    		"&layers=ptm" +
-    		"&bbox=%f,%f,%f,%f" +
-    		"&width=256" +
-    		"&height=256" +
-    		"&srs=EPSG:900913" +
-    		"&format=image/png" +				
-    		"&transparent=true";			
-
+    
     private GoogleMap mMap;
 
     @Override
