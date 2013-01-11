@@ -1,7 +1,5 @@
 package org.azavea.map;
 
-import java.net.URL;
-
 import com.google.android.gms.maps.model.UrlTileProvider;
 
 public abstract class WMSTileProvider extends UrlTileProvider {
