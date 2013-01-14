@@ -122,8 +122,7 @@ public class TreeInfoDisplay extends TreeDisplay{
                 	editPlot.putExtra("plot", plot.getData().toString());
                 	startActivityForResult(editPlot, EDIT_REQUEST);	
             	} else {
-            		Toast.makeText(TreeInfoDisplay.this, "You must be logged in to do that.", 
-        					Toast.LENGTH_SHORT).show();
+            		startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
             	}
             	break;
         }
