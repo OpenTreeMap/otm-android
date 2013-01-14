@@ -44,8 +44,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     		LinearLayout fieldList = (LinearLayout)findViewById(R.id.field_list);
             fieldList.removeAllViewsInLayout();
             LayoutInflater layout = ((Activity)this).getLayoutInflater();
-
-            
+    
     		Log.d(App.LOG_TAG, "Setting header values");
     		setHeaderValues(plot);
     		showPositionOnMap();
@@ -89,13 +88,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 		
 	}
 	
-	private void setText(int resourceId, String text) {
-		// Only set the text if it exists, letting the layout define default text
-		if (text != null &&  !"".equals(text)) {
-			((TextView)findViewById(resourceId)).setText(text);
-		}
-	}
-
 	private void showImage(Plot plot) throws JSONException {
 		// Default if there is no image returned
 		plotImage.setImageResource(R.drawable.ic_action_search);

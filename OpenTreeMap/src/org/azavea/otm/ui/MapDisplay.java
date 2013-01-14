@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
+import org.azavea.map.TileProviderFactory;
 import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -252,24 +253,8 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
     
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, zoomLevel));
-        
-        TileProvider tileProvider = new WMSTileProvider(256,256) {
-        	
-            @Override
-            public synchronized URL getTileUrl(int x, int y, int zoom) {
-            	double[] bbox = getBoundingBox(x, y, zoom);
-                String s = String.format(Locale.US, GEOSERVER_FORMAT, bbox[MINX], 
-                		bbox[MINY], bbox[MAXX], bbox[MAXY]);
-                Log.d("TILES", s);
-                URL url = null;
-                try {
-                    url = new URL(s);
-                } catch (MalformedURLException e) {
-                    throw new AssertionError(e);
-                }
-                return url;
-            }
-        };
+  
+        TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
         mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));    
     }
         
