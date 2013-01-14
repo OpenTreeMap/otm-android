@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -31,6 +32,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,12 @@ public class TreeDisplay extends android.support.v4.app.FragmentActivity{
 	 private void setUpMap() {
 		TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
 		mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+		UiSettings mUiSettings = mMap.getUiSettings();
+		mUiSettings.setZoomControlsEnabled(false);
+		mUiSettings.setScrollGesturesEnabled(false);
+		mUiSettings.setZoomGesturesEnabled(false);
+		mUiSettings.setTiltGesturesEnabled(false);
+		mUiSettings.setRotateGesturesEnabled(false);
 	 }
 	 
 	 
