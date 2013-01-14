@@ -16,9 +16,7 @@ package org.azavea.otm.ui;
  * limitations under the License.
  */
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Locale;
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,7 +29,7 @@ import com.google.android.gms.maps.model.TileProvider;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import org.azavea.map.TileProviderFactory;
-import org.azavea.map.WMSTileProvider;
+
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
@@ -41,7 +39,7 @@ import org.azavea.otm.data.Tree;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -50,7 +48,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -62,23 +60,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MapDisplay extends android.support.v4.app.FragmentActivity {
-	private final int zoomLevel = 12;
-	final private int FILTER_INTENT = 1;
-	final private int INFO_INTENT = 2;
-	
-	TextView plotSpeciesView;
-	TextView plotAddressView;
-	TextView plotDiameterView;
-	TextView plotUpdatedByView;
-	ImageView plotImageView;
+	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
+	private static final int DEFAULT_ZOOM_LEVEL = 12;
+	private static final int FILTER_INTENT = 1;
+	private static final int INFO_INTENT = 2;
+	private TextView plotSpeciesView;
+	private TextView plotAddressView;
+	private TextView plotDiameterView;
+	private TextView plotUpdatedByView;
+	private ImageView plotImageView;
 	private RelativeLayout plotPopup;
 	private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
-	
 	private Marker plotMarker;
-	
-	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
-    
-    
     private GoogleMap mMap;
 
     @Override
@@ -252,7 +245,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 	}	  
     
     private void setUpMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, zoomLevel));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));
   
         TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
         mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));    
@@ -318,7 +311,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
     	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
     			lastKnownLocation.getLatitude(),
     			lastKnownLocation.getLongitude()
-    	), zoomLevel+2));	
+    	), DEFAULT_ZOOM_LEVEL+2));	
     }
     
     @Override

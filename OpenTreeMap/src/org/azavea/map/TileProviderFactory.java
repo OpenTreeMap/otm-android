@@ -31,6 +31,7 @@ public class TileProviderFactory {
 		}
 	}
 	
+	// return a geoserver otm wms tile layer
 	private static TileProvider otm() {
 		TileProvider tileProvider = new WMSTileProvider(256,256) {
         	
