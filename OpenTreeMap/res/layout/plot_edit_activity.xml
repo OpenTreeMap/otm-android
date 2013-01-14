@@ -3,32 +3,29 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 	
+	<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:id="@+id/vignette_map_edit_mode"
+	  android:layout_width="fill_parent"
+	  android:layout_height="100dp"
+	  android:layout_alignParentTop="true"
+	  class="com.google.android.gms.maps.SupportMapFragment"/>
+	
 	<ScrollView
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/scroller"
 	    android:layout_width="fill_parent" android:layout_height="match_parent"
 	    android:paddingTop="10dp" 
-	    android:background="@color/base" >
-	   
-	    	
+	    android:background="@color/base"
+	    android:layout_below="@+id/vignette_map_edit_mode" >
+	      	
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/field_list"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
 	        android:focusable="true"
-	    	android:focusableInTouchMode="true" >
-	    	
-		<!-- org.azavea.map.OTMMapView
-			android:id="@+id/map_vignette"
-			android:layout_width="fill_parent"
-			android:layout_height="100dp"
-			android:enabled="true"
-			android:clickable="false"
-			android:apiKey="@string/maps_apikey" -->
-	            	
+	    	android:focusableInTouchMode="true" >        	
 	    </LinearLayout>
-	    
 	</ScrollView>
 
 </RelativeLayout>	

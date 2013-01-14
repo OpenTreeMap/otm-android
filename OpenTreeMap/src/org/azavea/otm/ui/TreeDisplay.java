@@ -1,6 +1,11 @@
 package org.azavea.otm.ui;
 
 //import org.azavea.map.OTMMapView;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
+
+import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
@@ -8,7 +13,14 @@ import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -16,83 +28,92 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
-public class TreeDisplay extends Activity{
+public class TreeDisplay extends android.support.v4.app.FragmentActivity{
 	protected LatLng plotLocation;
 	protected Plot plot;
-	protected User currentUser;
 	public static int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;
 	public static int RESULT_PLOT_EDITED = Activity.RESULT_FIRST_USER + 2;
+	protected static final int DEFAULT_TREE_ZOOM_LEVEL = 18;
+	protected GoogleMap mMap;
+	protected Marker  plotMarker;
+	protected int mapFragmentId;
 	
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-		try {
+        try {
 			plot = new Plot();
-
 			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
-	
-			
-	        // This activity is running in a new process because it has a map on it.
-	        // This means it doesn't share application context with the rest of the 
-	        // app, meaning we have to pass contextual state in, like logged in user.
-			String userData = getIntent().getStringExtra("user");
-			if (userData != null) {
-				currentUser = new User();
-		        currentUser.setData(new JSONObject(userData));
-			}
-	        
 			plotLocation = getPlotLocation(plot);
-			
+			//showPositionOnMap();
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not retrieve Tree information", 
 					Toast.LENGTH_SHORT).show();
 			Log.e(App.LOG_TAG, "Failed to create tree view", e);
 		}
+       
     }
     
     protected LatLng getPlotLocation(Plot plot) {
     	try {
-			double lon = plot.getGeometry().getLonE6();
-			double lat = plot.getGeometry().getLatE6();
-			return new LatLng((int)lat, (int)lon);
+			double lon = plot.getGeometry().getLon();
+			double lat = plot.getGeometry().getLat();
+			return new LatLng(lat, lon);
     	} catch (Exception e) {
     		return null;
     	}
     }
     
-	/*protected void showPositionOnMap() {
-		OTMMapView mapView = (OTMMapView)findViewById(R.id.map_vignette);
-		if (mapView != null) {
-			mapView.getOverlays().add(new TreeLocationOverlay());
-			mapView.getController().animateTo(plotLocation);
-			mapView.getController().setZoom(16);
+	protected void showPositionOnMap() {
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(plotLocation, DEFAULT_TREE_ZOOM_LEVEL));
+		if (plotMarker != null) {
+			plotMarker.remove();
 		}
-	}*/
-
-	/*@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}*/
+		plotMarker = mMap.addMarker(new MarkerOptions().position(plotLocation).title(""));
+	}
 	
-	/*private class TreeLocationOverlay extends com.google.android.maps.Overlay {
-		@Override
-		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-			super.draw(canvas, mapView, shadow);
-
-			if (!shadow) {
-				
-				Point point = new Point();
-				mapView.getProjection().toPixels(plotLocation, point);
-				
-				Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_forest2);
-				int x = point.x - bmp.getWidth() / 2;
-				int y = point.y - bmp.getHeight();
-				
-				canvas.drawBitmap(bmp, x, y, null);
-			}
-		}
-	}*/
+	 protected void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            // we have to try for 2 different fragment id's, using the reasonable
+        	// assumption that the base classes are going to be instantiated one at a time.
+        	Log.d("VIN", String.format("%d", mapFragmentId));
+        	FragmentManager fragmentManager = getSupportFragmentManager();
+            SupportMapFragment fragment = (SupportMapFragment) fragmentManager.findFragmentById(mapFragmentId);
+            mMap = fragment.getMap();
+        	if (mMap != null) {
+                setUpMap();
+            } else {
+            	Log.e("VIN", "map was null.");
+            }
+        }
+	 }
+	 
+	 private void setUpMap() {
+		
+		///TODO do we need a WMSTileProviderFactory class?
+		TileProvider tileProvider = new WMSTileProvider(256,256) {
+	        	
+	        @Override
+	        public synchronized URL getTileUrl(int x, int y, int zoom) {
+	        	double[] bbox = getBoundingBox(x, y, zoom);
+	            String s = String.format(Locale.US, GEOSERVER_FORMAT, bbox[MINX], 
+	            		bbox[MINY], bbox[MAXX], bbox[MAXY]);
+	            Log.d("TILES", s);
+	            URL url = null;
+	            try {
+	                url = new URL(s);
+	            } catch (MalformedURLException e) {
+	                throw new AssertionError(e);
+	            }
+	            return url;
+	        }
+		};
+		mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+	 }
 }
+

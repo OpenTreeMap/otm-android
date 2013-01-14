@@ -43,7 +43,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	private ProgressDialog deleteDialog = null;
 	private ProgressDialog saveDialog = null;
 	private ProgressDialog savePhotoDialog = null;
-	
+		
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
 		@Override
@@ -135,16 +135,19 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		photoHasBeenChanged = false;
 		initializeEditPage();
+		mapFragmentId = R.id.vignette_map_edit_mode;
+		setUpMapIfNeeded();
+		photoHasBeenChanged = false;
 	}
 
 
 	private void initializeEditPage() {
+		setContentView(R.layout.plot_edit_activity);
+		
 		if (plot == null) {
 			finish();
 		}
-		setContentView(R.layout.plot_edit_activity);
 
 		LinearLayout fieldList = (LinearLayout) findViewById(R.id.field_list);
 		LayoutInflater layout = ((Activity) this).getLayoutInflater();
@@ -153,7 +156,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		// Add all the fields to the display for edit mode
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-			View fieldGroup = group.renderForEdit(layout, plot, currentUser);
+			View fieldGroup = group.renderForEdit(layout, plot, App.getLoginManager().loggedInUser);
 			if (fieldGroup != null) {
 				fieldList.addView(fieldGroup);
 			}

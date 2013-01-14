@@ -29,8 +29,10 @@ public class TreeInfoDisplay extends TreeDisplay{
 	ImageView plotImage;
 	
     public void onCreate(Bundle savedInstanceState) {
+    	mapFragmentId = R.id.vignette_map_view_mode;
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.plot_view_activity);
+    	setUpMapIfNeeded();
     	plotImage = (ImageView) findViewById(R.id.plot_photo);
     	loadPlotInfo();
     }
@@ -46,7 +48,7 @@ public class TreeInfoDisplay extends TreeDisplay{
             
     		Log.d(App.LOG_TAG, "Setting header values");
     		setHeaderValues(plot);
-    		//showPositionOnMap();
+    		showPositionOnMap();
     		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
     			View fieldGroup = group.renderForDisplay(layout, plot);
     			if (fieldGroup != null) {
@@ -123,10 +125,9 @@ public class TreeInfoDisplay extends TreeDisplay{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_plot:
-            	if (this.currentUser != null) {
+            	if (App.getLoginManager().isLoggedIn()) {
             		Intent editPlot = new Intent(this, TreeEditDisplay.class);
                 	editPlot.putExtra("plot", plot.getData().toString());
-                	editPlot.putExtra("user", this.currentUser.getData().toString());
                 	startActivityForResult(editPlot, EDIT_REQUEST);	
             	} else {
             		Toast.makeText(TreeInfoDisplay.this, "You must be logged in to do that.", 
