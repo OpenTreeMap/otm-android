@@ -83,6 +83,33 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/mapBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Map"
+        android:onClick="mapBaselayer" />
+
+    <Button
+        android:id="@+id/hybridBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/satelliteBaselayer"
+        android:text="Hybrid"
+        android:onClick="hybridBaselayer" />
+
+    <Button
+        android:id="@+id/satelliteBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/mapBaselayer"
+        android:onClick="satelliteBaselayer"
+        android:text="Satellite" />
     
 </RelativeLayout>
 

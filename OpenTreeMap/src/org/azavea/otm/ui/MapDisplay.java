@@ -327,5 +327,15 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 		plotMarker = mMap.addMarker(new MarkerOptions().position(point).title(""));
 	}
 
-    
+	// callbacks for baselayer switcher buttons
+    public void hybridBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+    }
+    public void mapBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);    	
+    }
+    public void satelliteBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    }
+	
 }
