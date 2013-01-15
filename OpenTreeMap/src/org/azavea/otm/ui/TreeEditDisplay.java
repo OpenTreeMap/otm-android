@@ -13,6 +13,8 @@ import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
@@ -29,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Bitmap;
@@ -134,16 +137,29 @@ public class TreeEditDisplay extends TreeDisplay {
 	};
 	
 	public void onCreate(Bundle savedInstanceState) {
+    	mapFragmentId = R.id.vignette_map_edit_mode;
 		super.onCreate(savedInstanceState);
-		initializeEditPage();
-		mapFragmentId = R.id.vignette_map_edit_mode;
+		setContentView(R.layout.plot_edit_activity);
 		setUpMapIfNeeded();
+		initializeEditPage();
 		photoHasBeenChanged = false;
+		mMap.setOnMapClickListener( new OnMapClickListener() {
+			@Override
+			public void onMapClick(LatLng point) {
+				Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
+				treeMoveIntent.putExtra("plot", plot.getData().toString());
+				startActivity(treeMoveIntent);
+			}
+		});
+	}
+	
+	public void onResume() {
+		super.onResume();
+		plotLocation = getPlotLocation(plot);
+		showPositionOnMap();
 	}
 
-
 	private void initializeEditPage() {
-		setContentView(R.layout.plot_edit_activity);
 		
 		if (plot == null) {
 			finish();
@@ -151,8 +167,6 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		LinearLayout fieldList = (LinearLayout) findViewById(R.id.field_list);
 		LayoutInflater layout = ((Activity) this).getLayoutInflater();
-
-		//showPositionOnMap();
 
 		// Add all the fields to the display for edit mode
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:id="@+id/moveable_marker_map"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent"
+	  class="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:text="Long press the marker to move the tree. "
+        android:background="@color/black_start"
+        android:padding="5dp" />
+</RelativeLayout>
+
+
+
+

@@ -97,6 +97,10 @@
             android:label="@string/app_name"
             android:noHistory="true">
         </activity>
+        <activity
+          android:name=".ui.TreeMove"
+          android:label="@string/app_name">
+        </activity>
     </application>
 
 </manifest>
