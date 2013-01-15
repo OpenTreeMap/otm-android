@@ -20,6 +20,7 @@ package org.azavea.otm.ui;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -115,68 +117,20 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
+            } else {
+            	Log.e(App.LOG_TAG, "Map was null!");
             }
-        }
-        
-        mMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
-			@Override
-			public void onMapClick(LatLng point) {		
-				
-				
-				Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-				
-				final ProgressDialog dialog = ProgressDialog.show(MapDisplay.this, "", 
-	                  "Loading. Please wait...", true);
-				dialog.show();
-				
-				final RequestGenerator rg = new RequestGenerator();
-				rg.getPlotsNearLocation(
-					point.latitude,
-					point.longitude,
-					new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
-	
-						@Override
-						public void onFailure(Throwable e, String message) {
-							dialog.hide();
-							//invalidate();
-							Log.e("TREE_CLICK",
-									"Error retrieving plots on map touch event: "
-											+ e.getMessage());
-							e.printStackTrace();
-						}
-				
-						@Override
-						public void dataReceived(PlotContainer response) {
-							try {
-								Plot plot = response.getFirst();
-								if (plot != null) {
-									Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
-									// ???
-									//double plotX = plot.getGeometry().getLonE6();
-									//double plotY = plot.getGeometry().getLatE6();
-									//touchPoint = new GeoPoint((int)plotY, (int)plotX);
-									showPopup(plot);
-								} else {
-									//touchPoint = null;
-									hidePopup();
-								}
-							} catch (JSONException e) {
-								Log.e("TREE_CLICK",
-										"Error retrieving plot info on map touch event: "
-												+ e.getMessage());
-								e.printStackTrace();
-							} finally {
-								dialog.hide();
-								//invalidate();  ???
-							}
-						}
-					});
-			}
-        });
+        }       
     }
     
-	public void showPopup(Plot plot) {
-
+    private void setUpMap() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
+        TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
+        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+        mMap.setOnMapClickListener(mapClickListener);
+    }
+    
+    public void showPopup(Plot plot) {
 		//set default text
 		plotDiameterView.setText(getString(R.string.dbh_missing));
 		plotSpeciesView.setText(getString(R.string.species_missing));
@@ -202,7 +156,6 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
 				showImage(plot);
-				Geometry foo = plot.getGeometry();
 				
 				zoomToAndMarkCurrentPlot(new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon()));
 			}
@@ -244,12 +197,6 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 		});
 	}	  
     
-    private void setUpMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));
-  
-        TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
-        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));    
-    }
         
     // onClick handler for tree-details pop-up touch event
  	public void showFullTreeInfo(View view) {
@@ -337,5 +284,53 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
     public void satelliteBaselayer(View view) {
     	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
-	
-}
+    
+    // map click listener.  zoom to selected plot and show popup.
+    private OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {	
+    	@Override
+		public void onMapClick(LatLng point) {		
+			Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+			
+			final ProgressDialog dialog = ProgressDialog.show(MapDisplay.this, "", 
+                  "Loading. Please wait...", true);
+			dialog.show();
+			
+			final RequestGenerator rg = new RequestGenerator();
+			rg.getPlotsNearLocation(
+				point.latitude,
+				point.longitude,
+				new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+
+					@Override
+					public void onFailure(Throwable e, String message) {
+						dialog.hide();
+						Log.e("TREE_CLICK",
+								"Error retrieving plots on map touch event: "
+										+ e.getMessage());
+						e.printStackTrace();
+					}
+			
+					@Override
+					public void dataReceived(PlotContainer response) {
+						try {
+							Plot plot = response.getFirst();
+							if (plot != null) {
+								Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+								showPopup(plot);
+							} else {
+								hidePopup();
+							}
+						} catch (JSONException e) {
+							Log.e("TREE_CLICK",
+									"Error retrieving plot info on map touch event: "
+											+ e.getMessage());
+							e.printStackTrace();
+						} finally {
+							dialog.hide();
+						}
+					}
+				});
+    	}
+    };
+ }	
+ 
