@@ -36,7 +36,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TreeDisplay extends android.support.v4.app.FragmentActivity{
+public class TreeDisplay extends MapActivity{
 	protected LatLng plotLocation;
 	protected Plot plot;
 	public static int RESULT_PLOT_DELETED =  Activity.RESULT_FIRST_USER + 1;

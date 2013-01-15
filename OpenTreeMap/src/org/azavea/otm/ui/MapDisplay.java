@@ -16,8 +16,6 @@ package org.azavea.otm.ui;
  * limitations under the License.
  */
 
-
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -33,7 +31,6 @@ import org.azavea.map.TileProviderFactory;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
@@ -45,7 +42,6 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -61,11 +57,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MapDisplay extends android.support.v4.app.FragmentActivity {
+public class MapDisplay extends MapActivity{
 	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
 	private static final int DEFAULT_ZOOM_LEVEL = 12;
 	private static final int FILTER_INTENT = 1;
-	private static final int INFO_INTENT = 2;
 	private TextView plotSpeciesView;
 	private TextView plotAddressView;
 	private TextView plotDiameterView;
@@ -274,7 +269,7 @@ public class MapDisplay extends android.support.v4.app.FragmentActivity {
 		plotMarker = mMap.addMarker(new MarkerOptions().position(point).title(""));
 	}
 
-	// callbacks for baselayer switcher buttons
+	// call backs for base layer switcher buttons
     public void hybridBaselayer(View view) {
     	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     }

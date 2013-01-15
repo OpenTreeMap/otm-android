@@ -3,6 +3,7 @@ package org.azavea.otm;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.FilterManager;
 import com.loopj.android.http.AsyncHttpClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.app.Application;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.azavea.otm.R;
+
 
 /**
  * A global singleton object to maintain application state
@@ -148,4 +150,6 @@ public class App extends Application {
 		
 		return nearbyList;
 	}
+	
+	
 }
