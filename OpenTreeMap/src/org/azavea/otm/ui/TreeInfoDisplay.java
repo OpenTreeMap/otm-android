@@ -29,8 +29,10 @@ public class TreeInfoDisplay extends TreeDisplay{
 	ImageView plotImage;
 	
     public void onCreate(Bundle savedInstanceState) {
+    	mapFragmentId = R.id.vignette_map_view_mode;
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.plot_view_activity);
+    	setUpMapIfNeeded();
     	plotImage = (ImageView) findViewById(R.id.plot_photo);
     	loadPlotInfo();
     }
@@ -42,8 +44,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     		LinearLayout fieldList = (LinearLayout)findViewById(R.id.field_list);
             fieldList.removeAllViewsInLayout();
             LayoutInflater layout = ((Activity)this).getLayoutInflater();
-
-            
+    
     		Log.d(App.LOG_TAG, "Setting header values");
     		setHeaderValues(plot);
     		showPositionOnMap();
@@ -87,13 +88,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 		
 	}
 	
-	private void setText(int resourceId, String text) {
-		// Only set the text if it exists, letting the layout define default text
-		if (text != null &&  !"".equals(text)) {
-			((TextView)findViewById(resourceId)).setText(text);
-		}
-	}
-
 	private void showImage(Plot plot) throws JSONException {
 		// Default if there is no image returned
 		plotImage.setImageResource(R.drawable.ic_action_search);
@@ -123,14 +117,12 @@ public class TreeInfoDisplay extends TreeDisplay{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_plot:
-            	if (this.currentUser != null) {
+            	if (App.getLoginManager().isLoggedIn()) {
             		Intent editPlot = new Intent(this, TreeEditDisplay.class);
                 	editPlot.putExtra("plot", plot.getData().toString());
-                	editPlot.putExtra("user", this.currentUser.getData().toString());
                 	startActivityForResult(editPlot, EDIT_REQUEST);	
             	} else {
-            		Toast.makeText(TreeInfoDisplay.this, "You must be logged in to do that.", 
-        					Toast.LENGTH_SHORT).show();
+            		startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
             	}
             	break;
         }

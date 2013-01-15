@@ -1,27 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:azavea="http://schemas.android.com/apk/res/org.azavea.map"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <org.azavea.map.OTMMapView
-		 android:id="@+id/mapview1"
-		 android:layout_width="fill_parent"
-		 android:layout_height="fill_parent"
-		 android:enabled="true"
-		 android:clickable="true"
-		 android:apiKey="@string/maps_apikey"/>
-		 <!-- Developers should make a a maps_apiKey.xml resource file containing
-		 a maps_apiKey string resource with your local debug key.  That file is not
-		 checked into source control -->
-		 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:id="@+id/map"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent"
+	  class="com.google.android.gms.maps.SupportMapFragment"/>
     
-    <org.azavea.map.WMSTileRaster
-        android:id="@+id/tileraster"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
-
     <ImageButton
         android:id="@+id/mylocationbutton"
         android:layout_width="wrap_content"
@@ -94,5 +83,36 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/mapBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Map"
+        android:onClick="mapBaselayer" />
+
+    <Button
+        android:id="@+id/hybridBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/satelliteBaselayer"
+        android:text="Hybrid"
+        android:onClick="hybridBaselayer" />
+
+    <Button
+        android:id="@+id/satelliteBaselayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/mapBaselayer"
+        android:onClick="satelliteBaselayer"
+        android:text="Satellite" />
     
 </RelativeLayout>
+
+
+
+

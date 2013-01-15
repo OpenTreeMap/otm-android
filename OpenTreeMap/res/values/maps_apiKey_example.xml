@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="maps_apikey">0KKkhfkGFFslTpIQHh-S2-Wy-iJwy1QO622oJ7Q</string>
+    <!--TODO: NB: For v2 maps api, reverted back to keeping v2(!) api key in android manifest.-->
+    
+    <string name="maps_apikey">AIzaSyDHwJh2P_TnE2JW3Cq_Xn-q0bb_zkEDlZU</string>
     
     <!-- Replace with your development key:
     	https://developers.google.com/android/maps-api-signup

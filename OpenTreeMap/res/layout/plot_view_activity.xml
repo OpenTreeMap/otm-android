@@ -10,8 +10,8 @@
    	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
 	    android:layout_alignParentTop="true"
-	    android:background="@color/tint" >
-
+	    android:background="@color/tint">
+	    
 		<ImageView
 		    android:id="@+id/plot_photo"
 		    android:layout_width="wrap_content"
@@ -21,8 +21,9 @@
 		    android:layout_marginLeft="15dp"
 		    android:layout_marginTop="15dp"
             android:minHeight="80dp"
-            android:minWidth="80dp" />
-
+            android:minWidth="80dp"
+            android:contentDescription="Tree image"/>
+	    
 		<TextView
 		    android:id="@+id/address"
 		    android:layout_width="wrap_content"
@@ -60,34 +61,37 @@
 		    android:layout_below="@+id/updated_on"
 		    android:textColor="@color/text_dark" />
 	</RelativeLayout>
+
 	
+		
 	<ScrollView
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/scroller"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
 	    android:layout_below="@+id/header"
-	    android:paddingTop="10dp" >
-	   
-	    	
-	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	        android:id="@+id/field_list"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:focusable="true"
-	    	android:focusableInTouchMode="true" >
-	    	
-		<org.azavea.map.OTMMapView
-			android:id="@+id/map_vignette"
-			android:layout_width="fill_parent"
-			android:layout_height="100dp"
-			android:enabled="true"
-			android:clickable="false"
-			android:apiKey="@string/maps_apikey" />
-	            	
-	    </LinearLayout>
-	    
+	 >
+	       	
+	    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@color/base" >
+			
+			<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:id="@+id/vignette_map_view_mode"
+			  android:layout_width="fill_parent"
+			  android:layout_alignParentTop="true"
+			  android:layout_height="100dp"
+			  class="com.google.android.gms.maps.SupportMapFragment"/>
+	        	    
+		    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			    android:layout_below="@+id/vignette_map_view_mode"
+		        android:id="@+id/field_list"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical"
+		        >        	
+		    </LinearLayout>
+		</RelativeLayout>
 	</ScrollView>
-
 </RelativeLayout>	
