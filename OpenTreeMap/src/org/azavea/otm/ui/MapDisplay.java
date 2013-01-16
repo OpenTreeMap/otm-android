@@ -31,6 +31,7 @@ import org.azavea.map.TileProviderFactory;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
@@ -53,6 +54,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,6 +65,11 @@ public class MapDisplay extends MapActivity{
 	private static final int DEFAULT_ZOOM_LEVEL = 12;
 	private static final int FILTER_INTENT = 1;
 	private static final int INFO_INTENT = 2;
+	// modes for the add marker feature
+	private static final int ADD_MARKER = 1;
+	private static final int SET_MARKER_POSITION= 2;
+	private static final int CANCEL = 3;
+	private static final int DO_EDIT_PLOT = 4;
 	
 	private TextView plotSpeciesView;
 	private TextView plotAddressView;
@@ -81,6 +88,7 @@ public class MapDisplay extends MapActivity{
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
+		setTreeAddMode(CANCEL);
     }
 
     @Override
@@ -125,7 +133,7 @@ public class MapDisplay extends MapActivity{
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
         TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
         mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-        mMap.setOnMapClickListener(mapClickListener);
+        mMap.setOnMapClickListener(showPopupMapClickListener);
     }
     
     public void showPopup(Plot plot) {
@@ -155,7 +163,13 @@ public class MapDisplay extends MapActivity{
 				} 
 				showImage(plot);
 				
-				zoomToAndMarkCurrentPlot(new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon()));
+				LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
+				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+				if (plotMarker != null) {
+					plotMarker.remove();
+				}
+				plotMarker = mMap.addMarker(new MarkerOptions().position(position).title(""));
+				
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -221,6 +235,9 @@ public class MapDisplay extends MapActivity{
             	Intent filter = new Intent(this, FilterDisplay.class);
             	startActivityForResult(filter, FILTER_INTENT);
             	break;
+            case R.id.menu_add:
+            	setTreeAddMode(ADD_MARKER);
+                break;
         }
         return true;
     }
@@ -280,14 +297,7 @@ public class MapDisplay extends MapActivity{
     @Override
 	public void onBackPressed() {
 		hidePopup();
-	}
-
-	private void zoomToAndMarkCurrentPlot(LatLng point) {
-		mMap.animateCamera(CameraUpdateFactory.newLatLng(point));
-		if (plotMarker != null) {
-			plotMarker.remove();
-		}
-		plotMarker = mMap.addMarker(new MarkerOptions().position(point).title(""));
+		setTreeAddMode(CANCEL);
 	}
 
 	// call backs for base layer switcher buttons
@@ -301,8 +311,8 @@ public class MapDisplay extends MapActivity{
     	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
     
-    // map click listener.  zoom to selected plot and show popup.
-    private OnMapClickListener mapClickListener = new GoogleMap.OnMapClickListener() {	
+    // Map click listener for normall view mode
+    private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {	
     	@Override
 		public void onMapClick(LatLng point) {		
 			Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -348,5 +358,78 @@ public class MapDisplay extends MapActivity{
 				});
     	}
     };
+    
+    // Map click listener that allows us to add a tree
+    private OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {	
+    	@Override
+		public void onMapClick(LatLng point) {		
+			Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+			
+			plotMarker =  mMap.addMarker(new MarkerOptions()
+		       .position(point)
+		       .title("New Tree")
+		    );
+			plotMarker.setDraggable(true);
+			setTreeAddMode(SET_MARKER_POSITION);
+    	}
+    };
+    
+    private void displayInstruction(String instruction) {
+    	TextView t = (TextView) findViewById(R.id.treeAddInstructions);
+    	if (instruction == null) {
+    		t.setVisibility(TextView.INVISIBLE);
+    	} else {
+    		t.setVisibility(TextView.VISIBLE);
+    		t.setText(instruction);
+    	}
+    }
+    
+    public void setTreeAddMode(int step) {
+    	Button nextButton = (Button) findViewById(R.id.treeAddNext);
+    	switch (step) {
+	    	case ADD_MARKER:
+	    		hidePopup();
+	    		if (plotMarker != null) {
+	        		plotMarker.remove();
+	        		plotMarker = null;
+	        	}
+	        	displayInstruction("Step 1: Tap to add a tree marker");
+	            mMap.setOnMapClickListener(addMarkerMapClickListener);
+	    		break;
+	    	case SET_MARKER_POSITION:
+	    		mMap.setOnMapClickListener(null);
+	    		displayInstruction("Step 2: Long press to move the tree into position, then click next.");
+	    		nextButton.setVisibility(Button.VISIBLE);
+	    		break;
+	    	case CANCEL:
+	    		if (plotMarker != null) {
+	        		plotMarker.remove();
+	        		plotMarker = null;
+	        	}
+	    		mMap.setOnMapClickListener(showPopupMapClickListener);
+	    		displayInstruction(null);
+	    		nextButton.setVisibility(Button.INVISIBLE);
+	    		break;
+	    	case DO_EDIT_PLOT:
+	    		Intent editPlotIntent = new Intent (MapDisplay.this, TreeEditDisplay.class);
+	    		Plot newPlot = new Plot();
+	    		Geometry newGeometry = new Geometry();
+	    		try {
+	    			newGeometry.setLat(plotMarker.getPosition().latitude);
+	    			newGeometry.setLon(plotMarker.getPosition().longitude);
+	    			newPlot.setGeometry(newGeometry);
+	    		} catch (JSONException e) {
+	    			e.printStackTrace();
+	    		}
+	    		editPlotIntent.putExtra("plot", newPlot.getData().toString() );
+	    		startActivity(editPlotIntent);
+	    }
+    }
+
+    //click handler for the next button
+    public void submitNewTree(View view) {
+    	setTreeAddMode(DO_EDIT_PLOT);
+    }
+    
  }	
  

@@ -21,6 +21,26 @@
         android:onClick="showMyLocation"
         android:src="@android:drawable/ic_menu_mylocation" />
 
+    
+    
+
+    <Button
+        android:id="@+id/treeAddNext"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/treeAddInstructions"
+        android:text="next" />
+    
+    <TextView
+            android:id="@+id/treeAddInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/plotPopup"
+            android:layout_centerHorizontal="true"
+            android:text=""
+            android:background="@color/black_start" />
+    
     <RelativeLayout
         android:id="@+id/plotPopup"
         android:layout_width="fill_parent"
@@ -82,6 +102,8 @@
             android:layout_toRightOf="@+id/plotImage"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+        
+
     </RelativeLayout>
 
     <Button
@@ -110,6 +132,8 @@
         android:layout_toRightOf="@+id/mapBaselayer"
         android:onClick="satelliteBaselayer"
         android:text="Satellite" />
+
+    
     
 </RelativeLayout>
 
