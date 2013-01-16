@@ -21,16 +21,16 @@
         android:onClick="showMyLocation"
         android:src="@android:drawable/ic_menu_mylocation" />
 
-    
-    
-
+ 
     <Button
         android:id="@+id/treeAddNext"
+        android:layout_alignParentLeft="true"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/treeAddInstructions"
-        android:text="next" />
+        android:layout_above="@+id/treeAddInstructions"
+        android:text="next" 
+        android:onClick="submitNewTree"/>
     
     <TextView
             android:id="@+id/treeAddInstructions"
