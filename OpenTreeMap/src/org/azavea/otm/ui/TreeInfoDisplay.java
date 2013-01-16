@@ -122,6 +122,7 @@ public class TreeInfoDisplay extends TreeDisplay{
                 	editPlot.putExtra("plot", plot.getData().toString());
                 	startActivityForResult(editPlot, EDIT_REQUEST);	
             	} else {
+            		// TODO: This should redirect to login page
             		startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
             	}
             	break;
