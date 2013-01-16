@@ -13,6 +13,15 @@ public abstract class Model {
 			return data.getLong(key);
 		}
 	}
+
+	protected double getDoubleOrDefault(String key, Double defaultValue) throws JSONException {
+		if (data.isNull(key)){ 
+			return defaultValue;
+		} else {
+			return data.getDouble(key);
+		}
+	}
+	
 	public void setData(JSONObject data) {
 		this.data = data;
 	}

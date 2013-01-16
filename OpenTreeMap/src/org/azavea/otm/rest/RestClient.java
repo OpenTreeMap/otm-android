@@ -62,7 +62,7 @@ public class RestClient {
 	}
 	
 	public void post(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
-		String completeUrl = getAbsoluteUrl(url);
+		String completeUrl = getAbsoluteUrl(url) + id;
 		completeUrl = prepareUrl(completeUrl);
 		client.post(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
@@ -81,8 +81,9 @@ public class RestClient {
 	
 	
 	
-	public void put(Context context, String url, int id, Model model, AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
-		String completeUrl = getAbsoluteUrl(url);
+	public void put(Context context, String url, int id, Model model, 
+			AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
+		String completeUrl = getAbsoluteUrl(url) + id;
 		completeUrl = prepareUrl(completeUrl);
 		client.put(context, completeUrl, new StringEntity(model.getData().toString()), "application/json", response);
 	}
@@ -108,7 +109,7 @@ public class RestClient {
 									  Model model,
 									  AsyncHttpResponseHandler response) throws UnsupportedEncodingException {
 		
-		String completeUrl = getAbsoluteUrl(url);
+		String completeUrl = getAbsoluteUrl(url) + id;
 		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());

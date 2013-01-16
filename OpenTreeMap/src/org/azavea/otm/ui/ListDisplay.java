@@ -1,6 +1,6 @@
 package org.azavea.otm.ui;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.azavea.lists.InfoList;
 import org.azavea.lists.ListObserver;
@@ -11,7 +11,6 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
-import org.json.JSONException;
 
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
@@ -21,18 +20,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.util.Log;
 import android.view.View;
 
 
 public class ListDisplay extends Activity implements ListObserver {
 	private ListView listView;
-	private RadioGroup radioGroup;
 	private InfoList infoList;
 	private ProgressDialog dialog;
 	private ArrayAdapter<DisplayableModel> adapter;
@@ -44,10 +39,16 @@ public class ListDisplay extends Activity implements ListObserver {
         // Create the segmented buttons
         SegmentedButton buttons = (SegmentedButton)findViewById(R.id.segmented);
         buttons.clearButtons();
-        buttons.addButtons(
-                getString(R.string.toggle_nearby),
-                getString(R.string.toggle_pending),
-                getString(R.string.toggle_recent));
+        
+        ArrayList<String> buttonNames = new ArrayList<String>();
+        buttonNames.add(getString(R.string.toggle_nearby));
+        buttonNames.add(getString(R.string.toggle_recent));
+        
+        if (App.isPendingEnabled()) {
+        	buttonNames.add(1, getString(R.string.toggle_pending));
+        }
+        
+        buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
         
         buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
             @Override

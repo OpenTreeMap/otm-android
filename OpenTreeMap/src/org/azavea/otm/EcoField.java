@@ -3,6 +3,7 @@ package org.azavea.otm;
 import java.text.NumberFormat;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ public class EcoField extends Field {
 	}
 	
 	@Override
-	public View renderForDisplay(LayoutInflater layout, Model model) 
+	public View renderForDisplay(LayoutInflater layout, Plot model) 
 			throws JSONException {
 		View container = layout.inflate(R.layout.plot_ecofield_row, null);
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);

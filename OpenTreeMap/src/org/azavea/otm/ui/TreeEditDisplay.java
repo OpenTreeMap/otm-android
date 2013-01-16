@@ -359,7 +359,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
 				group.update(plot);
 			}
-					
+
 			RequestGenerator rg = new RequestGenerator();
 			rg.updatePlot(App.getInstance(), plot.getId(), plot,
 					new RestHandler<Plot>(new Plot()) {
@@ -370,6 +370,13 @@ public class TreeEditDisplay extends TreeDisplay {
 							setResultOk(updatedPlot);
 							saveDialog.dismiss();
 							finish();
+						}
+						
+						@Override
+						protected void handleFailureMessage(Throwable e, String responseBody) {
+							saveDialog.dismiss();
+							Toast.makeText(App.getInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
+							Log.e(App.LOG_TAG, "Could not save tree", e);
 						}
 
 					});

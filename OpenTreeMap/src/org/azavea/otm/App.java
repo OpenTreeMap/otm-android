@@ -1,5 +1,10 @@
 package org.azavea.otm;
 
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.FilterManager;
 import com.loopj.android.http.AsyncHttpClient;
@@ -13,6 +18,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.azavea.otm.R;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -28,6 +36,7 @@ public class App extends Application {
 	private static NearbyList nearbyList = null;
 	
 	private static SharedPreferences sharedPreferences = null;
+	private static boolean pendingEnabled = false;
 	
 	private static int tileRequestSequenceId = 0;
 	
@@ -92,6 +101,10 @@ public class App extends Application {
 		return sharedPreferences;
 	}
 	
+	public static boolean isPendingEnabled() {
+		return pendingEnabled;
+	}
+
 	private static void checkInstance() {
         if (instance == null)
             throw new IllegalStateException("Application not created yet");
@@ -117,6 +130,23 @@ public class App extends Application {
 		}
 	}
 	
+	private static void loadPendingStatus() {
+		// Load the pending setting from the included XML resource
+		InputStream filterFile = App.getInstance().getResources().openRawResource(R.raw.configuration);
+		try {
+			DocumentBuilder xml = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = xml.parse(filterFile);
+			NodeList pending = doc.getElementsByTagName("pending");
+			if (pending.getLength() > 0) {
+				Node el = pending.item(0);
+				pendingEnabled = Boolean.parseBoolean(el.getTextContent());
+			}
+		} catch (Exception e) {
+			pendingEnabled = false;
+			Log.e(LOG_TAG, "Invalid pending configuration xml file", e);
+		}
+	}
+	
 	@Override
     public void onCreate() {
         super.onCreate();
@@ -124,6 +154,7 @@ public class App extends Application {
         // Create an instance of login manager immediately, so that
         // the app can try to auto log in on any saved credentials
         getLoginManager();
+        loadPendingStatus();
     }
 	
 	public static int getTileRequestSeqId() {

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
@@ -142,13 +143,13 @@ public class Field {
 	/* 
 	 * Render a view to display the given model field in view mode
 	 */
-	public View renderForDisplay(LayoutInflater layout, Model model) throws JSONException {
+	public View renderForDisplay(LayoutInflater layout, Plot model) throws JSONException {
 		loadChoices();
 
 		View container = layout.inflate(R.layout.plot_field_row, null);
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
         ((TextView)container.findViewById(R.id.field_value))
-        	.setText(formatUnit(getValueForKey(this.key, model.getData())));
+        	.setText(formatUnit(getValueForKey(this.key, model)));
         
         return container;
 	}
@@ -156,7 +157,7 @@ public class Field {
 	/* 
 	 * Render a view to display the given model field in edit mode
 	 */
-	public View renderForEdit(LayoutInflater layout, Model model, User user) 
+	public View renderForEdit(LayoutInflater layout, Plot model, User user) 
 			throws JSONException {
 		
 		View container = null;
@@ -329,12 +330,21 @@ public class Field {
 		return value.toString();
 	}
 
+	public static Object getValueForKey(String key, Plot plot) throws JSONException {
+		PendingEditDescription pending = plot.getPendingEditForKey(key);
+		if (pending != null) {
+			return plot.getPendingEditForKey(key).getLatestValue();
+		} else {
+			return getValueForKey(key, plot.getData());
+		}
+	}
+	
 	/**
 	 * Return the value of a key name, which can be nested using . notation.  If the key does not 
 	 * exist or the value of the key, it will return a null value
 	 * @throws JSONException 
 	 */
-	protected Object getValueForKey(String key, JSONObject json) {
+	protected static Object getValueForKey(String key, JSONObject json) {
 		try {
 			String[] keys = key.split("\\.");
 			NestedJsonAndKey found = getValueForKey(keys, 0, json, false);
@@ -352,7 +362,7 @@ public class Field {
 	/**
 	 * Return value for keys, which could be nested as an array
 	 */
-	private NestedJsonAndKey getValueForKey(String[] keys, int index, 
+	private static NestedJsonAndKey getValueForKey(String[] keys, int index, 
 			JSONObject json, boolean createNodeIfEmpty) throws JSONException {
 		if (index < keys.length -1 && keys.length > 1) {
 			JSONObject child;

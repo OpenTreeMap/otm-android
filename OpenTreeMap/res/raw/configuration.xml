@@ -1,4 +1,5 @@
 <implementation>
+    <pending>true</pending>
 	<filters>
 	    <filter key="missing_tree" name="Missing Tree" type="OTMBoolFilter"/>
 	    <filter key="missing_species" name="Missing Species" type="OTMBoolFilter"/>

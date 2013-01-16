@@ -3,6 +3,7 @@ package org.azavea.otm;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -70,6 +71,17 @@ public class FieldManager {
 		} catch (Exception e) {
 			throw new Exception("Invalid field xml file", e);
 		}
+	}
+	
+	public Field getField(String name) {
+		for (FieldGroup group : allFields) {
+			for (Map.Entry<String,Field> field : group.getFields().entrySet()) {
+				if (field.getKey().equals(name)) {
+					return field.getValue();
+				}
+			}
+		}
+		return null;
 	}
 	
 	public FieldGroup[] getFieldGroups() {
