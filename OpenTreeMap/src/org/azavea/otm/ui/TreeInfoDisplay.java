@@ -133,7 +133,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
 	  super.onActivityResult(requestCode, resultCode, data); 
 	  switch(requestCode) { 
-	  	case (EDIT_REQUEST) : { 
+	  	case EDIT_REQUEST:  
 	  		
 	  		if (resultCode == Activity.RESULT_OK) { 
 	  			// The tree/plot has been updated, or the tree has been deleted
@@ -166,7 +166,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  			// Do nothing?
 	  		}
 	  		break; 
-	    } 
+	     
 	  } 
 	}    
 }
