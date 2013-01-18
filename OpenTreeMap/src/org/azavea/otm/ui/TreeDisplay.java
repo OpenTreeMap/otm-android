@@ -52,7 +52,6 @@ public class TreeDisplay extends MapActivity{
 			plot = new Plot();
 			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
 			plotLocation = getPlotLocation(plot);
-			//showPositionOnMap();
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not retrieve Tree information", 
 					Toast.LENGTH_SHORT).show();

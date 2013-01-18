@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<ScrollView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scroller"
+	    android:layout_width="fill_parent" android:layout_height="match_parent"
+	    android:background="@color/base"
+	    android:layout_below="@+id/vignette_map_edit_mode" >
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
 	
 	<fragment xmlns:android="http://schemas.android.com/apk/res/android"
 	  android:id="@+id/vignette_map_edit_mode"
 	  android:layout_width="fill_parent"
 	  android:layout_height="100dp"
 	  android:layout_alignParentTop="true"
-	  class="com.google.android.gms.maps.SupportMapFragment"/>
-	
-	<ScrollView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/scroller"
-	    android:layout_width="fill_parent" android:layout_height="match_parent"
-	    android:paddingTop="10dp" 
-	    android:background="@color/base"
-	    android:layout_below="@+id/vignette_map_edit_mode" >
-	      	
+	  class="com.google.android.gms.maps.SupportMapFragment"
+	  />
+
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:id="@+id/field_list"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
-	        android:focusable="true"
-	    	android:focusableInTouchMode="true" >        	
+	        android:layout_below="@+id/vignette_map_edit_mode"
+	        >
 	    </LinearLayout>
-	</ScrollView>
 
-</RelativeLayout>	
+
+	</RelativeLayout>
+</ScrollView>	
