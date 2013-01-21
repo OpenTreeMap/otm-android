@@ -470,6 +470,9 @@ public class MapDisplay extends MapActivity{
 			} else {
 				return null;
 			}
+			
+			newPlot.setTree(new Tree());
+			
 			return newPlot;
 	 }
  }	

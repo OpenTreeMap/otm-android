@@ -114,6 +114,9 @@ public class Plot extends Model {
 	
 	public void setAddress(String address) throws JSONException {
 		data.put("address", address);
+		data.put("address_street", address);
+		data.put("edit_address_street", address);
+		data.put("geocode_address", address);
 	}
 	
 	public String getAddressStreet() throws JSONException {

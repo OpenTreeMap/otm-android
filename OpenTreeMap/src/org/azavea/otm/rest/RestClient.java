@@ -113,7 +113,7 @@ public class RestClient {
 		completeUrl = prepareUrl(completeUrl);
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
-		
+		Log.d("REST", model.getData().toString());
 		client.put(context, completeUrl, headers, modelEntity, "application/json", response);
 	}
 	
@@ -147,6 +147,7 @@ public class RestClient {
 		Header[] headers = {createBasicAuthenticationHeader(username, password)};
 		StringEntity modelEntity = new StringEntity(model.getData().toString());
 		
+		Log.d("REST", model.getData().toString());
 		client.post(context, completeUrl, headers, modelEntity, "application/json", 
 				responseHandler);
 	}	

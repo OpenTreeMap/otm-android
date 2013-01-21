@@ -361,26 +361,33 @@ public class TreeEditDisplay extends TreeDisplay {
 			}
 
 			RequestGenerator rg = new RequestGenerator();
-			rg.updatePlot(App.getInstance(), plot.getId(), plot,
-					new RestHandler<Plot>(new Plot()) {
-						@Override
-						public void dataReceived(Plot updatedPlot) {
-							// The tree was updated, so return to the info page, and bring along
-							// the data for the new plot, which was the response from the update
-							setResultOk(updatedPlot);
-							saveDialog.dismiss();
-							finish();
-						}
-						
-						@Override
-						protected void handleFailureMessage(Throwable e, String responseBody) {
-							saveDialog.dismiss();
-							Toast.makeText(App.getInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
-							Log.e(App.LOG_TAG, "Could not save tree", e);
-						}
 
-					});
-
+			RestHandler responseHandler = new RestHandler<Plot>(new Plot()) {
+				@Override
+				public void dataReceived(Plot updatedPlot) {
+					// The tree was updated, so return to the info page, and bring along
+					// the data for the new plot, which was the response from the update
+					setResultOk(updatedPlot);
+					saveDialog.dismiss();
+					finish();
+				}
+				
+				@Override
+				protected void handleFailureMessage(Throwable e, String responseBody) {
+					Log.e("REST", responseBody);
+					saveDialog.dismiss();
+					Toast.makeText(App.getInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
+					Log.e(App.LOG_TAG, "Could not save tree", e);
+				}
+			};
+ 
+			// check if we are adding a new tree or editing an existing one.
+			if ((getIntent().getStringExtra("new_tree") != null) &&
+					getIntent().getStringExtra("new_tree").equals("1")) {
+				rg.addTree(App.getInstance(), plot, responseHandler);
+			} else {			
+				rg.updatePlot(App.getInstance(), plot.getId(), plot, responseHandler);
+			}
 		} catch (Exception e) {
 			Log.e(App.LOG_TAG, "Could not save edited plot info", e);
 			Toast.makeText(App.getInstance(), "Could not save tree info",

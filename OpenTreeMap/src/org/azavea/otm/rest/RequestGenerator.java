@@ -15,6 +15,7 @@ import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -205,4 +206,13 @@ public class RequestGenerator {
 	public void register(Context context, User user, JsonHttpResponseHandler handler) throws UnsupportedEncodingException {
 		client.post(context, "/user/", user, handler);
 	}
+	
+	public void addTree(Context context, Plot plot, AsyncHttpResponseHandler handler) 
+			throws JSONException, UnsupportedEncodingException {
+		client.postWithAuthentication(context, "/plots", 
+				loginManager.loggedInUser.getUserName(), 
+				loginManager.loggedInUser.getPassword(), plot, handler);
+	}
+	
+	
 }

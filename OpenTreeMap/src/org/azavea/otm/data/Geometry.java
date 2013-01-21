@@ -37,13 +37,20 @@ public class Geometry extends Model {
 	}
 	
 	public double getLon() throws JSONException {
-		return data.getDouble("lng");
+		//Code around discrepency in API Longitude attribute specification
+		try {
+			return data.getDouble("lng");
+		} catch (JSONException e) {
+			return data.getDouble("lon");
+		}
 	}
 	public double getLonE6() throws JSONException {
 		return this.getLon()*1E6;
 	}
 	public void setLon(double lon) throws JSONException {
+		// Code around discrepency in API Longitude attribute specification
 		data.put("lng", lon);
+		data.put("lon", lon);
 	}
 	
 	public RequestParams toParams() throws JSONException {
