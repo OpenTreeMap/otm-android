@@ -16,6 +16,10 @@ package org.azavea.otm.ui;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -46,6 +50,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -162,15 +168,13 @@ public class MapDisplay extends MapActivity{
 					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
 				} 
 				showImage(plot);
-				
-				LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
-				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
-				if (plotMarker != null) {
-					plotMarker.remove();
-				}
-				plotMarker = mMap.addMarker(new MarkerOptions().position(position).title(""));
-				
 			}
+			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
+			mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+			if (plotMarker != null) {
+				plotMarker.remove();
+			}
+			plotMarker = mMap.addMarker(new MarkerOptions().position(position).title(""));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -341,6 +345,7 @@ public class MapDisplay extends MapActivity{
 						try {
 							Plot plot = response.getFirst();
 							if (plot != null) {
+								Log.d("TREE_CLICK", plot.getData().toString());
 								Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
 								showPopup(plot);
 							} else {
@@ -412,24 +417,60 @@ public class MapDisplay extends MapActivity{
 	    		break;
 	    	case DO_EDIT_PLOT:
 	    		Intent editPlotIntent = new Intent (MapDisplay.this, TreeEditDisplay.class);
-	    		Plot newPlot = new Plot();
-	    		Geometry newGeometry = new Geometry();
+	    		Plot newPlot;
 	    		try {
-	    			newGeometry.setLat(plotMarker.getPosition().latitude);
-	    			newGeometry.setLon(plotMarker.getPosition().longitude);
-	    			newPlot.setGeometry(newGeometry);
-	    		} catch (JSONException e) {
+	    			newPlot = getPlotForNewTree();
+	    			if (newPlot == null) {
+	    				
+	    			}
+		    		String plotString = newPlot.getData().toString();
+		    		editPlotIntent.putExtra("plot", plotString );
+		    		editPlotIntent.putExtra("new_tree", "1");
+		    		startActivity(editPlotIntent); 		
+	    		} catch (Exception e) {
 	    			e.printStackTrace();
+	    			setTreeAddMode(CANCEL);
+	    			Toast.makeText(MapDisplay.this, "Error creating new tree", Toast.LENGTH_LONG).show();
 	    		}
-	    		editPlotIntent.putExtra("plot", newPlot.getData().toString() );
-	    		startActivity(editPlotIntent);
-	    }
+    	}
     }
 
     //click handler for the next button
     public void submitNewTree(View view) {
     	setTreeAddMode(DO_EDIT_PLOT);
     }
-    
+ 
+    private Plot getPlotForNewTree() throws JSONException, IOException {
+    		Plot newPlot = new Plot();
+			Geometry newGeometry = new Geometry();
+			double lat = plotMarker.getPosition().latitude;
+			double lon = plotMarker.getPosition().longitude;
+			newGeometry.setLat(lat);
+			newGeometry.setLon(lon);
+			newPlot.setGeometry(newGeometry);
+    		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+			List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+			if (addresses.size() != 0) {
+				Address addressData = addresses.get(0);
+				String streetAddress = null;
+				String city = null;
+				String zip = null;
+				if (addressData.getMaxAddressLineIndex() != 0) {
+					streetAddress = addressData.getAddressLine(0);
+				}
+				if (streetAddress == null || streetAddress == "") {
+					streetAddress = "No Address";
+				}
+				city = addressData.getLocality();
+				zip = addressData.getPostalCode();
+				
+				newPlot.setAddressCity(city);
+				newPlot.setAddressZip(zip);
+				newPlot.setAddress(streetAddress);
+			} else {
+				return null;
+			}
+			return newPlot;
+	 }
  }	
  
