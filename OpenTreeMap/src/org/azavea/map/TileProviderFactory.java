@@ -40,7 +40,6 @@ public class TileProviderFactory {
 	        	double[] bbox = getBoundingBox(x, y, zoom);
 	            String s = String.format(Locale.US, GEOSERVER_OTM_FORMAT, bbox[MINX], 
 	            		bbox[MINY], bbox[MAXX], bbox[MAXY]);
-	            Log.d("TILES", s);
 	            URL url = null;
 	            try {
 	                url = new URL(s);
