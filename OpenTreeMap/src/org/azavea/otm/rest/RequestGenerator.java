@@ -214,5 +214,9 @@ public class RequestGenerator {
 				loginManager.loggedInUser.getPassword(), plot, handler);
 	}
 	
-	
+	public void getCqlForFilters(RequestParams params, JsonHttpResponseHandler handler) {
+		Log.d("CQL-FILTERS", params.toString());
+		client.get("/cql-filter", params, handler);
+		
+	}
 }

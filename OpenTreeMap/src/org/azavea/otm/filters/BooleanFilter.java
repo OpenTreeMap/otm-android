@@ -2,8 +2,11 @@ package org.azavea.otm.filters;
 
 import org.azavea.otm.R;
 
+import com.loopj.android.http.RequestParams;
+
 import android.view.View;
 import android.widget.ToggleButton;
+import com.loopj.android.http.RequestParams;
 
 public class BooleanFilter extends BaseFilter {
 	public boolean active;
@@ -41,5 +44,10 @@ public class BooleanFilter extends BaseFilter {
 	@Override
 	public void clear() {
 		active = false;
+	}
+	
+	@Override
+	public void addToRequestParams(RequestParams rp) {
+		rp.put(key, Boolean.toString(active));
 	}
 }

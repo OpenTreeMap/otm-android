@@ -21,25 +21,23 @@ public class TileProviderFactory {
     		"&height=256" +
     		"&srs=EPSG:900913" +
     		"&format=image/png" +				
-    		"&transparent=true";	
+    		"&transparent=true" +
+    		"&cql_filter=(%s)";	
 	
-	public static TileProvider getTileProvider(String providerType) {
-		if (providerType.equals("otm")) {
-			return otm();
-		} else {
-			return null;
-		}
+	
+	public static TileProvider getWmsTileProvider() {
+		return getWmsCqlTileProvider("1=1");
 	}
-	
-	// return a geoserver otm wms tile layer
-	private static TileProvider otm() {
-		TileProvider tileProvider = new WMSTileProvider(256,256) {
+
+	public static TileProvider getWmsCqlTileProvider(String cql) {
+		TileProvider tileProvider = new WMSTileProvider(256,256, cql) {
         	
 	        @Override
 	        public synchronized URL getTileUrl(int x, int y, int zoom) {
 	        	double[] bbox = getBoundingBox(x, y, zoom);
+	        	String cql = getCql();
 	            String s = String.format(Locale.US, GEOSERVER_OTM_FORMAT, bbox[MINX], 
-	            		bbox[MINY], bbox[MAXX], bbox[MAXY]);
+	            		bbox[MINY], bbox[MAXX], bbox[MAXY], cql);
 	            URL url = null;
 	            try {
 	                url = new URL(s);
@@ -51,5 +49,7 @@ public class TileProviderFactory {
 		};
 		return tileProvider;
 	}
+		
+	
 	
 }

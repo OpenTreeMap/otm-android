@@ -17,6 +17,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.loopj.android.http.RequestParams;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -200,5 +202,16 @@ public class FilterManager {
 		return query;
 	}
 	
+	public RequestParams getActiveFiltersAsRequestParams() {
+		RequestParams rp = new RequestParams();
+		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
+			BaseFilter filter = entry.getValue();
+			if (filter.isActive()) {
+				filter.addToRequestParams(rp);
+			}
+		}
+		return rp;
+		
+	}
 }
 	

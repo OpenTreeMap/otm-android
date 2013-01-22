@@ -27,9 +27,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.azavea.map.TileProviderFactory;
 
@@ -87,6 +91,9 @@ public class MapDisplay extends MapActivity{
 	private Marker plotMarker;
     private GoogleMap mMap;
 
+    private String cqlFilter = "1=0";
+    TileOverlay filterTileOverlay;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,8 +144,11 @@ public class MapDisplay extends MapActivity{
     
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
-        TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
-        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+        TileProvider wmsTileProvider = TileProviderFactory.getWmsTileProvider();
+        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
+        TileProvider filterTileProvider = TileProviderFactory.getWmsCqlTileProvider(cqlFilter);
+        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
+        filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         mMap.setOnMapClickListener(showPopupMapClickListener);
     }
     
@@ -252,15 +262,16 @@ public class MapDisplay extends MapActivity{
  	  super.onActivityResult(requestCode, resultCode, data); 
  	  switch(requestCode) { 
  	  	case FILTER_INTENT: 
- 	  		// This is debugging code!
- 	  		// TODO Make filters work.
  	  		if (resultCode == Activity.RESULT_OK) { 
  	  			String activeFilters = App.getFilterManager().getActiveFiltersAsQueryString();
- 	  			if (!activeFilters.equals("")) {
- 	  				Toast.makeText(this, App.getFilterManager().getActiveFiltersAsQueryString(),
- 	  						Toast.LENGTH_LONG).show();
- 	  			} else {
+ 	  			if (activeFilters.equals("")) {
  	  				Toast.makeText(this,  "No filters", Toast.LENGTH_LONG).show();
+ 	  			} else {
+ 	  				Toast.makeText(this, activeFilters,
+ 	  						Toast.LENGTH_LONG).show();
+ 	  				RequestGenerator rc = new RequestGenerator();
+ 	  				RequestParams activeFilterAsRP = App.getFilterManager().getActiveFiltersAsRequestParams();
+ 	  				rc.getCqlForFilters(activeFilterAsRP ,handleNewFilterCql);
  	  			}
  	  		} 
  	  		break; 
@@ -475,5 +486,22 @@ public class MapDisplay extends MapActivity{
 			
 			return newPlot;
 	 }
- }	
+
+    // on response, set the global cqlFilter property, and cause the tile layer,
+    // which has a reference to this property, to refresh.
+    JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
+    	public void onSuccess(JSONObject data) {
+    		cqlFilter = data.optString("cql_string");
+    		Log.d("CQL-FILTERS", data.toString());
+    		Log.d("CQL-FILTERS", "cql is: " + cqlFilter);
+    		filterTileOverlay.clearTileCache();
+    	};
+    	protected void handleFailureMessage(Throwable arg0, String arg1) {
+    		Toast.makeText(MapDisplay.this, "Error processing filters", Toast.LENGTH_SHORT).show();
+    		Log.e(App.LOG_TAG, arg1);
+    		arg0.printStackTrace();
+    		cqlFilter = "1=0";
+    	};
+    };
+}	
  

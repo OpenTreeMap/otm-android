@@ -4,6 +4,8 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
 import org.json.JSONException;
 
+import com.loopj.android.http.RequestParams;
+
 import android.view.View;
 
 public class SpeciesFilter extends BaseFilter {
@@ -44,4 +46,14 @@ public class SpeciesFilter extends BaseFilter {
 		this.species = null;
 	}
 
+	@Override
+	public void addToRequestParams(RequestParams rp) {
+		try {
+			if (isActive()) {
+				rp.put(key,  ""+ species.getId());
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 }

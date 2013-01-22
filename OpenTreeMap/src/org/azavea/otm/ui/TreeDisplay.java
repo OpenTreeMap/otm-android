@@ -97,7 +97,7 @@ public class TreeDisplay extends MapActivity{
 	 }
 	 
 	 private void setUpMap() {
-		TileProvider tileProvider = TileProviderFactory.getTileProvider("otm");
+		TileProvider tileProvider = TileProviderFactory.getWmsTileProvider();
 		mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
 		UiSettings mUiSettings = mMap.getUiSettings();
 		mUiSettings.setZoomControlsEnabled(false);
