@@ -1,5 +1,7 @@
 package org.azavea.map;
 
+import java.net.URLEncoder;
+
 import com.google.android.gms.maps.model.UrlTileProvider;
 
 public abstract class WMSTileProvider extends UrlTileProvider {
@@ -23,13 +25,18 @@ public abstract class WMSTileProvider extends UrlTileProvider {
     protected StringBuilder cql;
     
     // Construct with tile size in pixels, normally 256, see parent class.
-    public WMSTileProvider(int x, int y, StringBuilder cql) {
+    public WMSTileProvider(int x, int y) {
     	super(x, y);
-    	this.cql = cql;
+    	this.cql = new StringBuilder();
     }
     
     protected String getCql() {
-    	return cql.toString();
+    	return URLEncoder.encode(cql.toString());
+    }
+    
+    public void setCql(String c) {
+    	cql.setLength(0);
+    	cql.append(c);
     }
      
     // Return a web Mercator bounding box given tile x/y indexes and a zoom

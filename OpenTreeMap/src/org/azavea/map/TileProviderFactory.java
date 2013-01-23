@@ -40,8 +40,8 @@ public class TileProviderFactory {
     		"&styles=tree_highlight";	
 
 	
-	public static TileProvider getWmsTileProvider() {
-		TileProvider tileProvider = new WMSTileProvider(256,256, new StringBuilder("")) {
+	public static WMSTileProvider getWmsTileProvider() {
+		WMSTileProvider tileProvider = new WMSTileProvider(256,256) {
         	
 	        @Override
 	        public synchronized URL getTileUrl(int x, int y, int zoom) {
@@ -61,13 +61,13 @@ public class TileProviderFactory {
 		return tileProvider;
 	}
 
-	public static TileProvider getWmsCqlTileProvider(StringBuilder cql) {
-		TileProvider tileProvider = new WMSTileProvider(256,256, cql) {
+	public static WMSTileProvider getWmsCqlTileProvider() {
+		WMSTileProvider tileProvider = new WMSTileProvider(256,256) {
         	
 	        @Override
 	        public synchronized URL getTileUrl(int x, int y, int zoom) {
 	        	double[] bbox = getBoundingBox(x, y, zoom);
-	        	String cql = URLEncoder.encode(getCql());
+	        	String cql = getCql();
 	        	
 	        	String s = String.format(Locale.US, GEOSERVER_OTM_FILTERABLE, bbox[MINX], 
 	            		bbox[MINY], bbox[MAXX], bbox[MAXY], cql);

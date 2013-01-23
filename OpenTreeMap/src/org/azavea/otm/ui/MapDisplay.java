@@ -36,6 +36,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.azavea.map.TileProviderFactory;
+import org.azavea.map.WMSTileProvider;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -91,20 +92,17 @@ public class MapDisplay extends MapActivity{
 	private Marker plotMarker;
     private GoogleMap mMap;
 
-    private StringBuilder cqlFilter;
     TileOverlay filterTileOverlay;
+    WMSTileProvider filterTileProvider;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cqlFilter = new StringBuilder("1=0");
         setContentView(R.layout.activity_map_display_2);
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
 		setTreeAddMode(CANCEL);
-		// clear and initialize the cqlFilter.
-		
     }
 
     @Override
@@ -153,7 +151,7 @@ public class MapDisplay extends MapActivity{
         wmsTileOverlay.setZIndex(50);
         
         // Set up the filter layer
-        TileProvider filterTileProvider = TileProviderFactory.getWmsCqlTileProvider(cqlFilter);
+        filterTileProvider = TileProviderFactory.getWmsCqlTileProvider();
         filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         filterTileOverlay.setZIndex(100);
        
@@ -501,17 +499,15 @@ public class MapDisplay extends MapActivity{
     JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
     	public void onSuccess(JSONObject data) {
     		String cqlFilterString = data.optString("cql_string");
-    		cqlFilter.setLength(0);
-    		cqlFilter.append(cqlFilterString);
-    		Log.d("CQL-FILTERS", cqlFilter.toString());
+       		Log.d("CQL-FILTERS", cqlFilterString);
+    		filterTileProvider.setCql(cqlFilterString);
     		filterTileOverlay.clearTileCache();
     	};
     	protected void handleFailureMessage(Throwable arg0, String arg1) {
     		Toast.makeText(MapDisplay.this, "Error processing filters", Toast.LENGTH_SHORT).show();
     		Log.e(App.LOG_TAG, arg1);
     		arg0.printStackTrace();
-    		cqlFilter.setLength(0);
-    		cqlFilter.append("1=0");
+    		filterTileProvider.setCql("1=0");
     	};
     };
 }	
