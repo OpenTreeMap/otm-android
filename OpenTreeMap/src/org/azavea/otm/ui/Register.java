@@ -38,7 +38,7 @@ public class Register extends ProfileActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
-		setDebuggingValues();
+		//setDebuggingValues();
 	}
 	
 	/*

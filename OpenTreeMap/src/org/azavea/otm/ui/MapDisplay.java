@@ -272,10 +272,12 @@ public class MapDisplay extends MapActivity{
  	  		if (resultCode == Activity.RESULT_OK) { 
  	  			String activeFilters = App.getFilterManager().getActiveFiltersAsQueryString();
  	  			if (activeFilters.equals("")) {
- 	  				Toast.makeText(this,  "No filters", Toast.LENGTH_LONG).show();
+ 	  				//Toast.makeText(this,  "No filters", Toast.LENGTH_LONG).show();
+ 	  				filterTileProvider.setCql("");
+ 	  				filterTileOverlay.clearTileCache();
  	  			} else {
- 	  				Toast.makeText(this, activeFilters,
- 	  						Toast.LENGTH_LONG).show();
+ 	  				//Toast.makeText(this, activeFilters,
+ 	  				//		Toast.LENGTH_LONG).show();
  	  				RequestGenerator rc = new RequestGenerator();
  	  				RequestParams activeFilterAsRP = App.getFilterManager().getActiveFiltersAsRequestParams();
  	  				rc.getCqlForFilters(activeFilterAsRP ,handleNewFilterCql);
