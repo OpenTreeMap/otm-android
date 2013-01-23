@@ -67,10 +67,9 @@ public class TileProviderFactory {
 	        @Override
 	        public synchronized URL getTileUrl(int x, int y, int zoom) {
 	        	double[] bbox = getBoundingBox(x, y, zoom);
-	        	String cql = getCql();
 	        	
 	        	String s = String.format(Locale.US, GEOSERVER_OTM_FILTERABLE, bbox[MINX], 
-	            		bbox[MINY], bbox[MAXX], bbox[MAXY], cql);
+	            		bbox[MINY], bbox[MAXX], bbox[MAXY], getCql());
 	            URL url = null;
 	            try {
 	                url = new URL(s);
