@@ -97,11 +97,11 @@ public class FilterManager {
 		callback.handleMessage(resultMessage);
 	}
 	
-	private BaseFilter makeMapFilter(String key, String name, String type) 
+	private BaseFilter makeMapFilter(String key, String name, String type, String trueval) 
 			throws Exception {
 		
 		if (type.equals("OTMBoolFilter")) {
-			return new BooleanFilter(key, name);
+			return new BooleanFilter(key, name, trueval);
 		} else if (type.equals("OTMRangeFilter")) {
 			return new RangeFilter(key, name);
 		} else if (type.equals("OTMListFilter")) {
@@ -125,7 +125,13 @@ public class FilterManager {
 				String key = filter.getAttributes().getNamedItem("key").getNodeValue();
 				String name = filter.getAttributes().getNamedItem("name").getNodeValue();
 				String type = filter.getAttributes().getNamedItem("type").getNodeValue();
-				allFilters.put(key, makeMapFilter(key, name, type));
+				String trueval;
+				try {
+					trueval = filter.getAttributes().getNamedItem("trueval").getNodeValue();
+				} catch (Exception e) {
+					trueval = "";
+				}
+				allFilters.put(key, makeMapFilter(key, name, type, trueval));
 			}
 		} catch (Exception e) {
 			throw new Exception("Invalid filter xml file", e);

@@ -10,25 +10,31 @@ import com.loopj.android.http.RequestParams;
 
 public class BooleanFilter extends BaseFilter {
 	public boolean active;
+	private String trueval = "";
 	
 
-	public BooleanFilter(String key, String label) {
-		initialize(key, label, false);
+	public BooleanFilter(String key, String label, String trueval) {
+		initialize(key, label, false, trueval);
 	}
 	
-	public BooleanFilter(String key, String label, boolean active) {
-		initialize(key, label, active);
+	public BooleanFilter(String key, String label, boolean active, String trueval) {
+		initialize(key, label, active, trueval);
 	}
 	
-	private void initialize(String key, String label, boolean active) {
+	private void initialize(String key, String label, boolean active, String trueval) {
 		this.key = key;
 		this.active = active;
 		this.label = label;
+		this.trueval = trueval;
 	}
 	
 	@Override
 	public String toQueryStringParam() {
-		return key + "=" + Boolean.toString(active);
+		if (trueval.equals("")) {
+			return key + "=" + Boolean.toString(active);			
+		} else {
+			return key + "=" + trueval;
+		}
 	}
 
 	@Override
@@ -48,6 +54,10 @@ public class BooleanFilter extends BaseFilter {
 	
 	@Override
 	public void addToRequestParams(RequestParams rp) {
-		rp.put(key, Boolean.toString(active));
+		if (trueval.equals("")) {
+			rp.put(key, Boolean.toString(active));
+		} else {
+			rp.put(key,  trueval);
+		}
 	}
 }
