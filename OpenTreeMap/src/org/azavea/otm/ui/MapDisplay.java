@@ -146,10 +146,19 @@ public class MapDisplay extends MapActivity{
     private void setUpMap() {
     	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
     	
+    	/* This is the base tree layer using wms/geoserver for debugging purposes.
+    	   In production we use tilecache.
+    	
     	TileProvider wmsTileProvider = TileProviderFactory.getWmsTileProvider();
         TileOverlay wmsTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
         wmsTileOverlay.setZIndex(50);
         
+        */
+        
+    	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
+    	TileOverlay treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
+    	treeTileOverlay.setZIndex(50);
+    	
         // Set up the filter layer
         filterTileProvider = TileProviderFactory.getWmsCqlTileProvider();
         filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));

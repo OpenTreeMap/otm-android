@@ -5,6 +5,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 
+import org.azavea.otm.map.TileCacheTileProvider;
+
 import android.util.Log;
 
 import com.google.android.gms.maps.model.TileProvider;
@@ -82,6 +84,10 @@ public class TileProviderFactory {
 	       
 		};
 		return tileProvider;
+	}
+	
+	public static TileProvider getTileCacheTileProvider() {
+		return new TileCacheTileProvider(256, 256);
 	}
 		
 	
