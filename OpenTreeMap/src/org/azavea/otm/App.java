@@ -122,6 +122,7 @@ public class App extends Application {
 			editor.putBoolean("first_run", false)
 				  .putString("base_url", context.getString(R.string.base_url))
 				  .putString("wms_url", context.getString(R.string.wms_url))
+				  .putString("tms_url", context.getString(R.string.tms_url))
 				  .putString("api_key", context.getString(R.string.api_key))
 				  .putString("num_tiles_x", context.getString(R.string.num_tiles_x))
 				  .putString("num_tiles_y", context.getString(R.string.num_tiles_y))
