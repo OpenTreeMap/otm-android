@@ -27,15 +27,6 @@ public class BooleanFilter extends BaseFilter {
 		this.label = label;
 		this.trueval = trueval;
 	}
-	
-	@Override
-	public String toQueryStringParam() {
-		if (trueval.equals("")) {
-			return key + "=" + Boolean.toString(active);			
-		} else {
-			return key + "=" + trueval;
-		}
-	}
 
 	@Override
 	public void updateFromView(View view) {

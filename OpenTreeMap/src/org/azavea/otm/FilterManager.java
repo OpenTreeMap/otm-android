@@ -191,23 +191,10 @@ public class FilterManager {
 		return display;		
 	}
 	
-	/**
-	 * Get a string of key=value parameters for use in a query string.
-	 * If there are no active filters, it will return an empty string
-	 * so the call can be appended without checking if there are filters
-	 */
-	public String getActiveFiltersAsQueryString() {
-		String query = "", sep = "";
-		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
-			BaseFilter filter = entry.getValue();
-			if (filter.isActive()) {
-				query += sep + filter.toQueryStringParam();
-				sep = "&";
-			}
-		}
-		return query;
-	}
 	
+	/**
+	 * Returns a RequestParams object loaded with the filter values.
+	 */
 	public RequestParams getActiveFiltersAsRequestParams() {
 		RequestParams rp = new RequestParams();
 		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {

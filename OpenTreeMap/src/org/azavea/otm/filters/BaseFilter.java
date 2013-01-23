@@ -30,18 +30,15 @@ public abstract class BaseFilter {
 	 *  from a view of the corresponding type
 	 */
 	public abstract void updateFromView(View view);
-	
-	/**
-	 * Return a string for this filter to be used in a URL query string
-	 * parameter
-	 */
-	public abstract String toQueryStringParam();
 
 	/**
 	 *  Reset the filter to the default state
 	 */
 	public abstract void clear();
 
-	// Add this filter to a RequestParams object.
+	/**
+	 *  Add this filter to a RequestParams object.
+	 *  This method replaces getQueryStringParams.
+	 */
 	public abstract void addToRequestParams(RequestParams rp);
 }

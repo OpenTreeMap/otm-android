@@ -32,16 +32,6 @@ public class SpeciesFilter extends BaseFilter {
 	}
 
 	@Override
-	public String toQueryStringParam() {
-		try {
-			return isActive() ? key + "=" + species.getId() : "";
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-
-	@Override
 	public void clear() {
 		this.species = null;
 	}

@@ -25,24 +25,22 @@ public class RangeFilter extends BaseFilter {
 		return max;
 	}
 	
-	private String minKey() {
-		return key + "_min";
-	}
 	
-	private String maxKey() {
-		return key + "_max";
-	}
-
-	@Override
-	public String toQueryStringParam() {
-		String params = "";
+	// diameter_range=2-4.... diameter_range=0-8.... diameter_range=3-9999.....
+	private String queryValue() {
+		String qval = "";
 		if (min > 0) {
-			params += minKey() + "=" + Double.toString(min); 
+			qval += Double.toString(min); 
+		} else {
+			qval += "0";
 		}
+		qval += "-";
 		if (max > 0) {
-			params += maxKey() + "=" + Double.toString(max);
+			qval += Double.toString(max);
+		} else {
+			qval += "999999";
 		}
-		return params;
+		return qval;
 	}
 
 	@Override
@@ -78,11 +76,6 @@ public class RangeFilter extends BaseFilter {
 	
 	@Override
 	public void addToRequestParams(RequestParams rp) {
-		if (min > 0) {
-			rp.put(minKey(), Double.toString(min));
-		}
-		if (max > 0) {
-			rp.put(maxKey(), Double.toString(max));
-		}				
+		rp.put(key, queryValue());
 	}
 }

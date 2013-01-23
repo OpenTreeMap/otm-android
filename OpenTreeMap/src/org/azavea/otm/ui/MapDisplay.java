@@ -270,17 +270,13 @@ public class MapDisplay extends MapActivity{
  	  switch(requestCode) { 
  	  	case FILTER_INTENT: 
  	  		if (resultCode == Activity.RESULT_OK) { 
- 	  			String activeFilters = App.getFilterManager().getActiveFiltersAsQueryString();
- 	  			if (activeFilters.equals("")) {
- 	  				//Toast.makeText(this,  "No filters", Toast.LENGTH_LONG).show();
+ 	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsRequestParams();
+ 	  			if (activeFilters.toString().equals("")) {
  	  				filterTileProvider.setCql("");
  	  				filterTileOverlay.clearTileCache();
  	  			} else {
- 	  				//Toast.makeText(this, activeFilters,
- 	  				//		Toast.LENGTH_LONG).show();
  	  				RequestGenerator rc = new RequestGenerator();
- 	  				RequestParams activeFilterAsRP = App.getFilterManager().getActiveFiltersAsRequestParams();
- 	  				rc.getCqlForFilters(activeFilterAsRP ,handleNewFilterCql);
+ 	  				rc.getCqlForFilters(activeFilters, handleNewFilterCql);
  	  			}
  	  		} 
  	  		break; 
