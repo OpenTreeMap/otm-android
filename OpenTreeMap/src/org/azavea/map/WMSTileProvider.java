@@ -20,18 +20,18 @@ public abstract class WMSTileProvider extends UrlTileProvider {
     protected static final int MAXY = 3;
     
     // cql filters
-    protected String cql = "";
+    protected StringBuilder cql;
     
     // Construct with tile size in pixels, normally 256, see parent class.
-    public WMSTileProvider(int x, int y, String cql) {
+    public WMSTileProvider(int x, int y, StringBuilder cql) {
     	super(x, y);
     	this.cql = cql;
     }
     
     protected String getCql() {
-    	return cql;
+    	return cql.toString();
     }
-    
+     
     // Return a web Mercator bounding box given tile x/y indexes and a zoom
     // level.
 	protected double[] getBoundingBox(int x, int y, int zoom) {

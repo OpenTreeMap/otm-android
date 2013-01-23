@@ -91,17 +91,20 @@ public class MapDisplay extends MapActivity{
 	private Marker plotMarker;
     private GoogleMap mMap;
 
-    private String cqlFilter = "1=0";
+    private StringBuilder cqlFilter;
     TileOverlay filterTileOverlay;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cqlFilter = new StringBuilder("1=0");
         setContentView(R.layout.activity_map_display_2);
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
 		setTreeAddMode(CANCEL);
+		// clear and initialize the cqlFilter.
+		
     }
 
     @Override
@@ -143,12 +146,18 @@ public class MapDisplay extends MapActivity{
     }
     
     private void setUpMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
-        TileProvider wmsTileProvider = TileProviderFactory.getWmsTileProvider();
-        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
+    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
+    	
+    	TileProvider wmsTileProvider = TileProviderFactory.getWmsTileProvider();
+        TileOverlay wmsTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
+        wmsTileOverlay.setZIndex(50);
+        
+        // Set up the filter layer
         TileProvider filterTileProvider = TileProviderFactory.getWmsCqlTileProvider(cqlFilter);
-        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
+        filterTileOverlay.setZIndex(100);
+       
+        // Set up the default click listener
         mMap.setOnMapClickListener(showPopupMapClickListener);
     }
     
@@ -491,16 +500,18 @@ public class MapDisplay extends MapActivity{
     // which has a reference to this property, to refresh.
     JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
     	public void onSuccess(JSONObject data) {
-    		cqlFilter = data.optString("cql_string");
-    		Log.d("CQL-FILTERS", data.toString());
-    		Log.d("CQL-FILTERS", "cql is: " + cqlFilter);
+    		String cqlFilterString = data.optString("cql_string");
+    		cqlFilter.setLength(0);
+    		cqlFilter.append(cqlFilterString);
+    		Log.d("CQL-FILTERS", cqlFilter.toString());
     		filterTileOverlay.clearTileCache();
     	};
     	protected void handleFailureMessage(Throwable arg0, String arg1) {
     		Toast.makeText(MapDisplay.this, "Error processing filters", Toast.LENGTH_SHORT).show();
     		Log.e(App.LOG_TAG, arg1);
     		arg0.printStackTrace();
-    		cqlFilter = "1=0";
+    		cqlFilter.setLength(0);
+    		cqlFilter.append("1=0");
     	};
     };
 }	

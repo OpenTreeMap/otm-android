@@ -1,15 +1,15 @@
 <implementation>
     <pending>true</pending>
 	<filters>
-	    <filter key="missing_tree" name="Missing Tree" type="OTMBoolFilter"/>
+	    <!--filter key="missing_tree" name="Missing Tree" type="OTMBoolFilter" -->
 	    <filter key="missing_species" name="Missing Species" type="OTMBoolFilter"/>
 	    <filter key="missing_diameter" name="Missing Diameter" type="OTMBoolFilter"/>
 	    <filter key="species_id" name="Species" type="OTMListFilter" data="species"/>
-	    <filter key="filter_edible" name="Edible" type="OTMBoolFilter"/>
-	    <filter key="filter_fall_colors" name="Fall Colors" type="OTMBoolFilter"/>
-	    <filter key="filter_flowering" name="Flowering" type="OTMBoolFilter"/>
-	    <filter key="filter_native" name="Native" type="OTMBoolFilter"/>
-	    <filter key="filter_dbh" name="Diameter" type="OTMRangeFilter"/>
+	    <filter key="edible" name="Edible" type="OTMBoolFilter" data="palatable_human"/>
+	    <filter key="color" name="Fall Colors" type="OTMBoolFilter" data="fall_conspicuous"/>
+	    <filter key="flowering" name="Flowering" type="OTMBoolFilter" data="flower_conspicuous"/>
+	    <filter key="native" name="Native" type="OTMBoolFilter"/>
+	    <filter key="diameter_range" name="Diameter" type="OTMRangeFilter"/>
 	</filters>
 	<choices>
 		<choice key="action">
