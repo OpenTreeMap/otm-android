@@ -4,7 +4,7 @@
 	    <!--filter key="missing_tree" name="Missing Tree" type="OTMBoolFilter" -->
 	    <filter key="missing_species" name="Missing Species" type="OTMBoolFilter"/>
 	    <filter key="missing_diameter" name="Missing Diameter" type="OTMBoolFilter"/>
-	    <filter key="species_id" name="Species" type="OTMListFilter" data="species"/>
+	    <filter key="species" name="Species" type="OTMListFilter" data="species"/>
 	    <filter key="edible" name="Edible" type="OTMBoolFilter" trueval="palatable_human"/>
 	    <filter key="color" name="Fall Colors" type="OTMBoolFilter" trueval="fall_conspicuous"/>
 	    <filter key="flowering" name="Flowering" type="OTMBoolFilter" trueval="flower_conspicuous"/>
