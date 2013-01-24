@@ -19,7 +19,7 @@ public class TabLayout extends TabActivity {
         TabHost.TabSpec spec;  
         
         // Map
-        Intent intent = new Intent().setClass(this, MapDisplay.class);
+        Intent intent = new Intent().setClass(this, MainMapActivity.class);
         spec = tabHost.newTabSpec("map").setIndicator("Tree Map", 
         		res.getDrawable(android.R.drawable.ic_menu_mapmode)).setContent(intent);
         tabHost.addTab(spec);

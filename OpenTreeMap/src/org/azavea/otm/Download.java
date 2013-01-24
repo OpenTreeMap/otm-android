@@ -2,7 +2,7 @@ package org.azavea.otm;
 
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RestClient;
-import org.azavea.otm.ui.MapDisplay;
+import org.azavea.otm.ui.MainMapActivity;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -29,7 +29,7 @@ public class Download extends Activity
     
     public void showMap(View view) {
     	// Create intent for map-view activity and switch
-    	Intent intent = new Intent(view.getContext(), MapDisplay.class);
+    	Intent intent = new Intent(view.getContext(), MainMapActivity.class);
     	startActivity(intent);    			
     }
     

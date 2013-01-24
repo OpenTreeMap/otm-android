@@ -9,7 +9,7 @@ import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.azavea.otm.ui.MapDisplay;
+import org.azavea.otm.ui.MainMapActivity;
 import org.azavea.otm.ui.TreeInfoDisplay;
 import org.json.JSONException;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">OpenTreeMap</string>
+    <string name="app_name">Open Tree Map</string>
 
     <string name="menu_filter">Filter</string>
     <string name="menu_add">Add Tree</string>
