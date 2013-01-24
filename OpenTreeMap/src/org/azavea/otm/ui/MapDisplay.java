@@ -65,7 +65,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -161,6 +163,7 @@ public class MapDisplay extends MapActivity{
     	
         // Set up the filter layer
         filterTileProvider = TileProviderFactory.getWmsCqlTileProvider();
+        filterTileProvider.setCql("1=0");
         filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         filterTileOverlay.setZIndex(100);
        
@@ -517,5 +520,29 @@ public class MapDisplay extends MapActivity{
     		filterTileProvider.setCql("1=0");
     	};
     };
+    
+    public void handleLocationSearchClick(View view) {
+    	EditText et = (EditText)findViewById(R.id.locationSearchField);
+    	String address = et.getText().toString();
+    	if (address == "") {
+    		Toast.makeText(MapDisplay.this, "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
+    	} else {
+    		Geocoder g = new Geocoder(MapDisplay.this);
+    		try {
+				List<Address> a = g.getFromLocationName(address, 1);
+				if (a.size() == 0) {
+					Toast.makeText(MapDisplay.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
+				} else {
+					Address geocoded = a.get(0);
+					LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
+			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM_LEVEL+4));  
+				}
+				 
+			} catch (IOException e) {
+				e.printStackTrace();
+				Toast.makeText(MapDisplay.this,  "Error searching for location.", Toast.LENGTH_SHORT);
+			}
+    	}
+    }
 }	
  

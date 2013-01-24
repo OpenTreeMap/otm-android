@@ -11,16 +11,41 @@
 	  android:layout_height="fill_parent"
 	  class="com.google.android.gms.maps.SupportMapFragment"/>
     
-    <ImageButton
-        android:id="@+id/mylocationbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/show_location"
-        android:onClick="showMyLocation"
-        android:src="@android:drawable/ic_menu_mylocation" />
 
+    <LinearLayout
+        android:id="@+id/location_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        style="@android:style/ButtonBar"
+    >
+        
+	    <ImageButton
+	        android:id="@+id/mylocationbutton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="fill_parent"
+	        android:contentDescription="@string/show_location"
+	        android:onClick="showMyLocation"
+	        android:src="@android:drawable/ic_menu_mylocation" />
+	    <ImageButton
+	        android:id="@+id/locationSearchButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="fill_parent"
+	        android:contentDescription="address"
+	        android:src="@android:drawable/ic_menu_search"
+	        android:onClick="handleLocationSearchClick"
+	    ></ImageButton>
+	    <EditText
+	        android:id="@+id/locationSearchField"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:hint="search location"
+	        android:imeOptions="actionSearch"
+	        >
+	    </EditText>
+	    
+	    
+	</LinearLayout>
  
     <Button
         android:id="@+id/treeAddNext"
@@ -106,34 +131,34 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/mapBaselayer"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Map"
-        android:onClick="mapBaselayer" />
+        android:layout_below="@+id/location_bar" >
+        <Button
+            android:id="@+id/mapBaselayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="mapBaselayer"
+            android:text="Map" />
 
-    <Button
-        android:id="@+id/hybridBaselayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/satelliteBaselayer"
-        android:text="Hybrid"
-        android:onClick="hybridBaselayer" />
+        <Button
+            android:id="@+id/hybridBaselayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dip"
+            android:onClick="hybridBaselayer"
+            android:text="Hybrid" />
 
-    <Button
-        android:id="@+id/satelliteBaselayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/mapBaselayer"
-        android:onClick="satelliteBaselayer"
-        android:text="Satellite" />
-
-    
+        <Button
+            android:id="@+id/satelliteBaselayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dip"
+            android:onClick="satelliteBaselayer"
+            android:text="Satellite" />
+    </LinearLayout>
     
 </RelativeLayout>
 
