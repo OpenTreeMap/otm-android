@@ -11,8 +11,8 @@
          android:layout_height="wrap_content"
          android:layout_marginBottom="5dp"
          android:gravity="center_vertical"
-         android:textColor="@color/text_dark"
-         android:textColorHint="@color/text_dark"
+         android:textColor="@color/text_light"
+         android:textColorHint="@color/text_light"
          android:textSize="@dimen/padding_large"
          android:textStyle="bold" />
 
@@ -23,7 +23,7 @@
          android:layout_alignParentLeft="true"
          android:layout_below="@+id/edit_type"
          android:gravity="center_vertical"
-         android:textColor="@color/text_dark"
+         android:textColor="@color/text_light"
          android:textSize="@dimen/padding_medium" />
 
      <TextView
