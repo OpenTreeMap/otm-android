@@ -26,7 +26,8 @@
 	        android:layout_height="fill_parent"
 	        android:contentDescription="@string/show_location"
 	        android:onClick="showMyLocation"
-	        android:src="@android:drawable/ic_menu_mylocation" />
+	        android:src="@android:drawable/ic_menu_mylocation"
+	        android:background="@drawable/btn_silver" />
 	    <ImageButton
 	        android:id="@+id/locationSearchButton"
 	        android:layout_width="wrap_content"
@@ -34,6 +35,7 @@
 	        android:contentDescription="address"
 	        android:src="@android:drawable/ic_menu_search"
 	        android:onClick="handleLocationSearchClick"
+	        android:background="@drawable/btn_silver"
 	    ></ImageButton>
 	    <EditText
 	        android:id="@+id/locationSearchField"
@@ -135,29 +137,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/location_bar" >
+        android:layout_below="@+id/location_bar" 
+        android:layout_marginTop="@dimen/mapbtn_top">
         <Button
             android:id="@+id/mapBaselayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="mapBaselayer"
-            android:text="Map" />
+            android:text="Map" 
+            android:background="@drawable/btn_default2"
+            android:layout_marginLeft="@dimen/mapbtn_left"
+            android:padding="@dimen/padding_12"
+        />
 
         <Button
             android:id="@+id/hybridBaselayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dip"
             android:onClick="hybridBaselayer"
-            android:text="Hybrid" />
+            android:text="Hybrid" 
+            android:background="@drawable/btn_default2"
+            android:padding="@dimen/padding_12"
+            android:layout_marginLeft="@dimen/mapbtn_left"
+           
+            />
 
         <Button
             android:id="@+id/satelliteBaselayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dip"
+            
             android:onClick="satelliteBaselayer"
-            android:text="Satellite" />
+            android:text="Satellite" 
+            android:background="@drawable/btn_default2"
+            android:layout_marginLeft="@dimen/mapbtn_left"
+            android:padding="@dimen/padding_12"
+            
+            />
     </LinearLayout>
     
 </RelativeLayout>

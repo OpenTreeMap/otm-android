@@ -1,7 +1,50 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+// Window load event used just in case window height is dependant upon images
+$(window).bind("load", function() { 
+       
+       var footerHeight = 0,
+           footerTop = 0,
+           $footer = $("#footer");
+           
+       positionFooter();
+       
+       function positionFooter() {
+       
+                footerHeight = $footer.height();
+                footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+       
+               if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+                   $footer.css({
+                        position: "absolute"
+                   }).animate({
+                        top: footerTop
+                   })
+               } else {
+                   $footer.css({
+                        position: "static"
+                   })
+               }
+               
+       }
+
+       $(window)
+               .scroll(positionFooter)
+               .resize(positionFooter)
+               
+});               
+</script>
+
+<link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
+
 <style type="text/css">
-	.tagline { color:navy;}
+	body { background-color: #ffffff; }
+	.tagline { color: #3c4b8b; text-align: center; font-size: 19px; font-family: 'Questrial', sans-serif; }
+	#image { width: 275px; height: 150px; margin: 0 auto; text-align: center; } 
+	#footer { background-image: url('file:///android_asset/home-bg.png'); height: 414px; width: 100%; }
 </style>
 
-<img width=200 src="file:///android_asset/logo.png"></img>
-
-<p class="tagline">Mapping Philly's trees and growing a green future together.</p>
+<div id="image">
+	<img src="file:///android_asset/logo.png"></img>
+	<p class="tagline">Mapping Philly's trees and growing a green future together.</p>
+</div>
