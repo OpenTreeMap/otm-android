@@ -1,24 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-		android:id="@+id/login_username"  
-		android:layout_height="wrap_content"  
-		android:hint="@string/hint_email"  
-		android:inputType="text"  
-		android:layout_width="fill_parent"
-		android:layout_centerInParent="true">
-    </EditText>
-    <EditText
-		android:id="@+id/login_password"  
-		android:layout_height="wrap_content"  
-		android:layout_below="@id/login_username"
-		android:hint="@string/hint_password"  
-		android:inputType="textPassword"  
-		android:layout_width="fill_parent">
-    </EditText>
+    android:layout_height="match_parent" >
 
     <Button
         android:id="@+id/login"
@@ -26,8 +9,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/login_password"
-        android:text="@string/login" 
-        android:onClick="login"/>
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/btn_default2"
+        android:onClick="login"
+        android:padding="@dimen/padding_12"
+        android:text="@string/login"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/cancel"
@@ -35,15 +24,54 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/login"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/btn_cancel"
         android:onClick="cancel"
-        android:text="@string/cancel" />
+        android:padding="@dimen/padding_12"
+        android:text="@string/cancel"
+        android:textColor="@color/white" />
+
     <Button
         android:id="@+id/register"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/cancel"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/btn_silver"
         android:onClick="register"
-        android:text="@string/Register" />
-    
+        android:padding="@dimen/padding_12"
+        android:text="@string/Register"
+        android:textColor="@color/black_end" />
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="154dp"
+        android:ems="10"
+        android:hint="@string/hint_email"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_username"
+        android:layout_below="@+id/login_username"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="6dp"
+        android:ems="10"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
+
 </RelativeLayout>

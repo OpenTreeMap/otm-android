@@ -8,9 +8,10 @@
         android:id="@+id/register_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_12"
         android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email_address" >
+        android:hint="@string/email_address"
+        android:inputType="textEmailAddress" >
 
         <requestFocus />
     </EditText>
@@ -78,15 +79,23 @@
             android:id="@+id/register_profilePic"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:src="@drawable/dlg_background"
-            android:contentDescription="@string/add_profile_picture" />
+            android:layout_marginLeft="@dimen/mapbtn_left"
+            android:layout_marginRight="@dimen/mapbtn_right"
+            android:layout_marginTop="@dimen/mapbtn_top"
+            android:contentDescription="@string/add_profile_picture"
+            android:src="@drawable/ic_addphoto" />
 
         <Button
             android:id="@+id/register_addProfilePicture"
             android:layout_width="match_parent"
             android:layout_height="75dp"
+            android:layout_marginRight="@dimen/mapbtn_right"
+            android:layout_marginTop="@dimen/mapbtn_top"
+            android:background="@drawable/btn_silver"
+            android:onClick="handleChangeProfilePhotoClick"
+            android:padding="@dimen/small_btn"
             android:text="@string/add_profile_picture"
-            android:onClick="handleChangeProfilePhotoClick" />
+            android:textColor="@color/text_dark" />
 
     </LinearLayout>
 
@@ -94,15 +103,23 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         >
+
         <Button
             android:id="@+id/register"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="@string/register" 
-            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_24dp"
+            android:background="@drawable/btn_default2"
             android:onClick="handleRegisterClick"
-            />       
+            android:paddingBottom="@dimen/padding_small"
+            android:paddingTop="@dimen/padding_small"
+            android:text="@string/Register"
+            android:textColor="@color/white" />
+       
     </RelativeLayout>
 
 </LinearLayout>

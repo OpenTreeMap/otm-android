@@ -7,10 +7,11 @@
 	<RelativeLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/header"
-   	    android:layout_width="fill_parent"
+	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
 	    android:layout_alignParentTop="true"
-	    android:background="@color/tint">
+	    android:background="@color/dgreen"
+	    android:color="@color/text_dark">
 	    
 		<ImageView
 		    android:id="@+id/plot_photo"
@@ -32,7 +33,7 @@
 		    android:layout_marginLeft="16dp"
 		    android:layout_toRightOf="@+id/plot_photo"
 		    android:text="@string/no_address"
-		    android:textColor="@color/text_dark" />
+		    android:textColor="@color/white" />
 
 		<TextView
 		    android:id="@+id/species"
@@ -42,7 +43,7 @@
 		    android:layout_below="@+id/address"
 		    android:text="@string/species_missing"
 		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@color/text_dark" />
+		    android:textColor="@color/white" />
 
 		<TextView
 		    android:id="@+id/updated_on"
@@ -90,7 +91,7 @@
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical"
-		     >        	
+		        >        	
 		    </LinearLayout>
 		</RelativeLayout>
 	</ScrollView>
