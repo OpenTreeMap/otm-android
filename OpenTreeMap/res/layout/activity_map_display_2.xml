@@ -57,6 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/treeAddInstructions"
         android:text="next" 
+       	android:background="@drawable/btn_default2"
+        android:padding="@dimen/padding_12"
         android:onClick="submitNewTree"/>
     
     <TextView
@@ -66,6 +68,7 @@
             android:layout_alignBottom="@+id/plotPopup"
             android:layout_centerHorizontal="true"
             android:text=""
+            android:padding="5dp"
             android:background="@color/black_start" />
     
     <RelativeLayout
@@ -166,7 +169,6 @@
             android:id="@+id/satelliteBaselayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            
             android:onClick="satelliteBaselayer"
             android:text="Satellite" 
             android:background="@drawable/btn_default2"
