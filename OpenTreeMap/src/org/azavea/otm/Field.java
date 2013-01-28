@@ -150,7 +150,9 @@ public class Field {
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
         ((TextView)container.findViewById(R.id.field_value))
         	.setText(formatUnit(getValueForKey(this.key, model)));
-        
+        if (isKeyPending(this.key, model)) {
+        	((Button)container.findViewById(R.id.pending)).setVisibility(View.VISIBLE);
+        }
         return container;
 	}
 
@@ -336,6 +338,15 @@ public class Field {
 			return plot.getPendingEditForKey(key).getLatestValue();
 		} else {
 			return getValueForKey(key, plot.getData());
+		}
+	}
+	
+	public static boolean isKeyPending(String key, Plot plot) throws JSONException {
+		PendingEditDescription pending =  plot.getPendingEditForKey(key);
+		if (pending == null) {
+			return false; 
+		} else {
+			return true;
 		}
 	}
 	

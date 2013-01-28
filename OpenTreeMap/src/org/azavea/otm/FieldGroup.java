@@ -59,11 +59,18 @@ public class FieldGroup {
 	}
 
 	private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user) {
+		try {
+			Log.d("PENDING", model.getData().getJSONObject("pending_edits").toString());
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
 		View fieldView = null;
 		int renderedFieldCount = 0;
+
 		
         ((TextView)group.findViewById(R.id.group_name)).setText(this.title);
         if (this.title != null) {
