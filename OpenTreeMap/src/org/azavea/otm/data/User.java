@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User extends Model {
+	public static int ADMINISTRATOR_LEVEL = 0; //TODO 
+	
 	public User() throws JSONException {
 		data = new JSONObject();
 	}

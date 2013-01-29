@@ -6,6 +6,7 @@ import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ public class EcoField extends Field {
 	}
 	
 	@Override
-	public View renderForDisplay(LayoutInflater layout, Plot model) 
+	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) 
 			throws JSONException {
 		View container = layout.inflate(R.layout.plot_ecofield_row, null);
         ((TextView)container.findViewById(R.id.field_label)).setText(this.label);

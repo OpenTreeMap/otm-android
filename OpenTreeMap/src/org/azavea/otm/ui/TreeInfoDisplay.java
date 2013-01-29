@@ -49,7 +49,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     		setHeaderValues(plot);
     		showPositionOnMap();
     		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-    			View fieldGroup = group.renderForDisplay(layout, plot);
+    			View fieldGroup = group.renderForDisplay(layout, plot, TreeInfoDisplay.this);
     			if (fieldGroup != null) {
     				fieldList.addView(fieldGroup);
     			}

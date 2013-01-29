@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class FieldGroup {
 		return fields;
 	}
 
-	private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user) {
+	private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user, Context context) {
 		try {
 			Log.d("PENDING", model.getData().getJSONObject("pending_edits").toString());
 		} catch (JSONException e1) {
@@ -78,10 +79,10 @@ public class FieldGroup {
 	        	try {
 	        		switch (mode) {
 	        			case VIEW:
-	        				fieldView = field.getValue().renderForDisplay(layout, model);
+	        				fieldView = field.getValue().renderForDisplay(layout, model, context);
 	        				break;
 	        			case EDIT:
-	        				fieldView= field.getValue().renderForEdit(layout, model, user);
+	        				fieldView= field.getValue().renderForEdit(layout, model, user, context);
 	        				break;
 	        		}
 	        		
@@ -106,17 +107,16 @@ public class FieldGroup {
 	 * Render a field group and its child fields for viewing
 	 * @throws JSONException 
 	 */
-	public View renderForDisplay(LayoutInflater layout, Plot model) {
-		return render(layout, model, DisplayMode.VIEW, null); 
-
+	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) {
+		return render(layout, model, DisplayMode.VIEW, null, context);
 	}
 	
 	/**
 	 * Render a field group and its child fields for editing
 	 * @throws JSONException 
 	 */
-	public View renderForEdit(LayoutInflater layout, Plot model, User user) {
-        return render(layout, model, DisplayMode.EDIT, user);
+	public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
+        return render(layout, model, DisplayMode.EDIT, user, context);
 	}
 
 	public void update(Model model) throws Exception {

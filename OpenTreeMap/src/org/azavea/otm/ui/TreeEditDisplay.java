@@ -170,7 +170,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		// Add all the fields to the display for edit mode
 		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-			View fieldGroup = group.renderForEdit(layout, plot, App.getLoginManager().loggedInUser);
+			View fieldGroup = group.renderForEdit(layout, plot, App.getLoginManager().loggedInUser, TreeEditDisplay.this);
 			if (fieldGroup != null) {
 				fieldList.addView(fieldGroup);
 			}

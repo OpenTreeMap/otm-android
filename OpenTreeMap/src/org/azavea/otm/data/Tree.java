@@ -2,10 +2,13 @@ package org.azavea.otm.data;
 
 import java.util.ArrayList;
 
+import org.azavea.otm.App;
 import org.azavea.otm.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 public class Tree extends Model {
 	private Plot plot = null;
@@ -235,4 +238,19 @@ public class Tree extends Model {
 		return idList;
 	}
 	
+	//TODO what about other fields like height and canopy?  See config
+	public Object get(String key) throws JSONException {
+		return get(false, key);
+	}
+	
+	public Object get(boolean currentOnly, String key) throws JSONException {
+		if (key.equals("sci_name")) {
+			return getScientificName();
+		}
+		if (key.equals("dbh")) {
+			return getDbh(currentOnly);
+		}	
+		Log.e(App.LOG_TAG, "Unknown Tree key field");
+		return null;
+	}
 }

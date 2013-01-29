@@ -35,4 +35,8 @@ public class PendingEdit {
 		// TODO
 		throw new Exception("not implemented");
 	}
+	
+	public void setData(JSONObject data) {
+		this.data = data;
+	}
 }

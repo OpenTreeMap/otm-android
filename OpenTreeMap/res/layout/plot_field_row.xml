@@ -16,14 +16,29 @@
          android:textSize="14dp"
          android:textStyle="bold" />
     
-     <TextView
-         android:id="@+id/field_value"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginBottom="5dp"
-         android:gravity="center_vertical"
-         android:paddingLeft="25dp"
-         android:textColor="@color/text_dark"
-         android:textSize="12dip" />
-       
+     <LinearLayout
+         android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+	     <TextView
+	         android:id="@+id/field_value"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_marginBottom="5dp"
+	         android:gravity="center_vertical"
+	         android:paddingLeft="25dp"
+	         android:textColor="@color/text_dark"
+	         android:textSize="12dip" />
+	     
+	   	<Button android:id="@+id/pending"
+	   	    android:layout_marginLeft="3dp"
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:textSize="12dip"
+			android:textColor="#FFFFFF"
+			android:background="#0000FF"
+			android:onClick="showPendingField"
+			android:padding="3dp"
+			android:visibility="invisible"
+	     />
+       </LinearLayout>
 </LinearLayout>

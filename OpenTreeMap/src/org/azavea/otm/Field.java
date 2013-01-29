@@ -10,12 +10,16 @@ import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
+import org.azavea.otm.ui.PendingItemDisplay;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Node;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.sax.StartElementListener;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -143,7 +147,7 @@ public class Field {
 	/* 
 	 * Render a view to display the given model field in view mode
 	 */
-	public View renderForDisplay(LayoutInflater layout, Plot model) throws JSONException {
+	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) throws JSONException {
 		loadChoices();
 
 		View container = layout.inflate(R.layout.plot_field_row, null);
@@ -151,7 +155,10 @@ public class Field {
         ((TextView)container.findViewById(R.id.field_value))
         	.setText(formatUnit(getValueForKey(this.key, model)));
         if (isKeyPending(this.key, model)) {
-        	((Button)container.findViewById(R.id.pending)).setVisibility(View.VISIBLE);
+        	Button pendingButton = (Button)container.findViewById(R.id.pending);
+        	bindPendingEditClickHandler(pendingButton, this.key, model, context);
+        	pendingButton.setVisibility(View.VISIBLE);
+        	
         }
         return container;
 	}
@@ -159,7 +166,7 @@ public class Field {
 	/* 
 	 * Render a view to display the given model field in edit mode
 	 */
-	public View renderForEdit(LayoutInflater layout, Plot model, User user) 
+	public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) 
 			throws JSONException {
 		
 		View container = null;
@@ -355,7 +362,7 @@ public class Field {
 	 * exist or the value of the key, it will return a null value
 	 * @throws JSONException 
 	 */
-	protected static Object getValueForKey(String key, JSONObject json) {
+	public static Object getValueForKey(String key, JSONObject json) {
 		try {
 			String[] keys = key.split("\\.");
 			NestedJsonAndKey found = getValueForKey(keys, 0, json, false);
@@ -528,6 +535,20 @@ public class Field {
 			}
 		}
 		
+	}
+	
+	public void bindPendingEditClickHandler(Button b, final String key, final Plot model, final Context context ) {
+		b.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
+				pendingItemDisplay.putExtra("plot", model.getData().toString());
+				pendingItemDisplay.putExtra("key", key);
+				pendingItemDisplay.putExtra("label" , label);
+				context.startActivity(pendingItemDisplay);
+			}
+			
+		});
 	}
 
 }

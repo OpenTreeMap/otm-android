@@ -2,12 +2,14 @@ package org.azavea.otm.data;
 
 import java.util.ArrayList;
 
+import org.azavea.otm.App;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
@@ -318,5 +320,38 @@ public class Plot extends Model {
 			
 			tree.addImageToList(image);
 		}
+	}
+
+	// A mapping of configuration.xml field names to typed helper methods.
+	public Object get(boolean currentOnly, String key) throws JSONException  {
+		String[] keys = key.split("\\.");
+		if (keys[0].equals("tree")){
+			if (getTree() == null) {
+				return null;
+			} else {
+				return getTree().get(currentOnly, keys[1]);
+			}
+		} else {
+			if (keys.equals("plot_width")) {
+				return getWidth();
+			} 
+			if (keys.equals("plot_length")) {
+				return getLength();
+			} 
+			if (keys.equals("power_lines")) {
+				return getPowerlineConflictPotential();
+			} 
+			if (keys.equals("sidewalk_damage")) {
+				return getSidewalkDamage();
+			} 
+		}
+
+		Log.e(App.LOG_TAG, "UNRECOGNIZED key!");
+		return null;
+		
+	}
+	
+	public Object get(String key) throws JSONException {
+		return get(false, key);
 	}
 }
