@@ -11,10 +11,12 @@ import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
 import org.azavea.otm.ui.PendingItemDisplay;
+import org.azavea.otm.ui.TreeInfoDisplay;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Node;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -97,8 +99,6 @@ public class Field {
 	 */
 	public String owner = null;
 	
-	public static int PENDING_ITEM_UPDATE_OK = 888;
-	public static int PENDING_ITEM_UPDATE_CANCELLED = 999;
 	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
 			String format, String type, String choice, String owner) {
@@ -546,7 +546,9 @@ public class Field {
 				pendingItemDisplay.putExtra("plot", model.getData().toString());
 				pendingItemDisplay.putExtra("key", key);
 				pendingItemDisplay.putExtra("label" , label);
-				context.startActivity(pendingItemDisplay);
+				
+				Activity a = (Activity)context;
+				a.startActivityForResult(pendingItemDisplay, TreeInfoDisplay.EDIT_REQUEST);
 			}
 			
 		});

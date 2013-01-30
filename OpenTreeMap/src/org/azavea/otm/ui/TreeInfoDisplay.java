@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeInfoDisplay extends TreeDisplay{
-	final private static int EDIT_REQUEST = 1;
+	public final static int EDIT_REQUEST = 1;
 	ImageView plotImage;
 	
     public void onCreate(Bundle savedInstanceState) {

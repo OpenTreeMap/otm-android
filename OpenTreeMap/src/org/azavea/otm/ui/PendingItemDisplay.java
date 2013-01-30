@@ -239,7 +239,7 @@ public class PendingItemDisplay extends Activity {
 				if (ped == null) {
 					Intent intent = new Intent();
 					intent.putExtra("plot", plotData.toString());
-					setResult(Field.PENDING_ITEM_UPDATE_OK, intent);
+					setResult(RESULT_OK, intent);
 					finish();
 				} else {
 					int nextIdToReject = ped.getPendingEdits().get(0).getId();
@@ -268,18 +268,17 @@ public class PendingItemDisplay extends Activity {
 		public void onSuccess(JSONObject plotData) {
 			Intent intent = new Intent();
 			intent.putExtra("plot", plotData.toString());
-			setResult(Field.PENDING_ITEM_UPDATE_OK, intent);
+			setResult(RESULT_OK, intent);
 			finish();
 		};
 		protected void handleFailureMessage(Throwable arg0, String arg1) {
-			Log.e("PENDING", arg0.toString());
-			Log.e("PENDING", arg1);
+			arg0.printStackTrace();
 			Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
 		};		
 	};
 	
 	public void handleCancelClick(View view) {
-		setResult(Field.PENDING_ITEM_UPDATE_CANCELLED);
+		setResult(Activity.RESULT_CANCELED);
 		finish();
 	}
 	
