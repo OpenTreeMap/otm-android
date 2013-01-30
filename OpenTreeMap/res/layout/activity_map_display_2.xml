@@ -50,27 +50,39 @@
 	    
 	</LinearLayout>
  
-    <Button
-        android:id="@+id/treeAddNext"
-        android:layout_alignParentLeft="true"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    
+    <LinearLayout
+        android:id="@+id/treeAddInstructionContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/treeAddInstructions"
+        android:layout_alignBottom="@+id/plotPopup"
+        android:background="@color/black_start"
+        android:visibility="invisible">
+        
+        
+    <TextView
+            android:id="@+id/treeAddInstructions"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:background="@color/black_start"
+            android:gravity="center" />
+
+   	<Button
+        android:id="@+id/treeAddNext"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:text="next" 
        	android:background="@drawable/btn_default2"
         android:padding="@dimen/padding_12"
-        android:onClick="submitNewTree"/>
+        android:onClick="submitNewTree"
+        android:layout_margin="10dp"/>
     
-    <TextView
-            android:id="@+id/treeAddInstructions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/plotPopup"
-            android:layout_centerHorizontal="true"
-            android:text=""
-            android:padding="5dp"
-            android:background="@color/black_start" />
+    
+    </LinearLayout>    
     
     <RelativeLayout
         android:id="@+id/plotPopup"

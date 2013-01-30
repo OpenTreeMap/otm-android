@@ -115,6 +115,7 @@ public class MainMapActivity extends MapActivity{
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        setTreeAddMode(CANCEL);
     }
 
     
@@ -273,7 +274,12 @@ public class MainMapActivity extends MapActivity{
             	startActivityForResult(filter, FILTER_INTENT);
             	break;
             case R.id.menu_add:
-            	setTreeAddMode(ADD_MARKER);
+            	if(App.getLoginManager().isLoggedIn()) {
+                	setTreeAddMode(CANCEL);
+            		setTreeAddMode(ADD_MARKER);
+            	} else {
+            		startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
+            	}
                 break;
         }
         return true;
@@ -417,10 +423,11 @@ public class MainMapActivity extends MapActivity{
     
     private void displayInstruction(String instruction) {
     	TextView t = (TextView) findViewById(R.id.treeAddInstructions);
+    	View container = findViewById(R.id.treeAddInstructionContainer);
     	if (instruction == null) {
-    		t.setVisibility(TextView.INVISIBLE);
+    		container.setVisibility(View.INVISIBLE);
     	} else {
-    		t.setVisibility(TextView.VISIBLE);
+    		container.setVisibility(View.VISIBLE);
     		t.setText(instruction);
     	}
     }
