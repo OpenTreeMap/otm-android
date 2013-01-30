@@ -71,14 +71,16 @@ public class PendingItemDisplay extends Activity {
 		
     }
 	
-	//TODO this code belongs in User.
+//TODO
 	public boolean canApprovePendingEdits() {
-		try {
+		return false;	
+		/*try {
 			return plot.canDeletePlot();
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
 		}
+		*/
 	}
 	
 	
