@@ -226,8 +226,8 @@ public class RequestGenerator {
 				loginManager.loggedInUser.getPassword(), handler);
 	}
 
-	public void acceptPendingEdit(Context context, int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
-		String url = String.format("/pending-edits/%d/accept", id);
+	public void approvePendingEdit(Context context, int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
+		String url = String.format("/pending-edits/%d/approve", id);
 		client.postWithAuthentication(context, url, loginManager.loggedInUser.getUserName(), 
 				loginManager.loggedInUser.getPassword(), handler);
 	}

@@ -123,13 +123,14 @@ public class PendingItemDisplay extends Activity {
 			View pendingRow = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
 			String value = pendingEdit.getValue();
 			String username = pendingEdit.getUsername();
+			int id = pendingEdit.getId();
 			String date = "";
 			try {
 				date = pendingEdit.getSubmittedTime().toLocaleString();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			int id = pendingEdit.getId();
+			int pendingEditId = pendingEdit.getId();
 						
 			((TextView)pendingRow.findViewById(R.id.value)).setText(value);
 			((TextView)pendingRow.findViewById(R.id.date)).setText(date);
@@ -138,6 +139,8 @@ public class PendingItemDisplay extends Activity {
 			CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
 			allPending.add(cb);
 			cb.setOnClickListener(checkBoxClickListener);
+			cb.setTag(pendingEditId);
+			
 			container.addView(pendingRow);
 		}
 	}
@@ -169,8 +172,7 @@ public class PendingItemDisplay extends Activity {
 	
 	public void handleSaveClick(View view) {
 		if (selectedValue == null) {
-			setResult(Field.PENDING_ITEM_UPDATE_CANCELLED);
-			finish();
+			Toast.makeText(PendingItemDisplay.this, "Please select an item.", Toast.LENGTH_SHORT).show();
 		} else if (selectedValue == currentValue) {
 			try {
 				rejectAll();
@@ -179,20 +181,29 @@ public class PendingItemDisplay extends Activity {
 				Toast.makeText(this, "There was a problem saving the pending edits", Toast.LENGTH_LONG).show();
 			}
 		} else {
-			accept(selectedValue);
+			approve(selectedValue);
 		}
 	}
 	
-	private void accept(CheckBox c) {
+	private void approve(CheckBox c) {
 		RequestGenerator rc = new RequestGenerator();
-		int idToAccept = (Integer) c.getTag();
-		if (c.getTag() != null) {
+		
+		Object tag = c.getTag();
+		if (tag != null) {
+			Integer idToApprove = null;
 			try {
-				rc.acceptPendingEdit(PendingItemDisplay.this, idToAccept, handleAcceptedPendingEdit);
+				idToApprove = (Integer)tag;
 			} catch (Exception e) {
-				Toast.makeText(PendingItemDisplay.this, "Error accepting pending edit", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
-			} 
+			}
+			if (idToApprove != null) {
+				try {
+					rc.approvePendingEdit(PendingItemDisplay.this, idToApprove.intValue(), handleApprovedPendingEdit);
+				} catch (Exception e) {
+					Toast.makeText(PendingItemDisplay.this, "Error approving pending edit", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				} 
+			}
 		}
 	}
 	
@@ -253,7 +264,7 @@ public class PendingItemDisplay extends Activity {
 		};
 	}
 	
-	private JsonHttpResponseHandler handleAcceptedPendingEdit = new JsonHttpResponseHandler() {
+	private JsonHttpResponseHandler handleApprovedPendingEdit = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject plotData) {
 			Intent intent = new Intent();
 			intent.putExtra("plot", plotData.toString());
@@ -266,5 +277,10 @@ public class PendingItemDisplay extends Activity {
 			Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
 		};		
 	};
+	
+	public void handleCancelClick(View view) {
+		setResult(Field.PENDING_ITEM_UPDATE_CANCELLED);
+		finish();
+	}
 	
 }
