@@ -17,6 +17,7 @@ package org.azavea.otm.ui;
  */
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
+import com.joelapenna.foursquared.widget.SegmentedButton;
+import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -105,6 +108,7 @@ public class MainMapActivity extends MapActivity{
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
 		setTreeAddMode(CANCEL);
+		setUpBasemapControls();
     }
 
     @Override
@@ -547,6 +551,35 @@ public class MainMapActivity extends MapActivity{
 				Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT);
 			}
     	}
+    }
+    
+    public void setUpBasemapControls() {
+    	// Create the segmented buttons
+        SegmentedButton buttons = (SegmentedButton)findViewById(R.id.basemap_controls);
+        buttons.clearButtons();
+        
+        ArrayList<String> buttonNames = new ArrayList<String>();
+        buttonNames.add("map");
+        buttonNames.add("satellite");
+        buttonNames.add("hybrid");
+        buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
+        
+        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
+            @Override
+            public void onClick(int index) {
+            	switch (index) {
+            	case 0:
+            		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); 
+            		break;
+            	case 1:
+            	   	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            		break;
+            	case 2:
+            		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);           		
+            		break;
+            	}
+            }
+        });	
     }
 }	
  

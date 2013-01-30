@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    xmlns:foursquared="http://schemas.android.com/apk/res/org.azavea.otm">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
 	  android:id="@+id/map"
@@ -136,47 +137,26 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/location_bar" 
-        android:layout_marginTop="@dimen/mapbtn_top">
-        <Button
-            android:id="@+id/mapBaselayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="mapBaselayer"
-            android:text="Map" 
-            android:background="@drawable/btn_default2"
-            android:layout_marginLeft="@dimen/mapbtn_left"
-            android:padding="@dimen/padding_12"
-        />
-
-        <Button
-            android:id="@+id/hybridBaselayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="hybridBaselayer"
-            android:text="Hybrid" 
-            android:background="@drawable/btn_default2"
-            android:padding="@dimen/padding_12"
-            android:layout_marginLeft="@dimen/mapbtn_left"
-           
-            />
-
-        <Button
-            android:id="@+id/satelliteBaselayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="satelliteBaselayer"
-            android:text="Satellite" 
-            android:background="@drawable/btn_default2"
-            android:layout_marginLeft="@dimen/mapbtn_left"
-            android:padding="@dimen/padding_12"
-            
-            />
-    </LinearLayout>
+	<com.joelapenna.foursquared.widget.SegmentedButton
+      android:id="@+id/basemap_controls"
+      android:layout_width="200dp"
+      android:layout_height="wrap_content"
+      foursquared:gradientColorOnStart="#4cc39d"
+      foursquared:gradientColorOnEnd="#3aa27c"
+      foursquared:gradientColorOffStart="#3b9e7d"
+      foursquared:gradientColorOffEnd="#2e8465"
+      foursquared:gradientColorSelectedStart="#FF00AA"
+      foursquared:gradientColorSelectedEnd="#FF00AA"
+      foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue"
+      foursquared:strokeColor="#32906e"
+      foursquared:strokeWidth="1dip"
+      foursquared:cornerRadius="4dip"
+      foursquared:btnPaddingTop="7dip"
+      foursquared:btnPaddingBottom="7dip" 
+      android:layout_below="@+id/location_bar"
+      android:layout_marginTop="5dp"
+      android:layout_marginLeft="5dp"/> 
+    
     
 </RelativeLayout>
 
