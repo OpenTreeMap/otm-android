@@ -26,6 +26,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text=""
+            android:visibility="invisible"
            
         />
         <TextView

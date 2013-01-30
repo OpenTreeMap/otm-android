@@ -73,19 +73,12 @@ public class PendingItemDisplay extends Activity {
 	
 	//TODO this code belongs in User.
 	public boolean canApprovePendingEdits() {
-		User u = App.getLoginManager().loggedInUser;
 		try {
-			if (u != null) {
-				UserType t = u.getUserType();
-				int userLevel = t.getLevel();
-				if (userLevel > User.ADMINISTRATOR_LEVEL) {
-					return true;
-				}
-			}
-		} catch (Exception e) {
+			return plot.canDeletePlot();
+		} catch (JSONException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 	
 	
@@ -110,9 +103,11 @@ public class PendingItemDisplay extends Activity {
 		((TextView)row.findViewById(R.id.user_name)).setText("");
 		((TextView)row.findViewById(R.id.date)).setText("");
 		
-		currentValue = (CheckBox)row.findViewById(R.id.checkBox);
-		currentValue.setOnClickListener(checkBoxClickListener);
-		
+		if (canApprovePendingEdits()) {
+			currentValue = (CheckBox)row.findViewById(R.id.checkBox);
+			currentValue.setOnClickListener(checkBoxClickListener);
+			currentValue.setVisibility(View.VISIBLE);
+		} 
 	}
 	
 	private void renderPendingValues() throws JSONException {
@@ -136,11 +131,13 @@ public class PendingItemDisplay extends Activity {
 			((TextView)pendingRow.findViewById(R.id.date)).setText(date);
 			((TextView)pendingRow.findViewById(R.id.user_name)).setText(username);
 			
-			CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
-			allPending.add(cb);
-			cb.setOnClickListener(checkBoxClickListener);
-			cb.setTag(pendingEditId);
-			
+			if (canApprovePendingEdits()) {
+				CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
+				allPending.add(cb);
+				cb.setOnClickListener(checkBoxClickListener);
+				cb.setTag(pendingEditId);
+				cb.setVisibility(View.VISIBLE);
+			}
 			container.addView(pendingRow);
 		}
 	}
@@ -149,11 +146,17 @@ public class PendingItemDisplay extends Activity {
 		((TextView)findViewById(R.id.pending_edit_label)).setText(label);
 	}
 	
+	private void renderApprovalButtons() {
+		if (canApprovePendingEdits()) {
+			findViewById(R.id.nav).setVisibility(View.VISIBLE);
+		}
+	}
 	
 	public void render() throws JSONException {
 		renderTitle();
 		renderCurrentValue();
 		renderPendingValues();
+		renderApprovalButtons();
 	}
 
 	

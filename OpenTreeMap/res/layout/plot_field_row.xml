@@ -29,16 +29,19 @@
 	         android:textColor="@color/text_dark"
 	         android:textSize="12dip" />
 	     
-	   	<Button android:id="@+id/pending"
+	   
+	     
+	     
+	   	<ImageButton android:id="@+id/pending"
 	   	    android:layout_marginLeft="3dp"
 			android:layout_width="30dp"
 			android:layout_height="30dp"
 			android:textSize="12dip"
 			android:textColor="#FFFFFF"
-			android:background="#0000FF"
 			android:onClick="showPendingField"
 			android:padding="3dp"
 			android:visibility="invisible"
+			android:src="@drawable/avplay"
 	     />
        </LinearLayout>
 </LinearLayout>

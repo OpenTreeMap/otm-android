@@ -156,7 +156,7 @@ public class Field {
         ((TextView)container.findViewById(R.id.field_value))
         	.setText(formatUnit(getValueForKey(this.key, model)));
         if (isKeyPending(this.key, model)) {
-        	Button pendingButton = (Button)container.findViewById(R.id.pending);
+        	View pendingButton = container.findViewById(R.id.pending);
         	bindPendingEditClickHandler(pendingButton, this.key, model, context);
         	pendingButton.setVisibility(View.VISIBLE);
         	
@@ -538,7 +538,7 @@ public class Field {
 		
 	}
 	
-	public void bindPendingEditClickHandler(Button b, final String key, final Plot model, final Context context ) {
+	public void bindPendingEditClickHandler(View b, final String key, final Plot model, final Context context ) {
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
