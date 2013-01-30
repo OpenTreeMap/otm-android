@@ -219,4 +219,17 @@ public class RequestGenerator {
 		client.get("/cql-filter", params, handler);
 		
 	}
+	
+	public void rejectPendingEdit(Context context, int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
+		String url = String.format("/pending-edits/%d/reject", id);
+		client.postWithAuthentication(context, url, loginManager.loggedInUser.getUserName(), 
+				loginManager.loggedInUser.getPassword(), handler);
+	}
+
+	public void acceptPendingEdit(Context context, int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
+		String url = String.format("/pending-edits/%d/accept", id);
+		client.postWithAuthentication(context, url, loginManager.loggedInUser.getUserName(), 
+				loginManager.loggedInUser.getPassword(), handler);
+	}
+
 }

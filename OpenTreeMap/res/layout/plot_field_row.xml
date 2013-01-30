@@ -31,8 +31,8 @@
 	     
 	   	<Button android:id="@+id/pending"
 	   	    android:layout_marginLeft="3dp"
-			android:layout_width="15dp"
-			android:layout_height="15dp"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
 			android:textSize="12dip"
 			android:textColor="#FFFFFF"
 			android:background="#0000FF"

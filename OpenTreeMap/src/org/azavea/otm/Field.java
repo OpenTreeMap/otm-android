@@ -31,8 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Field {
-	
-
 	private static final String TREE_SPECIES = "tree.species";
 
 	private HashMap<String,String> unitFormatter = new HashMap<String,String>(){
@@ -98,6 +96,9 @@ public class Field {
 	 *  it is only setup to support species list picker
 	 */
 	public String owner = null;
+	
+	public static int PENDING_ITEM_UPDATE_OK = 888;
+	public static int PENDING_ITEM_UPDATE_CANCELLED = 999;
 	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
 			String format, String type, String choice, String owner) {

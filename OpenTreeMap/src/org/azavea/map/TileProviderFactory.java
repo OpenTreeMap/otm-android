@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.TileProvider;
 
 public class TileProviderFactory {
 	
+	//TODO don't hardcode the address!
 	private static final String GEOSERVER_OTM_BASIC =
     		"http://phillytreemap.org/geoserver/wms" +
     		"?service=WMS" +
@@ -26,6 +27,7 @@ public class TileProviderFactory {
     		"&format=image/png" +				
     		"&transparent=true";	
 
+	//TODO nor here.
 	private static final String GEOSERVER_OTM_FILTERABLE =
     		"http://phillytreemap.org/geoserver/wms" +
     		"?service=WMS" +

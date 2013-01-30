@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
@@ -21,13 +22,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.CheckBox;
@@ -60,7 +61,7 @@ public class PendingItemDisplay extends Activity {
 			render();
 		} catch (JSONException e) {
 			e.printStackTrace();
-			Toast.makeText(this, "Error rendering pending edit.", Toast.LENGTH_SHORT);
+			Toast.makeText(this, "Error rendering pending edit.", Toast.LENGTH_SHORT).show();
 		}
 		
 		Log.d("PENDING", "key: " + key);
@@ -70,6 +71,7 @@ public class PendingItemDisplay extends Activity {
 		
     }
 	
+	//TODO this code belongs in User.
 	public boolean canApprovePendingEdits() {
 		User u = App.getLoginManager().loggedInUser;
 		try {
@@ -108,6 +110,9 @@ public class PendingItemDisplay extends Activity {
 		((TextView)row.findViewById(R.id.user_name)).setText("");
 		((TextView)row.findViewById(R.id.date)).setText("");
 		
+		currentValue = (CheckBox)row.findViewById(R.id.checkBox);
+		currentValue.setOnClickListener(checkBoxClickListener);
+		
 	}
 	
 	private void renderPendingValues() throws JSONException {
@@ -130,6 +135,9 @@ public class PendingItemDisplay extends Activity {
 			((TextView)pendingRow.findViewById(R.id.date)).setText(date);
 			((TextView)pendingRow.findViewById(R.id.user_name)).setText(username);
 			
+			CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
+			allPending.add(cb);
+			cb.setOnClickListener(checkBoxClickListener);
 			container.addView(pendingRow);
 		}
 	}
@@ -146,80 +154,117 @@ public class PendingItemDisplay extends Activity {
 	}
 
 	
-	/*
-	private OnClickListener createCheckboxClickListener(final CheckBox c) {
-		return new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				selectedValue = c; 
-				for (CheckBox cc : allPending) {
-					cc.setChecked(c == cc);
-				}
-			}			
-		};
-	}
+	public OnClickListener checkBoxClickListener  = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			selectedValue = (CheckBox)v;
+			currentValue.setChecked(currentValue == v);
+			for (CheckBox cc : allPending) {
+				cc.setChecked(v == cc);
+			}
+		}					
+	};
+	
 	
 	public void handleSaveClick(View view) {
 		if (selectedValue == null) {
-			backToTreeList();
+			setResult(Field.PENDING_ITEM_UPDATE_CANCELLED);
+			finish();
 		} else if (selectedValue == currentValue) {
-			rejectAll();
+			try {
+				rejectAll();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				Toast.makeText(this, "There was a problem saving the pending edits", Toast.LENGTH_LONG).show();
+			}
 		} else {
 			accept(selectedValue);
 		}
-		//TODO...
-		//We are going to navigate to another activity here.. Is there a problem
-		//if the REST requests from above haven't resolved yet?
-		backToTreeList();
 	}
 	
 	private void accept(CheckBox c) {
 		RequestGenerator rc = new RequestGenerator();
+		int idToAccept = (Integer) c.getTag();
 		if (c.getTag() != null) {
-			//rc.acceptPendingEdit(c.getTag(), pendingEditAccepted	);
+			try {
+				rc.acceptPendingEdit(PendingItemDisplay.this, idToAccept, handleAcceptedPendingEdit);
+			} catch (Exception e) {
+				Toast.makeText(PendingItemDisplay.this, "Error accepting pending edit", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} 
 		}
 	}
 	
-	private void rejectAll() {
+	private void rejectAll() throws JSONException {
+		PendingEditDescription ped = plot.getPendingEditForKey(key);
+		
+		int firstIdToReject = ped.getPendingEdits().get(0).getId(); 
 		RequestGenerator rc = new RequestGenerator();
-	}
-	
-	private void backToTreeList() {
-		Intent treeList = new Intent();
-		// TODO put plot..
-		startActivity(treeList);
-	}
-	
-	private JsonHttpResponseHandler createRejectionResponseHandlder(final String key,JSONObject plotData) {
-		Plot = new Plot();
-		plot.setData(plotData);
-		PendingEditDescription pd = plot.getPendingEditForKey(key);
-		if (pd == null) {
-			return new JsonHttpResponseHandler() {
-				@Override
-				public void onSuccess(JSONObject plotData) {
-					Intent treeInfoIntent = new Intent(TreeInfoDisplay.class);
-					treeInfoIntent.putExtra("plot", plotData.toString());
-					startActivity(treeInfoIntent);
-				};
-				@Override
-				protected void handleFailureMessage(Throwable arg0, String arg1) {
-					Log.e("PENDING", arg0.toString());
-					Log.e("PENDING", arg1);
-					Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT);
-				};
-		} else {
-			return new JsonHttpResponseHandler() {
-				public void onSuccess(org.json.JSONArray plotData) {
-					return createRejectionResponseHandler(key, plotData.toString());
-				};
-				protected void handleFailureMessage(Throwable arg0, String arg1) {
-					Log.e("PENDING", arg0.toString());
-					Log.e("PENDING", arg1);
-					Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT);
-				};
-			}
+		try {
+			rc.rejectPendingEdit(PendingItemDisplay.this, firstIdToReject, createRejectionResponseHandlder(key));
+		} catch (UnsupportedEncodingException e) {
+			Toast.makeText(PendingItemDisplay.this, "Error rejecting all pending edits", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
 	}
-	*/
+		
+	public  JsonHttpResponseHandler createRejectionResponseHandlder(final String key) {
+		return new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(JSONObject plotData) {
+				try {
+					processNextId(plotData);
+				} catch (JSONException e) {
+					e.printStackTrace();
+					doError();
+				}
+			}
+				
+			protected void processNextId(JSONObject plotData) throws JSONException {
+				Plot plot = new Plot();
+				plot.setData(plotData);
+				PendingEditDescription ped = plot.getPendingEditForKey(key);
+				if (ped == null) {
+					Intent intent = new Intent();
+					intent.putExtra("plot", plotData.toString());
+					setResult(Field.PENDING_ITEM_UPDATE_OK, intent);
+					finish();
+				} else {
+					int nextIdToReject = ped.getPendingEdits().get(0).getId();
+					RequestGenerator rc = new RequestGenerator();
+					try {
+						rc.rejectPendingEdit(PendingItemDisplay.this, nextIdToReject, createRejectionResponseHandlder(key));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+						doError();
+					} 
+				}
+			}
+			protected void handleFailureMessage(Throwable arg0, String arg1) {
+				Log.e("PENDING", arg0.toString());
+				Log.e("PENDING", arg1);
+				doError();
+			}
+					
+			protected void doError() {
+				Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
+			}
+		};
+	}
+	
+	private JsonHttpResponseHandler handleAcceptedPendingEdit = new JsonHttpResponseHandler() {
+		public void onSuccess(JSONObject plotData) {
+			Intent intent = new Intent();
+			intent.putExtra("plot", plotData.toString());
+			setResult(Field.PENDING_ITEM_UPDATE_OK, intent);
+			finish();
+		};
+		protected void handleFailureMessage(Throwable arg0, String arg1) {
+			Log.e("PENDING", arg0.toString());
+			Log.e("PENDING", arg1);
+			Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
+		};		
+	};
+	
 }

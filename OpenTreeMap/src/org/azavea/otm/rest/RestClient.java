@@ -152,6 +152,19 @@ public class RestClient {
 				responseHandler);
 	}	
 	
+	public void postWithAuthentication(Context context,
+			   String url,
+			   String username, 
+			   String password,
+			   AsyncHttpResponseHandler responseHandler) throws UnsupportedEncodingException {
+
+		String completeUrl = getAbsoluteUrl(url);
+		completeUrl = prepareUrl(completeUrl);
+		Header[] headers = {createBasicAuthenticationHeader(username, password)};
+		StringEntity modelEntity = new StringEntity("");
+		client.post(context, completeUrl, headers, modelEntity, "application/json", 
+		responseHandler);
+}	
 	
 	
 	// This overloading of the postWithAuthentication method takes a bitmap, and posts
