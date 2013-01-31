@@ -38,6 +38,7 @@ public class NearbyList implements InfoList {
 	private boolean filterPending;
 	
 	public NearbyList() {
+		//TODO these values should come from config.
 		lat = 40;
 		lon = -75.2;
 		filterRecent = false;
@@ -132,10 +133,12 @@ public class NearbyList implements InfoList {
 		String provider = locationManager.getBestProvider(crit, true);
 		
 		Location loc = locationManager.getLastKnownLocation(provider);
-		lat = loc.getLatitude();
-		lon = loc.getLongitude();
+		if (loc != null) {
+			lat = loc.getLatitude();
+			lon = loc.getLongitude();
+			update();
+		}
 		
-		update();
 	}
 	
 	public void update() {
