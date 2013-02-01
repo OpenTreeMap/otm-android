@@ -94,7 +94,7 @@
         android:layout_alignParentTop="false"
         android:layout_centerHorizontal="true"
         android:background="@color/popup_background"
-        android:minHeight="100dp"
+        android:minHeight="110dp"
         android:visibility="invisible"
         android:onClick="showFullTreeInfo" >
 
@@ -104,7 +104,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            
             android:background="@color/no_image_background"
             android:minHeight="80dp"
             android:minWidth="80dp" />
@@ -114,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/plotImage"
             android:text="@string/species_missing"
             android:textAppearance="?android:attr/textAppearanceLarge"
