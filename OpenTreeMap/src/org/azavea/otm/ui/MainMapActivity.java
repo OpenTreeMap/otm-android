@@ -61,7 +61,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
+//import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -82,10 +82,10 @@ public class MainMapActivity extends MapActivity{
 	private static final int FILTER_INTENT = 1;
 	private static final int INFO_INTENT = 2;
 	// modes for the add marker feature
-	private static final int ADD_MARKER = 1;
-	private static final int SET_MARKER_POSITION= 2;
+	private static final int STEP1 = 1;
+	private static final int STEP2 = 2;
 	private static final int CANCEL = 3;
-	private static final int DO_EDIT_PLOT = 4;
+	private static final int FINISH = 4;
 	
 	private TextView plotSpeciesView;
 	private TextView plotAddressView;
@@ -276,7 +276,7 @@ public class MainMapActivity extends MapActivity{
             case R.id.menu_add:
             	if(App.getLoginManager().isLoggedIn()) {
                 	setTreeAddMode(CANCEL);
-            		setTreeAddMode(ADD_MARKER);
+            		setTreeAddMode(STEP1);
             	} else {
             		startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
             	}
@@ -326,7 +326,8 @@ public class MainMapActivity extends MapActivity{
  	
  	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    	Context context = MainMapActivity.this;
+    	
+    	/*Context context = MainMapActivity.this;
     	LocationManager locationManager = 
     			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
     	Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -338,6 +339,7 @@ public class MainMapActivity extends MapActivity{
     	} else {
     		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
     	}
+    	*/
     }
     
     @Override
@@ -417,56 +419,49 @@ public class MainMapActivity extends MapActivity{
 		       .title("New Tree")
 		    );
 			plotMarker.setDraggable(true);
-			setTreeAddMode(SET_MARKER_POSITION);
+			setTreeAddMode(STEP2);
     	}
     };
-    
-    private void displayInstruction(String instruction) {
-    	TextView t = (TextView) findViewById(R.id.treeAddInstructions);
-    	View container = findViewById(R.id.treeAddInstructionContainer);
-    	if (instruction == null) {
-    		container.setVisibility(View.INVISIBLE);
-    	} else {
-    		container.setVisibility(View.VISIBLE);
-    		t.setText(instruction);
-    	}
-    }
-    
+        
     public void setTreeAddMode(int step) {
-    	Button nextButton = (Button) findViewById(R.id.treeAddNext);
+    	View step1 =findViewById(R.id.addTreeStep1);
+    	View step2 = findViewById(R.id.addTreeStep2);
     	switch (step) {
-	    	case ADD_MARKER:
-	    		hidePopup();
-	    		if (plotMarker != null) {
-	        		plotMarker.remove();
-	        		plotMarker = null;
-	        	}
-	        	displayInstruction("Step 1: Tap to add a tree marker");
-	            mMap.setOnMapClickListener(addMarkerMapClickListener);
-	    		break;
-	    	case SET_MARKER_POSITION:
-	    		mMap.setOnMapClickListener(null);
-	    		displayInstruction("Step 2: Long press to move the tree into position, then click next.");
-	    		nextButton.setVisibility(Button.VISIBLE);
-	    		break;
-	    	case CANCEL:
+    		case CANCEL:
+	    		step1.setVisibility(View.GONE);
+	    		step2.setVisibility(View.GONE);
 	    		if (plotMarker != null) {
 	        		plotMarker.remove();
 	        		plotMarker = null;
 	        	}
 	    		mMap.setOnMapClickListener(showPopupMapClickListener);
-	    		displayInstruction(null);
-	    		nextButton.setVisibility(Button.INVISIBLE);
 	    		break;
-	    	case DO_EDIT_PLOT:
+	    	case STEP1:
+	    		step2.setVisibility(View.GONE);
+	    		step1.setVisibility(View.VISIBLE);
+	    		hidePopup();
+	    		if (plotMarker != null) {
+	        		plotMarker.remove();
+	        		plotMarker = null;
+	        	}
+	            if (mMap != null) {
+	            	mMap.setOnMapClickListener(addMarkerMapClickListener);
+	            }
+	    		break;
+	    	case STEP2:
+	    		hidePopup();
+	    		step1.setVisibility(View.GONE);
+	    		step2.setVisibility(View.VISIBLE);
+	    		if (mMap != null) {
+	    			mMap.setOnMapClickListener(null);
+	    		}
+	    		break;
+	    	case FINISH:
 	    		Intent editPlotIntent = new Intent (MainMapActivity.this, TreeEditDisplay.class);
 	    		Plot newPlot;
 	    		try {
 	    			newPlot = getPlotForNewTree();
-	    			if (newPlot == null) {
-	    				
-	    			}
-		    		String plotString = newPlot.getData().toString();
+	    			String plotString = newPlot.getData().toString();
 		    		editPlotIntent.putExtra("plot", plotString );
 		    		editPlotIntent.putExtra("new_tree", "1");
 		    		startActivity(editPlotIntent); 		
@@ -480,7 +475,7 @@ public class MainMapActivity extends MapActivity{
 
     //click handler for the next button
     public void submitNewTree(View view) {
-    	setTreeAddMode(DO_EDIT_PLOT);
+    	setTreeAddMode(FINISH);
     }
  
     private Plot getPlotForNewTree() throws JSONException, IOException {
