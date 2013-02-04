@@ -48,18 +48,6 @@
         android:textColor="@color/black_end" />
 
     <EditText
-        android:id="@+id/login_username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="154dp"
-        android:ems="10"
-        android:hint="@string/hint_email"
-        android:inputType="text" />
-
-    <EditText
         android:id="@+id/login_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -73,5 +61,15 @@
 
         <requestFocus />
     </EditText>
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:hint="@string/hint_email"
+        android:inputType="text" />
 
 </RelativeLayout>
