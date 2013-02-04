@@ -40,6 +40,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
 	protected static final int SPECIES_SELECTOR = 0;
 	protected static final int TREE_PHOTO = 1;
+	protected static final int TREE_MOVE = 2;
 	
 	private Field speciesField;
 	private boolean photoHasBeenChanged;
@@ -148,7 +149,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			public void onMapClick(LatLng point) {
 				Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
 				treeMoveIntent.putExtra("plot", plot.getData().toString());
-				startActivity(treeMoveIntent);
+				startActivityForResult(treeMoveIntent, TREE_MOVE);
 			}
 		});
 	}
@@ -441,39 +442,50 @@ public class TreeEditDisplay extends TreeDisplay {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
 	  super.onActivityResult(requestCode, resultCode, data); 
 	  switch(requestCode) { 
-	  	case (SPECIES_SELECTOR) : { 
-	  		if (resultCode == Activity.RESULT_OK) {
-	  			CharSequence speciesJSON = data.getCharSequenceExtra("species");
-	  			if (speciesJSON != null && !speciesJSON.equals(null)) {
-	  				Species species = new Species();
-	  				try {
-	  					
-						species.setData(new JSONObject(speciesJSON.toString()));
-						speciesField.setValue(species);
-						
+		  	case SPECIES_SELECTOR: 
+		  		if (resultCode == Activity.RESULT_OK) {
+		  			CharSequence speciesJSON = data.getCharSequenceExtra("species");
+		  			if (speciesJSON != null && !speciesJSON.equals(null)) {
+		  				Species species = new Species();
+		  				try {
+		  					
+							species.setData(new JSONObject(speciesJSON.toString()));
+							speciesField.setValue(species);
+							
+						} catch (JSONException e) {
+							String msg = "Unable to retrieve selected species";
+							Log.e(App.LOG_TAG, msg, e);
+							Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+						}
+		  			}
+		  		}
+		  		break; 
+		  	case TREE_PHOTO : 
+			  	if (resultCode == Activity.RESULT_OK) {
+			  		Bitmap bm = (Bitmap) data.getExtras().get("data");
+			  		RequestGenerator rc = new RequestGenerator();
+					try {
+						savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
+						rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
 					} catch (JSONException e) {
-						String msg = "Unable to retrieve selected species";
-						Log.e(App.LOG_TAG, msg, e);
-						Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+						Log.e(App.LOG_TAG, "Error updating tree photo.", e);
+						savePhotoDialog.dismiss();
 					}
-	  			}
-	  		}
-	  		break; 
-	    } 
-	  	case (TREE_PHOTO) : {
-		  	if (resultCode == Activity.RESULT_OK) {
-		  		Bitmap bm = (Bitmap) data.getExtras().get("data");
-		  		RequestGenerator rc = new RequestGenerator();
+		  		}
+		  		break;
+		  	case TREE_MOVE:
 				try {
-					savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-					rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+					plot.setData(new JSONObject(data.getStringExtra("plot")));
 				} catch (JSONException e) {
-					Log.e(App.LOG_TAG, "Error updating tree photo.", e);
-					savePhotoDialog.dismiss();
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-	  		}
-	  		break; 
-	    } 
+				plotLocation = getPlotLocation(plot);
+				showPositionOnMap();
+		  		break;
+		  		
 	  }
-	}
+  		
+    } 
+	
 }

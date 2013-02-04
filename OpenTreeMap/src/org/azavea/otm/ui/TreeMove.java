@@ -41,7 +41,7 @@ public class TreeMove extends TreeDisplay{
     	plotMarker.setDraggable(true);
     }
   
-    public void onBackPressed() {
+    public void submitTreeMove(View view) {
     	LatLng position = plotMarker.getPosition();
     	try {
     		Geometry g = plot.getGeometry();
@@ -53,6 +53,7 @@ public class TreeMove extends TreeDisplay{
     	}
     	Intent editPlot = new Intent(this, TreeEditDisplay.class);
     	editPlot.putExtra("plot", plot.getData().toString());
-    	startActivity(editPlot);	
+    	setResult(RESULT_OK, editPlot);
+    	finish();
     }
 }
