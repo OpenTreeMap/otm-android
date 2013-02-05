@@ -61,6 +61,13 @@ public class LoginManager {
 				}				
 				
 				@Override
+				public void handleFailureMessage(Throwable e, String responseBody) {
+					data.putBoolean("success", false);
+					data.putString("message", "Error logging in, please check your username and password.");
+					handleCallback(data);
+				}
+				
+				@Override
 				public void dataReceived(User response) {
 					prefs.edit().putString(userKey, username).commit();
 			    	prefs.edit().putString(passKey, password).commit();
