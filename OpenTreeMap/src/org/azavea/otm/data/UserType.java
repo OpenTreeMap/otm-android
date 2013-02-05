@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserType extends Model {
+	public static final int ADMINISTRATOR_LEVEL = 1000;
+	
 	public UserType() {
 		data = new JSONObject();
 	}
@@ -23,4 +25,5 @@ public class UserType extends Model {
 	public void setName(String name) throws JSONException {
 		data.put("name", name);
 	}
+	
 }

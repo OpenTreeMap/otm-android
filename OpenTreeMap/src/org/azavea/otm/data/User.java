@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User extends Model {
-	public static int ADMINISTRATOR_LEVEL = 0; //TODO 
 	
 	public User() throws JSONException {
 		data = new JSONObject();
@@ -104,4 +103,21 @@ public class User extends Model {
 	public void setUserType(UserType type) throws JSONException {
 		data.put("user_type", type.getData());
 	}
+	
+	public boolean isAdmin() {
+		UserType ut;
+		try {
+			ut = getUserType();
+			if (ut.getLevel() >= UserType.ADMINISTRATOR_LEVEL) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
 }

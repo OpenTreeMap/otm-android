@@ -71,16 +71,12 @@ public class PendingItemDisplay extends Activity {
 		
     }
 	
-//TODO
 	public boolean canApprovePendingEdits() {
-		return false;	
-		/*try {
-			return plot.canDeletePlot();
-		} catch (JSONException e) {
-			e.printStackTrace();
+		if (App.getLoginManager().isLoggedIn()) {
+			return App.getLoginManager().loggedInUser.isAdmin();
+		} else {
 			return false;
 		}
-		*/
 	}
 	
 	
