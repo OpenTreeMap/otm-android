@@ -39,6 +39,7 @@ public class EcoField extends Field {
 	        
 	        // The dollar amount of the benefit
 	        NumberFormat currency = NumberFormat.getCurrencyInstance();
+	        currency.setMaximumFractionDigits(2);
 	        Double amount = (Double)getValueForKey(this.key + AMOUNT_KEY, model.getData());
 	        ((TextView)container.findViewById(R.id.field_money))
 	        	.setText(currency.format(amount));
