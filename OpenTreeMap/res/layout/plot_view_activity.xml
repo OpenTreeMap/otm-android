@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/base" >
+    android:background="@color/base" 
+    android:orientation="vertical">
 
 	<RelativeLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/header"
 	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
-	    android:layout_alignParentTop="true"
 	    android:background="@color/dgreen"
 	    android:color="@color/text_dark">
 	    
@@ -62,7 +62,13 @@
 		    android:layout_below="@+id/updated_on"
 		    android:textColor="@color/text_dark" />
 	</RelativeLayout>
-
+	
+	<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+		  android:id="@+id/vignette_map_view_mode"
+		  android:layout_width="fill_parent"
+		  android:layout_height="100dp"
+		  class="com.google.android.gms.maps.SupportMapFragment"/>
+    
 	
 		
 	<ScrollView
@@ -70,29 +76,14 @@
 	    android:id="@+id/scroller"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:layout_below="@+id/header"
 	 >
-	       	
-	    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:background="@color/base" >
-			
-			<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:id="@+id/vignette_map_view_mode"
-			  android:layout_width="fill_parent"
-			  android:layout_alignParentTop="true"
-			  android:layout_height="100dp"
-			  class="com.google.android.gms.maps.SupportMapFragment"/>
-	        	    
-		    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			    android:layout_below="@+id/vignette_map_view_mode"
-		        android:id="@+id/field_list"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:orientation="vertical"
-		        >        	
-		    </LinearLayout>
-		</RelativeLayout>
+		    	    
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/field_list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        >        	
+	    </LinearLayout>
 	</ScrollView>
-</RelativeLayout>	
+</LinearLayout>	
