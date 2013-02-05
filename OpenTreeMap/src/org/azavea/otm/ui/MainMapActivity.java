@@ -59,8 +59,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 //import android.location.LocationManager;
 
 import android.os.Bundle;
@@ -327,10 +329,13 @@ public class MainMapActivity extends MapActivity{
  	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
     	
-    	/*Context context = MainMapActivity.this;
+    	Context context = MainMapActivity.this;
     	LocationManager locationManager = 
     			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-    	Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    	Criteria crit = new Criteria();
+		crit.setAccuracy(Criteria.ACCURACY_FINE);
+    	String provider = locationManager.getBestProvider(crit, true);
+    	Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
     	if (lastKnownLocation != null) {
 	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
 	    			lastKnownLocation.getLatitude(),
@@ -339,7 +344,7 @@ public class MainMapActivity extends MapActivity{
     	} else {
     		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
     	}
-    	*/
+    	
     }
     
     @Override
@@ -583,5 +588,5 @@ public class MainMapActivity extends MapActivity{
             }
         });	
     }
-}	
+}
  
