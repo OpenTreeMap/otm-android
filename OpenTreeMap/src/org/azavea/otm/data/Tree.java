@@ -251,6 +251,6 @@ public class Tree extends Model {
 			return getDbh(currentOnly);
 		}	
 		Log.e(App.LOG_TAG, "Unknown Tree key field");
-		return null;
+		return data.get(key);
 	}
 }

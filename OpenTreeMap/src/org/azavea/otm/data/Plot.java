@@ -332,23 +332,26 @@ public class Plot extends Model {
 				return getTree().get(currentOnly, keys[1]);
 			}
 		} else {
-			if (keys.equals("plot_width")) {
+			String k = keys[0];
+			// the thinking here is that where possible we should run the logic
+			// for the specific key....
+			if (k.equals("plot_width")) {
 				return getWidth();
 			} 
-			if (keys.equals("plot_length")) {
+			if (k.equals("plot_length")) {
 				return getLength();
 			} 
-			if (keys.equals("power_lines")) {
+			if (k.equals("power_lines")) {
 				return getPowerlineConflictPotential();
 			} 
-			if (keys.equals("sidewalk_damage")) {
+			if (k.equals("sidewalk_damage")) {
 				return getSidewalkDamage();
 			} 
-		}
-
-		Log.e(App.LOG_TAG, "UNRECOGNIZED key!");
-		return null;
-		
+	
+			// but fall back to a generic JSON lookup
+			return data.get(k);
+	
+		}		
 	}
 	
 	public Object get(String key) throws JSONException {
