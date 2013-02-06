@@ -112,7 +112,7 @@ public class ListDisplay extends Activity implements ListObserver {
 	
 	public void update() {
         adapter = new ArrayAdapter<DisplayableModel>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, infoList.getDisplayValues());
+                R.layout.simple_list_item, android.R.id.text1, infoList.getDisplayValues());
         
 		listView.setAdapter(adapter);
 

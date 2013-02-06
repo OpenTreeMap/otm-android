@@ -60,4 +60,18 @@
     <color 
         name="dgreen">#51AD93</color>
     
+    
+    <!-- Basemap Picker, List Mode Picker (Rounded button bars)..etc -->
+     <color name="buttonBarGradientColorOnStart">#4cc39d</color>
+     <color name="buttonBarGradientColorOnEnd">#3aa27c</color>
+     <color name="buttonBarGradientColorOffStart">#3b9e7d</color>
+     <color name="buttonBarGradientColorOffEnd">#2e8465</color>
+     <color name="buttonBarGradientColorSelectedStart">#FF00AA</color>
+     <color name="buttonBarGradientColorSelectedEnd">#FF00AA</color>
+     <color name="buttonBarStrokeColor">#32906e</color>
+     
+     <!--  Background color of all content panes -->
+     <color name="mainBackgroundColor">#ebf6f6</color>
+     
+    
 </resources>

@@ -3,30 +3,32 @@
     xmlns:foursquared="http://schemas.android.com/apk/res/org.azavea.otm"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/org.azavea.otm">
-
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/org.azavea.otm"
+    >
     <com.joelapenna.foursquared.widget.SegmentedButton
       android:id="@+id/segmented"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      foursquared:gradientColorOnStart="#4cc39d"
-      foursquared:gradientColorOnEnd="#3aa27c"
-      foursquared:gradientColorOffStart="#3b9e7d"
-      foursquared:gradientColorOffEnd="#2e8465"
-      foursquared:gradientColorSelectedStart="#FF00AA"
-      foursquared:gradientColorSelectedEnd="#FF00AA"
+      foursquared:gradientColorOnStart="@color/buttonBarGradientColorOnStart"
+      foursquared:gradientColorOnEnd="@color/buttonBarGradientColorOnEnd"
+      foursquared:gradientColorOffStart="@color/buttonBarGradientColorOffStart"
+      foursquared:gradientColorOffEnd="@color/buttonBarGradientColorOffEnd"
+      foursquared:gradientColorSelectedStart="@color/buttonBarGradientColorSelectedStart"
+      foursquared:gradientColorSelectedEnd="@color/buttonBarGradientColorSelectedEnd"
       foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue"
-      foursquared:strokeColor="#32906e"
+      foursquared:strokeColor="@color/buttonBarStrokeColor"
       foursquared:strokeWidth="1dip"
       foursquared:cornerRadius="4dip"
       foursquared:btnPaddingTop="7dip"
-      foursquared:btnPaddingBottom="7dip" /> 
+      foursquared:btnPaddingBottom="7dip"
+      android:layout_margin="4dp" /> 
     
     <ListView
         android:id="@+id/listItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+       >
     </ListView>
 
 </LinearLayout>
