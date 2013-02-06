@@ -322,39 +322,5 @@ public class Plot extends Model {
 		}
 	}
 
-	// A mapping of configuration.xml field names to typed helper methods.
-	public Object get(boolean currentOnly, String key) throws JSONException  {
-		String[] keys = key.split("\\.");
-		if (keys[0].equals("tree")){
-			if (getTree() == null) {
-				return null;
-			} else {
-				return getTree().get(currentOnly, keys[1]);
-			}
-		} else {
-			String k = keys[0];
-			// the thinking here is that where possible we should run the logic
-			// for the specific key....
-			if (k.equals("plot_width")) {
-				return getWidth();
-			} 
-			if (k.equals("plot_length")) {
-				return getLength();
-			} 
-			if (k.equals("power_lines")) {
-				return getPowerlineConflictPotential();
-			} 
-			if (k.equals("sidewalk_damage")) {
-				return getSidewalkDamage();
-			} 
 	
-			// but fall back to a generic JSON lookup
-			return data.get(k);
-	
-		}		
-	}
-	
-	public Object get(String key) throws JSONException {
-		return get(false, key);
-	}
 }

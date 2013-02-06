@@ -238,19 +238,7 @@ public class Tree extends Model {
 		return idList;
 	}
 	
-	//TODO what about other fields like height and canopy?  See config
-	public Object get(String key) throws JSONException {
-		return get(false, key);
-	}
 	
-	public Object get(boolean currentOnly, String key) throws JSONException {
-		if (key.equals("sci_name")) {
-			return getScientificName();
-		}
-		if (key.equals("dbh")) {
-			return getDbh(currentOnly);
-		}	
-		Log.e(App.LOG_TAG, "Unknown Tree key field");
-		return data.get(key);
-	}
+	
+	
 }
