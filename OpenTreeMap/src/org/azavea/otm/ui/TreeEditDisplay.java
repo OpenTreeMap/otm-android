@@ -474,14 +474,16 @@ public class TreeEditDisplay extends TreeDisplay {
 		  		}
 		  		break;
 		  	case TREE_MOVE:
-				try {
-					plot.setData(new JSONObject(data.getStringExtra("plot")));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				plotLocation = getPlotLocation(plot);
-				showPositionOnMap();
+		  		if (resultCode == Activity.RESULT_OK) {
+				  	try {
+						plot.setData(new JSONObject(data.getStringExtra("plot")));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					plotLocation = getPlotLocation(plot);
+					showPositionOnMap();
+		  		}
 		  		break;
 		  		
 	  }
