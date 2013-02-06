@@ -5,12 +5,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-import org.azavea.map.TileProviderFactory;
 import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
+import org.azavea.otm.map.TileProviderFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,8 +97,6 @@ public class TreeDisplay extends MapActivity{
 	 }
 	 
 	 private void setUpMap() {
-		TileProvider tileProvider = TileProviderFactory.getWmsTileProvider();
-		mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
 		UiSettings mUiSettings = mMap.getUiSettings();
 		mUiSettings.setZoomControlsEnabled(false);
 		mUiSettings.setScrollGesturesEnabled(false);

@@ -38,7 +38,6 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.azavea.map.TileProviderFactory;
 import org.azavea.map.WMSTileProvider;
 
 import org.azavea.otm.App;
@@ -47,6 +46,7 @@ import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
+import org.azavea.otm.map.TileProviderFactory;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
@@ -169,7 +169,7 @@ public class MainMapActivity extends MapActivity{
     	treeTileOverlay.setZIndex(50);
     	
         // Set up the filter layer
-        filterTileProvider = TileProviderFactory.getWmsCqlTileProvider();
+        filterTileProvider = TileProviderFactory.getFilterLayerTileProvider();
         filterTileProvider.setCql("1=0");
         filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         filterTileOverlay.setZIndex(100);

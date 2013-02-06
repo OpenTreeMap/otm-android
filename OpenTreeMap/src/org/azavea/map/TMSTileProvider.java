@@ -8,16 +8,18 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.UrlTileProvider;
 
-
-public abstract class TMSTileProvider extends UrlTileProvider {
+public class TMSTileProvider extends UrlTileProvider {
+	String baseUrl;
 	
-	public TMSTileProvider(int xsize, int ysize) {
+	public TMSTileProvider(int xsize, int ysize, String baseUrl) {
 		super(xsize, ysize);
+		this.baseUrl = baseUrl;
 	}
 
-	public abstract String getBaseUrl();
+	public String getBaseUrl() {
+		return baseUrl;
+	}
 
-	//TODO store the root in config
 	private static String TMS_BASIC = "%s/%d/%d/%d.png";
 	
 	@Override

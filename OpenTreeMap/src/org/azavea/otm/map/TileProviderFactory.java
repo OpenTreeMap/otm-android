@@ -1,50 +1,42 @@
-package org.azavea.map;
+package org.azavea.otm.map;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-import org.azavea.otm.map.TileCacheTileProvider;
+import org.azavea.map.TMSTileProvider;
+import org.azavea.map.WMSTileProvider;
+import org.azavea.otm.App;
 
+
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.TileProvider;
 
 public class TileProviderFactory {
 	
-	//TODO don't hardcode the address!
-	private static final String GEOSERVER_OTM_BASIC =
-    		"http://phillytreemap.org/geoserver/wms" +
-    		"?service=WMS" +
-    		"&version=1.1.1" +  			
-    		"&request=GetMap" +
-    		"&layers=ptm" +
-    		"&bbox=%f,%f,%f,%f" +
-    		"&width=256" +
-    		"&height=256" +
-    		"&srs=EPSG:900913" +
-    		"&format=image/png" +				
-    		"&transparent=true";	
-
-	//TODO nor here.
-	private static final String GEOSERVER_OTM_FILTERABLE =
-    		"http://phillytreemap.org/geoserver/wms" +
-    		"?service=WMS" +
-    		"&version=1.1.1" +  			
-    		"&request=GetMap" +
-    		"&layers=tree_search" +
-    		"&bbox=%f,%f,%f,%f" +
-    		"&width=256" +
-    		"&height=256" +
-    		"&srs=EPSG:900913" +
-    		"&format=image/png" +				
-    		"&transparent=true" +
-    		"&cql_filter=%s" +
-    		"&styles=tree_highlight";	
-
 	
-	public static WMSTileProvider getWmsTileProvider() {
+	public static WMSTileProvider getDebuggingTileProvider() {
+		
+		SharedPreferences prefs = App.getSharedPreferences();
+		String baseUrl = prefs.getString("wms_url", "");
+		
+		final String GEOSERVER_OTM_BASIC =
+				baseUrl + //"http://phillytreemap.org/geoserver/wms"
+	    		"?service=WMS" +
+	    		"&version=1.1.1" +  			
+	    		"&request=GetMap" +
+	    		"&layers=ptm" +
+	    		"&bbox=%f,%f,%f,%f" +
+	    		"&width=256" +
+	    		"&height=256" +
+	    		"&srs=EPSG:900913" +
+	    		"&format=image/png" +				
+	    		"&transparent=true";
+		
+		
 		WMSTileProvider tileProvider = new WMSTileProvider(256,256) {
         	
 	        @Override
@@ -65,7 +57,26 @@ public class TileProviderFactory {
 		return tileProvider;
 	}
 
-	public static WMSTileProvider getWmsCqlTileProvider() {
+	public static WMSTileProvider getFilterLayerTileProvider() {
+
+		SharedPreferences prefs = App.getSharedPreferences();
+		String baseUrl = prefs.getString("wms_url", "");
+
+		final String GEOSERVER_OTM_FILTERABLE =
+				baseUrl + //"http://phillytreemap.org/geoserver/wms" 
+	    		"?service=WMS" +
+	    		"&version=1.1.1" +  			
+	    		"&request=GetMap" +
+	    		"&layers=tree_search" +
+	    		"&bbox=%f,%f,%f,%f" +
+	    		"&width=256" +
+	    		"&height=256" +
+	    		"&srs=EPSG:900913" +
+	    		"&format=image/png" +				
+	    		"&transparent=true" +
+	    		"&cql_filter=%s" +
+	    		"&styles=tree_highlight";	
+		
 		WMSTileProvider tileProvider = new WMSTileProvider(256,256) {
         	
 	        @Override
@@ -87,9 +98,12 @@ public class TileProviderFactory {
 		};
 		return tileProvider;
 	}
+
 	
 	public static TileProvider getTileCacheTileProvider() {
-		return new TileCacheTileProvider(256, 256);
+		SharedPreferences prefs = App.getSharedPreferences();
+		String baseUrl = prefs.getString("tms_url", "");
+		return new TMSTileProvider(256, 256, baseUrl);
 	}
 		
 	
