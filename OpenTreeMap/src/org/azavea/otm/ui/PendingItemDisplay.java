@@ -14,6 +14,7 @@ import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 import org.azavea.otm.data.UserType;
 import org.azavea.otm.rest.RequestGenerator;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,10 +38,14 @@ import android.widget.Toast;
 import org.azavea.otm.Field;
 
 public class PendingItemDisplay extends Activity {
-	Plot plot;
+
+	// We will need the key IE "tree.dbh" so that we can find the pending
+	// edits in the plot
 	String key;
-	String label;
-	CheckBox selectedValue;
+		
+	// We are going to manage the current and pending values 
+	// through the CheckBox objects that we instantiate for them.
+	CheckBox selectedValue; 
 	CheckBox currentValue;
 	Vector<CheckBox> allPending = new Vector();
 	
@@ -48,26 +53,31 @@ public class PendingItemDisplay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_item);
         
-        this.key = getIntent().getStringExtra("key");
-        this.label = getIntent().getStringExtra("label");
-       
-        plot = new Plot();
-		try {
-			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		try {
-			render();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			Toast.makeText(this, "Error rendering pending edit.", Toast.LENGTH_SHORT).show();
-		}
-		
-		Log.d("PENDING", "key: " + key);
-		Log.d("PENDING", "label: " + label);
-		
-		
+        /*Render
+            + label (IE "Diameter a Breast Height (in)")
+            + current value (the value in the db that has been prev approved)
+            + pending values
+            + next/cancel buttons
+        */
+        String label = getIntent().getStringExtra("label");
+        if (label != null && label != "") {
+        	renderTitle(label);
+        }
+        		
+ 		String current = getIntent().getStringExtra("current");
+ 		renderCurrentValue(current);
+ 		
+ 		String pending = getIntent().getStringExtra("pending");
+ 		if (pending != null && pending != "") {
+ 			try {
+				renderPendingValues(new JSONArray(getIntent().getStringExtra("pending")));
+			} catch (JSONException e) {
+				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG);
+				e.printStackTrace();
+			}
+ 		}
+ 		
+ 		renderApprovalButtons();
 		
     }
 	
@@ -80,67 +90,61 @@ public class PendingItemDisplay extends Activity {
 	}
 	
 	
-	private void renderCurrentValue() {
+	private void renderCurrentValue(String value) {
 		View row = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
 		ViewGroup container = (ViewGroup) findViewById(R.id.currentValue);
-		Object value = null;
-		boolean CURRENT_ONLY = true;
-		try {
-			value = plot.get(CURRENT_ONLY, key);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		String v;
-		if (value != null  && !value.equals("")) {
-			v = value.toString();
-			container.addView(row);
-		} else {
-			v = "No current value";
-		}
-		((TextView)row.findViewById(R.id.value)).setText(v);
+		currentValue = (CheckBox)row.findViewById(R.id.checkBox);
+		
 		((TextView)row.findViewById(R.id.user_name)).setText("");
 		((TextView)row.findViewById(R.id.date)).setText("");
 		
-		if (canApprovePendingEdits()) {
-			currentValue = (CheckBox)row.findViewById(R.id.checkBox);
-			currentValue.setOnClickListener(checkBoxClickListener);
-			currentValue.setVisibility(View.VISIBLE);
-		} 
+		if (value == null || value.equals("")) { // no current value.
+			((TextView)row.findViewById(R.id.value)).setText("No current value");
+		} else {			
+			((TextView)row.findViewById(R.id.value)).setText(value);
+			if (canApprovePendingEdits()) {
+				currentValue.setOnClickListener(checkBoxClickListener);
+				currentValue.setVisibility(View.VISIBLE);
+			} 			
+		}
+		container.addView(row);
+		
 	}
 	
-	private void renderPendingValues() throws JSONException {
+	private void renderPendingValues(JSONArray pendingEdits) {
 		ViewGroup container = (ViewGroup) findViewById(R.id.pendingEdits);
-		PendingEditDescription pendingEditDescription = plot.getPendingEditForKey(key);
-		List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
-		for (PendingEdit pendingEdit : pendingEdits) {	
-			View pendingRow = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
-			String value = pendingEdit.getValue();
-			String username = pendingEdit.getUsername();
-			int id = pendingEdit.getId();
-			String date = "";
+	
+		for (int i =0; i< pendingEdits.length(); i++) {
+			JSONObject pendingEdit;
 			try {
-				date = pendingEdit.getSubmittedTime().toLocaleString();
-			} catch (Exception e) {
+				pendingEdit = pendingEdits.getJSONObject(i);
+				String value = pendingEdit.getString("value");
+				String username = pendingEdit.getString("username");
+				String date = pendingEdit.getString("date");
+				int id = (Integer) pendingEdit.getInt("id");
+				
+				View pendingRow = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
+							
+				((TextView)pendingRow.findViewById(R.id.value)).setText(value);
+				((TextView)pendingRow.findViewById(R.id.date)).setText(date);
+				((TextView)pendingRow.findViewById(R.id.user_name)).setText(username);
+				
+				if (canApprovePendingEdits()) {
+					CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
+					allPending.add(cb);
+					cb.setOnClickListener(checkBoxClickListener);
+					cb.setTag(id);
+					cb.setVisibility(View.VISIBLE);
+				}
+				container.addView(pendingRow);
+			} catch (JSONException e) {
+				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG);
 				e.printStackTrace();
 			}
-			int pendingEditId = pendingEdit.getId();
-						
-			((TextView)pendingRow.findViewById(R.id.value)).setText(value);
-			((TextView)pendingRow.findViewById(R.id.date)).setText(date);
-			((TextView)pendingRow.findViewById(R.id.user_name)).setText(username);
-			
-			if (canApprovePendingEdits()) {
-				CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
-				allPending.add(cb);
-				cb.setOnClickListener(checkBoxClickListener);
-				cb.setTag(pendingEditId);
-				cb.setVisibility(View.VISIBLE);
-			}
-			container.addView(pendingRow);
 		}
 	}
 	
-	private void renderTitle() {
+	private void renderTitle(String label) {
 		((TextView)findViewById(R.id.pending_edit_label)).setText(label);
 	}
 	
@@ -150,16 +154,7 @@ public class PendingItemDisplay extends Activity {
 		}
 	}
 	
-	public void render() throws JSONException {
-		renderTitle();
-		renderCurrentValue();
-		renderPendingValues();
-		renderApprovalButtons();
-	}
-
-	
 	public OnClickListener checkBoxClickListener  = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			selectedValue = (CheckBox)v;
@@ -209,15 +204,16 @@ public class PendingItemDisplay extends Activity {
 	}
 	
 	private void rejectAll() throws JSONException {
-		PendingEditDescription ped = plot.getPendingEditForKey(key);
-		
-		int firstIdToReject = ped.getPendingEdits().get(0).getId(); 
-		RequestGenerator rc = new RequestGenerator();
-		try {
-			rc.rejectPendingEdit(PendingItemDisplay.this, firstIdToReject, createRejectionResponseHandlder(key));
-		} catch (UnsupportedEncodingException e) {
-			Toast.makeText(PendingItemDisplay.this, "Error rejecting all pending edits", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
+		if (allPending.size() != 0) {
+			int firstIdToReject = (Integer) allPending.get(0).getTag();
+			
+			RequestGenerator rc = new RequestGenerator();
+			try {
+				rc.rejectPendingEdit(PendingItemDisplay.this, firstIdToReject, createRejectionResponseHandlder(key));
+			} catch (UnsupportedEncodingException e) {
+				Toast.makeText(PendingItemDisplay.this, "Error rejecting all pending edits", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
 		}
 	}
 		

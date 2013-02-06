@@ -2,16 +2,19 @@ package org.azavea.otm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
+import org.azavea.otm.data.PendingEdit;
 import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.User;
 import org.azavea.otm.ui.PendingItemDisplay;
 import org.azavea.otm.ui.TreeInfoDisplay;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Node;
@@ -538,19 +541,47 @@ public class Field {
 		
 	}
 	
-	public void bindPendingEditClickHandler(View b, final String key, final Plot model, final Context context ) {
+	private void bindPendingEditClickHandler(View b, final String key, final Plot model, final Context context ) {
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// initialize the intent, and load it with some initial values
 				Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
-				pendingItemDisplay.putExtra("plot", model.getData().toString());
-				pendingItemDisplay.putExtra("key", key);
 				pendingItemDisplay.putExtra("label" , label);
+				pendingItemDisplay.putExtra("currentValue", formatUnit(getValueForKey(key, model.getData())));
+				pendingItemDisplay.putExtra("key", key);
 				
-				Activity a = (Activity)context;
-				a.startActivityForResult(pendingItemDisplay, TreeInfoDisplay.EDIT_REQUEST);
+				// Now create an array of pending values, [{id: X, value: "42", username: "sam"}, ...]
+				PendingEditDescription pendingEditDescription;
+				try {
+					pendingEditDescription = model.getPendingEditForKey(key);
+					List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
+					JSONArray serializedPendingEdits = new JSONArray();
+					for (PendingEdit pendingEdit : pendingEdits) {	
+						JSONObject serializedPendingEdit = new JSONObject();
+						serializedPendingEdit.put("id", pendingEdit.getId());
+						// This formatUnit call is why we are doing all the work in this class.
+						serializedPendingEdit.put("value", formatUnit(pendingEdit.getValue()));
+						serializedPendingEdit.put("username", pendingEdit.getUsername());
+						try {
+							serializedPendingEdit.put("date", pendingEdit.getSubmittedTime().toLocaleString());
+						} catch (Exception e) {
+							e.printStackTrace();
+							serializedPendingEdit.put("date", "");
+						}
+						serializedPendingEdits.put(serializedPendingEdit);
+						
+					}
+					pendingItemDisplay.putExtra("pending", serializedPendingEdits.toString());
+					
+					// And start the target activity
+					Activity a = (Activity)context;
+					a.startActivityForResult(pendingItemDisplay, TreeInfoDisplay.EDIT_REQUEST);
+				} catch (JSONException e1) {
+					Toast.makeText(context, "Sorry, pending edits not available.", Toast.LENGTH_SHORT).show();
+					e1.printStackTrace();
+				}			
 			}
-			
 		});
 	}
 
