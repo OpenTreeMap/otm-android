@@ -19,37 +19,49 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         style="@android:style/ButtonBar"
+        android:background="@color/buttonBarGradientColorOffEnd"
+        android:padding="3dp"
     >
         
-	    <ImageButton
-	        android:id="@+id/mylocationbutton"
-	        android:layout_width="wrap_content"
+	    <EditText
+	        android:id="@+id/locationSearchField"
+	        android:layout_width="0dp"
+	        android:layout_weight="8"
 	        android:layout_height="fill_parent"
-	        android:contentDescription="@string/show_location"
-	        android:onClick="showMyLocation"
-	        android:src="@android:drawable/ic_menu_mylocation"
-	        android:background="@drawable/btn_silver" />
+	        android:hint="search location"
+	        android:imeOptions="actionSearch"
+	        android:background="@color/mainBackgroundColor"
+	        android:layout_marginRight="3dp"
+	        android:padding="2dp"
+	        >
+	    </EditText>
 	    <ImageButton
 	        android:id="@+id/locationSearchButton"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
+	        android:layout_weight="2"
 	        android:layout_height="fill_parent"
 	        android:contentDescription="address"
 	        android:src="@android:drawable/ic_menu_search"
 	        android:onClick="handleLocationSearchClick"
-	        android:background="@drawable/btn_silver"
+	        android:background="@color/buttonBarGradientColorOnStart"
 	    ></ImageButton>
-	    <EditText
-	        android:id="@+id/locationSearchField"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:hint="search location"
-	        android:imeOptions="actionSearch"
-	        >
-	    </EditText>
-	    
-	    
 	</LinearLayout>
  
+    <ImageButton
+	        android:id="@+id/mylocationbutton"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="3dp"
+	        android:layout_marginTop="3dp"
+	        android:layout_below="@+id/location_bar"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/show_location"
+	        android:onClick="showMyLocation"
+	        android:src="@android:drawable/ic_menu_mylocation"
+	        android:background="@color/buttonBarGradientColorOnStart"
+	 />
+    
+    
 	<LinearLayout 
 	    android:id="@+id/addTreeStep1"
 	    android:layout_height="wrap_content"
