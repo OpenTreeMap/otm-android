@@ -17,3 +17,6 @@ local.properties
 
 # Mac file cruft
 .DS_Store
+
+fabfile.pyc
+buildconf.json
