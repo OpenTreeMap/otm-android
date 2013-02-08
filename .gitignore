@@ -21,8 +21,8 @@ local.properties
 fabfile.pyc
 buildconf.json
 
-res/drawable-hdpi/*
-res/drawable-ldpi/*
-res/drawable-mdpi/*
-res/drawable-xhdpi/*
+*/res/drawable-hdpi/
+*/res/drawable-ldpi/
+*/res/drawable-mdpi/
+*/res/drawable-xhdpi/
 
