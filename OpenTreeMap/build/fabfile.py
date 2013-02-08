@@ -31,8 +31,12 @@ def treezilla():
 def ufm():
 	env["skin"] = "ufm"
 
+def default():
+	env["skin"] = "default"
+
 # operations
 def colors():
+	# REFACTOR Consider pulling from build/default/colors.json first, and overriding with skin values.
 	skin = env["skin"]
 	json_path= buildconf[skin] + "/colors.json"
 	template_path = buildconf["project"] + "/build/templates/colors.xml.template"
@@ -47,23 +51,36 @@ def strings():
 	out_path = buildconf["project"]+"/res/values/strings.xml"
 	_write_out(template_path, json_path, out_path)
 
-#bash all images with skin images
 def drawables():
+	#TODO clean targets first??
+
+	# TARGET drawable directories
+	hdpi_tgt   = buildconf["project"] + "/res/drawable-hdpi"
+	ldpi_tgt   = buildconf["project"] + "/res/drawable-ldpi"
+	mdpi_tgt   = buildconf["project"] + "/res/drawable-mdpi"	
+	xhdpi_tgt  = buildconf["project"] + "/res/drawable-xdpi"
+
+
+	# FIRST copy all files from default
+	hdpi_src   = buildconf["default"] + "/drawable-hdpi/*"
+	ldpi_src   = buildconf["default"] + "/drawable-ldpi/*"
+	mdpi_src   = buildconf["default"] + "/drawable-mdpi/*"
+	xhdpi_src  = buildconf["default"] + "/drawable-xhdpi/*"
+	local("cp " + hdpi_src + " " + hdpi_tgt)
+	local("cp " + ldpi_src + " " + ldpi_tgt)
+	local("cp " + mdpi_src + " " + mdpi_tgt)
+	local("cp  " + xhdpi_src + " " + xhdpi_tgt)
+
+	# THEN overwrite with skin files
 	skin = env["skin"]
 	hdpi_src   = buildconf[skin] + "/drawable-hdpi/*"
 	ldpi_src   = buildconf[skin] + "/drawable-ldpi/*"
 	mdpi_src   = buildconf[skin] + "/drawable-mdpi/*"
 	xhdpi_src  = buildconf[skin] + "/drawable-xhdpi/*"
-	
-	hdpi_tgt   = buildconf["project"] + "/res/drawable-hdpi"
-	ldpi_tgt   = buildconf["project"] + "/res/drawable-ldpi"
-	mdpi_tgt   = buildconf["project"] + "/res/drawable-mdpi"	
-	xhdpi_tgt  = buildconf["project"] + "/res/drawable-xdpi"
-	
-	local("cp " + hdpi_src + " " + hdpi_tgt)
+	local("cp  " + hdpi_src + " " + hdpi_tgt)
 	local("cp " + ldpi_src + " " + ldpi_tgt)
-	local("cp " + mdpi_src + " " + mdpi_tgt)
-	local("cp " + xhdpi_src + " " + xhdpi_tgt)
+	local("cp  " + mdpi_src + " " + mdpi_tgt)
+	local("cp  " + xhdpi_src + " " + xhdpi_tgt)
 
 #composite operations
 def build():
