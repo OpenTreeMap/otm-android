@@ -1,3 +1,11 @@
+<!-- IMPORTANT: 
+             
+         /res/values/colors.xml is overwritten by the templated build process.  Only edit colors in
+         /build/templates/colors.xml.template and in /build/default/colors.json, PTM/android/colors.json,
+         TreeZilla/android/colors.json, etc... 
+
+-->
+
 <resources>
     <color name="tint">#AEC9AB</color>
     <color name="base">#E9F0EF</color>
@@ -62,13 +70,16 @@
     
     
     <!-- Basemap Picker, List Mode Picker (Rounded button bars)..etc -->
-     <color name="buttonBarGradientColorOnStart">%(buttonBarGradientColorOnStart)s</color>
-     <color name="buttonBarGradientColorOnEnd">%(buttonBarGradientColorOnEnd)s</color>
-     <color name="buttonBarGradientColorOffStart">%(buttonBarGradientColorOffStart)s</color>
-     <color name="buttonBarGradientColorOffEnd">%(buttonBarGradientColorOffEnd)s</color>
-     <color name="buttonBarGradientColorSelectedStart">%(buttonBarGradientColorSelectedStart)s</color>
-     <color name="buttonBarGradientColorSelectedEnd">%(buttonBarGradientColorSelectedEnd)s</color>
-     <color name="buttonBarStrokeColor">%(buttonBarStrokeColor)s</color>
+
+     <color name="primaryColor">%(primaryColor)s</color>
+    
+     <color name="primaryGradientColorOnStart">%(primaryGradientColorOnStart)s</color>
+     <color name="primaryGradientColorOnEnd">%(primaryGradientColorOnEnd)s</color>
+     <color name="primaryGradientColorOffStart">%(primaryGradientColorOffStart)s</color>
+     <color name="primaryGradientColorOffEnd">%(primaryGradientColorOffEnd)s</color>
+     <color name="primaryGradientColorSelectedStart">%(primaryGradientColorSelectedStart)s</color>
+     <color name="primaryGradientColorSelectedEnd">%(primaryGradientColorSelectedEnd)s</color>
+     <color name="primaryStrokeColor">%(primaryStrokeColor)s</color>
      
      <!--  Background color of all content panes -->
      <color name="mainBackgroundColor">%(mainBackgroundColor)s</color>

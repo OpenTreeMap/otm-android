@@ -301,10 +301,6 @@
     <item name="android:textStyle">bold</item>
    </style> 
    
-   <style name="TextViewStyleTabMainNav">
-    <item name="android:textSize">12dip</item>
-    <item name="android:textColor">@drawable/tab_main_nav_text_selector</item>
-   </style> 
    
    <style name="TextViewStyleVenueActivityBold">
     <item name="android:textSize">14dip</item>

@@ -41,7 +41,7 @@
 			android:onClick="showPendingField"
 			android:padding="3dp"
 			android:visibility="invisible"
-			android:src="@drawable/avplay"
+			android:src="@drawable/ic_pending"
 	     />
        </LinearLayout>
 </LinearLayout>

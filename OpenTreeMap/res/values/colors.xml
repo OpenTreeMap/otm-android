@@ -1,3 +1,11 @@
+<!-- IMPORTANT: 
+             
+         /res/values/colors.xml is overwritten by the templated build process.  Only edit colors in
+         /build/templates/colors.xml.template and in /build/default/colors.json, PTM/android/colors.json,
+         TreeZilla/android/colors.json, etc... 
+
+-->
+
 <resources>
     <color name="tint">#AEC9AB</color>
     <color name="base">#E9F0EF</color>
@@ -62,13 +70,16 @@
     
     
     <!-- Basemap Picker, List Mode Picker (Rounded button bars)..etc -->
-     <color name="buttonBarGradientColorOnStart">#4cc39d</color>
-     <color name="buttonBarGradientColorOnEnd">#3aa27c</color>
-     <color name="buttonBarGradientColorOffStart">#3b9e7d</color>
-     <color name="buttonBarGradientColorOffEnd">#2e8465</color>
-     <color name="buttonBarGradientColorSelectedStart">#FF00AA</color>
-     <color name="buttonBarGradientColorSelectedEnd">#FF00AA</color>
-     <color name="buttonBarStrokeColor">#32906e</color>
+
+     <color name="primaryColor">#4cc39d</color>
+    
+     <color name="primaryGradientColorOnStart">#4cc39d</color>
+     <color name="primaryGradientColorOnEnd">#3aa27c</color>
+     <color name="primaryGradientColorOffStart">#3b9e7d</color>
+     <color name="primaryGradientColorOffEnd">#2e8465</color>
+     <color name="primaryGradientColorSelectedStart">#FF00AA</color>
+     <color name="primaryGradientColorSelectedEnd">#FF00AA</color>
+     <color name="primaryStrokeColor">#32906e</color>
      
      <!--  Background color of all content panes -->
      <color name="mainBackgroundColor">#ebf6f6</color>
