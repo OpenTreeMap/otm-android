@@ -113,7 +113,7 @@
             android:layout_marginLeft="@dimen/padding_medium"
             android:layout_marginRight="@dimen/padding_medium"
             android:layout_marginTop="@dimen/padding_24dp"
-            android:background="@drawable/btn_default2"
+            android:background="@drawable/btn_primary"
             android:onClick="handleRegisterClick"
             android:paddingBottom="@dimen/padding_small"
             android:paddingTop="@dimen/padding_small"

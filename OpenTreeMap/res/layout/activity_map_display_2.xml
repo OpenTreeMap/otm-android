@@ -105,7 +105,7 @@
 	        android:layout_weight="2"
 	        android:layout_height="wrap_content"
 	        android:text="next" 
-	       	android:background="@drawable/btn_default2"
+	       	android:background="@drawable/btn_primary"
 	        android:padding="@dimen/padding_12"
 	        android:onClick="submitNewTree"
 	        android:layout_margin="10dp"/>
