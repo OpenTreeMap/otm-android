@@ -46,7 +46,7 @@
 	        android:layout_alignBottom="@+id/cancel"
 	        android:layout_marginRight="3dp"
 	        android:layout_toLeftOf="@+id/cancel"
-	        android:background="@drawable/btn_silver"
+	        android:background="@drawable/btn"
 	        android:onClick="onClear"
 	        android:text="@string/clear_filtering"
 	        android:textColor="@color/dgrey_end"

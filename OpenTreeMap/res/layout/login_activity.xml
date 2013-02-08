@@ -41,7 +41,7 @@
         android:layout_below="@+id/cancel"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:background="@drawable/btn_silver"
+        android:background="@drawable/btn"
         android:onClick="register"
         android:padding="@dimen/padding_12"
         android:text="@string/Register"
