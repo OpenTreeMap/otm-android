@@ -49,7 +49,21 @@ def strings():
 
 #bash all images with skin images
 def drawables():
-	pass
+	skin = env["skin"]
+	hdpi_src   = buildconf[skin] + "/drawable-hdpi/*"
+	ldpi_src   = buildconf[skin] + "/drawable-ldpi/*"
+	mdpi_src   = buildconf[skin] + "/drawable-mdpi/*"
+	xhdpi_src  = buildconf[skin] + "/drawable-xhdpi/*"
+	
+	hdpi_tgt   = buildconf["project"] + "/res/drawable-hdpi"
+	ldpi_tgt   = buildconf["project"] + "/res/drawable-ldpi"
+	mdpi_tgt   = buildconf["project"] + "/res/drawable-mdpi"	
+	xhdpi_tgt  = buildconf["project"] + "/res/drawable-xdpi"
+	
+	local("cp " + hdpi_src + " " + hdpi_tgt)
+	local("cp " + ldpi_src + " " + ldpi_tgt)
+	local("cp " + mdpi_src + " " + mdpi_tgt)
+	local("cp " + xhdpi_src + " " + xhdpi_tgt)
 
 #composite operations
 def build():
