@@ -71,7 +71,7 @@
     
     <!-- Basemap Picker, List Mode Picker (Rounded button bars)..etc -->
 
-     <color name="primaryColor">#4cc39d</color>
+     <color name="primaryColor">#3aa27c</color>
     
      <color name="primaryGradientColorOnStart">#4cc39d</color>
      <color name="primaryGradientColorOnEnd">#3aa27c</color>

@@ -1,0 +1,4 @@
+{	"project": "/var/jenkins/workspace/PhillyTreeMap_Android/OpenTreeMap",
+	"ptm" : "/var/jenkins/workspace/PhillyTreeMap_Android/Philadelphia/android",
+	"default" : "/var/jenkins/workspace/PhillyTreeMap_Android/OpenTreeMap/build/default"
+}
