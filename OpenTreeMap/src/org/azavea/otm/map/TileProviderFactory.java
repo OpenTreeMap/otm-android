@@ -67,7 +67,7 @@ public class TileProviderFactory {
 	    		"?service=WMS" +
 	    		"&version=1.1.1" +  			
 	    		"&request=GetMap" +
-	    		"&layers=tree_search" +
+	    		"&layers=%s" +
 	    		"&bbox=%f,%f,%f,%f" +
 	    		"&width=256" +
 	    		"&height=256" +
@@ -75,7 +75,7 @@ public class TileProviderFactory {
 	    		"&format=image/png" +				
 	    		"&transparent=true" +
 	    		"&cql_filter=%s" +
-	    		"&styles=tree_highlight";	
+	    		"&styles=%s";	
 		
 		WMSTileProvider tileProvider = new WMSTileProvider(256,256) {
         	
@@ -83,8 +83,12 @@ public class TileProviderFactory {
 	        public synchronized URL getTileUrl(int x, int y, int zoom) {
 	        	double[] bbox = getBoundingBox(x, y, zoom);
 	        	
-	        	String s = String.format(Locale.US, GEOSERVER_OTM_FILTERABLE, bbox[MINX], 
-	            		bbox[MINY], bbox[MAXX], bbox[MAXY], getCql());
+	        	SharedPreferences prefs = App.getSharedPreferences();
+	        	String tree_highlight_layer = prefs.getString("tree_highlight_layer", "");
+	        	String tree_highlight_style = prefs.getString("tree_highlight_style", "");
+	        	
+	        	String s = String.format(Locale.US, GEOSERVER_OTM_FILTERABLE, tree_highlight_layer, bbox[MINX], 
+	            		bbox[MINY], bbox[MAXX], bbox[MAXY], getCql(), tree_highlight_style);
 	            URL url = null;
 	            try {
 	                url = new URL(s);

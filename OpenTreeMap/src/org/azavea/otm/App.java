@@ -125,6 +125,8 @@ public class App extends Application {
 			  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
 			  .putString("start_lat", context.getString(R.string.start_lat))
 			  .putString("start_lon", context.getString(R.string.start_lon))
+			  .putString("tree_highlight_layer", context.getString(R.string.tree_highlight_layer))
+			  .putString("tree_highlight_style", context.getString(R.string.tree_highlight_style))
 			  .commit();
 	
 	}
@@ -189,6 +191,5 @@ public class App extends Application {
 		double lond = Double.parseDouble(lon);
 		return new LatLng(latd, lond);
 		
-	}
-	
+	}	
 }
