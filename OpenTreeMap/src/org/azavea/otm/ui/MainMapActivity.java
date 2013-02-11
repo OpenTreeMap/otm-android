@@ -79,7 +79,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainMapActivity extends MapActivity{
-	private static final LatLng PHILADELPHIA = new LatLng(39.952622, -75.165708) ;
+	private static LatLng START_POS;
 	private static final int DEFAULT_ZOOM_LEVEL = 12;
 	private static final int FILTER_INTENT = 1;
 	private static final int INFO_INTENT = 2;
@@ -105,6 +105,7 @@ public class MainMapActivity extends MapActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        START_POS = App.getStartPos();
         setContentView(R.layout.activity_map_display_2);
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
@@ -153,7 +154,7 @@ public class MainMapActivity extends MapActivity{
     }
     
     private void setUpMap() {
-    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PHILADELPHIA, DEFAULT_ZOOM_LEVEL));  
+    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, DEFAULT_ZOOM_LEVEL));  
     	
     	/* This is the base tree layer using wms/geoserver for debugging purposes.
     	   In production we use tilecache.

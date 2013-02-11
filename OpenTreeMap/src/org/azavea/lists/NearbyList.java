@@ -38,9 +38,8 @@ public class NearbyList implements InfoList {
 	private boolean filterPending;
 	
 	public NearbyList() {
-		//TODO these values should come from config.
-		lat = 40;
-		lon = -75.2;
+		lat = App.getStartPos().latitude;
+		lon = App.getStartPos().longitude;
 		filterRecent = false;
 		filterPending = false;
 	}

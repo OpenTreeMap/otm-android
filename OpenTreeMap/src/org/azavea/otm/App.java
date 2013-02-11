@@ -9,6 +9,7 @@ import org.azavea.lists.NearbyList;
 import org.azavea.otm.FilterManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Application;
 import android.content.Context;
@@ -122,6 +123,8 @@ public class App extends Application {
 			  .putString("num_tiles_x", context.getString(R.string.num_tiles_x))
 			  .putString("num_tiles_y", context.getString(R.string.num_tiles_y))
 			  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
+			  .putString("start_lat", context.getString(R.string.start_lat))
+			  .putString("start_lon", context.getString(R.string.start_lon))
 			  .commit();
 	
 	}
@@ -178,5 +181,14 @@ public class App extends Application {
 		return nearbyList;
 	}
 	
+	public static LatLng getStartPos() {
+		SharedPreferences prefs = getSharedPreferences();
+		String lat = prefs.getString("start_lat", "");//("start_lat", "39.952622");
+		String lon = prefs.getString("start_lon", "");//("start_lon", "-75.165708");
+		double latd = Double.parseDouble(lat);
+		double lond = Double.parseDouble(lon);
+		return new LatLng(latd, lond);
+		
+	}
 	
 }
