@@ -53,6 +53,14 @@ def strings():
 	out_path = buildconf["project"]+"/res/values/strings.xml"
 	_write_out(template_path, json_path, out_path)
 
+def defaults_file():
+	skin = env["skin"]
+	json_path= buildconf[skin] + "/defaults.json"
+	template_path = buildconf["project"] + "/build/templates/defaults.xml.template"
+	out_path = buildconf["project"]+"/res/values/defaults.xml"
+	_write_out(template_path, json_path, out_path)
+
+
 def drawables():
 	# TARGET drawable directories
 	hdpi_tgt   = buildconf["project"] + "/res/drawable-hdpi"
@@ -107,9 +115,31 @@ def drawables():
 	local("cp  " + mdpi_src + " " + mdpi_tgt)
 	local("cp  " + xhdpi_src + " " + xhdpi_tgt)
 
+def assets():
+	tgt   = buildconf["project"] + "/assets"
+
+	try:
+		shutil.rmtree(tgt)
+	except:
+		pass
+
+	os.makedirs(tgt)
+
+	# FIRST copy all files from default
+	src   = buildconf["default"] + "/assets/*"
+	
+	local("cp " + src + " " + tgt)
+	
+	# THEN overwrite with skin files
+	skin = env["skin"]
+	src   = buildconf[skin] + "/assets/*"
+	local("cp  " + src + " " + tgt)
+	
+
 #composite operations
 def build():
 	colors()
 	strings()
-
-
+	defaults_file()
+	drawables()
+	assets()
