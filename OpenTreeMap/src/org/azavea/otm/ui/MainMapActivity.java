@@ -271,20 +271,18 @@ public class MainMapActivity extends MapActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_filter:
-            	Intent filter = new Intent(this, FilterDisplay.class);
-            	startActivityForResult(filter, FILTER_INTENT);
-            	break;
-            case R.id.menu_add:
-            	if(App.getLoginManager().isLoggedIn()) {
-                	setTreeAddMode(CANCEL);
-            		setTreeAddMode(STEP1);
-            	} else {
-            		startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
-            	}
-                break;
-        }
+        int itemId = item.getItemId();
+		if (itemId == R.id.menu_filter) {
+			Intent filter = new Intent(this, FilterDisplay.class);
+			startActivityForResult(filter, FILTER_INTENT);
+		} else if (itemId == R.id.menu_add) {
+			if(App.getLoginManager().isLoggedIn()) {
+				setTreeAddMode(CANCEL);
+				setTreeAddMode(STEP1);
+			} else {
+				startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
+			}
+		}
         return true;
     }
     

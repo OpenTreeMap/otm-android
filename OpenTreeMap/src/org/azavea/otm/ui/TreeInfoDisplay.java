@@ -115,18 +115,17 @@ public class TreeInfoDisplay extends TreeDisplay{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit_plot:
-            	if (App.getLoginManager().isLoggedIn()) {
-            		Intent editPlot = new Intent(this, TreeEditDisplay.class);
-                	editPlot.putExtra("plot", plot.getData().toString());
-                	startActivityForResult(editPlot, EDIT_REQUEST);	
-            	} else {
-            		// TODO: This should redirect to login page
-            		startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
-            	}
-            	break;
-        }
+        int itemId = item.getItemId();
+		if (itemId == R.id.edit_plot) {
+			if (App.getLoginManager().isLoggedIn()) {
+				Intent editPlot = new Intent(this, TreeEditDisplay.class);
+				editPlot.putExtra("plot", plot.getData().toString());
+				startActivityForResult(editPlot, EDIT_REQUEST);	
+			} else {
+				// TODO: This should redirect to login page
+				startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
+			}
+		}
         return true;
     }
     

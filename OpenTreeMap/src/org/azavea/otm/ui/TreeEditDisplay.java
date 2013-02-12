@@ -420,13 +420,11 @@ public class TreeEditDisplay extends TreeDisplay {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.save_edits:
-				save();
-				break;
-			case R.id.cancel_edits:
-				cancel();	
-				break;
+		int itemId = item.getItemId();
+		if (itemId == R.id.save_edits) {
+			save();
+		} else if (itemId == R.id.cancel_edits) {
+			cancel();
 		}
 		return true;
 	}
