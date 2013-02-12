@@ -13,4 +13,8 @@
     <string name="num_tiles_y">1</string>
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
-    </resources>
+    <string name="start_lat">39.952622</string>
+    <string name="start_lon">-75.165708</string>
+    <string name="tree_highlight_layer">tree_search</string>
+    <string name="tree_highlight_style">tree_highlight</string>
+</resources>
