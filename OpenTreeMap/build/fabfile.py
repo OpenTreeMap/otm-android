@@ -17,129 +17,64 @@ def _write_out(template_path, json_path, out_path):
 	f.write(template % json_data)
 	f.close()
 	
-env = {}
-buildconf = _get_json("buildconf.json")
+#env = {}
+#buildconf = _get_json("buildconf.json")
 
-# skins #
-def ptm():
-	env["skin"] = "ptm"
-
-def greenprint():
-	env["skin"] = "greenprint"
-
-def treezilla():
-	env["skin"] = "treezilla"
-
-def ufm():
-	env["skin"] = "ufm"
-
-def default():
-	env["skin"] = "default"
-
-# operations
-def colors():
-	# REFACTOR Consider pulling from build/default/colors.json first, and overriding with skin values.
-	skin = env["skin"]
-	json_path= buildconf[skin] + "/colors.json"
-	template_path = buildconf["project"] + "/build/templates/colors.xml.template"
-	out_path = buildconf["project"]+"/res/values/colors.xml"
-	_write_out(template_path, json_path, out_path)
+#def ptm():
+#	env["skin"] = "ptm"
+#
+#def greenprint():
+#	env["skin"] = "greenprint"
+#
+#def treezilla():
+#	env["skin"] = "treezilla"
+#
+#def ufm():
+#	env["skin"] = "ufm"
+#
+#def default():
+#	env["skin"] = "default"
 
 
-def strings():
-	skin = env["skin"]
-	json_path= buildconf[skin] + "/strings.json"
-	template_path = buildconf["project"] + "/build/templates/strings.xml.template"
-	out_path = buildconf["project"]+"/res/values/strings.xml"
-	_write_out(template_path, json_path, out_path)
 
-def defaults_file():
-	skin = env["skin"]
-	json_path= buildconf[skin] + "/defaults.json"
-	template_path = buildconf["project"] + "/build/templates/defaults.xml.template"
-	out_path = buildconf["project"]+"/res/values/defaults.xml"
-	_write_out(template_path, json_path, out_path)
+#	<choices>
+#		<choice key="action">
+#			<option type="int" value="1">Watered</option>
+#			<option type="int" value="2">Pruned</option>
+#			<option type="int" value="3">Fruit or Nuts Harvested</option>
+#			<option type="int" value="4">Removed</option>
+#			<option type="int" value="5">Inspected</option>
+#		</choice>	
 
+def convert_choices_to_xml(choices_py):
+	globs = {}
+	execfile(choices_py, globs)
+	choices = globs['CHOICES']
 
-def drawables():
-	# TARGET drawable directories
-	hdpi_tgt   = buildconf["project"] + "/res/drawable-hdpi"
-	ldpi_tgt   = buildconf["project"] + "/res/drawable-ldpi"
-	mdpi_tgt   = buildconf["project"] + "/res/drawable-mdpi"	
-	xhdpi_tgt  = buildconf["project"] + "/res/drawable-xhdpi"
+	#print choices
 
-	# start from a clean dir.  I decided this was preferable to having
-	# stuff hanging around the eclipse project that is not going to be part
-	# of a fresh build.
-	try:
-		shutil.rmtree(hdpi_tgt)
-	except:
-		pass
-	try:
-		shutil.rmtree(ldpi_tgt)
-	except:
-		pass
-	try:
-		shutil.rmtree(mdpi_tgt)
-	except:
-		pass
-	try:
-		shutil.rmtree(xhdpi_tgt)
-	except:
-		pass
+	hippie_xml = """
+<choices>
+  <choice key="bool_set">
+    <option type="bool" value="1">Yes</option>
+    <option type="bool" value="0">No</option>
+  </choice>	
+"""
 
-	os.makedirs(hdpi_tgt)
-	os.makedirs(ldpi_tgt)
-	os.makedirs(mdpi_tgt)
-	os.makedirs(xhdpi_tgt)
+	#print choices["canopy_conditions"]
 
-	# FIRST copy all files from default
-	hdpi_src   = buildconf["default"] + "/drawable-hdpi/*"
-	ldpi_src   = buildconf["default"] + "/drawable-ldpi/*"
-	mdpi_src   = buildconf["default"] + "/drawable-mdpi/*"
-	xhdpi_src  = buildconf["default"] + "/drawable-xhdpi/*"
-	
-	local("cp " + hdpi_src + " " + hdpi_tgt)
-	local("cp " + ldpi_src + " " + ldpi_tgt)
-	local("cp " + mdpi_src + " " + mdpi_tgt)
-	local("cp  " + xhdpi_src + " " + xhdpi_tgt)
+	for (ch, vals) in choices.iteritems():
+		#print vals
+		hippie_xml += """  <choice key="%s">\n""" % ch
+		for (value, txt) in vals:
+			hippie_xml += """    <option type="int" value="%s">%s</option>\n""" % (value, txt)
+		
+		hippie_xml += "  </choice>\n"
 
-	# THEN overwrite with skin files
-	skin = env["skin"]
-	hdpi_src   = buildconf[skin] + "/drawable-hdpi/*"
-	ldpi_src   = buildconf[skin] + "/drawable-ldpi/*"
-	mdpi_src   = buildconf[skin] + "/drawable-mdpi/*"
-	xhdpi_src  = buildconf[skin] + "/drawable-xhdpi/*"
-	local("cp  " + hdpi_src + " " + hdpi_tgt)
-	local("cp " + ldpi_src + " " + ldpi_tgt)
-	local("cp  " + mdpi_src + " " + mdpi_tgt)
-	local("cp  " + xhdpi_src + " " + xhdpi_tgt)
+        #for (value, txt) in vals:
+        #	print value
+        #		hippie_xml += "  </choice>\n"
+	hippie_xml += "</choices>\n"
 
-def assets():
-	tgt   = buildconf["project"] + "/assets"
+	print(hippie_xml)
 
-	try:
-		shutil.rmtree(tgt)
-	except:
-		pass
-
-	os.makedirs(tgt)
-
-	# FIRST copy all files from default
-	src   = buildconf["default"] + "/assets/*"
-	
-	local("cp " + src + " " + tgt)
-	
-	# THEN overwrite with skin files
-	skin = env["skin"]
-	src   = buildconf[skin] + "/assets/*"
-	local("cp  " + src + " " + tgt)
-	
-
-#composite operations
-def build():
-	colors()
-	strings()
-	defaults_file()
-	drawables()
-	assets()
