@@ -81,10 +81,11 @@ public class NearbyList implements InfoList {
 				
 			}
 		};
+		if (locationManager != null) {
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+			setInitialLocation();
+		}
 		
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-		
-		setInitialLocation();
 	}
 	
 	public void setFilterRecent(boolean filterRecent) {

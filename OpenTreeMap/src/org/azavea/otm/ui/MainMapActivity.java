@@ -331,15 +331,19 @@ public class MainMapActivity extends MapActivity{
     	Context context = MainMapActivity.this;
     	LocationManager locationManager = 
     			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-    	Criteria crit = new Criteria();
-		crit.setAccuracy(Criteria.ACCURACY_FINE);
-    	String provider = locationManager.getBestProvider(crit, true);
-    	Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
-    	if (lastKnownLocation != null) {
-	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-	    			lastKnownLocation.getLatitude(),
-	    			lastKnownLocation.getLongitude()
-	    	), DEFAULT_ZOOM_LEVEL+2));
+    	if (locationManager != null) {
+	    	Criteria crit = new Criteria();
+			crit.setAccuracy(Criteria.ACCURACY_FINE);
+	    	String provider = locationManager.getBestProvider(crit, true);
+	    	Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
+	    	if (lastKnownLocation != null) {
+		    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+		    			lastKnownLocation.getLatitude(),
+		    			lastKnownLocation.getLongitude()
+		    	), DEFAULT_ZOOM_LEVEL+2));
+	    	} else {
+	    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
+	    	}
     	} else {
     		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
     	}

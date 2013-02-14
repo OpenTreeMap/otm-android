@@ -13,7 +13,7 @@ Creating a new OTM Android app:
     + Redefine the parameters in defaults.xml for your specific backend
     + Set up a debugging Google API Maps key in manifest.html
     + The assets folder is not inherited.  Create a new about page html file in assets.
-
+    + parse the choices.py file and install in res/raw/config.xml (see fab task)
    
     Notes about step #1 above:
     A new android theme from scratch: 
