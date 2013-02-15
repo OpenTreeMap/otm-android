@@ -6,7 +6,6 @@ import com.loopj.android.http.RequestParams;
 
 import android.view.View;
 import android.widget.ToggleButton;
-import com.loopj.android.http.RequestParams;
 
 public class BooleanFilter extends BaseFilter {
 	public boolean active;
