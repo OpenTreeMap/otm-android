@@ -21,7 +21,7 @@ def _write_out(template_path, json_path, out_path):
 	
 env = {}
 buildconf = _get_json("/var/jenkins/static/otm_android_buildconf.json")
-env["otm_lib_path"] = buildconf["paths"]["src"]["otm_lib"]
+
 
 def ptm():
 	env["skin"] = "ptm"
@@ -35,16 +35,23 @@ def tz():
 def ufm():
 	env["skin"] = "ufm"
 
+
+def __both():
+	env["otm_lib_path"] = buildconf["paths"]["src"]["otm_lib"]
+	env["project_path"] = buildconf["paths"]["workspace"][env["skin"]] + buildconf["paths"]["src"][env["skin"]]
+	
 def debug():
-	env["release"] = False
-	env["project_path"] = buildconf["paths"]["src"][env["skin"]]
+	__both()
+	env["release"] = False	
 	env["gmap_api_key"] = buildconf["gmap_api_keys"]["debug"][env["skin"]]
 		
 def release():
+	__both()
 	env["release"] = True
-	env["project_path"] = buildconf["paths"]["src"][env["skin"]]
+	env["apk_path"] = buildconf["paths"]["workspace"][env["skin"]] + buildconf["paths"]["apk"]["release"][env["skin"]]
+	env["cert_path"] = buildconf["paths"]["release_certificates"][env["skin"]]
 	env["gmap_api_key"] = buildconf["gmap_api_keys"]["release"][env["skin"]]
-
+	
 def verify_paths():
 	if os.path.isdir(env["project_path"]):
 		print "Using path '%s' for skin '%s'." % (env["project_path"], env["skin"])
@@ -112,7 +119,7 @@ def build_apk():
 
 
 def sign_apk():
-	if not env["release"]:
+	if env["release"] == False:
 		return
 
 	try:
@@ -122,33 +129,16 @@ def sign_apk():
 	if not cert_pw:
 		cert_pw = getpass("Please enter the password for certificate'%s': " % env["skin"])
 
-	apk_path = buildconf["paths"]["apk"]["release"][env["skin"]]
-	cert_path = buildconf["paths"]["release_certificates"][env["skin"]]
 	keystore_alias = buildconf["keystore_alias"][env["skin"]]
-	signed_apk_name = "%s/bin/%s-unaligned-%s.apk" % (buildconf["paths"]["src"][env["skin"]], env["skin"], time.mktime(time.gmtime()))
-	local("jarsigner -signedjar %s -keypass %s -storepass %s -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore %s %s %s" % (signed_apk_name, cert_pw, cert_pw, cert_path, apk_path, keystore_alias))
+	signed_apk_name = "%s/bin/%s-unaligned-%s.apk" % (env["project_path"], env["skin"], time.mktime(time.gmtime()))
+	local("jarsigner -signedjar %s -keypass %s -storepass %s -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore %s %s %s" % (signed_apk_name, cert_pw, cert_pw, env["cert_path"], env["apk_path"], keystore_alias))
 	align_apk(signed_apk_name)
 
 def align_apk(unaligned):
 	output = unaligned.replace("unaligned", "release")
 	local("zipalign -fv 4 %s %s" % (unaligned, output))
 
-def deploy():
-	if env["release"]:
-		path = buildconf["paths"]["apk"]["release"][env["skin"]]
-	else:
-		path = buildconf["paths"]["apk"]["debug"][env["skin"]]
-	
-	if os.path.isfile(path):
-		print "Attempting to install apk: %s" % path
-		with lcd(env["project_path"]):
-			local("adb install %s") % path
-	else:
-		raise "APK not found at: %s" % path
-
-
 def build():
-	verify_paths()
 	install_gmap_api_key()
 	build_apk()
 	sign_apk()
