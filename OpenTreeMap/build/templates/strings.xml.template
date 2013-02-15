@@ -37,7 +37,7 @@
     <string name="filter_species_hint">Filter species...</string>
     
     <string name="unspecified_field_value">Unspecified</string>
-    
+    <string name="filter_display_label">Filter:</string>
     
     <item type="id" name="species_id"/>
     <item type="id" name="filter_key"/>
