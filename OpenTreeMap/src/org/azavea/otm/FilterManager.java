@@ -184,7 +184,7 @@ public class FilterManager {
 		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
 			BaseFilter filter = entry.getValue();
 			if (filter.isActive()) {
-				display += sep + filter.displayName;
+				display += sep + filter.label;
 				sep = ", ";
 			}
 		}
