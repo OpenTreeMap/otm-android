@@ -110,8 +110,7 @@ def build_apk():
 			local(cmd)
 		
 
-#TODO
-# release apk is being named TabLayout
+
 def sign_apk():
 	if not env["release"]:
 		return
@@ -121,17 +120,18 @@ def sign_apk():
 	except:
 		pass
 	if not cert_pw:
-		cert_pw = getpass("Please enter the password for certificate: '%s'" % env["skin"])
+		cert_pw = getpass("Please enter the password for certificate'%s': " % env["skin"])
 
 	apk_path = buildconf["paths"]["apk"]["release"][env["skin"]]
 	cert_path = buildconf["paths"]["release_certificates"][env["skin"]]
 	keystore_alias = buildconf["keystore_alias"][env["skin"]]
-	signed_apk_name = "%s/bin/%s-release-%s.apk" % (buildconf["paths"]["src"][env["skin"]], env["skin"], time.mktime(time.gmtime()))
+	signed_apk_name = "%s/bin/%s-unaligned-%s.apk" % (buildconf["paths"]["src"][env["skin"]], env["skin"], time.mktime(time.gmtime()))
 	local("jarsigner -signedjar %s -keypass %s -storepass %s -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore %s %s %s" % (signed_apk_name, cert_pw, cert_pw, cert_path, apk_path, keystore_alias))
+	align_apk(signed_apk_name)
 
-def align_apk():
-	#TODO
-	pass
+def align_apk(unaligned):
+	output = unaligned.replace("unaligned", "release")
+	local("zipalign -fv 4 %s %s" % (unaligned, output))
 
 def deploy():
 	if env["release"]:
