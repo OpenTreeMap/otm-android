@@ -98,6 +98,7 @@ public class MainMapActivity extends MapActivity{
 	private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
 	private Marker plotMarker;
     private GoogleMap mMap;
+    private TextView filterDisplay;
 
     TileOverlay filterTileOverlay;
     WMSTileProvider filterTileProvider;
@@ -107,6 +108,7 @@ public class MainMapActivity extends MapActivity{
         super.onCreate(savedInstanceState);
         START_POS = App.getStartPos();
         setContentView(R.layout.activity_map_display_2);
+        filterDisplay = (TextView)findViewById(R.id.filterDisplay);
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
@@ -294,6 +296,7 @@ public class MainMapActivity extends MapActivity{
  	  	case FILTER_INTENT: 
  	  		if (resultCode == Activity.RESULT_OK) { 
  	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsRequestParams();
+ 	  			setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
  	  			if (activeFilters.toString().equals("")) {
  	  				filterTileProvider.setCql("");
  	  				filterTileOverlay.clearTileCache();
@@ -325,7 +328,17 @@ public class MainMapActivity extends MapActivity{
  	  } 
  	}
  	
- 	// onClick handler for "My Location" button
+ 	private void setFilterDisplay(String activeFilterDisplay) {
+ 		if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
+ 			filterDisplay.setVisibility(View.GONE);
+ 		} else {
+ 			filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
+ 			filterDisplay.setVisibility(View.VISIBLE);
+ 		}
+		
+	}
+
+	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
     	
     	Context context = MainMapActivity.this;
@@ -367,7 +380,7 @@ public class MainMapActivity extends MapActivity{
     	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
     
-    // Map click listener for normall view mode
+    // Map click listener for normal view mode
     private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {	
     	@Override
 		public void onMapClick(LatLng point) {		

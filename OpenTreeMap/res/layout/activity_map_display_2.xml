@@ -12,16 +12,14 @@
 	  android:layout_height="fill_parent"
 	  class="com.google.android.gms.maps.SupportMapFragment"/>
     
-
     <LinearLayout
         android:id="@+id/location_bar"
+        style="@android:style/ButtonBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        style="@android:style/ButtonBar"
         android:background="@color/primaryGradientColorOffEnd"
-        android:padding="3dp"
-    >
+        android:padding="3dp" >
         
 	    <EditText
 	        android:id="@+id/locationSearchField"
@@ -45,21 +43,30 @@
 	        android:onClick="handleLocationSearchClick"
 	        android:background="@drawable/btn_primary"
 	    ></ImageButton>
+
 	</LinearLayout>
+
+  	    <TextView
+  	        android:id="@+id/filterDisplay"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:layout_below="@+id/location_bar"
+  	        android:background="@color/black_start"
+  	        android:visibility="gone"
+  	        android:textAppearance="?android:attr/textAppearanceSmall" />
  
     <ImageButton
 	        android:id="@+id/mylocationbutton"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginRight="3dp"
 	        android:layout_marginTop="3dp"
-	        android:layout_below="@+id/location_bar"
+	        android:layout_below="@+id/filterDisplay"
 	        android:layout_width="44dp"
 	        android:layout_height="44dp"
 	        android:contentDescription="@string/show_location"
 	        android:onClick="showMyLocation"
 	        android:src="@android:drawable/ic_menu_mylocation"
 	        android:background="@drawable/btn_primary"
-	        
 	 />
     
     
@@ -196,10 +203,9 @@
       foursquared:cornerRadius="4dip"
       foursquared:btnPaddingTop="7dip"
       foursquared:btnPaddingBottom="7dip" 
-      android:layout_below="@+id/location_bar"
+      android:layout_below="@+id/filterDisplay"
       android:layout_marginTop="5dp"
-      android:layout_marginLeft="5dp"/> 
-    
+      android:layout_marginLeft="5dp"/>
     
 </RelativeLayout>
 
