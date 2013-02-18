@@ -1,7 +1,7 @@
 <implementation>
     <pending>true</pending>
 	<filters>
-	    <!--filter key="missing_tree" name="Missing Tree" type="OTMBoolFilter" -->
+	    <!--  
 	    <filter key="missing_species" name="Missing Species" type="OTMBoolFilter"/>
 	    <filter key="missing_diameter" name="Missing Diameter" type="OTMBoolFilter"/>
 	    <filter key="species" name="Species" type="OTMListFilter" data="species"/>
@@ -10,8 +10,10 @@
 	    <filter key="flowering" name="Flowering" type="OTMBoolFilter" trueval="flower_conspicuous"/>
 	    <filter key="native" name="Native" type="OTMBoolFilter"/>
 	    <filter key="diameter_range" name="Diameter" type="OTMRangeFilter"/>
+	    -->
 	</filters>
 	<choices>
+	    <!--  
 		<choice key="action">
 			<option type="int" value="1">Watered</option>
 			<option type="int" value="2">Pruned</option>
@@ -86,9 +88,12 @@
 		<choice key="status">
 		    <option type="int" value="1">Height (in feet)</option>
 		    <option type="int" value="2">Diameter (in inches)</option>
-		</choice>    
+		</choice>
+		-->    
 	</choices>
+	
 	<fields>
+		<!--  
 	    <fieldGroup>
 	        <field key="geometry" label="" minimumToEdit="99999"/>
 	    </fieldGroup>
@@ -121,5 +126,6 @@
 	        <field type="eco" key="tree.eco.annual_energy_conserved" label="Energy Benefits" minimumToEdit="99999"/>
 	        <field type="eco" key="tree.eco.annual_air_quality_improvement" label="Air Quality" minimumToEdit="99999"/>
 	    </fieldGroup>
+	    -->
 	</fields>
 </implementation>

@@ -14,6 +14,6 @@
 			    android:layout_margin="@dimen/padding_medium"
 			    android:onClick="changeTreePhoto"
 			    android:text="@string/change_tree_picture"
-			    android:textColor="@color/text_dark" />
+			    android:textColor="@color/white" />
 			
 </LinearLayout>
