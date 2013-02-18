@@ -27,16 +27,21 @@
       		android:name="com.google.android.maps.v2.API_KEY"
      		android:value="AIzaSyCxd7VprLKxRJQ5JJzgUy8_BUfx4Y9RaKY"/ -->
     
-        
-        <!-- uses-library android:name="com.google.android.maps" android:required="false" /-->
+       <activity
+       	    android:label="@string/app_name"
+       	    android:name="org.azavea.otm.ui.SplashScreenActivity"
+       	    android:theme="@android:style/Theme.NoTitleBar">
+       	    <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+       	</activity>
+       	
+       
         <activity
             android:label="@string/app_name"
             android:name="org.azavea.otm.ui.TabLayout"
             android:theme="@android:style/Theme.NoTitleBar" >
-            <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>        
         <activity
             android:name="org.azavea.otm.ui.LoginActivity"

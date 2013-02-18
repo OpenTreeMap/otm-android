@@ -42,6 +42,6 @@ public class TabLayout extends TabActivity {
         		res.getDrawable(R.drawable.tab_about)).setContent(intent);
         tabHost.addTab(spec);
 
-        tabHost.setCurrentTab(3);
+        tabHost.setCurrentTab(0);
     }
 }
