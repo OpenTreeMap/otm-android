@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -213,7 +214,7 @@ public class MainMapActivity extends MapActivity{
 			if (plotMarker != null) {
 				plotMarker.remove();
 			}
-			plotMarker = mMap.addMarker(new MarkerOptions().position(position).title(""));
+			plotMarker = mMap.addMarker(new MarkerOptions().position(position).title("").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -438,6 +439,7 @@ public class MainMapActivity extends MapActivity{
 			plotMarker =  mMap.addMarker(new MarkerOptions()
 		       .position(point)
 		       .title("New Tree")
+		       .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker))
 		    );
 			plotMarker.setDraggable(true);
 			setTreeAddMode(STEP2);

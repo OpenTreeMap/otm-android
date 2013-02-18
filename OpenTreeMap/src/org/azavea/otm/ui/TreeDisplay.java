@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -75,7 +76,7 @@ public class TreeDisplay extends MapActivity{
 		if (plotMarker != null) {
 			plotMarker.remove();
 		}
-		plotMarker = mMap.addMarker(new MarkerOptions().position(plotLocation).title(""));
+		plotMarker = mMap.addMarker(new MarkerOptions().position(plotLocation).title("").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
 	}
 	
 	 protected void setUpMapIfNeeded() {
