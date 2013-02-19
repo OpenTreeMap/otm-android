@@ -113,9 +113,7 @@ public class MainMapActivity extends MapActivity{
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
-		setTreeAddMode(CANCEL);
-		setUpBasemapControls();
-    }
+	}
 
     @Override
     protected void onResume() {
@@ -151,6 +149,7 @@ public class MainMapActivity extends MapActivity{
             if (mMap != null) {
                 setUpMap();
             } else {
+            	Toast.makeText(MainMapActivity.this, "Google play services library not found.", Toast.LENGTH_LONG).show();
             	Log.e(App.LOG_TAG, "Map was null!");
             }
         }       
@@ -180,6 +179,10 @@ public class MainMapActivity extends MapActivity{
        
         // Set up the default click listener
         mMap.setOnMapClickListener(showPopupMapClickListener);
+        
+        setTreeAddMode(CANCEL);
+		setUpBasemapControls();
+   
     }
     
     public void showPopup(Plot plot) {
