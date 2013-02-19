@@ -149,8 +149,8 @@ public class MainMapActivity extends MapActivity{
             if (mMap != null) {
                 setUpMap();
             } else {
-            	Toast.makeText(MainMapActivity.this, "Google play services library not found.", Toast.LENGTH_LONG).show();
-            	Log.e(App.LOG_TAG, "Map was null!");
+            	Toast.makeText(MainMapActivity.this, "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
+        		Log.e(App.LOG_TAG, "Map was null!");
             }
         }       
     }
@@ -450,6 +450,10 @@ public class MainMapActivity extends MapActivity{
     };
         
     public void setTreeAddMode(int step) {
+    	if (mMap == null) {
+    		return;
+    	}
+    	
     	View step1 =findViewById(R.id.addTreeStep1);
     	View step2 = findViewById(R.id.addTreeStep2);
     	switch (step) {

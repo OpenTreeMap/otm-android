@@ -6,6 +6,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.widget.Toast;
 
 public abstract class MapActivity extends android.support.v4.app.FragmentActivity {
 	
