@@ -12,7 +12,7 @@ import org.azavea.otm.R;
 public class SplashScreenActivity extends Activity {
 	//http://mobituts.blogspot.com/2011/10/example-of-splash-screen-in-android.html
 	private static final int STOP_SPLASH = 0;     
-	private static final long SPLASH_TIME_MILLIS = 750;  
+	private static final long SPLASH_TIME_MILLIS = 2000;  
   
     private Handler splashHandler = new Handler() {  
          @Override  
