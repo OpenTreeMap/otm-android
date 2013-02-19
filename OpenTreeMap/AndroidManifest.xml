@@ -30,6 +30,7 @@
        <activity
        	    android:label="@string/app_name"
        	    android:name="org.azavea.otm.ui.SplashScreenActivity"
+       	    android:screenOrientation="portrait"
        	    android:theme="@android:style/Theme.NoTitleBar">
        	    <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
