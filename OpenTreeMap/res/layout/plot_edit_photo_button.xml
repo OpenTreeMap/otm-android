@@ -11,7 +11,6 @@
 			    android:id="@+id/edit_tree_picture"
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
-			    android:layout_margin="@dimen/padding_medium"
 			    android:onClick="changeTreePhoto"
 			    android:text="@string/change_tree_picture"
 			    android:textColor="@color/white" />
