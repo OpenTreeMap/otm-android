@@ -32,6 +32,8 @@ Creating a new OTM Android app:
     + The assets folder is not inherited.  Create a new about page and splash page html file in assets.
 
     + parse the choices.py file and install in res/raw/config.xml (see fab task)
+    + edit the fields in res/raw/config.xml
+
 
     + (Editor)Set up a debugging Google API Maps key in buildconf.json (OTM project on fileshare in deploy/android folder for example)
 
