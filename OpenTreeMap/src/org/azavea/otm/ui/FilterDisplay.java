@@ -1,12 +1,10 @@
 package org.azavea.otm.ui;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.azavea.otm.App;
-import org.azavea.otm.Choice;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.filters.BooleanFilter;
@@ -19,7 +17,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,7 +78,6 @@ public class FilterDisplay extends Activity{
 		for (Entry<String, BaseFilter> filter : filters.entrySet()){
 			filter.getValue().clear();
 		}
-		
 	}
 
 	private void resetFilterUI(ViewGroup group) {
@@ -188,8 +184,8 @@ public class FilterDisplay extends Activity{
 					
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							choiceButton.setText(filter.label + " " + filter.choices.getItems().get(which));
 							filter.setSelectedIndex(which);
+							choiceButton.setText(filter.getSelectedLabelText());
 							dialog.dismiss();
 						}
 					})
