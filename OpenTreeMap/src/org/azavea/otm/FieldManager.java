@@ -64,7 +64,9 @@ public class FieldManager {
 				Node choiceGroup = choices.item(i);
 				
 				String name = choiceGroup.getAttributes().getNamedItem("key").getNodeValue();
-				Choices group = new Choices(name);
+				String type = choiceGroup.getAttributes().getNamedItem("type").getNodeValue();
+				
+				Choices group = new Choices(name, type);
 				group.addChoices(choiceGroup.getChildNodes());
 				allChoices.put(name, group);
 			}
