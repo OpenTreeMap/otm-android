@@ -69,18 +69,19 @@ def convert_choices_to_xml(choices_py):
 
 	hippie_xml = """
 <choices>
-  <choice key="bool_set">
+  <choice type="bool" key="bool_set">
     <option type="bool" value="1">Yes</option>
     <option type="bool" value="0">No</option>
   </choice>	
 """
 	for (ch, vals) in choices.iteritems():
-		#print vals
-		hippie_xml += """  <choice key="%s">\n""" % ch
-		for (value, txt) in vals:
-			hippie_xml += """    <option type="int" value="%s">%s</option>\n""" % (value, txt)
+		# bool set is handled above
+		if ch != 'bool_set':
+			hippie_xml += """  <choice type="int" key="%s">\n""" % ch
+			for (value, txt) in vals:
+				hippie_xml += """    <option value="%s">%s</option>\n""" % (value, txt)
 		
-		hippie_xml += "  </choice>\n"
+			hippie_xml += "  </choice>\n"
 
 	hippie_xml += "</choices>\n"
 
