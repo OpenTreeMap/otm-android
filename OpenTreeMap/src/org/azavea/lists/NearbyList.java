@@ -132,11 +132,13 @@ public class NearbyList implements InfoList {
 		crit.setAccuracy(Criteria.ACCURACY_FINE);
 		String provider = locationManager.getBestProvider(crit, true);
 		
-		Location loc = locationManager.getLastKnownLocation(provider);
-		if (loc != null) {
-			lat = loc.getLatitude();
-			lon = loc.getLongitude();
-			update();
+		if (provider != null) {
+			Location loc = locationManager.getLastKnownLocation(provider);
+			if (loc != null) {
+				lat = loc.getLatitude();
+				lon = loc.getLongitude();
+				update();
+			}
 		}
 		
 	}
