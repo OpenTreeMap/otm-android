@@ -1,5 +1,6 @@
 package org.azavea.otm;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,7 +11,9 @@ public class Choices {
 
 	private String name;
 	private Map<Integer,Choice> choices = new LinkedHashMap<Integer, Choice>();
-
+	private ArrayList<String> items = new ArrayList<String>();
+	private ArrayList<Integer> values = new ArrayList<Integer>();
+	
 	public Choices() {
 		this.name = "";
 	}
@@ -28,7 +31,10 @@ public class Choices {
 			for (int i=0; i < choiceDefs.getLength(); i++) {
 				Node def = choiceDefs.item(i);
 				if (def.getNodeType() == Node.ELEMENT_NODE) {
-					addChoice(new Choice(def));
+					Choice choice = new Choice(def);
+					addChoice(choice);
+					this.items.add(choice.getText());
+					this.values.add(choice.getId());
 				}
 			}
 		}
@@ -44,5 +50,13 @@ public class Choices {
 
 	public Map<Integer,Choice> getChoices() {
 		return choices;
+	}
+
+	public ArrayList<String> getItems() {
+		return this.items;
+	}
+
+	public ArrayList<Integer> getValues() {
+		return this.values;
 	}
 }

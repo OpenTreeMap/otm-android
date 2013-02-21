@@ -245,15 +245,8 @@ public class Field {
 		Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
 		if (choices != null && !choices.equals(null)) {
 			this.choiceMap = choices.getChoices();
-	
-	    	if (this.choiceItems.size() == 0) {
-				for (Entry<Integer, Choice> entry: choiceMap.entrySet()) {
-					this.choiceItems.add(entry.getValue().getText());
-					this.choiceValues.add(entry.getKey());
-				}
-	    	}
-		} else {
-			Log.w(App.LOG_TAG, "Unable to load specified choices: " + this.choiceName);
+			this.choiceItems = choices.getItems();
+			this.choiceValues = choices.getValues();
 		}
 	}
 

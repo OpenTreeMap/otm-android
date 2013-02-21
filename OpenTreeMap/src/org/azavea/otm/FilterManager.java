@@ -8,12 +8,14 @@ import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.BaseFilter;
+import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -97,7 +99,8 @@ public class FilterManager {
 		callback.handleMessage(resultMessage);
 	}
 	
-	private BaseFilter makeMapFilter(String key, String name, String type, String trueval) 
+	private BaseFilter makeMapFilter(String key, String name, String type, 
+			String trueval, String choice) 
 			throws Exception {
 		
 		if (type.equals("OTMBoolFilter")) {
@@ -106,6 +109,8 @@ public class FilterManager {
 			return new RangeFilter(key, name);
 		} else if (type.equals("OTMListFilter")) {
 			return new SpeciesFilter(key, name);
+		} else if (type.equals("OTMChoiceFilter")) {
+			return new ChoiceFilter(key, name, choice);
 		}
 		else {
 			throw new Exception("Invalid filter type defined in config: " + type);
@@ -122,16 +127,24 @@ public class FilterManager {
 			NodeList filters = doc.getElementsByTagName("filter");
 			for (int i=0; i < filters.getLength(); i++) {
 				Node filter = filters.item(i);
-				String key = filter.getAttributes().getNamedItem("key").getNodeValue();
-				String name = filter.getAttributes().getNamedItem("name").getNodeValue();
-				String type = filter.getAttributes().getNamedItem("type").getNodeValue();
-				String trueval;
-				try {
-					trueval = filter.getAttributes().getNamedItem("trueval").getNodeValue();
-				} catch (Exception e) {
-					trueval = "";
+				NamedNodeMap attributes = filter.getAttributes();
+				String key = attributes.getNamedItem("key").getNodeValue();
+				String name = attributes.getNamedItem("name").getNodeValue();
+				String type = attributes.getNamedItem("type").getNodeValue();
+				
+				Node choiceNode = attributes.getNamedItem("choice");
+				String choice = "";
+				if (choiceNode != null) {
+					choice = choiceNode.getNodeValue();
 				}
-				allFilters.put(key, makeMapFilter(key, name, type, trueval));
+				
+				Node truevalNode = attributes.getNamedItem("trueval");
+				String trueval = "";
+				if (truevalNode != null) {
+					trueval = truevalNode.getNodeValue();
+				}
+				
+				allFilters.put(key, makeMapFilter(key, name, type, trueval, choice));
 			}
 		} catch (Exception e) {
 			throw new Exception("Invalid filter xml file", e);
