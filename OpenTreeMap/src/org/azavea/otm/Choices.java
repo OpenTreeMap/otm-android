@@ -10,6 +10,8 @@ import org.w3c.dom.NodeList;
 public class Choices {
 
 	private String name;
+	private String valueType;
+	
 	private Map<Integer,Choice> choices = new LinkedHashMap<Integer, Choice>();
 	private ArrayList<String> items = new ArrayList<String>();
 	private ArrayList<Integer> values = new ArrayList<Integer>();
@@ -18,8 +20,9 @@ public class Choices {
 		this.name = "";
 	}
 	
-	public Choices(String name) {
+	public Choices(String name, String valueType) {
 		this.name = name;
+		this.valueType = valueType;
 	}
 	
 	public void addChoices(Map<Integer,Choice> choices) {
@@ -48,6 +51,10 @@ public class Choices {
 		return name;
 	}
 
+	public String getValueType() {
+		return this.valueType;
+	}
+	
 	public Map<Integer,Choice> getChoices() {
 		return choices;
 	}

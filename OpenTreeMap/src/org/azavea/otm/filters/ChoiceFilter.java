@@ -36,7 +36,12 @@ public class ChoiceFilter extends BaseFilter{
 	@Override
 	public void addToRequestParams(RequestParams rp) {
 		// Id of the choice at selected index
-		rp.put(key, choices.getValues().get(selectedIndex).toString());
+		int value = choices.getValues().get(selectedIndex);
+		String typeValue = String.valueOf(value);
+		if (this.choices.getValueType().equals("bool")) {
+			typeValue = String.valueOf(value == 1);
+		}
+		rp.put(key, typeValue);
 		
 	}
 
