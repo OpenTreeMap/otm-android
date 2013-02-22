@@ -1,5 +1,10 @@
 package org.azavea.otm.ui;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.azavea.otm.App;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
@@ -77,8 +82,14 @@ public class TreeInfoDisplay extends TreeDisplay{
 			} else {
 				setText(R.id.species, defaultText);
 			}
-			
-			setText(R.id.updated_on, "Last updated on " + plot.getLastUpdated());
+			try {
+				DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				DateFormat outputFormat = new SimpleDateFormat(getString(R.string.date_time_format));
+				Date updated = inputFormat.parse(plot.getLastUpdated());
+				setText(R.id.updated_on, "Updated " + outputFormat.format(updated));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			setText(R.id.updated_by, "By " + plot.getLastUpdatedBy());
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not access plot information for display", 
