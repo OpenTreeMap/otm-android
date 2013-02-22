@@ -34,8 +34,10 @@ public class EcoField extends Field {
         Object value = getValueForKey(this.key + VALUE_KEY, model.getData());
         Object units = getValueForKey(this.key + UNIT_KEY, model.getData());
         if (value != null) {
-	        ((TextView)container.findViewById(R.id.field_value))
-	        	.setText(value + " " + units);
+            String valueTruncated = String.format("%.1f", value);
+            
+        	((TextView)container.findViewById(R.id.field_value))
+	        	.setText(valueTruncated + " " + units);
 	        
 	        // The dollar amount of the benefit
 	        NumberFormat currency = NumberFormat.getCurrencyInstance();

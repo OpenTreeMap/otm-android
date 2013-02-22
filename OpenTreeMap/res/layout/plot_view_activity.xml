@@ -10,7 +10,7 @@
 	    android:id="@+id/header"
 	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
-	    android:background="@color/dgreen"
+	    android:background="@color/primaryColor"
 	    android:color="@color/text_dark">
 	    
 		<ImageView
@@ -83,6 +83,7 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
+	        android:paddingLeft="10dp"
 	        >        	
 	    </LinearLayout>
 	</ScrollView>
