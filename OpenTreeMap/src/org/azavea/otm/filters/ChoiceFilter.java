@@ -41,7 +41,8 @@ public class ChoiceFilter extends BaseFilter{
 		if (this.choices.getValueType().equals("bool")) {
 			typeValue = String.valueOf(value == 1);
 		}
-		rp.put(key, typeValue);
+		// API expects <key>_<value>=1: pests_1=1, pests_2=1
+		rp.put(key + "_" + value, typeValue);
 		
 	}
 
