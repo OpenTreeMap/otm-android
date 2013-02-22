@@ -165,7 +165,10 @@
             android:layout_below="@+id/plotSpecies"
             android:layout_toRightOf="@+id/plotImage"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_dark" />
+            android:textColor="@color/text_dark" 
+         	android:ellipsize="end"
+			android:maxLines="1"
+			android:scrollHorizontally="true"/>
 
         <TextView
             android:id="@+id/plotDiameter"

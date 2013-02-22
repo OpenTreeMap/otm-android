@@ -33,7 +33,11 @@
 		    android:layout_marginLeft="16dp"
 		    android:layout_toRightOf="@+id/plot_photo"
 		    android:text="@string/no_address"
-		    android:textColor="@color/white" />
+		    android:textColor="@color/white" 
+		    android:ellipsize="end"
+			android:maxLines="1"
+			android:scrollHorizontally="true"
+/>
 
 		<TextView
 		    android:id="@+id/species"
