@@ -46,7 +46,6 @@
     <string name="no_address">No Address</string>
     <string name="species_missing">Species Missing</string>
     <string name="dbh_missing">Diameter Missing</string>
-    <string name="dbh_units">Inches</string>
     <string name="address_missing">Address Missing</string>
     
     <string name="toggle_nearby">Nearby</string>
@@ -98,5 +97,10 @@
     <string name="problem_creating_account">There was a problem creating your account.</string>
     <string name="problem_setting_profile_picture">There was a problem setting your profile picture.</string>
 	<string name="username_is_taken">Sorry, that username is taken.</string>
+	
+	<!-- Internationalization options -->
 	<string name="date_time_format">MMMM dd, yyyy h:mmaa</string>
+	<string name="iso_locale_language">English</string>
+	<string name="iso_locale_country">US</string>
+	<string name="default_measure_units">in</string>
 </resources>
