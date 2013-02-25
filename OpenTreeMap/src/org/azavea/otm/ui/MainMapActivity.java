@@ -193,7 +193,7 @@ public class MainMapActivity extends MapActivity{
 		plotImageView.setImageResource(R.drawable.ic_action_search);
 		
 		try {
-	        plotUpdatedByView.setText(plot.getLastUpdatedBy());
+	        plotUpdatedByView.setText("By " + plot.getLastUpdatedBy());
 	        if (plot.getAddress().length() != 0) {
 	        	plotAddressView.setText(plot.getAddress());
 	        }
@@ -219,7 +219,10 @@ public class MainMapActivity extends MapActivity{
 			if (plotMarker != null) {
 				plotMarker.remove();
 			}
-			plotMarker = mMap.addMarker(new MarkerOptions().position(position).title("").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+			plotMarker = mMap.addMarker(new MarkerOptions()
+				.position(position)
+				.title("")
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
