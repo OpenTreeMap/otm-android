@@ -208,7 +208,9 @@ public class MainMapActivity extends MapActivity{
 				plotSpeciesView.setText(speciesName);
 			
 				if (tree.getDbh() != 0) {
-					plotDiameterView.setText(String.valueOf(tree.getDbh()) + " " + getString(R.string.dbh_units));
+					plotDiameterView.setText(String.valueOf(tree.getDbh()) +  
+							getString(R.string.default_measure_units) + " " + 
+							"Diameter");
 				} 
 				showImage(plot);
 			}
