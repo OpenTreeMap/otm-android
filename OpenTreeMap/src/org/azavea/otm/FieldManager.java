@@ -3,6 +3,7 @@ package org.azavea.otm;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,6 +28,11 @@ public class FieldManager {
 	public FieldManager(Context context) throws Exception {
 		this.context = context;
 		loadFieldDefinitions();
+	}
+	
+	public Locale getLocale() {
+		return new Locale(context.getString(R.string.iso_locale_language), 
+				context.getString(R.string.iso_locale_country));
 	}
 	
 	private void loadFieldDefinitions() throws Exception {
