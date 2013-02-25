@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- NB: res/values/defaults.xml is templated in build/templates/defaults.xml.template. 
-	     CHANGES TO res/values/defaults.xml WILL BE OVERWRITTEN
--->
-
 <resources>
     <string name="base_url">http://207.245.89.246/v1.2/api/v0.1</string>
     <string name="wms_url">http://phillytreemap.org/geoserver/wms</string>
@@ -17,4 +13,8 @@
     <string name="start_lon">-75.165708</string>
     <string name="tree_highlight_layer">tree_search</string>
     <string name="tree_highlight_style">tree_highlight</string>
+    <string name="search_bbox_lower_left_lat">39.56970506644249</string>
+    <string name="search_bbox_lower_left_lon">-75.74523925781249</string>
+    <string name="search_bbox_upper_right_lat">40.43858586704328</string>
+    <string name="search_bbox_upper_right_lon">-74.6795654296875</string>
 </resources>

@@ -127,6 +127,10 @@ public class App extends Application {
 			  .putString("start_lon", context.getString(R.string.start_lon))
 			  .putString("tree_highlight_layer", context.getString(R.string.tree_highlight_layer))
 			  .putString("tree_highlight_style", context.getString(R.string.tree_highlight_style))
+			  .putString("search_bbox_lower_left_lat", context.getString(R.string.search_bbox_lower_left_lat))
+			  .putString("search_bbox_lower_left_lon", context.getString(R.string.search_bbox_lower_left_lon))
+			  .putString("search_bbox_upper_right_lat", context.getString(R.string.search_bbox_upper_right_lat))
+			  .putString("search_bbox_upper_right_lon", context.getString(R.string.search_bbox_upper_right_lon))
 			  .commit();
 	
 	}

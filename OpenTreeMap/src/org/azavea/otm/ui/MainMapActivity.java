@@ -58,6 +58,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Criteria;
@@ -576,7 +577,13 @@ public class MainMapActivity extends MapActivity{
     	} else {
     		Geocoder g = new Geocoder(MainMapActivity.this);
     		try {
-				List<Address> a = g.getFromLocationName(address, 1);
+    			SharedPreferences prefs = App.getSharedPreferences();
+    			double lowerLeftLatitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", ""));
+    			double lowerLeftLongitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", ""));
+    			double upperRightLatitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", ""));
+    			double upperRightLongitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""));
+    			
+				List<Address> a = g.getFromLocationName(address, 1, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
 				if (a.size() == 0) {
 					Toast.makeText(MainMapActivity.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
 				} else {
