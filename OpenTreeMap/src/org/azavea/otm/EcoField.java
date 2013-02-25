@@ -1,6 +1,7 @@
 package org.azavea.otm;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
@@ -40,7 +41,7 @@ public class EcoField extends Field {
 	        	.setText(valueTruncated + " " + units);
 	        
 	        // The dollar amount of the benefit
-	        NumberFormat currency = NumberFormat.getCurrencyInstance();
+	        NumberFormat currency = NumberFormat.getCurrencyInstance(App.getFieldManager().getLocale());
 	        currency.setMaximumFractionDigits(2);
 	        Double amount = (Double)getValueForKey(this.key + AMOUNT_KEY, model.getData());
 	        ((TextView)container.findViewById(R.id.field_money))
