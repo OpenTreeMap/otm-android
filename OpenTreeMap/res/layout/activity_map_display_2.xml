@@ -209,6 +209,37 @@
       android:layout_below="@+id/filterDisplay"
       android:layout_marginTop="5dp"
       android:layout_marginLeft="5dp"/>
+	
+	<LinearLayout
+	    android:id="@+id/filter_add_buttons"
+	    android:layout_alignParentBottom="true"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="5dp"
+	 >
+	    <Button 
+	        android:text="filter"
+	        android:layout_width="0dp"
+	        android:layout_weight=".5"
+	        android:layout_height="wrap_content"
+	        android:onClick="doFilter"
+	        android:background="@drawable/btn_primary"
+	        android:layout_marginRight="1dp"
+	        />
+	    <Button 
+	        android:text="add tree"
+	        android:layout_width="0dp"
+	        android:layout_weight=".5"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/btn_primary"
+	        android:onClick="doAddTree"
+	        android:layout_marginLeft="1dp"
+	        
+	       
+	        />
+	    
+	    
+	</LinearLayout>
     
 </RelativeLayout>
 

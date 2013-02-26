@@ -158,7 +158,7 @@ public class MainMapActivity extends MapActivity{
     
     private void setUpMap() {
     	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, DEFAULT_ZOOM_LEVEL));  
-    	
+    	mMap.getUiSettings().setZoomControlsEnabled(false);
     	/* This is the base tree layer using wms/geoserver for debugging purposes.
     	   In production we use tilecache.
     	
@@ -187,7 +187,9 @@ public class MainMapActivity extends MapActivity{
     }
     
     public void showPopup(Plot plot) {
-		//set default text
+    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+    	
+    	//set default text
 		plotDiameterView.setText(getString(R.string.dbh_missing));
 		plotSpeciesView.setText(getString(R.string.species_missing));
 		plotAddressView.setText(getString(R.string.address_missing));
@@ -232,6 +234,7 @@ public class MainMapActivity extends MapActivity{
 	}
 
 	public void hidePopup() {
+		findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
 		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		plotPopup.setVisibility(View.INVISIBLE);
 		currentPlot = null;
@@ -274,29 +277,7 @@ public class MainMapActivity extends MapActivity{
  		}
  		startActivityForResult(viewPlot, INFO_INTENT);
  	}
- 	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_map_display, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-		if (itemId == R.id.menu_filter) {
-			Intent filter = new Intent(this, FilterDisplay.class);
-			startActivityForResult(filter, FILTER_INTENT);
-		} else if (itemId == R.id.menu_add) {
-			if(App.getLoginManager().isLoggedIn()) {
-				setTreeAddMode(CANCEL);
-				setTreeAddMode(STEP1);
-			} else {
-				startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
-			}
-		}
-        return true;
-    }
     
     
  	@Override 
@@ -464,6 +445,7 @@ public class MainMapActivity extends MapActivity{
     	
     	View step1 =findViewById(R.id.addTreeStep1);
     	View step2 = findViewById(R.id.addTreeStep2);
+    	View filterAddButtons = findViewById(R.id.filter_add_buttons);
     	switch (step) {
     		case CANCEL:
 	    		step1.setVisibility(View.GONE);
@@ -473,11 +455,13 @@ public class MainMapActivity extends MapActivity{
 	        		plotMarker = null;
 	        	}
 	    		mMap.setOnMapClickListener(showPopupMapClickListener);
+	        	filterAddButtons.setVisibility(View.VISIBLE);
 	    		break;
 	    	case STEP1:
+	    		hidePopup();
+	    		filterAddButtons.setVisibility(View.GONE);
 	    		step2.setVisibility(View.GONE);
 	    		step1.setVisibility(View.VISIBLE);
-	    		hidePopup();
 	    		if (plotMarker != null) {
 	        		plotMarker.remove();
 	        		plotMarker = null;
@@ -488,6 +472,7 @@ public class MainMapActivity extends MapActivity{
 	    		break;
 	    	case STEP2:
 	    		hidePopup();
+	    		filterAddButtons.setVisibility(View.GONE);
 	    		step1.setVisibility(View.GONE);
 	    		step2.setVisibility(View.VISIBLE);
 	    		if (mMap != null) {
@@ -626,6 +611,21 @@ public class MainMapActivity extends MapActivity{
             	}
             }
         });	
+    }
+    
+    public void doAddTree(View view) {
+    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+    	if(App.getLoginManager().isLoggedIn()) {
+			setTreeAddMode(CANCEL);
+			setTreeAddMode(STEP1);
+		} else {
+			startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
+		}
+    }
+    
+    public void doFilter(View view) {
+    	Intent filter = new Intent(this, FilterDisplay.class);
+		startActivityForResult(filter, FILTER_INTENT);
     }
 }
  
