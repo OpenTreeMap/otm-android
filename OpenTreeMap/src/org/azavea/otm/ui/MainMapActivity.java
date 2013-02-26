@@ -335,6 +335,7 @@ public class MainMapActivity extends MapActivity{
     	Context context = MainMapActivity.this;
     	LocationManager locationManager = 
     			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+    	boolean success = false;
     	if (locationManager != null) {
 	    	Criteria crit = new Criteria();
 			crit.setAccuracy(Criteria.ACCURACY_FINE);
@@ -346,12 +347,20 @@ public class MainMapActivity extends MapActivity{
 			    			lastKnownLocation.getLatitude(),
 			    			lastKnownLocation.getLongitude()
 			    	), DEFAULT_ZOOM_LEVEL+2));
+			    	success = true;
 		    	} else {
-		    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
+		    		Log.d("CURRENT_LOC", "lastKnownLocation == null");
 		    	}
+	    	} else {
+	    		Log.d("CURRENT_LOC", "provider == null");
 	    	}
     	} else {
-    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_SHORT).show();
+    		Log.d("CURRENT_LOC", "locationManager == null");
+    	}
+    	
+    	
+    	if (success == false) {
+    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();
     	}
     	
     }
