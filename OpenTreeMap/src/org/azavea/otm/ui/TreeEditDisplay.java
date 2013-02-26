@@ -412,22 +412,6 @@ public class TreeEditDisplay extends TreeDisplay {
 		setResult(RESULT_OK, resultIntent);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_edit_tree_display, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.save_edits) {
-			save();
-		} else if (itemId == R.id.cancel_edits) {
-			cancel();
-		}
-		return true;
-	}
 
 
     @Override
@@ -487,5 +471,13 @@ public class TreeEditDisplay extends TreeDisplay {
 	  }
   		
     } 
+	
+	public void saveEdit(View view) {
+		save();
+	}
+	
+	public void cancelEdit(View view) {
+		cancel();
+	}
 	
 }
