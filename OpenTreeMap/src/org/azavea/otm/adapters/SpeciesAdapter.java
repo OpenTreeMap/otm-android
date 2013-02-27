@@ -64,6 +64,9 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         try {
 	        boolean needsSection = false;
 	        char section = species.getCommonName().toUpperCase().charAt(0);
+	        if (isDigit(section)) {
+	        	section = 'A';
+	        }
 	        
 	        // Check the cached section status for the cell in the current position
 	        // It is redrawn after the cell is removed from the screen
@@ -129,5 +132,9 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     	TextView separator;
     	TextView commonName;
         TextView scientificName;
+    }
+    
+    boolean isDigit(char c) {
+    	return (c >= '0' && c <= '9');
     }
 }
