@@ -58,7 +58,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -357,7 +359,7 @@ public class MainMapActivity extends MapActivity{
     	
     	if (success == false) {
     		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();    		
-    	}
+    	} 
     }
     
     @Override
@@ -578,7 +580,9 @@ public class MainMapActivity extends MapActivity{
 				} else {
 					Address geocoded = a.get(0);
 					LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
-			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM_LEVEL+4));  
+			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM_LEVEL+4));
+			    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
 				}
 				 
 			} catch (IOException e) {
