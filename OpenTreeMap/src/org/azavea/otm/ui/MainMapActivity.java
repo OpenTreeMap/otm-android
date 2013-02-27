@@ -92,7 +92,7 @@ public class MainMapActivity extends MapActivity{
 
     TileOverlay filterTileOverlay;
     WMSTileProvider filterTileProvider;
-
+    TileOverlay treeTileOverlay;
     private Location currentLocation;
     
     @Override
@@ -105,6 +105,10 @@ public class MainMapActivity extends MapActivity{
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
+		
+		if (treeTileOverlay != null) {
+			treeTileOverlay.clearTileCache();
+		}
 	}
 
     @Override
@@ -112,6 +116,11 @@ public class MainMapActivity extends MapActivity{
         super.onResume();
         setUpMapIfNeeded();
         setTreeAddMode(CANCEL);
+        
+		if (treeTileOverlay != null) {
+			treeTileOverlay.clearTileCache();
+		}
+
     }
 
     
@@ -153,7 +162,7 @@ public class MainMapActivity extends MapActivity{
     
         
     	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
-    	TileOverlay treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
+    	treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
     	treeTileOverlay.setZIndex(50);
     	
         // Set up the filter layer
@@ -318,7 +327,7 @@ public class MainMapActivity extends MapActivity{
  		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
     			l.getLatitude(),
     			l.getLongitude()
-    	), DEFAULT_ZOOM_LEVEL+2));
+    	), DEFAULT_ZOOM_LEVEL+4));
     
  	}
  	
