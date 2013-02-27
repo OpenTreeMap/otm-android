@@ -1,20 +1,5 @@
 package org.azavea.otm.ui;
 
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +49,7 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 //import android.location.LocationManager;
 
@@ -104,10 +90,13 @@ public class MainMapActivity extends MapActivity{
 
     TileOverlay filterTileOverlay;
     WMSTileProvider filterTileProvider;
+
+    private Location currentLocation;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupLocationUpdating(MainMapActivity.this);
         START_POS = App.getStartPos();
         setContentView(R.layout.activity_map_display_2);
         filterDisplay = (TextView)findViewById(R.id.filterDisplay);
@@ -159,14 +148,7 @@ public class MainMapActivity extends MapActivity{
     private void setUpMap() {
     	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, DEFAULT_ZOOM_LEVEL));  
     	mMap.getUiSettings().setZoomControlsEnabled(false);
-    	/* This is the base tree layer using wms/geoserver for debugging purposes.
-    	   In production we use tilecache.
-    	
-    	TileProvider wmsTileProvider = TileProviderFactory.getWmsTileProvider();
-        TileOverlay wmsTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
-        wmsTileOverlay.setZIndex(50);
-        
-        */
+    
         
     	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
     	TileOverlay treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
@@ -329,40 +311,53 @@ public class MainMapActivity extends MapActivity{
 		
 	}
 
+ 	
+ 	private void zoomMapToLocation(Location l) {
+ 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+    			l.getLatitude(),
+    			l.getLongitude()
+    	), DEFAULT_ZOOM_LEVEL+2));
+    
+ 	}
+ 	
+ 	private Location getCachedLocation() {
+ 		Context context = MainMapActivity.this;
+    	Criteria crit = new Criteria();
+		crit.setAccuracy(Criteria.ACCURACY_FINE);
+		LocationManager locationManager = 
+    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+		if (locationManager != null) {
+    		String provider = locationManager.getBestProvider(crit, true);
+    		
+    		if (provider != null) {
+    			Location loc = locationManager.getLastKnownLocation(provider);
+    			if (loc != null) {
+    				return loc;
+    			}
+    		
+    		}
+    	}
+		return null;
+		
+ 	}
+ 	
 	// onClick handler for "My Location" button
     public void showMyLocation(View view) {
-    	
-    	Context context = MainMapActivity.this;
-    	LocationManager locationManager = 
-    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
     	boolean success = false;
-    	if (locationManager != null) {
-	    	Criteria crit = new Criteria();
-			crit.setAccuracy(Criteria.ACCURACY_FINE);
-	    	String provider = locationManager.getBestProvider(crit, true);
-	    	if (provider != null) {
-		    	Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
-		    	if (lastKnownLocation != null) {
-			    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-			    			lastKnownLocation.getLatitude(),
-			    			lastKnownLocation.getLongitude()
-			    	), DEFAULT_ZOOM_LEVEL+2));
-			    	success = true;
-		    	} else {
-		    		Log.d("CURRENT_LOC", "lastKnownLocation == null");
-		    	}
-	    	} else {
-	    		Log.d("CURRENT_LOC", "provider == null");
-	    	}
+    	if (currentLocation != null) {
+    		zoomMapToLocation(currentLocation);
+    		success = true;
     	} else {
-    		Log.d("CURRENT_LOC", "locationManager == null");
+    		Location cachedLocation = getCachedLocation();
+    		if (cachedLocation != null) {
+    			zoomMapToLocation(cachedLocation);
+    			success =true;
+    		}
     	}
-    	
     	
     	if (success == false) {
-    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();
+    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();    		
     	}
-    	
     }
     
     @Override
@@ -588,7 +583,7 @@ public class MainMapActivity extends MapActivity{
 				 
 			} catch (IOException e) {
 				e.printStackTrace();
-				Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT);
+				Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT).show();
 			}
     	}
     }
@@ -622,6 +617,7 @@ public class MainMapActivity extends MapActivity{
         });	
     }
     
+    // click handler for add tree button
     public void doAddTree(View view) {
     	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     	if(App.getLoginManager().isLoggedIn()) {
@@ -632,9 +628,44 @@ public class MainMapActivity extends MapActivity{
 		}
     }
     
+    // click handler for filter button
     public void doFilter(View view) {
     	Intent filter = new Intent(this, FilterDisplay.class);
 		startActivityForResult(filter, FILTER_INTENT);
     }
+    
+    public void setupLocationUpdating(Context applicationContext) {
+		LocationManager locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+		
+		LocationListener locationListener = new LocationListener() {
+			@Override
+			public void onLocationChanged(Location location) {
+				currentLocation = location;
+			}
+			
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		if (locationManager != null) {
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);
+		}
+		
+	}
 }
  
