@@ -215,7 +215,11 @@ public class MainMapActivity extends MapActivity{
 				showImage(plot);
 			}
 			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
-			mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
+				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+			} else {
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
+			}
 			if (plotMarker != null) {
 				plotMarker.remove();
 			}
