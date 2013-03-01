@@ -70,7 +70,7 @@ import android.widget.Toast;
 
 public class MainMapActivity extends MapActivity{
 	private static LatLng START_POS;
-	private static final int DEFAULT_ZOOM_LEVEL = 12;
+	private static final int STREET_ZOOM_LEVEL = 17;
 	private static final int FILTER_INTENT = 1;
 	private static final int INFO_INTENT = 2;
 	// modes for the add marker feature
@@ -157,7 +157,10 @@ public class MainMapActivity extends MapActivity{
     }
     
     private void setUpMap() {
-    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, DEFAULT_ZOOM_LEVEL));  
+    	SharedPreferences prefs = App.getSharedPreferences();
+		int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
+    	
+    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));  
     	mMap.getUiSettings().setZoomControlsEnabled(false);
     
         
@@ -328,7 +331,7 @@ public class MainMapActivity extends MapActivity{
  		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
     			l.getLatitude(),
     			l.getLongitude()
-    	), DEFAULT_ZOOM_LEVEL+4));
+    	), STREET_ZOOM_LEVEL));
     
  	}
  	
@@ -590,7 +593,7 @@ public class MainMapActivity extends MapActivity{
 				} else {
 					Address geocoded = a.get(0);
 					LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
-			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM_LEVEL+4));
+			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
 			    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
 				}

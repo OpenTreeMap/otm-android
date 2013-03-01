@@ -17,4 +17,5 @@
     <string name="search_bbox_lower_left_lon">-75.74523925781249</string>
     <string name="search_bbox_upper_right_lat">40.43858586704328</string>
     <string name="search_bbox_upper_right_lon">-74.6795654296875</string>
+    <string name="starting_zoom_level">12</string>
 </resources>
