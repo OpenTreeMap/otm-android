@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Currency;
 
 import org.azavea.otm.App;
@@ -13,7 +14,10 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.joelapenna.foursquared.widget.SegmentedButton;
+import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
@@ -39,6 +43,7 @@ public class TreeMove extends TreeDisplay{
     	setUpMapIfNeeded();
     	showPositionOnMap();
     	plotMarker.setDraggable(true);
+    	setUpBasemapControls();
     }
   
     public void submitTreeMove(View view) {
@@ -55,5 +60,34 @@ public class TreeMove extends TreeDisplay{
     	editPlot.putExtra("plot", plot.getData().toString());
     	setResult(RESULT_OK, editPlot);
     	finish();
+    }
+    
+    public void setUpBasemapControls() {
+    	// Create the segmented buttons
+        SegmentedButton buttons = (SegmentedButton)findViewById(R.id.basemap_controls);
+        buttons.clearButtons();
+        
+        ArrayList<String> buttonNames = new ArrayList<String>();
+        buttonNames.add("map");
+        buttonNames.add("satellite");
+        buttonNames.add("hybrid");
+        buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
+        
+        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
+            @Override
+            public void onClick(int index) {
+            	switch (index) {
+            	case 0:
+            		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); 
+            		break;
+            	case 1:
+            	   	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            		break;
+            	case 2:
+            		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);           		
+            		break;
+            	}
+            }
+        });	
     }
 }

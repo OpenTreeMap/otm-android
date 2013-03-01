@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:foursquared="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
 	  android:id="@+id/moveable_marker_map"
@@ -11,7 +12,29 @@
 	  android:layout_height="fill_parent"
 	  class="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <com.joelapenna.foursquared.widget.SegmentedButton
+      android:id="@+id/basemap_controls"
+      android:layout_width="200dp"
+      android:layout_height="wrap_content"
+      foursquared:gradientColorOnStart="@color/primaryGradientColorOnStart"
+      foursquared:gradientColorOnEnd="@color/primaryGradientColorOnEnd"
+      foursquared:gradientColorOffStart="@color/primaryGradientColorOffStart"
+      foursquared:gradientColorOffEnd="@color/primaryGradientColorOffEnd"
+      foursquared:gradientColorSelectedStart="@color/primaryGradientColorSelectedStart"
+      foursquared:gradientColorSelectedEnd="@color/primaryGradientColorSelectedEnd"
+      foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue"
+      foursquared:strokeColor="@color/primaryStrokeColor"
+      foursquared:strokeWidth="1dip"
+      foursquared:cornerRadius="4dip"
+      foursquared:btnPaddingTop="7dip"
+      foursquared:btnPaddingBottom="7dip" 
+      android:layout_marginTop="5dp"
+      android:layout_marginLeft="5dp"
+      android:layout_alignParentTop="true"
+      />
     
+    
+ 
     <LinearLayout 
 	    android:layout_width="match_parent"
         android:layout_height="wrap_content"
