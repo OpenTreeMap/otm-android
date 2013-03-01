@@ -329,13 +329,20 @@ public class Field {
 			if (choice != null) {
 				return choice.getText();
 			}
-			
 		} else if (format != null) {
-			return value.toString() + " " + unitFormatter.get(format);
+				return attemptToGetRoundedValueForObject(value) + " " + unitFormatter.get(format);
 		} 
-		return value.toString();
+		return attemptToGetRoundedValueForObject(value);
 	}
-
+	
+	public String attemptToGetRoundedValueForObject(Object value) {
+		try { // attempt to round 'value'
+			return String.format("%.2f", (Double)value);
+		} catch (ClassCastException e) {
+			return value.toString();
+		}
+	}
+	
 	public static Object getValueForKey(String key, Plot plot) throws JSONException {
 		PendingEditDescription pending = plot.getPendingEditForKey(key);
 		if (pending != null) {
