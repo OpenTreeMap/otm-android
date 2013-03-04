@@ -117,7 +117,7 @@ public class FilterDisplay extends Activity{
 			} else {
 				Log.e(App.LOG_TAG, "Invalid filter specified, unable to create UI");
 			}
-	        view.setTag(R.id.filter_key, filter.key);
+	        view.setTag(R.id.filter_key, filter.cqlKey);  // this is a bit arbitrary...
 	        parent.addView(view);
 		}
 	}

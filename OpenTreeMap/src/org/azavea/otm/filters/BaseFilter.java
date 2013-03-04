@@ -7,8 +7,10 @@ import android.view.View;
 public abstract class BaseFilter {
 	/**
 	 * The key for the filter which is used as a query string argument
+	 * (Modulo the 2 end points: CQL and nearest plot.)
 	 */
-	public String key;
+	public String cqlKey;
+	public String nearestPlotKey;
 	
 	/**
 	 * The name to display on the filter bar when active
@@ -37,8 +39,14 @@ public abstract class BaseFilter {
 	public abstract void clear();
 
 	/**
-	 *  Add this filter to a RequestParams object.
-	 *  This method replaces getQueryStringParams.
+	 *  Called when the filter is active...
+	 *  Add this filter to a RequestParams object configured for the CQL end point.
 	 */
-	public abstract void addToRequestParams(RequestParams rp);
+	public abstract void addToCqlRequestParams(RequestParams rp);
+
+	/**
+	 * Same as above method, but for the nearestPlot REST end point. 
+	 */
+	public abstract void addToNearestPlotRequestParams(RequestParams rp);
+	
 }

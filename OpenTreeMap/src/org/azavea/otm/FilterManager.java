@@ -99,18 +99,18 @@ public class FilterManager {
 		callback.handleMessage(resultMessage);
 	}
 	
-	private BaseFilter makeMapFilter(String key, String name, String type, 
-			String trueval, String choice) 
+	private BaseFilter makeMapFilter(String cqlKey, String nearestPlotKey, String name, String type, 
+			String cqlTrueval, String nearestPlotTrueval, String choice) 
 			throws Exception {
 		
 		if (type.equals("OTMBoolFilter")) {
-			return new BooleanFilter(key, name, trueval);
+			return new BooleanFilter(cqlKey, nearestPlotKey, name, cqlTrueval, nearestPlotTrueval);
 		} else if (type.equals("OTMRangeFilter")) {
-			return new RangeFilter(key, name);
+			return new RangeFilter(cqlKey, nearestPlotKey, name);
 		} else if (type.equals("OTMListFilter")) {
-			return new SpeciesFilter(key, name);
+			return new SpeciesFilter(cqlKey, nearestPlotKey, name);
 		} else if (type.equals("OTMChoiceFilter")) {
-			return new ChoiceFilter(key, name, choice);
+			return new ChoiceFilter(cqlKey, nearestPlotKey, name, choice);
 		}
 		else {
 			throw new Exception("Invalid filter type defined in config: " + type);
@@ -128,23 +128,16 @@ public class FilterManager {
 			for (int i=0; i < filters.getLength(); i++) {
 				Node filter = filters.item(i);
 				NamedNodeMap attributes = filter.getAttributes();
-				String key = attributes.getNamedItem("key").getNodeValue();
+				String cqlKey = attributes.getNamedItem("cql_key").getNodeValue();
+				String nearestPlotKey = attributes.getNamedItem("nearest_plot_key").getNodeValue();
 				String name = attributes.getNamedItem("name").getNodeValue();
 				String type = attributes.getNamedItem("type").getNodeValue();
 				
-				Node choiceNode = attributes.getNamedItem("choice");
-				String choice = "";
-				if (choiceNode != null) {
-					choice = choiceNode.getNodeValue();
-				}
+				String choice = getOptionalNodeValue(attributes, "choice");
+				String cqlTrueval = getOptionalNodeValue(attributes, "cql_trueval");
+				String nearestPlotTrueval = getOptionalNodeValue(attributes, "nearest_plot_trueval");				
 				
-				Node truevalNode = attributes.getNamedItem("trueval");
-				String trueval = "";
-				if (truevalNode != null) {
-					trueval = truevalNode.getNodeValue();
-				}
-				
-				allFilters.put(key, makeMapFilter(key, name, type, trueval, choice));
+				allFilters.put(cqlKey, makeMapFilter(cqlKey, nearestPlotKey, name, type, cqlTrueval, nearestPlotTrueval, choice));
 			}
 		} catch (Exception e) {
 			throw new Exception("Invalid filter xml file", e);
@@ -208,16 +201,37 @@ public class FilterManager {
 	/**
 	 * Returns a RequestParams object loaded with the filter values.
 	 */
-	public RequestParams getActiveFiltersAsRequestParams() {
+	public RequestParams getActiveFiltersAsCqlRequestParams() {
 		RequestParams rp = new RequestParams();
 		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
 			BaseFilter filter = entry.getValue();
 			if (filter.isActive()) {
-				filter.addToRequestParams(rp);
+				filter.addToCqlRequestParams(rp);
 			}
 		}
 		return rp;
 		
+	}
+	
+	public RequestParams getActiveFiltersAsNearestPlotRequestParams() {
+		RequestParams rp = new RequestParams();
+		for(Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
+			BaseFilter filter = entry.getValue();
+			if (filter.isActive()) {
+				filter.addToNearestPlotRequestParams(rp);
+			}
+		}
+		return rp;
+	}
+	
+	
+	private String getOptionalNodeValue(NamedNodeMap attributes, String key) {
+		Node node = attributes.getNamedItem(key);
+		String val = "";
+		if (node != null) {
+			val = node.getNodeValue();
+		}
+		return val;
 	}
 }
 	

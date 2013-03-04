@@ -9,22 +9,25 @@ import android.widget.ToggleButton;
 
 public class BooleanFilter extends BaseFilter {
 	public boolean active;
-	private String trueval = "";
+	private String cqlTrueval = "";
+	private String nearestPlotTrueval = "";
 	
 
-	public BooleanFilter(String key, String label, String trueval) {
-		initialize(key, label, false, trueval);
+	public BooleanFilter(String cqlKey, String nearestPlotKey, String label, String cqlTrueval, String nearestPlotTrueval) {
+		initialize(cqlKey, nearestPlotKey, label, cqlTrueval, nearestPlotTrueval, false);
 	}
 	
-	public BooleanFilter(String key, String label, boolean active, String trueval) {
-		initialize(key, label, active, trueval);
+	public BooleanFilter(String cqlKey, String nearestPlotKey, String label, String cqlTrueval, String nearestPlotTrueval, boolean active) {
+		initialize(cqlKey, nearestPlotKey, label, cqlTrueval, nearestPlotTrueval, active);
 	}
 	
-	private void initialize(String key, String label, boolean active, String trueval) {
-		this.key = key;
+	private void initialize(String cqlKey, String nearestPlotKey, String label,  String cqlTrueval, String nearestPlotTrueval, boolean active) {
+		this.cqlKey = cqlKey;
+		this.nearestPlotKey = nearestPlotKey;
 		this.active = active;
 		this.label = label;
-		this.trueval = trueval;
+		this.cqlTrueval = cqlTrueval;
+		this.nearestPlotTrueval = nearestPlotTrueval;
 	}
 
 	@Override
@@ -43,11 +46,20 @@ public class BooleanFilter extends BaseFilter {
 	}
 	
 	@Override
-	public void addToRequestParams(RequestParams rp) {
-		if (trueval.equals("")) {
-			rp.put(key, Boolean.toString(active));
+	public void addToCqlRequestParams(RequestParams rp) {
+		if (cqlTrueval.equals("")) {
+			rp.put(cqlKey, Boolean.toString(active));
 		} else {
-			rp.put(key,  trueval);
+			rp.put(cqlKey,  cqlTrueval);
 		}
 	}
+	
+	public void addToNearestPlotRequestParams(RequestParams rp) {
+		if (nearestPlotTrueval.equals("")) {
+			rp.put(nearestPlotKey, Boolean.toString(active));
+		} else {
+			rp.put(nearestPlotKey, nearestPlotTrueval);
+		}
+	}
+	
 }

@@ -11,8 +11,9 @@ import android.view.View;
 public class SpeciesFilter extends BaseFilter {
 	public Species species = null;
 	
-	public SpeciesFilter(String key, String name) {
-		this.key = key;
+	public SpeciesFilter(String cqlKey, String nearestPlotKey, String name) {
+		this.cqlKey = cqlKey;
+		this.nearestPlotKey = nearestPlotKey;
 		this.label = name;	
 	}
 	
@@ -37,13 +38,25 @@ public class SpeciesFilter extends BaseFilter {
 	}
 
 	@Override
-	public void addToRequestParams(RequestParams rp) {
+	public void addToCqlRequestParams(RequestParams rp) {
 		try {
 			if (isActive()) {
-				rp.put(key,  ""+ species.getId());
+				rp.put(cqlKey,  ""+ species.getId());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void addToNearestPlotRequestParams(RequestParams rp) {
+		try {
+			if (isActive()) {
+				rp.put(nearestPlotKey,  ""+ species.getId());
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

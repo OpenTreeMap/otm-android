@@ -11,9 +11,10 @@ public class RangeFilter extends BaseFilter {
 	final private double DEFAULT = 0;
 	private double min = DEFAULT;
 	private double max = DEFAULT;
-	
-	public RangeFilter(String key, String label) {
-		this.key = key;
+		
+	public RangeFilter(String cqlKey, String nearestPlotKey, String label) {
+		this.cqlKey = cqlKey;
+		this.nearestPlotKey = nearestPlotKey;
 		this.label = label;
 	}
 	
@@ -75,7 +76,17 @@ public class RangeFilter extends BaseFilter {
 	}
 	
 	@Override
-	public void addToRequestParams(RequestParams rp) {
-		rp.put(key, queryValue());
+	public void addToCqlRequestParams(RequestParams rp) {
+		rp.put(cqlKey, queryValue());
+	}
+	
+	@Override
+	public void addToNearestPlotRequestParams(RequestParams rp) {
+		if (getMin() > 0) {
+			rp.put(nearestPlotKey+"min", Double.toString(getMin()));
+		}
+		if (getMax() > 0) {
+			rp.put(nearestPlotKey+"max", Double.toString(getMax()));
+		}
 	}
 }

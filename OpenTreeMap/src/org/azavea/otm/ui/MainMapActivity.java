@@ -287,7 +287,7 @@ public class MainMapActivity extends MapActivity{
  	  switch(requestCode) { 
  	  	case FILTER_INTENT: 
  	  		if (resultCode == Activity.RESULT_OK) { 
- 	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsRequestParams();
+ 	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
  	  			setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
  	  			if (activeFilters.toString().equals("")) {
  	  				filterTileProvider.setCql("");
@@ -407,9 +407,12 @@ public class MainMapActivity extends MapActivity{
 			dialog.show();
 			
 			final RequestGenerator rg = new RequestGenerator();
+			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsNearestPlotRequestParams();
+	  			
 			rg.getPlotsNearLocation(
 				point.latitude,
 				point.longitude,
+				activeFilters,
 				new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
 
 					@Override

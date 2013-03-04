@@ -12,8 +12,9 @@ public class ChoiceFilter extends BaseFilter{
 	private int DEFAULT = -1;
 	private int selectedIndex = DEFAULT;
 	
-	public ChoiceFilter(String key, String label, String choiceKey) {
-		this.key = key;
+	public ChoiceFilter(String cqlKey, String nearestPlotKey, String label, String choiceKey) {
+		this.cqlKey = cqlKey;
+		this.nearestPlotKey = nearestPlotKey;
 		this.label = label;
 		this.choices = App.getFieldManager().getChoicesByName(choiceKey);
 	}
@@ -34,7 +35,7 @@ public class ChoiceFilter extends BaseFilter{
 	}
 
 	@Override
-	public void addToRequestParams(RequestParams rp) {
+	public void addToCqlRequestParams(RequestParams rp) {
 		// Id of the choice at selected index
 		int value = choices.getValues().get(selectedIndex);
 		String typeValue = String.valueOf(value);
@@ -42,7 +43,7 @@ public class ChoiceFilter extends BaseFilter{
 			typeValue = String.valueOf(value == 1);
 		}
 		// API expects <key>_<value>=1: pests_1=1, pests_2=1
-		rp.put(key + "_" + value, typeValue);
+		rp.put(cqlKey + "_" + value, typeValue);
 		
 	}
 
@@ -68,6 +69,12 @@ public class ChoiceFilter extends BaseFilter{
 			labelText += ": " + getSelectedValueText();
 		}
 		return labelText;
+	}
+
+
+	@Override
+	public void addToNearestPlotRequestParams(RequestParams rp) {
+		//TODO, I don't think the NP end point supports this filter!
 	}
 
 }

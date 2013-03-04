@@ -80,6 +80,25 @@ public class RequestGenerator {
 			client.get(url, null, handler);
 		}
 	}
+
+	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  ContainerRestHandler<PlotContainer> handler) {
+		String url = "/locations/" + geoY + "," + geoX + "/plots";
+		Log.d("NEAREST_PLOT", "rp: " + rp.toString());
+		try {
+			if (loginManager.isLoggedIn()) {
+				client.getWithAuthentication(App.getInstance(), url, 
+						loginManager.loggedInUser.getUserName(), 
+						loginManager.loggedInUser.getPassword(), 
+						rp, handler);
+			} else {
+				client.get(url, rp, handler);	
+			}
+		} catch (JSONException e) {
+			// If user json error, request with no auth
+			client.get(url, null, handler);
+		}
+	}
+
 	
 	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending, 
 			ContainerRestHandler<PlotContainer> handler) {
