@@ -37,17 +37,19 @@ public class ProfileDisplay extends ProfileActivity {
 	private boolean loadingRecentEdits = false; 
 	private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer,EditEntry>();
 	
-	public String[][] userFields = { 
-			{ "Username", "username" },
-			{ "First Name", "firstname" }, 
-			{ "Last Name", "lastname" },
-			{ "Zip Code", "zipcode" }, 
-			{ "Reputation", "reputation" } 
-	};
+	public String[][] userFields;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		userFields = new String[][] { 
+				{ "Username", "username" },
+				{ "First Name", "firstname" }, 
+				{ "Last Name", "lastname" },
+				{ getResources().getString(R.string.zip_code), "zipcode" }, 
+				{ "Reputation", "reputation" } 
+		};
 		loadProfile();
+		
 	}
 
 	@Override

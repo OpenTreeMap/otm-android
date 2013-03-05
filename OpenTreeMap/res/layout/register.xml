@@ -67,8 +67,6 @@
         android:layout_height="wrap_content"
         android:ems="10" 
         android:hint="@string/zip_code"
-        android:inputType="number"
-        android:maxLength="5"
         />
 
     <LinearLayout

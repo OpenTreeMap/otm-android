@@ -196,8 +196,7 @@ public class Register extends ProfileActivity{
 		return password.length() >= 6;
 	}
 	private static boolean validZipCode(String zipcode) {
-		//this is a number field so we only need to validate length
-		return zipcode.length() == 5;
+		return true;
 	}
 	private static boolean responseIsSuccess(JSONObject response) {
 		String status = "";
