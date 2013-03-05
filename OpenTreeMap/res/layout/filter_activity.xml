@@ -2,14 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:background="@color/mainBackgroundColor">
-
+	    android:background="@color/mainBackgroundColor"
+	    >
+	
+	<ScrollView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scroller"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@+id/footer"
+	    android:padding="20dp">
+	    
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/filter_list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:focusable="true"
+	    	android:focusableInTouchMode="true" >
+	    </LinearLayout>
+	    
+	</ScrollView>
 	<RelativeLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/footer"
 	    android:layout_width="fill_parent"
 	    android:layout_height="100dp"
-	    android:layout_alignParentBottom="true" >
+	    android:layout_alignParentBottom="true" 
+	    >
 
 	    <Button
 	        android:id="@+id/cancel"
@@ -54,23 +74,7 @@
 
 	</RelativeLayout>
 
-	<ScrollView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/scroller"
-	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
-	    android:layout_above="@+id/footer" >
-	    
-	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	        android:id="@+id/filter_list"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:focusable="true"
-	    	android:focusableInTouchMode="true" >
-	    </LinearLayout>
-	    
-	</ScrollView>
+	
 
 
 	
