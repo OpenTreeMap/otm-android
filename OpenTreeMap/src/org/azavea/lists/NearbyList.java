@@ -1,6 +1,7 @@
 package org.azavea.lists;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 import org.azavea.lists.data.DisplayablePlot;
@@ -163,8 +164,17 @@ public class NearbyList implements InfoList {
 	
 	private String getDisplayDistance(Plot p) {
 		String distance;
-		float dist = getDistanceFromMyLocation(p);
-		distance = (dist == -1.0)?"Distance unknown":Math.round(dist) + "m";
+		float dist = getDistanceFromMyLocation(p);  // this is always in meters.
+		Locale locale = Locale.getDefault();
+
+		if (dist == -1.0) {
+			distance = "Distance unknown";
+		} else if (locale != null && locale.equals(Locale.US)) {
+			float feet = (float) (dist * 3.38084);
+			distance = Math.round(feet) + "ft";
+		} else {
+			distance = Math.round(dist) + "m";			
+		}
 		return distance;
 	}
 
@@ -179,9 +189,16 @@ public class NearbyList implements InfoList {
 	}
 
 	private String getDiameter(Plot p) {
+		Locale l = Locale.getDefault();
+		String unitString;
+		if (l != null && l.equals(Locale.US)) {
+			unitString = " in. Diameter";
+		} else {
+			unitString = " m. Diameter";
+		}
 		String diameter;
 		try {
-			diameter = p.getTree().getDbh()+" in. Diameter";
+			diameter = p.getTree().getDbh()+ unitString;
 		} catch (Exception e) {
 			diameter = "Diameter missing";
 		}
