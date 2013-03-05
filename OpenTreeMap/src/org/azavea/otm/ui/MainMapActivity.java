@@ -105,22 +105,23 @@ public class MainMapActivity extends MapActivity{
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
-		
-		if (treeTileOverlay != null) {
-			treeTileOverlay.clearTileCache();
-		}
-	}
+		clearTMSCache();
+        if (plotPopup.getVisibility() == View.VISIBLE) {
+        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
         setTreeAddMode(CANCEL);
-        
-		if (treeTileOverlay != null) {
-			treeTileOverlay.clearTileCache();
-		}
-
+        clearTMSCache();
+    
+        if (plotPopup.getVisibility() == View.VISIBLE) {
+        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+        }
+		
     }
 
     
@@ -232,6 +233,7 @@ public class MainMapActivity extends MapActivity{
 		}
 		currentPlot = plot;
 		plotPopup.setVisibility(View.VISIBLE);
+		findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
 	}
 
 	public void hidePopup() {
@@ -476,22 +478,22 @@ public class MainMapActivity extends MapActivity{
     		case CANCEL:
 	    		step1.setVisibility(View.GONE);
 	    		step2.setVisibility(View.GONE);
-	    		if (plotMarker != null) {
-	        		plotMarker.remove();
-	        		plotMarker = null;
-	        	}
 	    		mMap.setOnMapClickListener(showPopupMapClickListener);
 	        	filterAddButtons.setVisibility(View.VISIBLE);
 	    		break;
 	    	case STEP1:
 	    		hidePopup();
-	    		filterAddButtons.setVisibility(View.GONE);
-	    		step2.setVisibility(View.GONE);
-	    		step1.setVisibility(View.VISIBLE);
 	    		if (plotMarker != null) {
 	        		plotMarker.remove();
 	        		plotMarker = null;
 	        	}
+	    		filterAddButtons.setVisibility(View.GONE);
+	    		step2.setVisibility(View.GONE);
+	    		step1.setVisibility(View.VISIBLE);
+	    		/*if (plotMarker != null) {
+	        		plotMarker.remove();
+	        		plotMarker = null;
+	        	}*/
 	            if (mMap != null) {
 	            	mMap.setOnMapClickListener(addMarkerMapClickListener);
 	            }
@@ -691,5 +693,11 @@ public class MainMapActivity extends MapActivity{
 		}
 		
 	}
+    
+    private void clearTMSCache() {
+    	if (treeTileOverlay != null) {
+			treeTileOverlay.clearTileCache();
+		}
+    }
 }
  
