@@ -111,11 +111,13 @@
 	        android:layout_width="0dp"
 	        android:layout_weight="2"
 	        android:layout_height="wrap_content"
-	        android:text="next" 
+	        android:text="Next" 
 	       	android:background="@drawable/btn_primary"
 	        android:padding="@dimen/padding_12"
 	        android:onClick="submitNewTree"
-	        android:layout_margin="10dp"/>
+	        android:layout_margin="10dp"
+	        android:textColor="#FFFFFF"
+	        />
     
     </LinearLayout>    
     
@@ -218,22 +220,24 @@
 	    android:padding="5dp"
 	 >
 	    <Button 
-	        android:text="filter"
+	        android:text="Filter"
 	        android:layout_width="0dp"
 	        android:layout_weight=".5"
 	        android:layout_height="wrap_content"
 	        android:onClick="doFilter"
 	        android:background="@drawable/btn_primary"
-	        android:layout_marginRight="1dp"
+	        android:layout_marginRight="2dp"
+	        android:textColor="#FFFFFF"
 	        />
 	    <Button 
-	        android:text="add tree"
+	        android:text="Add Tree"
 	        android:layout_width="0dp"
 	        android:layout_weight=".5"
 	        android:layout_height="wrap_content"
 	        android:background="@drawable/btn_primary"
 	        android:onClick="doAddTree"
-	        android:layout_marginLeft="1dp"
+	        android:layout_marginLeft="2dp"
+	        android:textColor="#FFFFFF"
 	        
 	       
 	        />
