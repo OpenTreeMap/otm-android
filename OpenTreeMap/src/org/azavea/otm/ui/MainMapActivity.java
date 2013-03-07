@@ -45,6 +45,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -94,6 +95,8 @@ public class MainMapActivity extends MapActivity{
     WMSTileProvider filterTileProvider;
     TileOverlay treeTileOverlay;
     private Location currentLocation;
+    
+    private Bitmap fullSizeTreeImage;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,6 +258,7 @@ public class MainMapActivity extends MapActivity{
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
+				fullSizeTreeImage = Plot.createTreeDetail(imageData);
 				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
 				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
 				plotImage.setImageBitmap(scaledImage);
@@ -699,5 +703,13 @@ public class MainMapActivity extends MapActivity{
 			treeTileOverlay.clearTileCache();
 		}
     }
+    
+    public void handlePhotoDetailClick(View view) {
+    	if (fullSizeTreeImage != null) {
+    		showPhotoDetail(fullSizeTreeImage);
+    	}
+    }
+    
+    
 }
  

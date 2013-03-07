@@ -32,7 +32,8 @@ import android.widget.Toast;
 public class TreeInfoDisplay extends TreeDisplay{
 	public final static int EDIT_REQUEST = 1;
 	ImageView plotImage;
-	
+	private Bitmap fullSizeTreeImage;
+		
     public void onCreate(Bundle savedInstanceState) {
     	mapFragmentId = R.id.vignette_map_view_mode;
     	super.onCreate(savedInstanceState);
@@ -106,6 +107,7 @@ public class TreeInfoDisplay extends TreeDisplay{
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
+				fullSizeTreeImage = Plot.createTreeDetail(imageData);
 				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
 				plotImage.setImageBitmap(scaledImage);
 			}
@@ -170,5 +172,11 @@ public class TreeInfoDisplay extends TreeDisplay{
 			// TODO: This should redirect to login page
 			startActivity(new Intent(TreeInfoDisplay.this, LoginActivity.class));
 		}
+    }
+    
+    public void handlePhotoDetailClick(View view) {
+    	if (fullSizeTreeImage != null) {
+    		showPhotoDetail(fullSizeTreeImage);
+    	}
     }
 }

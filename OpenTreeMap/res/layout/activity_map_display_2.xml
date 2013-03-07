@@ -147,7 +147,8 @@
             
             android:background="@color/no_image_background"
             android:minHeight="80dp"
-            android:minWidth="80dp" />
+            android:minWidth="80dp"
+            android:onClick="handlePhotoDetailClick" />
 
         <TextView
             android:id="@+id/plotSpecies"

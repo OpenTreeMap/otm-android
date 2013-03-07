@@ -310,6 +310,12 @@ public class Plot extends Model {
 		// Use an 80x80px image thumbnail
 		return Bitmap.createScaledBitmap(image, 80, 80, true);
 	}
+	
+	public static Bitmap createTreeDetail(byte[] imageData) {
+		return Bitmap.createScaledBitmap(
+				BitmapFactory.decodeByteArray(imageData, 0, imageData.length), 480, 480, true);
+	}
+	
 
 	public void assignNewTreePhoto(String title, int photoId) throws JSONException {
 		Tree tree = this.getTree();
