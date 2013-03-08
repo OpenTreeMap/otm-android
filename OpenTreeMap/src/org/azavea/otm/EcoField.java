@@ -22,7 +22,7 @@ public class EcoField extends Field {
 	// information in their definition.
 	protected EcoField(String key, String label, int minimumToEdit, 
 			String keyboard, String format, String type)	{
-		super(key, label, minimumToEdit, keyboard, format, type, null, null);
+		super(key, label, minimumToEdit, keyboard, format, type, null, null, null);
 	}
 	
 	@Override

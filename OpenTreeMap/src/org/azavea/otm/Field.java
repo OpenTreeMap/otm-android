@@ -1,5 +1,6 @@
 package org.azavea.otm;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.sax.StartElementListener;
 import android.text.InputType;
 import android.util.Log;
@@ -102,9 +104,11 @@ public class Field {
 	 */
 	public String owner = null;
 	
+	//TODO MTW
+	public String infoUrl = null;
 	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
-			String format, String type, String choice, String owner) {
+			String format, String type, String choice, String owner, String infoUrl) {
 		this.key = key;
 		this.label = label;
 		this.minimumToEdit = minimumToEdit;
@@ -113,6 +117,7 @@ public class Field {
 		this.type = type;
 		this.choiceName = choice;
 		this.owner = owner;
+		this.infoUrl = infoUrl;
 	}
 	
 	public static Field makeField(Node fieldNode) {
@@ -140,11 +145,15 @@ public class Field {
 		node = fieldNode.getAttributes().getNamedItem("owner");
 		String owner = node == null ? null : node.getNodeValue();
 		
+		node = fieldNode.getAttributes().getNamedItem("info_url");
+		String infoUrl = node == null ? null : node.getNodeValue();
+
+		
 		if (type != null && type.equals("eco")) {
 			return new EcoField(key, label, minimumToEdit, keyboardResource, format, type);
 		} else {
 			return new Field(key, label, minimumToEdit, keyboardResource, format, 
-					type, choice, owner);
+					type, choice, owner, infoUrl);
 		}
 	}
 	
@@ -163,6 +172,11 @@ public class Field {
         	bindPendingEditClickHandler(pendingButton, this.key, model, context);
         	pendingButton.setVisibility(View.VISIBLE);
         	
+        }
+        if (this.infoUrl != null) {
+        	View infoButton = container.findViewById(R.id.info);
+        	bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
+        	infoButton.setVisibility(View.VISIBLE);
         }
         return container;
 	}
@@ -585,4 +599,14 @@ public class Field {
 		});
 	}
 
+	private void bindInfoButtonClickHandler(View infoButton, final String url, final Context context) {
+		infoButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url) );
+				Activity a = (Activity)context;
+				a.startActivity(browserIntent);
+			}
+		});
+	}
 }
