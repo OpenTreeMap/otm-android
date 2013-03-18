@@ -171,7 +171,7 @@ public class Register extends ProfileActivity{
         .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	startActivity(new Intent(App.getInstance(), ProfileDisplay.class));
+            	startActivity(new Intent(App.getInstance(), TabLayout.class));
             }
         })
         .show();
@@ -225,26 +225,5 @@ public class Register extends ProfileActivity{
 			Log.e("Register", "Error formulating rc.addProfilePhoto request.");
 			e.printStackTrace();
 		}
-	}
-	
-	
-	/* 
-	 * Debugging 
-	 */
-	private void setDebuggingValues() {
-		EditText e = (EditText)findViewById(R.id.register_password);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_password2);
-		e.setText("123456");
-		e = (EditText)findViewById(R.id.register_email);
-		e.setText("barney@lighthouse.com");
-		e = (EditText)findViewById(R.id.register_username);
-		e.setText("a");
-		e = (EditText)findViewById(R.id.register_firstName);
-		e.setText("Donkey");
-		e = (EditText)findViewById(R.id.register_lastName);
-		e.setText("Kong");
-		e = (EditText)findViewById(R.id.register_zip);
-		e.setText("19143");
 	}
 }

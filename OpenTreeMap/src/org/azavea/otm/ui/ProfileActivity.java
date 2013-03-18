@@ -106,41 +106,5 @@ public abstract class ProfileActivity extends Activity {
         return fullSizeBitmap;
 	}
 
-	/*
-	private static int getImageRotationUsingEXIF(Uri selectedImage) {
-	   File imageFile = new File(selectedImage.toString());
-	   ExifInterface exif;
-	   try {
-			exif = new ExifInterface(imageFile.getAbsolutePath());
-	   } catch (IOException e) {
-			e.printStackTrace();
-			return 0;
-	   }
-	   int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-	   int rotate = 0;
-	   switch(orientation) {
-	     case ExifInterface.ORIENTATION_ROTATE_270:
-	         rotate-=90;
-	     case ExifInterface.ORIENTATION_ROTATE_180:
-	         rotate-=90;
-	     case ExifInterface.ORIENTATION_ROTATE_90:
-	         rotate-=90;
-	   }
-	   return rotate;
-	}
-	
-	protected static Bitmap isoScaleBitmapToWidthAndRotate(Bitmap bm, int rotation, int width) {
-	    int height = bm.getHeight();
-        int newWidth = width;
-        float newHeight = (float)height/(float)width * (float)PROFILE_PIC_WIDTH;
-        bm = Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
-        
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rotation);
-
-        return Bitmap.createBitmap(bm, 0, 0,
-                          width, height, matrix, true);
-	}
-	 */
 	
 }
