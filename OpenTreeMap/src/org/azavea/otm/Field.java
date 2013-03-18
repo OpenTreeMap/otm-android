@@ -332,7 +332,7 @@ public class Field {
 	 */
 	public String formatUnit(Object value) {
 		// If there is no value, return an unspecified value
-		if (value == null || value.equals(null)) {
+		if (value == null || value.equals(null) || value.equals("")) {
 			return App.getInstance().getResources()
 					.getString(R.string.unspecified_field_value);
 		} else if (hasChoices()) {
