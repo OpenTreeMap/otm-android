@@ -268,7 +268,7 @@ public class Field {
 	private void setupChoiceDisplay(final Button choiceButton, Object value) {
 		
 		choiceButton.setText(R.string.unspecified_field_value);
-		final int v = (value == null || value.equals(null)) 
+		final int v = (value == null || value.equals(null) || value.equals("")) 
 				? -1 : Integer.parseInt(value.toString()); 
 		
 		if (value != null) {
