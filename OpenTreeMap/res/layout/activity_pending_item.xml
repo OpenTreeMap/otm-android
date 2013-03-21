@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:padding="20dp"
+    android:background="@color/mainBackgroundColor"
+>
     
 	
 		<TextView 
@@ -11,6 +14,7 @@
 	        android:layout_height="wrap_content"
 	        android:id="@+id/pending_edit_label"
 	   		android:textSize="18dp"
+	   		android:textColor="@color/text_dark"
 	       />
 	
 	    <TextView
@@ -18,6 +22,7 @@
 	        android:text="Current Value"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	   		android:textColor="@color/text_dark"
 	        android:textSize="15dp"/>
 	 
 	    <LinearLayout
@@ -37,6 +42,7 @@
 	    <TextView
 	        android:text="Pending Edits"
 	        android:layout_width="wrap_content"
+	   		android:textColor="@color/text_dark"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="20dp"
 	        />
@@ -59,6 +65,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="Save"
+	            android:background="@drawable/btn_primary"
 	            android:onClick="handleSaveClick"
 	             />
 
@@ -67,7 +74,9 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="Cancel"
-	            android:onClick = "handleCancelClick" />
+	            android:onClick = "handleCancelClick"
+	            android:background="@drawable/btn_danger"
+	             />
 
 	    </LinearLayout>
 	    
