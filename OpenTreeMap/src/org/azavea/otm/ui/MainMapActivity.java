@@ -96,7 +96,7 @@ public class MainMapActivity extends MapActivity{
     TileOverlay treeTileOverlay;
     private Location currentLocation;
     
-    private Bitmap fullSizeTreeImage;
+    private String fullSizeTreeImageUrl = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,6 +217,14 @@ public class MainMapActivity extends MapActivity{
 							"Diameter");
 				} 
 				showImage(plot);
+				
+				try {
+					fullSizeTreeImageUrl = tree.getTreePhotoUrl();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+			
 			}
 			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
 			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
@@ -258,7 +266,6 @@ public class MainMapActivity extends MapActivity{
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
-				fullSizeTreeImage = Plot.createTreeDetail(imageData);
 				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
 				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
 				plotImage.setImageBitmap(scaledImage);
@@ -705,8 +712,8 @@ public class MainMapActivity extends MapActivity{
     }
     
     public void handlePhotoDetailClick(View view) {
-    	if (fullSizeTreeImage != null) {
-    		showPhotoDetail(fullSizeTreeImage);
+    	if (fullSizeTreeImageUrl != null) {
+    		showPhotoDetail(fullSizeTreeImageUrl);
     	}
     }
     

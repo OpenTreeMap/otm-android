@@ -238,7 +238,30 @@ public class Tree extends Model {
 		return idList;
 	}
 	
-	
-	
-	
+	public String getTreePhotoUrl() throws JSONException {
+		if (data.isNull("images")) {
+			return null; 
+		} 
+		
+		// loop through the image array and pluck out
+		// the image with the highest ID (the most current image.)
+		JSONArray images = data.getJSONArray("images");
+		String urlLeaf = null;
+		int maxId = -1;
+		for (int i = 0; i< images.length(); i++) {
+			JSONObject image = images.getJSONObject(i);
+			int imageId = image.getInt("id");
+			if (imageId > maxId) {
+				maxId = imageId;
+				urlLeaf = image.getString("url");
+			}
+		}
+		
+		if (urlLeaf == null) {
+			return null;
+		}
+		
+		String urlStem = App.getSharedPreferences().getString("image_url", "");
+		return urlStem + urlLeaf;
+	}
 }

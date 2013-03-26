@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class TreeInfoDisplay extends TreeDisplay{
 	public final static int EDIT_REQUEST = 1;
 	ImageView plotImage;
-	private Bitmap fullSizeTreeImage;
+	private String fullSizeTreeImageUrl;
 		
     public void onCreate(Bundle savedInstanceState) {
     	mapFragmentId = R.id.vignette_map_view_mode;
@@ -107,7 +107,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
 			@Override
 			public void onSuccess(byte[] imageData) {
-				fullSizeTreeImage = Plot.createTreeDetail(imageData);
 				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
 				plotImage.setImageBitmap(scaledImage);
 			}
@@ -118,6 +117,13 @@ public class TreeInfoDisplay extends TreeDisplay{
 				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
 			}
 		});
+		
+		try {
+			fullSizeTreeImageUrl = plot.getTree().getTreePhotoUrl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 
@@ -175,8 +181,8 @@ public class TreeInfoDisplay extends TreeDisplay{
     }
     
     public void handlePhotoDetailClick(View view) {
-    	if (fullSizeTreeImage != null) {
-    		showPhotoDetail(fullSizeTreeImage);
+    	if (fullSizeTreeImageUrl != null) {
+    		showPhotoDetail(fullSizeTreeImageUrl);
     	}
     }
 }
