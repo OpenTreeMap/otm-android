@@ -76,6 +76,7 @@
 	            android:text="Cancel"
 	            android:onClick = "handleCancelClick"
 	            android:background="@drawable/btn_danger"
+	            android:layout_marginLeft="10dp"
 	             />
 
 	    </LinearLayout>
