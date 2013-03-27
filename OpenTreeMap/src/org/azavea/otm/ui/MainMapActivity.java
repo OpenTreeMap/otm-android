@@ -55,10 +55,14 @@ import android.location.LocationManager;
 //import android.location.LocationManager;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -104,6 +108,7 @@ public class MainMapActivity extends MapActivity{
         setupLocationUpdating(MainMapActivity.this);
         START_POS = App.getStartPos();
         setContentView(R.layout.activity_map_display_2);
+        bindEnterKeyListenerToLocationSearchBar();
         filterDisplay = (TextView)findViewById(R.id.filterDisplay);
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
@@ -593,10 +598,10 @@ public class MainMapActivity extends MapActivity{
     	};
     };
     
-    public void handleLocationSearchClick(View view) {
+    public void doLocationSearch() {
     	EditText et = (EditText)findViewById(R.id.locationSearchField);
     	String address = et.getText().toString();
-    	if (address == "") {
+    	if (address.equals("")) {
     		Toast.makeText(MainMapActivity.this, "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
     	} else {
     		Geocoder g = new Geocoder(MainMapActivity.this);
@@ -623,6 +628,11 @@ public class MainMapActivity extends MapActivity{
 				Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT).show();
 			}
     	}
+    
+    }
+    
+    public void handleLocationSearchClick(View view) {
+    	doLocationSearch();
     }
     
     public void setUpBasemapControls() {
@@ -716,7 +726,23 @@ public class MainMapActivity extends MapActivity{
     		showPhotoDetail(fullSizeTreeImageUrl);
     	}
     }
-    
+
+    public void bindEnterKeyListenerToLocationSearchBar() {
+    	EditText et = (EditText)findViewById(R.id.locationSearchField);
+    	et.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+					doLocationSearch();
+					return true;
+				} else {
+					return false;
+				}
+			}
+				
+    		
+    	});
+    }
     
 }
  
