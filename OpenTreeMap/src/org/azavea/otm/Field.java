@@ -495,7 +495,7 @@ public class Field {
 				
 			} else if (this.valueView instanceof Button) {
 				Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
-				if (choiceVal != null && !choiceVal.equals(null)) {
+				if (choiceVal != null && !choiceVal.equals(null) && !choiceVal.equals("")) {
 					return Integer.parseInt(choiceVal.toString());
 				}
 				
