@@ -170,6 +170,15 @@ public class TreeInfoDisplay extends TreeDisplay{
 	}
     
     public void doEdit(View view) {
+    	try {
+			if (plot.getTree().isReadOnly()) {
+				Toast.makeText(TreeInfoDisplay.this, "Tree is read only." , Toast.LENGTH_LONG).show();
+				return;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	if (App.getLoginManager().isLoggedIn()) {
 			Intent editPlot = new Intent(this, TreeEditDisplay.class);
 			editPlot.putExtra("plot", plot.getData().toString());
