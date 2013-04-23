@@ -598,37 +598,51 @@ public class MainMapActivity extends MapActivity{
     	};
     };
     
+    private List<Address> doGeocode(String address) throws IOException {
+    	Geocoder g = new Geocoder(MainMapActivity.this);
+    	SharedPreferences prefs = App.getSharedPreferences();
+		double lowerLeftLatitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", ""));
+		double lowerLeftLongitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", ""));
+		double upperRightLatitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", ""));
+		double upperRightLongitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""));
+		List<Address> a = g.getFromLocationName(address, 1, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
+		return a;
+    }
+    
     public void doLocationSearch() {
     	EditText et = (EditText)findViewById(R.id.locationSearchField);
     	String address = et.getText().toString();
     	if (address.equals("")) {
     		Toast.makeText(MainMapActivity.this, "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
-    	} else {
-    		Geocoder g = new Geocoder(MainMapActivity.this);
+    		return;
+    	} 
+    	
+    	List<Address> a;
+    	// try to geocode, if it fails the first time, retry.
+    	try {
+    		a = doGeocode(address);
+    	} catch (IOException e) {
+    		Log.d("LOC_SEARCH", "error in first geocode try");
+    		Log.e("LOC_SEARCH", "exception", e);
     		try {
-    			SharedPreferences prefs = App.getSharedPreferences();
-    			double lowerLeftLatitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", ""));
-    			double lowerLeftLongitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", ""));
-    			double upperRightLatitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", ""));
-    			double upperRightLongitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""));
-    			
-				List<Address> a = g.getFromLocationName(address, 1, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
-				if (a.size() == 0) {
-					Toast.makeText(MainMapActivity.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
-				} else {
-					Address geocoded = a.get(0);
-					LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
-			    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
-			    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
-				}
-				 
-			} catch (IOException e) {
-				e.printStackTrace();
-				Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT).show();
-			}
+    			a = doGeocode(address);
+    		} catch (IOException f) {
+    			Log.e("LOC_SEARCH", "error in second geocode try.  bailing out!");
+    			Log.e("LOC_SEARCH", "exception", e);
+    			Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT).show();
+    			return;
+    		}
     	}
     
+		if (a.size() == 0) {
+			Toast.makeText(MainMapActivity.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
+		} else {
+			Address geocoded = a.get(0);
+			LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
+	    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
+	    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+	    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
+		}
     }
     
     public void handleLocationSearchClick(View view) {
