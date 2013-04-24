@@ -78,7 +78,8 @@ public class MainMapActivity extends MapActivity{
 	private static final int STREET_ZOOM_LEVEL = 17;
 	private static final int FILTER_INTENT = 1;
 	private static final int INFO_INTENT = 2;
-	// modes for the add marker feature
+
+	// modes for the add tree marker feature
 	private static final int STEP1 = 1;
 	private static final int STEP2 = 2;
 	private static final int CANCEL = 3;
@@ -101,319 +102,7 @@ public class MainMapActivity extends MapActivity{
     private Location currentLocation;
     
     private String fullSizeTreeImageUrl = null;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupLocationUpdating(MainMapActivity.this);
-        START_POS = App.getStartPos();
-        setContentView(R.layout.activity_map_display_2);
-        bindEnterKeyListenerToLocationSearchBar();
-        filterDisplay = (TextView)findViewById(R.id.filterDisplay);
-        setUpMapIfNeeded();
-		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
-		setPopupViews();
-		clearTMSCache();
-        if (plotPopup.getVisibility() == View.VISIBLE) {
-        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
-        }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpMapIfNeeded();
-        setTreeAddMode(CANCEL);
-        clearTMSCache();
-    
-        if (plotPopup.getVisibility() == View.VISIBLE) {
-        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
-        }
-		
-    }
-
-    
-    /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p>
-     * If it isn't installed {@link SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView
-     * MapView}) will show a prompt for the user to install/update the Google Play services APK on
-     * their device.
-     * <p>
-     * A user can return to this Activity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the Activity may not have been
-     * completely destroyed during this process (it is likely that it would only be stopped or
-     * paused), {@link #onCreate(Bundle)} may not be called again so we should call this method in
-     * {@link #onResume()} to guarantee that it will be called.
-     */
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            } else {
-            	Toast.makeText(MainMapActivity.this, "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
-        		Log.e(App.LOG_TAG, "Map was null!");
-            }
-        }       
-    }
-    
-    private void setUpMap() {
-    	SharedPreferences prefs = App.getSharedPreferences();
-		int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
-    	
-    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));  
-    	mMap.getUiSettings().setZoomControlsEnabled(false);
-    
-        
-    	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
-    	treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
-    	treeTileOverlay.setZIndex(50);
-    	
-        // Set up the filter layer
-        filterTileProvider = TileProviderFactory.getFilterLayerTileProvider();
-        filterTileProvider.setCql("1=0");
-        filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
-        filterTileOverlay.setZIndex(100);
-       
-        // Set up the default click listener
-        mMap.setOnMapClickListener(showPopupMapClickListener);
-        
-        setTreeAddMode(CANCEL);
-		setUpBasemapControls();
-   
-    }
-    
-    public void showPopup(Plot plot) {
-    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-    	
-    	//set default text
-		plotDiameterView.setText(getString(R.string.dbh_missing));
-		plotSpeciesView.setText(getString(R.string.species_missing));
-		plotAddressView.setText(getString(R.string.address_missing));
-		plotImageView.setImageResource(R.drawable.ic_action_search);
-		
-		try {
-	        plotUpdatedByView.setText("By " + plot.getLastUpdatedBy());
-	        if (plot.getAddress().length() != 0) {
-	        	plotAddressView.setText(plot.getAddress());
-	        }
-			Tree tree = plot.getTree();
-			if (tree != null) {
-				String speciesName;
-				try {
-					speciesName = tree.getSpeciesName();
-				} catch (JSONException e) {
-					speciesName = "No species name";
-				}
-				plotSpeciesView.setText(speciesName);
-			
-				if (tree.getDbh() != 0) {
-					String dbh = String.format("%.2f", tree.getDbh() );
-					plotDiameterView.setText(dbh +  
-							getString(R.string.default_measure_units) + " " + 
-							"Diameter");
-				} 
-				showImage(plot);
-				
-				try {
-					fullSizeTreeImageUrl = tree.getTreePhotoUrl();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			
-			
-			}
-			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
-			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
-				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
-			} else {
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
-			}
-			if (plotMarker != null) {
-				plotMarker.remove();
-			}
-			plotMarker = mMap.addMarker(new MarkerOptions()
-				.position(position)
-				.title("")
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		currentPlot = plot;
-		plotPopup.setVisibility(View.VISIBLE);
-		findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-	}
-
-	public void hidePopup() {
-		findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
-		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
-		plotPopup.setVisibility(View.INVISIBLE);
-		currentPlot = null;
-	}
-
-	private void setPopupViews() {
-    	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
-    	plotAddressView = (TextView) findViewById(R.id.plotAddress);
-    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
-    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
-    	plotImageView = (ImageView) findViewById(R.id.plotImage);
-    }
-
-	private void showImage(Plot plot) throws JSONException {
-		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
-			@Override
-			public void onSuccess(byte[] imageData) {
-				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
-				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
-				plotImage.setImageBitmap(scaledImage);
-			}
-			
-			@Override
-			public void onFailure(Throwable e, byte[] imageData) {
-				// Log the error, but not important enough to bother the user
-				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
-			}
-		});
-	}	  
-    
-        
-    // onClick handler for tree-details pop-up touch event
- 	public void showFullTreeInfo(View view) {
- 		// Show TreeInfoDisplay with current plot
- 		Intent viewPlot = new Intent(MainMapActivity.this, TreeInfoDisplay.class);
- 		viewPlot.putExtra("plot", currentPlot.getData().toString());
- 		
- 		if (App.getLoginManager().isLoggedIn()) {
- 			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
- 		}
- 		startActivityForResult(viewPlot, INFO_INTENT);
- 	}
-
-    
-    
- 	@Override 
- 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
- 	  super.onActivityResult(requestCode, resultCode, data); 
- 	  switch(requestCode) { 
- 	  	case FILTER_INTENT: 
- 	  		if (resultCode == Activity.RESULT_OK) { 
- 	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
- 	  			setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
- 	  			if (activeFilters.toString().equals("")) {
- 	  				filterTileProvider.setCql("");
- 	  				filterTileOverlay.clearTileCache();
- 	  			} else {
- 	  				RequestGenerator rc = new RequestGenerator();
- 	  				rc.getCqlForFilters(activeFilters, handleNewFilterCql);
- 	  			}
- 	  		} 
- 	  		break; 
- 	  	case INFO_INTENT:
- 	  		if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
- 	  	 
- 	  			try {
- 	  				// The plot was updated, so update the pop-up with any new data
- 	  				Plot updatedPlot = new Plot();
-					String plotJSON = data.getExtras().getString("plot");
-					updatedPlot.setData(new JSONObject(plotJSON));
-					showPopup(updatedPlot);
-	 	  	 
-		 	  	 } catch (JSONException e) {
-		 	  		 		Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
-		 	  		 		hidePopup();
-		 		 }
-  			} else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
-  				hidePopup();
-  				// TODO: Do we need to refresh the map tile?
- 	  	 	}
- 	  	 break;
- 	  } 
- 	}
- 	
- 	private void setFilterDisplay(String activeFilterDisplay) {
- 		if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
- 			filterDisplay.setVisibility(View.GONE);
- 		} else {
- 			filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
- 			filterDisplay.setVisibility(View.VISIBLE);
- 		}
-		
-	}
-
- 	
- 	private void zoomMapToLocation(Location l) {
- 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-    			l.getLatitude(),
-    			l.getLongitude()
-    	), STREET_ZOOM_LEVEL));
-    
- 	}
- 	
- 	private Location getCachedLocation() {
- 		Context context = MainMapActivity.this;
-    	Criteria crit = new Criteria();
-		crit.setAccuracy(Criteria.ACCURACY_FINE);
-		LocationManager locationManager = 
-    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-		if (locationManager != null) {
-    		String provider = locationManager.getBestProvider(crit, true);
-    		
-    		if (provider != null) {
-    			Location loc = locationManager.getLastKnownLocation(provider);
-    			if (loc != null) {
-    				return loc;
-    			}
-    		
-    		}
-    	}
-		return null;
-		
- 	}
- 	
-	// onClick handler for "My Location" button
-    public void showMyLocation(View view) {
-    	boolean success = false;
-    	if (currentLocation != null) {
-    		zoomMapToLocation(currentLocation);
-    		success = true;
-    	} else {
-    		Location cachedLocation = getCachedLocation();
-    		if (cachedLocation != null) {
-    			zoomMapToLocation(cachedLocation);
-    			success =true;
-    		}
-    	}
-    	
-    	if (success == false) {
-    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();    		
-    	} 
-    }
-    
-    @Override
-	public void onBackPressed() {
-		hidePopup();
-		setTreeAddMode(CANCEL);
-	}
-
-	// call backs for base layer switcher buttons
-    public void hybridBaselayer(View view) {
-    	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-    }
-    public void mapBaselayer(View view) {
-    	mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);    	
-    }
-    public void satelliteBaselayer(View view) {
-    	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-    }
-    
     // Map click listener for normal view mode
     private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {	
     	@Override
@@ -481,7 +170,383 @@ public class MainMapActivity extends MapActivity{
 			setTreeAddMode(STEP2);
     	}
     };
+
+    // on response, set the global cqlFilter property, and cause the tile layer,
+    // which has a reference to this property, to refresh.
+    JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
+    	public void onSuccess(JSONObject data) {
+    		String cqlFilterString = data.optString("cql_string");
+       		Log.d("CQL-FILTERS", cqlFilterString);
+    		filterTileProvider.setCql(cqlFilterString);
+    		filterTileOverlay.clearTileCache();
+    	};
+    	protected void handleFailureMessage(Throwable arg0, String arg1) {
+    		Toast.makeText(MainMapActivity.this, "Error processing filters", Toast.LENGTH_SHORT).show();
+    		Log.e(App.LOG_TAG, arg1);
+    		arg0.printStackTrace();
+    		filterTileProvider.setCql("1=0");
+    	};
+    };
+
+
+    /*******************************************************
+     * Overrides for the Activity base class
+     *******************************************************/
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupLocationUpdating(MainMapActivity.this);
+        START_POS = App.getStartPos();
+        setContentView(R.layout.activity_map_display_2);
+        bindEnterKeyListenerToLocationSearchBar();
+        filterDisplay = (TextView)findViewById(R.id.filterDisplay);
+        setUpMapIfNeeded();
+		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		setPopupViews();
+		clearTMSCache();
+        if (plotPopup.getVisibility() == View.VISIBLE) {
+        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+        setTreeAddMode(CANCEL);
+        clearTMSCache();
+    
+        if (plotPopup.getVisibility() == View.VISIBLE) {
+        	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+        }
+		
+    }
+
+    @Override 
+ 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+ 	  super.onActivityResult(requestCode, resultCode, data); 
+ 	  switch(requestCode) { 
+ 	  	case FILTER_INTENT: 
+ 	  		if (resultCode == Activity.RESULT_OK) { 
+ 	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
+ 	  			setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
+ 	  			if (activeFilters.toString().equals("")) {
+ 	  				filterTileProvider.setCql("");
+ 	  				filterTileOverlay.clearTileCache();
+ 	  			} else {
+ 	  				RequestGenerator rc = new RequestGenerator();
+ 	  				rc.getCqlForFilters(activeFilters, handleNewFilterCql);
+ 	  			}
+ 	  		} 
+ 	  		break; 
+ 	  	case INFO_INTENT:
+ 	  		if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
+ 	  	 
+ 	  			try {
+ 	  				// The plot was updated, so update the pop-up with any new data
+ 	  				Plot updatedPlot = new Plot();
+					String plotJSON = data.getExtras().getString("plot");
+					updatedPlot.setData(new JSONObject(plotJSON));
+					showPopup(updatedPlot);
+	 	  	 
+		 	  	 } catch (JSONException e) {
+		 	  		 		Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+		 	  		 		hidePopup();
+		 		 }
+  			} else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
+  				hidePopup();
+  				// TODO: Do we need to refresh the map tile?
+ 	  	 	}
+ 	  	 break;
+ 	  } 
+ 	}
+    
+    @Override
+	public void onBackPressed() {
+		hidePopup();
+		setTreeAddMode(CANCEL);
+	}
+    
+    /*********************************************
+     * Event handlers bound to the view.
+     *********************************************/
+    public void handlePhotoDetailClick(View view) {
+    	if (fullSizeTreeImageUrl != null) {
+    		showPhotoDetail(fullSizeTreeImageUrl);
+    	}
+    }
+  
+    public void handleLocationSearchClick(View view) {
+    	doLocationSearch();
+    }
+  
+    // click handler for filter button
+    public void doFilter(View view) {
+    	Intent filter = new Intent(this, FilterDisplay.class);
+		startActivityForResult(filter, FILTER_INTENT);
+    }
+
+    // click handler for add tree button
+    public void doAddTree(View view) {
+    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+    	if(App.getLoginManager().isLoggedIn()) {
+			setTreeAddMode(CANCEL);
+			setTreeAddMode(STEP1);
+		} else {
+			startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
+		}
+    }
+ 
+    //click handler for the next button
+    public void submitNewTree(View view) {
+    	setTreeAddMode(FINISH);
+    }
+ 
+    // onClick handler for tree-details pop-up touch event
+ 	public void showFullTreeInfo(View view) {
+ 		// Show TreeInfoDisplay with current plot
+ 		Intent viewPlot = new Intent(MainMapActivity.this, TreeInfoDisplay.class);
+ 		viewPlot.putExtra("plot", currentPlot.getData().toString());
+ 		
+ 		if (App.getLoginManager().isLoggedIn()) {
+ 			viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
+ 		}
+ 		startActivityForResult(viewPlot, INFO_INTENT);
+ 	}
+
+ 	// call backs for base layer switcher buttons
+    public void hybridBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+    }
+    public void mapBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);    	
+    }
+    public void satelliteBaselayer(View view) {
+    	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    }
+    
+	// onClick handler for "My Location" button
+    public void showMyLocation(View view) {
+    	boolean success = false;
+    	if (currentLocation != null) {
+    		zoomMapToLocation(currentLocation);
+    		success = true;
+    	} else {
+    		Location cachedLocation = getCachedLocation();
+    		if (cachedLocation != null) {
+    			zoomMapToLocation(cachedLocation);
+    			success =true;
+    		}
+    	}
+    	
+    	if (success == false) {
+    		Toast.makeText(MainMapActivity.this, "Could not determine current location.", Toast.LENGTH_LONG).show();    		
+    	} 
+    }
+    
         
+    /*********************************
+     * Private methods
+     *********************************/
+    
+    /**
+     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
+     * installed) and the map has not already been instantiated.. This will ensure that we only ever
+     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * <p>
+     * If it isn't installed {@link SupportMapFragment} (and
+     * {@link com.google.android.gms.maps.MapView
+     * MapView}) will show a prompt for the user to install/update the Google Play services APK on
+     * their device.
+     * <p>
+     * A user can return to this Activity after following the prompt and correctly
+     * installing/updating/enabling the Google Play services. Since the Activity may not have been
+     * completely destroyed during this process (it is likely that it would only be stopped or
+     * paused), {@link #onCreate(Bundle)} may not be called again so we should call this method in
+     * {@link #onResume()} to guarantee that it will be called.
+     */
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            } else {
+            	Toast.makeText(MainMapActivity.this, "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
+        		Log.e(App.LOG_TAG, "Map was null!");
+            }
+        }       
+    }
+    
+    private void setUpMap() {
+    	SharedPreferences prefs = App.getSharedPreferences();
+		int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
+    	
+    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));  
+    	mMap.getUiSettings().setZoomControlsEnabled(false);
+    
+        
+    	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
+    	treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
+    	treeTileOverlay.setZIndex(50);
+    	
+        // Set up the filter layer
+        filterTileProvider = TileProviderFactory.getFilterLayerTileProvider();
+        filterTileProvider.setCql("1=0");
+        filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
+        filterTileOverlay.setZIndex(100);
+       
+        // Set up the default click listener
+        mMap.setOnMapClickListener(showPopupMapClickListener);
+        
+        setTreeAddMode(CANCEL);
+		setUpBasemapControls();
+   
+    }
+    
+    
+    private void showPopup(Plot plot) {
+    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+    	
+    	//set default text
+		plotDiameterView.setText(getString(R.string.dbh_missing));
+		plotSpeciesView.setText(getString(R.string.species_missing));
+		plotAddressView.setText(getString(R.string.address_missing));
+		plotImageView.setImageResource(R.drawable.ic_action_search);
+		
+		try {
+	        plotUpdatedByView.setText("By " + plot.getLastUpdatedBy());
+	        if (plot.getAddress().length() != 0) {
+	        	plotAddressView.setText(plot.getAddress());
+	        }
+			Tree tree = plot.getTree();
+			if (tree != null) {
+				String speciesName;
+				try {
+					speciesName = tree.getSpeciesName();
+				} catch (JSONException e) {
+					speciesName = "No species name";
+				}
+				plotSpeciesView.setText(speciesName);
+			
+				if (tree.getDbh() != 0) {
+					String dbh = String.format("%.2f", tree.getDbh() );
+					plotDiameterView.setText(dbh +  
+							getString(R.string.default_measure_units) + " " + 
+							"Diameter");
+				} 
+				showImageOnPlotPopup(plot);
+				
+				try {
+					fullSizeTreeImageUrl = tree.getTreePhotoUrl();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+			
+			}
+			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
+			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
+				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+			} else {
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
+			}
+			if (plotMarker != null) {
+				plotMarker.remove();
+			}
+			plotMarker = mMap.addMarker(new MarkerOptions()
+				.position(position)
+				.title("")
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		currentPlot = plot;
+		plotPopup.setVisibility(View.VISIBLE);
+		findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+	}
+
+	private void hidePopup() {
+		findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
+		RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+		plotPopup.setVisibility(View.INVISIBLE);
+		currentPlot = null;
+	}
+
+	private void setPopupViews() {
+    	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
+    	plotAddressView = (TextView) findViewById(R.id.plotAddress);
+    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
+    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
+    	plotImageView = (ImageView) findViewById(R.id.plotImage);
+    }
+
+	private void showImageOnPlotPopup(Plot plot) throws JSONException {
+		plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
+			@Override
+			public void onSuccess(byte[] imageData) {
+				Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
+				ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
+				plotImage.setImageBitmap(scaledImage);
+			}
+			
+			@Override
+			public void onFailure(Throwable e, byte[] imageData) {
+				// Log the error, but not important enough to bother the user
+				Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+			}
+		});
+	}	  
+    
+ 	
+ 	private void setFilterDisplay(String activeFilterDisplay) {
+ 		if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
+ 			filterDisplay.setVisibility(View.GONE);
+ 		} else {
+ 			filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
+ 			filterDisplay.setVisibility(View.VISIBLE);
+ 		}
+		
+	}
+
+ 	private void zoomMapToLocation(Location l) {
+ 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+    			l.getLatitude(),
+    			l.getLongitude()
+    	), STREET_ZOOM_LEVEL));
+    
+ 	}
+ 	
+ 	private Location getCachedLocation() {
+ 		Context context = MainMapActivity.this;
+    	Criteria crit = new Criteria();
+		crit.setAccuracy(Criteria.ACCURACY_FINE);
+		LocationManager locationManager = 
+    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+		if (locationManager != null) {
+    		String provider = locationManager.getBestProvider(crit, true);
+    		
+    		if (provider != null) {
+    			Location loc = locationManager.getLastKnownLocation(provider);
+    			if (loc != null) {
+    				return loc;
+    			}
+    		
+    		}
+    	}
+		return null;
+		
+ 	} 
+        
+ 	/* tree add modes:
+ 	 * 	CANCEL : not adding a tree
+ 	 *  STEP1  : "Tap to add a tree"
+ 	 *  STEP2  : "Long press to move the tree into position, then click next"
+ 	 *  FINISH : Create tree and redirect to tree detail page.
+ 	 */
     public void setTreeAddMode(int step) {
     	if (mMap == null) {
     		return;
@@ -540,11 +605,6 @@ public class MainMapActivity extends MapActivity{
     	}
     }
 
-    //click handler for the next button
-    public void submitNewTree(View view) {
-    	setTreeAddMode(FINISH);
-    }
- 
     private Plot getPlotForNewTree() throws JSONException, IOException {
     		Plot newPlot = new Plot();
 			Geometry newGeometry = new Geometry();
@@ -581,22 +641,6 @@ public class MainMapActivity extends MapActivity{
 			return newPlot;
 	 }
 
-    // on response, set the global cqlFilter property, and cause the tile layer,
-    // which has a reference to this property, to refresh.
-    JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
-    	public void onSuccess(JSONObject data) {
-    		String cqlFilterString = data.optString("cql_string");
-       		Log.d("CQL-FILTERS", cqlFilterString);
-    		filterTileProvider.setCql(cqlFilterString);
-    		filterTileOverlay.clearTileCache();
-    	};
-    	protected void handleFailureMessage(Throwable arg0, String arg1) {
-    		Toast.makeText(MainMapActivity.this, "Error processing filters", Toast.LENGTH_SHORT).show();
-    		Log.e(App.LOG_TAG, arg1);
-    		arg0.printStackTrace();
-    		filterTileProvider.setCql("1=0");
-    	};
-    };
     
     private List<Address> doGeocode(String address) throws IOException {
     	Geocoder g = new Geocoder(MainMapActivity.this);
@@ -609,6 +653,8 @@ public class MainMapActivity extends MapActivity{
 		return a;
     }
     
+    
+    /* Read the location search field, geocode it, and zoom to the location. */
     public void doLocationSearch() {
     	EditText et = (EditText)findViewById(R.id.locationSearchField);
     	String address = et.getText().toString();
@@ -645,9 +691,6 @@ public class MainMapActivity extends MapActivity{
 		}
     }
     
-    public void handleLocationSearchClick(View view) {
-    	doLocationSearch();
-    }
     
     public void setUpBasemapControls() {
     	// Create the segmented buttons
@@ -677,25 +720,8 @@ public class MainMapActivity extends MapActivity{
             }
         });	
     }
-    
-    // click handler for add tree button
-    public void doAddTree(View view) {
-    	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-    	if(App.getLoginManager().isLoggedIn()) {
-			setTreeAddMode(CANCEL);
-			setTreeAddMode(STEP1);
-		} else {
-			startActivity(new Intent(MainMapActivity.this, LoginActivity.class));
-		}
-    }
-    
-    // click handler for filter button
-    public void doFilter(View view) {
-    	Intent filter = new Intent(this, FilterDisplay.class);
-		startActivityForResult(filter, FILTER_INTENT);
-    }
-    
-    public void setupLocationUpdating(Context applicationContext) {
+        
+    private void setupLocationUpdating(Context applicationContext) {
 		LocationManager locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
 		
 		LocationListener locationListener = new LocationListener() {
@@ -735,13 +761,7 @@ public class MainMapActivity extends MapActivity{
 		}
     }
     
-    public void handlePhotoDetailClick(View view) {
-    	if (fullSizeTreeImageUrl != null) {
-    		showPhotoDetail(fullSizeTreeImageUrl);
-    	}
-    }
-
-    public void bindEnterKeyListenerToLocationSearchBar() {
+    private void bindEnterKeyListenerToLocationSearchBar() {
     	EditText et = (EditText)findViewById(R.id.locationSearchField);
     	et.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -753,10 +773,11 @@ public class MainMapActivity extends MapActivity{
 					return false;
 				}
 			}
-				
-    		
     	});
     }
-    
+
+ 	
 }
+
+
  
