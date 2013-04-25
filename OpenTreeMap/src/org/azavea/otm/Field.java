@@ -160,6 +160,25 @@ public class Field {
 	/* 
 	 * Render a view to display the given model field in view mode
 	 */
+		
+	/* ???REFACTOR (semantics are more complicated than code as written.)
+	 * 
+	 * Pending: This field is pending or the owner field is pending
+	 * Current value:
+	 * 		has owner:
+	 * 			
+	 * 			pending : value of the latest pending field (for owner), related key (for this field).
+	 *			(IE when looking at pending edit value for "species name", lookup pending edit for owner 
+	 *			"Species", and return the value of related fields for "species name"
+	 * 			
+	 * 			not pending: value
+	 * 
+	 *  	no owner:
+	 *
+	 *  		pending: value of pending edit for this key
+	
+	 *  		not pending: value
+	 */
 	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) throws JSONException {
 		loadChoices();
 
@@ -175,8 +194,8 @@ public class Field {
         }
         if (this.infoUrl != null) {
         	View infoButton = container.findViewById(R.id.info);
-        	bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
         	infoButton.setVisibility(View.VISIBLE);
+        	bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
         }
         return container;
 	}
@@ -554,6 +573,22 @@ public class Field {
 		}
 		
 	}
+	
+	/*
+	 * ????REFACTOR
+	 * 
+	 * Also here, the semantics are more complicated.
+	 * 
+	 * Change the signature to have both a pendingEditKey (the key into the pending edits hash)
+	 * and a related_fields key (The key into the individual pending edit's related_fields.)
+	 * 
+	 * "value" becomes the value of the related field when there is a related_field_key.
+	 * 
+	 * Potentially we should add a function to the PendingEdit class
+	 * getValueOfRelatedField(String fieldname) to accomplish this.
+	 * 
+	 */
+	
 	
 	private void bindPendingEditClickHandler(View b, final String key, final Plot model, final Context context ) {
 		b.setOnClickListener(new OnClickListener() {
