@@ -104,7 +104,6 @@ public class Field {
 	 */
 	public String owner = null;
 	
-	//TODO MTW
 	public String infoUrl = null;
 	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
@@ -181,22 +180,48 @@ public class Field {
 	 */
 	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) throws JSONException {
 		loadChoices();
-
+		
+		// our ui elements
 		View container = layout.inflate(R.layout.plot_field_row, null);
-        ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
-        ((TextView)container.findViewById(R.id.field_value))
-        	.setText(formatUnit(getValueForKey(this.key, model)));
-        if (isKeyPending(this.key, model)) {
-        	View pendingButton = container.findViewById(R.id.pending);
+        TextView label = (TextView)container.findViewById(R.id.field_label);
+        TextView fieldValue = (TextView)container.findViewById(R.id.field_value);
+    	View infoButton = container.findViewById(R.id.info);
+    	View pendingButton = container.findViewById(R.id.pending);
+        
+    	//set the label (simple)
+    	label.setText(this.label);
+    	
+    	// is this field pending (based on its own notion of pending or its owners.)
+    	Boolean pending = (this.owner == null) ? 
+    			isKeyPending(this.key, model) :
+    			isKeyPending(this.owner, model);
+    	
+    	// Determine the current value of the field and update the ui. (Based on current
+    	// value, value of simple pending edit, or value of pending edit where we have
+    	// an owner field.
+    	String value = null;
+		if (!pending || this.owner == null) {
+			 value = formatUnit(getValueForKey(this.key, model));
+		} else {
+			value = getValueForLatestPendingEditByRelatedField(this.key, this.owner, model); 
+		}
+    	fieldValue.setText(value);
+    	
+    	
+    	// If the key is pending, display the arrow UI, and set up its click handler
+        if (pending) {
+        	//TODO this still works were owner is null, need to refactor per notes below.
         	bindPendingEditClickHandler(pendingButton, this.key, model, context);
         	pendingButton.setVisibility(View.VISIBLE);
-        	
         }
+        
+        // If the field has a URL attached to it as an info description (IE for pests)
+        // display the link.
         if (this.infoUrl != null) {
-        	View infoButton = container.findViewById(R.id.info);
         	infoButton.setVisibility(View.VISIBLE);
         	bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
         }
+        
         return container;
 	}
 
@@ -643,5 +668,49 @@ public class Field {
 				a.startActivity(browserIntent);
 			}
 		});
+	}
+	
+	/*
+	 * pending key: the key to get pending edits for.. IE tree.species
+	 * related field: the key determining the representation to return.. IE tree.species_name
+	 * plot: the plot object.
+	 */
+	
+	//??REFACTOR: the signature suggests that this belongs on the Plot object.
+	
+	private static String getValueForLatestPendingEditByRelatedField(String relatedFieldKey, String pendingKey, Plot plot) {
+		// get the pending edit description object for this plot
+		PendingEditDescription ped;
+		try {
+			ped = plot.getPendingEditForKey(pendingKey);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+		
+		// get a list of pending edits
+		List<PendingEdit> pendingEditList;
+		try {
+			pendingEditList = ped.getPendingEdits();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+		
+		// I assert that the most recent one is the first one. (argh.)
+		PendingEdit mostRecentPendingEdit;
+		if (pendingEditList.size() != 0) {
+			mostRecentPendingEdit = pendingEditList.get(0);
+		} else {
+			return "";
+		}
+		
+		// now give me the related field for that pending edit.
+		String value =  mostRecentPendingEdit.getValue(relatedFieldKey);
+		
+		return value;
+
 	}
 }

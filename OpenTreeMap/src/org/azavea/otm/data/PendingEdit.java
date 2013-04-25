@@ -21,6 +21,16 @@ public class PendingEdit {
 		return data.getString("value");
 	}
 	
+	public String getValue(String relatedField) {
+		try {
+			return data.getJSONObject("related_fields").getString(relatedField);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public int getId() throws JSONException {
 		return data.getInt("id");
 	}
