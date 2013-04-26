@@ -209,9 +209,18 @@ public class Field {
     	
     	
     	// If the key is pending, display the arrow UI, and set up its click handler
+    	//
+    	// Note that the semantics of the bindPendingEditClickHandler function take
+    	// a key into the pending edit array, and an optional related field.
+    	//
+    	// Where owner is defined, the owner is what we want to use to look up pending edits (and this.key
+    	// becomes the related field.
         if (pending) {
-        	//TODO this still works were owner is null, need to refactor per notes below.
-        	bindPendingEditClickHandler(pendingButton, this.key, model, context);
+        	if (this.owner!=null) {
+        		bindPendingEditClickHandler(pendingButton, this.owner, this.key, model, context);
+        	} else {
+        		bindPendingEditClickHandler(pendingButton, this.key, null, model, context);
+        	}
         	pendingButton.setVisibility(View.VISIBLE);
         }
         
@@ -599,23 +608,17 @@ public class Field {
 		
 	}
 	
+	
+	
 	/*
-	 * ????REFACTOR
 	 * 
-	 * Also here, the semantics are more complicated.
+	 * key : the index into the pending edit array (IE Species)
+	 * related field: the value to return. (IE Species Name)
 	 * 
-	 * Change the signature to have both a pendingEditKey (the key into the pending edits hash)
-	 * and a related_fields key (The key into the individual pending edit's related_fields.)
-	 * 
-	 * "value" becomes the value of the related field when there is a related_field_key.
-	 * 
-	 * Potentially we should add a function to the PendingEdit class
-	 * getValueOfRelatedField(String fieldname) to accomplish this.
-	 * 
+	 * If related field is null, return the plain value for the field.
+	 *  (Example, when key is DBH, we want the numeric value.)
 	 */
-	
-	
-	private void bindPendingEditClickHandler(View b, final String key, final Plot model, final Context context ) {
+	private void bindPendingEditClickHandler(View b, final String key, final String relatedField, final Plot model, final Context context ) {
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -632,10 +635,20 @@ public class Field {
 					List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
 					JSONArray serializedPendingEdits = new JSONArray();
 					for (PendingEdit pendingEdit : pendingEdits) {	
+						// The value is the plain pending edit's value, or the value of the PE's 
+						// related field.  (IE retrieve Species Name instead of a species ID.)
+						String value;
+						if (relatedField == null) {
+							value = formatUnit(pendingEdit.getValue());
+						} else {
+							value = pendingEdit.getValue(relatedField);
+						}
+						
+						//Continue on loading all of the pending edit data into the serializedPendingEdit
+						// object
 						JSONObject serializedPendingEdit = new JSONObject();
 						serializedPendingEdit.put("id", pendingEdit.getId());
-						// This formatUnit call is why we are doing all the work in this class.
-						serializedPendingEdit.put("value", formatUnit(pendingEdit.getValue()));
+						serializedPendingEdit.put("value", value);
 						serializedPendingEdit.put("username", pendingEdit.getUsername());
 						try {
 							serializedPendingEdit.put("date", pendingEdit.getSubmittedTime().toLocaleString());
@@ -643,6 +656,8 @@ public class Field {
 							e.printStackTrace();
 							serializedPendingEdit.put("date", "");
 						}
+						
+						// and then append this edit onto the rest of them.
 						serializedPendingEdits.put(serializedPendingEdit);
 						
 					}
