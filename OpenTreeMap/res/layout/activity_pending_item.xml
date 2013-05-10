@@ -1,84 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="20dp"
-    android:background="@color/mainBackgroundColor"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
 >
-    
-	
-		<TextView 
-	        android:text="FIELD LABEL"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:id="@+id/pending_edit_label"
-	   		android:textSize="18dp"
-	   		android:textColor="@color/text_dark"
-	       />
-	
-	    <TextView
-	        android:layout_marginTop="20dp"
-	        android:text="Current Value"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	   		android:textColor="@color/text_dark"
-	        android:textSize="15dp"/>
-	 
-	    <LinearLayout
-	        android:layout_marginLeft="10dp"
-	        android:id="@+id/currentValue"
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:orientation="vertical"
-	   	>
-		<!--  TextView 
-	        android:text="PLACEOLDER"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	     / -->
-	   	</LinearLayout>
-	   	
-	    <TextView
-	        android:text="Pending Edits"
-	        android:layout_width="wrap_content"
-	   		android:textColor="@color/text_dark"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        />
-	    <LinearLayout
-	        android:layout_marginLeft="10dp"
-	        android:id="@+id/pendingEdits"
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:orientation="vertical"
-	    ></LinearLayout>
-
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" 
-	        android:id="@+id/nav"
-	        android:visibility="invisible">
-
-	        <Button
-	            android:id="@+id/save_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Save"
-	            android:background="@drawable/btn_primary"
-	            android:onClick="handleSaveClick"
-	             />
-
-	        <Button
-	            android:id="@+id/cancel_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Cancel"
-	            android:onClick = "handleCancelClick"
-	            android:background="@drawable/btn_danger"
-	            android:layout_marginLeft="10dp"
-	             />
-
-	    </LinearLayout>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" 
+	    android:padding="20dp"
+	    android:background="@color/mainBackgroundColor"
+	>
 	    
-</LinearLayout>
+		
+			<TextView 
+		        android:text="FIELD LABEL"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/pending_edit_label"
+		   		android:textSize="18dp"
+		   		android:textColor="@color/text_dark"
+		       />
+		
+		    <TextView
+		        android:layout_marginTop="20dp"
+		        android:text="Current Value"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		   		android:textColor="@color/text_dark"
+		        android:textSize="15dp"/>
+		 
+		    <LinearLayout
+		        android:layout_marginLeft="10dp"
+		        android:id="@+id/currentValue"
+		        android:layout_height="wrap_content"
+		        android:layout_width="wrap_content"
+		        android:orientation="vertical"
+		   	>
+			<!--  TextView 
+		        android:text="PLACEOLDER"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		     / -->
+		   	</LinearLayout>
+		   	
+		    <TextView
+		        android:text="Pending Edits"
+		        android:layout_width="wrap_content"
+		   		android:textColor="@color/text_dark"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="20dp"
+		        />
+		    <LinearLayout
+		        android:layout_marginLeft="10dp"
+		        android:id="@+id/pendingEdits"
+		        android:layout_height="wrap_content"
+		        android:layout_width="wrap_content"
+		        android:orientation="vertical"
+		    ></LinearLayout>
+	
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:id="@+id/nav"
+		        android:visibility="invisible">
+	
+		        <Button
+		            android:id="@+id/save_button"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Save"
+		            android:background="@drawable/btn_primary"
+		            android:onClick="handleSaveClick"
+		             />
+	
+		        <Button
+		            android:id="@+id/cancel_button"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Cancel"
+		            android:onClick = "handleCancelClick"
+		            android:background="@drawable/btn_danger"
+		            android:layout_marginLeft="10dp"
+		             />
+	
+		    </LinearLayout>
+		    
+	</LinearLayout>
+</ScrollView>
