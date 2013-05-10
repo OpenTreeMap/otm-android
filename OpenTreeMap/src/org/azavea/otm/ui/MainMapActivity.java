@@ -642,10 +642,36 @@ public class MainMapActivity extends MapActivity{
 			return newPlot;
 	 }    
     
+    private void moveMapAndFinishGeocode(LatLng pos) {
+    	EditText et = (EditText)findViewById(R.id.locationSearchField);
+    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
+    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);	
+    }
+    
+    private void alertGeocodeError() {
+   		Toast.makeText(MainMapActivity.this, "Location search error.", Toast.LENGTH_SHORT).show();	
+    }
+    
+    JsonHttpResponseHandler handleGoogleGeocodeResponse = new JsonHttpResponseHandler() {
+    	public void onSuccess(JSONObject data) {
+    		LatLng pos = FallbackGeocoder.decodeGoogleJsonResponse(data);
+    		if (pos == null) {
+    			alertGeocodeError();
+    		} else {
+    			moveMapAndFinishGeocode(pos);
+    		}
+    	};
+    	protected void handleFailureMessage(Throwable arg0, String arg1) {
+    		alertGeocodeError();
+    	};
+    };
+
     /* Read the location search field, geocode it, and zoom to the location. */
     public void doLocationSearch() {
     	EditText et = (EditText)findViewById(R.id.locationSearchField);
     	String address = et.getText().toString();
+    
     	if (address.equals("")) {
     		Toast.makeText(MainMapActivity.this, "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
     		return;
@@ -659,17 +685,15 @@ public class MainMapActivity extends MapActivity{
     			Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", "")),
     			Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""))
     	);
-    	LatLng pos = geocoder.androidGeocode(address);
+    	
+    	LatLng pos = geocoder.androidGeocode(address);    	
     	
     	if (pos == null) {
-			Toast.makeText(MainMapActivity.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
-		} else {
-	    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
-	    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-	    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
-		}
+    		geocoder.httpGeocode(address, handleGoogleGeocodeResponse);
+    	} else {
+			moveMapAndFinishGeocode(pos);
+	 	}
     }
-    
     
     public void setUpBasemapControls() {
     	// Create the segmented buttons

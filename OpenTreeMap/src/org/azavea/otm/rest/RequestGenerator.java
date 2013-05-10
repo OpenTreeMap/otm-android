@@ -250,5 +250,8 @@ public class RequestGenerator {
 		client.postWithAuthentication(context, url, loginManager.loggedInUser.getUserName(), 
 				loginManager.loggedInUser.getPassword(), handler);
 	}
+	
+	
+	
 
 }
