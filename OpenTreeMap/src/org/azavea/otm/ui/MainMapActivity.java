@@ -32,6 +32,7 @@ import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
+import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.map.TileProviderFactory;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
@@ -639,20 +640,7 @@ public class MainMapActivity extends MapActivity{
 			newPlot.setTree(new Tree());
 			
 			return newPlot;
-	 }
-
-    
-    private List<Address> doGeocode(String address) throws IOException {
-    	Geocoder g = new Geocoder(MainMapActivity.this);
-    	SharedPreferences prefs = App.getSharedPreferences();
-		double lowerLeftLatitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", ""));
-		double lowerLeftLongitude = Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", ""));
-		double upperRightLatitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", ""));
-		double upperRightLongitude = Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""));
-		List<Address> a = g.getFromLocationName(address, 1, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
-		return a;
-    }
-    
+	 }    
     
     /* Read the location search field, geocode it, and zoom to the location. */
     public void doLocationSearch() {
@@ -662,29 +650,20 @@ public class MainMapActivity extends MapActivity{
     		Toast.makeText(MainMapActivity.this, "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
     		return;
     	} 
+
+    	SharedPreferences prefs = App.getSharedPreferences();
+    	FallbackGeocoder geocoder = new FallbackGeocoder(
+    			MainMapActivity.this,
+    			Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", "")),
+    			Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", "")),
+    			Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", "")),
+    			Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""))
+    	);
+    	LatLng pos = geocoder.androidGeocode(address);
     	
-    	List<Address> a;
-    	// try to geocode, if it fails the first time, retry.
-    	try {
-    		a = doGeocode(address);
-    	} catch (IOException e) {
-    		Log.d("LOC_SEARCH", "error in first geocode try");
-    		Log.e("LOC_SEARCH", "exception", e);
-    		try {
-    			a = doGeocode(address);
-    		} catch (IOException f) {
-    			Log.e("LOC_SEARCH", "error in second geocode try.  bailing out!");
-    			Log.e("LOC_SEARCH", "exception", e);
-    			Toast.makeText(MainMapActivity.this,  "Error searching for location.", Toast.LENGTH_SHORT).show();
-    			return;
-    		}
-    	}
-    
-		if (a.size() == 0) {
+    	if (pos == null) {
 			Toast.makeText(MainMapActivity.this, "Could not find that location.", Toast.LENGTH_SHORT).show();
 		} else {
-			Address geocoded = a.get(0);
-			LatLng pos = new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
 	    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
 	    	InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 	    	im.hideSoftInputFromWindow(et.getWindowToken(), 0);
