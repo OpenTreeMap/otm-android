@@ -73,7 +73,10 @@ public class Species extends Model implements Comparable<Object> {
 	@Override
 	public String toString() {
 		try {
-			return getCommonName();
+			// Whatever value toString provides to an ArrayAdapter will be used
+			// in a simple wildcard filter.  By providing both names, both names
+			// can be filtered on
+			return getCommonName() + " " + getScientificName();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
