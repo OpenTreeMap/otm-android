@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import java.text.DecimalFormat;
 import java.util.Map.Entry;
 
 import org.azavea.otm.App;
@@ -28,8 +29,12 @@ import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler.Callback;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -191,11 +196,92 @@ public class TreeEditDisplay extends TreeDisplay {
 		}
 		first.requestFocus();
 		
+		setupCircumferenceField(layout);
 		setupSpeciesSelector();
-		
 		setupChangePhotoButton(layout, fieldList);
-		
 		setupDeleteButtons(layout, fieldList);		
+	}
+	
+	private void setupCircumferenceField(LayoutInflater layout) {
+		final EditText dbh = (EditText)findViewById(R.id.dynamic_dbh).findViewById(R.id.field_value);
+		final EditText cir = (EditText)findViewById(R.id.dynamic_circumference).findViewById(R.id.field_value);
+		
+		dbh.addTextChangedListener(new TextWatcher() {
+			   @Override
+			    public void onTextChanged(CharSequence s, int start, int before,
+			    		int count) {}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					handleTextChange(dbh, cir, false);
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {}
+		});
+
+		
+		cir.addTextChangedListener(new TextWatcher() {
+			   @Override
+			    public void onTextChanged(CharSequence s, int start, int before,
+			    		int count) {}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					handleTextChange(cir, dbh, true);
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {}
+		});
+		
+		dbh.setText(dbh.getText());
+	}
+	
+	private void handleTextChange(EditText editing, EditText receiving, boolean calcDbh) {
+		try {
+			DecimalFormat df = new DecimalFormat("#.##");
+			
+			String editingText = editing.getText().toString();
+    		String other = receiving.getText().toString();
+    		double otherVal = other.equals("") ? 0 : Double.parseDouble(other);
+    		
+    		// If the value was blanked, and the other is not already blank, blank it
+			if (editingText.equals("")) {
+				if (other.equals("")) {
+					return;
+				} else {
+					receiving.setText("");
+				}
+				return;
+			}
+			
+			String display = "";
+			double calculatedVal = 0;
+			
+			if (calcDbh) {
+				double c = Double.parseDouble(editingText);
+	    		calculatedVal = c / Math.PI;
+			} else {
+				double d = Double.parseDouble(editingText);
+        		calculatedVal = Math.PI * d;
+
+			}
+			display = df.format(calculatedVal);
+    		
+    		if (Math.abs(otherVal - calculatedVal) >= 0.05) {
+    			receiving.setText(display);
+    			receiving.setSelection(display.length());
+    		} else {
+    			Log.d("mjm", "not clse enough");
+    		}
+    		
+    	} catch (Exception e) {
+    		Log.e("mjm", "darn", e);
+    		editing.setText("");
+    	}
 	}
 	
 	/**
