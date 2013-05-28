@@ -228,7 +228,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
 		try {
 			// You can only change a tree picture if there is a tree
-			if (plot.getTree() != null) {
+			if ((plot.getId() != 0) &&   (plot.getTree() != null)) {
 				View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
 				fieldList.addView(thePanel);
 			}	
