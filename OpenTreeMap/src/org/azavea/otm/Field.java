@@ -1,11 +1,9 @@
 package org.azavea.otm;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.PendingEdit;
@@ -26,7 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.sax.StartElementListener;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,8 +103,11 @@ public class Field {
 	
 	public String infoUrl = null;
 	
+	public boolean editViewOnly = false;
+	
 	protected Field(String key, String label, int minimumToEdit, String keyboard, 
-			String format, String type, String choice, String owner, String infoUrl) {
+			String format, String type, String choice, String owner, String infoUrl,
+			boolean editViewOnly) {
 		this.key = key;
 		this.label = label;
 		this.minimumToEdit = minimumToEdit;
@@ -117,6 +117,7 @@ public class Field {
 		this.choiceName = choice;
 		this.owner = owner;
 		this.infoUrl = infoUrl;
+		this.editViewOnly = editViewOnly;
 	}
 	
 	public static Field makeField(Node fieldNode) {
@@ -147,12 +148,15 @@ public class Field {
 		node = fieldNode.getAttributes().getNamedItem("info_url");
 		String infoUrl = node == null ? null : node.getNodeValue();
 
+		node = fieldNode.getAttributes().getNamedItem("editViewOnly");
+		boolean editViewOnly = node == null ? false : Boolean.parseBoolean(node.getNodeValue());
+
 		
 		if (type != null && type.equals("eco")) {
 			return new EcoField(key, label, minimumToEdit, keyboardResource, format, type);
 		} else {
 			return new Field(key, label, minimumToEdit, keyboardResource, format, 
-					type, choice, owner, infoUrl);
+					type, choice, owner, infoUrl, editViewOnly);
 		}
 	}
 	
@@ -256,6 +260,15 @@ public class Field {
 	        	if (this.keyboardResource != null) {
 					setFieldKeyboard(edit); 
 		        }
+	        	
+        		// Special case for tree diameter.  Make a synced circumference field
+	        	if (this.key.equals("dynamic-cirumference")) {
+	        		container.setId(R.id.dynamic_circumference);
+	        		Log.d("mjm", "did circ");
+	        	} else if (this.key.equals("tree.dbh")) {
+	        		container.setId(R.id.dynamic_dbh);
+	        		Log.d("mjm", "did dbh");
+	        	}
 	        }
 		}
         

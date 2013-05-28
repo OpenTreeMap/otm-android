@@ -72,9 +72,12 @@ public class FieldGroup {
         if (this.title != null) {
 	        for (Entry<String, Field> field : fields.entrySet()) {
 	        	try {
+	        		fieldView = null;
 	        		switch (mode) {
 	        			case VIEW:
-	        				fieldView = field.getValue().renderForDisplay(layout, model, context);
+	        				if (!field.getValue().editViewOnly) {
+	        					fieldView = field.getValue().renderForDisplay(layout, model, context);
+	        				}
 	        				break;
 	        			case EDIT:
 	        				fieldView= field.getValue().renderForEdit(layout, model, user, context);
