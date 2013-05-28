@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Register extends ProfileActivity{
+public class Register extends PhotoActivity{
 	private String username;
 	private String password;	
 	private Bitmap profilePicture;

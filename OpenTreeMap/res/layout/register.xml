@@ -90,7 +90,7 @@
             android:layout_marginRight="@dimen/mapbtn_right"
             android:layout_marginTop="@dimen/mapbtn_top"
             android:background="@drawable/btn"
-            android:onClick="handleChangeProfilePhotoClick"
+            android:onClick="handleChangePhotoClick"
             android:padding="@dimen/small_btn"
             android:text="@string/add_profile_picture"
             android:textColor="@color/text_dark" />
