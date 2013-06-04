@@ -262,15 +262,14 @@ public class TreeEditDisplay extends TreeDisplay {
 			}
 			display = df.format(calculatedVal);
     		
+			// Only set the other text if there is a significant difference
+			// in from the calculated value
     		if (Math.abs(otherVal - calculatedVal) >= 0.05) {
     			receiving.setText(display);
     			receiving.setSelection(display.length());
-    		} else {
-    			Log.d("mjm", "not clse enough");
     		}
     		
     	} catch (Exception e) {
-    		Log.e("mjm", "darn", e);
     		editing.setText("");
     	}
 	}
