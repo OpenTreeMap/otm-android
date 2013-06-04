@@ -23,9 +23,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler.Callback;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class TreeEditDisplay extends TreeDisplay {
 
@@ -53,6 +57,11 @@ public class TreeEditDisplay extends TreeDisplay {
 	private ProgressDialog saveDialog = null;
 	private ProgressDialog savePhotoDialog = null;
 		
+	protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
+	protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
+	protected final static int PIC_WIDTH = 100;
+	
+	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
 		@Override
@@ -304,7 +313,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
 		try {
 			// You can only change a tree picture if there is a tree
-			if (plot.getTree() != null) {
+			if ((plot.getId() != 0) &&   (plot.getTree() != null)) {
 				View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
 				fieldList.addView(thePanel);
 			}	
@@ -338,10 +347,6 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	}
 
-	public void changeTreePhoto(View view) {
-		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(intent, TREE_PHOTO);
-	}
 	
 	public void deleteTree(View view) {
 		Callback confirm = new Callback() {
@@ -527,19 +532,6 @@ public class TreeEditDisplay extends TreeDisplay {
 		  			}
 		  		}
 		  		break; 
-		  	case TREE_PHOTO : 
-			  	if (resultCode == Activity.RESULT_OK) {
-			  		Bitmap bm = (Bitmap) data.getExtras().get("data");
-			  		RequestGenerator rc = new RequestGenerator();
-					try {
-						savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-						rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
-					} catch (JSONException e) {
-						Log.e(App.LOG_TAG, "Error updating tree photo.", e);
-						savePhotoDialog.dismiss();
-					}
-		  		}
-		  		break;
 		  	case TREE_MOVE:
 		  		if (resultCode == Activity.RESULT_OK) {
 				  	try {
@@ -552,7 +544,16 @@ public class TreeEditDisplay extends TreeDisplay {
 					showPositionOnMap();
 		  		}
 		  		break;
-		  		
+		  	case PHOTO_USING_CAMERA_RESPONSE:
+		  		if (resultCode == RESULT_OK) {
+		  			changePhotoUsingCamera(data);
+		  		}
+		  		break;
+		  	case PHOTO_USING_GALLERY_RESPONSE:
+		  		if (resultCode == RESULT_OK) {
+		  			changePhotoUsingGallery(data);
+		  		}					
+		  		break;		  		
 	  }
   		
     } 
@@ -565,4 +566,77 @@ public class TreeEditDisplay extends TreeDisplay {
 		cancel();
 	}
 	
+	
+	/* Photo Editing Functions
+	 * TODO: refactor, see PhotoActivity
+	 **/		
+	// Bind your change photo button to this handler.
+	public void changeTreePhoto(View view) {
+		Log.d("PHOTO", "changePhoto");
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	       			startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
+	           }
+	       });
+		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   Intent intent = new Intent(Intent.ACTION_PICK, 
+	        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+	       			startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
+	           }
+	       });
+
+		AlertDialog alert = builder.create();
+		alert.show();
+		
+	}	
+	
+	// This function is called at the end of the whole camera process. You might
+	// want to call your rc.submit method here, or store the bm in a class level
+	// variable.
+	protected void submitBitmap(Bitmap bm) {
+		RequestGenerator rc = new RequestGenerator();
+		try {
+			savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
+			rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+		} catch (JSONException e) {
+			Log.e(App.LOG_TAG, "Error updating tree photo.", e);
+			savePhotoDialog.dismiss();
+		}
+	}
+	
+	protected void changePhotoUsingCamera(Intent data) {
+		Bitmap bm = (Bitmap) data.getExtras().get("data");
+		bm = scaleBitmap(bm, PIC_WIDTH);
+		submitBitmap(bm);
+	}
+	protected void changePhotoUsingGallery(Intent data) {
+		Uri selectedImage = data.getData();
+        Bitmap bm = retrieveBitmapFromGallery(selectedImage);
+        bm = scaleBitmap(bm, PIC_WIDTH);
+        submitBitmap(bm);
+	}
+	protected static Bitmap scaleBitmap(Bitmap bm, int newWidth) {
+		int width = bm.getWidth();
+		int height = bm.getHeight();
+		float newHeight = (float)height/(float)width * (float)newWidth;
+		return Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
+	}
+	protected Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
+		String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(
+                           selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String filePath = cursor.getString(columnIndex);
+        
+        cursor.close();
+        Bitmap fullSizeBitmap = BitmapFactory.decodeFile(filePath);
+        return fullSizeBitmap;
+	}	
+	/* End of photo stuff*/
 }

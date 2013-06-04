@@ -1,6 +1,5 @@
 package org.azavea.otm.ui;
 
-import org.azavea.otm.App;
 import org.azavea.otm.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,32 +13,33 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
-public abstract class ProfileActivity extends Activity {
+public abstract class PhotoActivity extends Activity {
 	protected static int PHOTO_USING_CAMERA_RESPONSE = 7;
 	protected static int PHOTO_USING_GALLERY_RESPONSE = 8;
-	protected final static int PROFILE_PIC_WIDTH = 100;
+	protected final static int PIC_WIDTH = 100;
+	private static String LOG_TAG = "PHOTO_ACTIVITY";
 	
 	/*
 	 * UI Event Handlers
 	 */
-
-	// Bind your change profile photo button to this handler.
-	public void handleChangeProfilePhotoClick(View view) {
-		Log.d("addProfilePhoto", "changeProfilePhoto");
+	
+	// Bind your change photo button to this handler.
+	public void handleChangePhotoClick(View view) {
+		Log.d(LOG_TAG, "changePhoto");
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		       			startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
-		           }
-		       });
+	           public void onClick(DialogInterface dialog, int id) {
+	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	       			startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
+	           }
+	       });
 		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   Intent intent = new Intent(Intent.ACTION_PICK, 
-		        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		       			startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
-		           }
-		       });
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   Intent intent = new Intent(Intent.ACTION_PICK, 
+	        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+	       			startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
+	           }
+	       });
 
 		AlertDialog alert = builder.create();
 		alert.show();
@@ -55,16 +55,16 @@ public abstract class ProfileActivity extends Activity {
 	// variable.
 	abstract void submitBitmap(Bitmap bm);
 
-	protected void changeProfilePhotoUsingCamera(Intent data) {
+	protected void changePhotoUsingCamera(Intent data) {
 		Bitmap bm = (Bitmap) data.getExtras().get("data");
-		bm = scaleBitmap(bm, PROFILE_PIC_WIDTH);
+		bm = scaleBitmap(bm, PIC_WIDTH);
 		submitBitmap(bm);
 	}
 	
-	protected void changeProfilePhotoUsingGallery(Intent data) {
+	protected void changePhotoUsingGallery(Intent data) {
 		Uri selectedImage = data.getData();
         Bitmap bm = retrieveBitmapFromGallery(selectedImage);
-        bm = scaleBitmap(bm, PROFILE_PIC_WIDTH);
+        bm = scaleBitmap(bm, PIC_WIDTH);
         submitBitmap(bm);
 	}
 
@@ -74,11 +74,10 @@ public abstract class ProfileActivity extends Activity {
 	//       should be able to call super.onActivityResult first.
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			Log.d(App.LOG_TAG, "Reload profile for new user login");
 			if (requestCode == PHOTO_USING_CAMERA_RESPONSE) {
-				changeProfilePhotoUsingCamera(data);
+				changePhotoUsingCamera(data);
 			} else if (requestCode == PHOTO_USING_GALLERY_RESPONSE) {
-				changeProfilePhotoUsingGallery(data);					
+				changePhotoUsingGallery(data);					
 			}
 		}
 	}

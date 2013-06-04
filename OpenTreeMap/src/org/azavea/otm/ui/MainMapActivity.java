@@ -614,9 +614,16 @@ public class MainMapActivity extends MapActivity{
 			newGeometry.setLat(lat);
 			newGeometry.setLon(lon);
 			newPlot.setGeometry(newGeometry);
-    		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-			if (addresses.size() != 0) {
+    		
+			List<Address> addresses = null;
+			try {
+				Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+				addresses = geocoder.getFromLocation(lat, lon, 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if ((addresses != null) && (addresses.size() != 0)) {
 				Address addressData = addresses.get(0);
 				String streetAddress = null;
 				String city = null;
@@ -633,12 +640,9 @@ public class MainMapActivity extends MapActivity{
 				newPlot.setAddressCity(city);
 				newPlot.setAddressZip(zip);
 				newPlot.setAddress(streetAddress);
-			} else {
-				return null;
 			}
 			
 			newPlot.setTree(new Tree());
-			
 			return newPlot;
 	 }    
     

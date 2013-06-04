@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProfileDisplay extends ProfileActivity {
+public class ProfileDisplay extends PhotoActivity {
 
 	private final RequestGenerator client = new RequestGenerator();
 	private final int SHOW_LOGIN = 0;
