@@ -246,7 +246,9 @@ public class TreeEditDisplay extends TreeDisplay {
 			
 			String editingText = editing.getText().toString();
     		String other = receiving.getText().toString();
-    		double otherVal = other.equals("") ? 0 : Double.parseDouble(other);
+    		double otherVal = (other.equals("") || other.equals(".")) 
+    				? 0 
+    				: Double.parseDouble(other);
     		
     		// If the value was blanked, and the other is not already blank, blank it
 			if (editingText.equals("")) {
@@ -260,6 +262,9 @@ public class TreeEditDisplay extends TreeDisplay {
 			
 			String display = "";
 			double calculatedVal = 0;
+			
+			// Handle cases where the first input is a decimal point
+			if (editingText.equals(".")) editingText = "0.";
 			
 			if (calcDbh) {
 				double c = Double.parseDouble(editingText);
