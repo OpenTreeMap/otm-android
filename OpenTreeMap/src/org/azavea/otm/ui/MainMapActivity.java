@@ -758,7 +758,9 @@ public class MainMapActivity extends MapActivity{
 		};
 		if (locationManager != null) {
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);			
 		}
+		
 		
 	}
     
