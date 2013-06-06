@@ -246,7 +246,9 @@ public class TreeEditDisplay extends TreeDisplay {
 			
 			String editingText = editing.getText().toString();
     		String other = receiving.getText().toString();
-    		double otherVal = other.equals("") ? 0 : Double.parseDouble(other);
+    		double otherVal = (other.equals("") || other.equals(".")) 
+    				? 0 
+    				: Double.parseDouble(other);
     		
     		// If the value was blanked, and the other is not already blank, blank it
 			if (editingText.equals("")) {
@@ -261,6 +263,9 @@ public class TreeEditDisplay extends TreeDisplay {
 			String display = "";
 			double calculatedVal = 0;
 			
+			// Handle cases where the first input is a decimal point
+			if (editingText.equals(".")) editingText = "0.";
+			
 			if (calcDbh) {
 				double c = Double.parseDouble(editingText);
 	    		calculatedVal = c / Math.PI;
@@ -271,15 +276,14 @@ public class TreeEditDisplay extends TreeDisplay {
 			}
 			display = df.format(calculatedVal);
     		
+			// Only set the other text if there is a significant difference
+			// in from the calculated value
     		if (Math.abs(otherVal - calculatedVal) >= 0.05) {
     			receiving.setText(display);
     			receiving.setSelection(display.length());
-    		} else {
-    			Log.d("mjm", "not clse enough");
     		}
     		
     	} catch (Exception e) {
-    		Log.e("mjm", "darn", e);
     		editing.setText("");
     	}
 	}
