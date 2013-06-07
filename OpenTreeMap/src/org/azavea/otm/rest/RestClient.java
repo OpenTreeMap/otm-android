@@ -177,11 +177,11 @@ public class RestClient {
 		
 		// Content type also needs to be pinned down in the Bitmap.compress
 		// call, which is why I haven't exposed it as a parameter.
-		String contentType = "image/png";
+		String contentType = "image/jpeg";
 				
 		// We need to coerce the bitmap into a ByteArrayEntity so that we can post it.
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
-		bm.compress(CompressFormat.PNG, 0, bos); 
+		bm.compress(CompressFormat.JPEG, 55, bos); 
 		byte[] bitmapdata = bos.toByteArray();
 		ByteArrayEntity bae = new ByteArrayEntity(bitmapdata);
 		

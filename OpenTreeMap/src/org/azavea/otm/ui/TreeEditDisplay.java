@@ -59,7 +59,6 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
 	protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
-	protected final static int PIC_WIDTH = 100;
 	
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
@@ -603,6 +602,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	// variable.
 	protected void submitBitmap(Bitmap bm) {
 		RequestGenerator rc = new RequestGenerator();
+				
 		try {
 			savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
 			rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
@@ -614,20 +614,12 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	protected void changePhotoUsingCamera(Intent data) {
 		Bitmap bm = (Bitmap) data.getExtras().get("data");
-		bm = scaleBitmap(bm, PIC_WIDTH);
 		submitBitmap(bm);
 	}
 	protected void changePhotoUsingGallery(Intent data) {
 		Uri selectedImage = data.getData();
         Bitmap bm = retrieveBitmapFromGallery(selectedImage);
-        bm = scaleBitmap(bm, PIC_WIDTH);
         submitBitmap(bm);
-	}
-	protected static Bitmap scaleBitmap(Bitmap bm, int newWidth) {
-		int width = bm.getWidth();
-		int height = bm.getHeight();
-		float newHeight = (float)height/(float)width * (float)newWidth;
-		return Bitmap.createScaledBitmap(bm, newWidth, (int)newHeight, false);
 	}
 	protected Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
 		String[] filePathColumn = {MediaStore.Images.Media.DATA};
