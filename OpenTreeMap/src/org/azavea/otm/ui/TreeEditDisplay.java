@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Map.Entry;
 
@@ -21,11 +22,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.os.Handler.Callback;
 import android.provider.MediaStore;
@@ -59,7 +62,8 @@ public class TreeEditDisplay extends TreeDisplay {
 		
 	protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
 	protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
-	
+
+	private Uri mImageCaptureUri;
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
@@ -550,7 +554,7 @@ public class TreeEditDisplay extends TreeDisplay {
 		  		break;
 		  	case PHOTO_USING_CAMERA_RESPONSE:
 		  		if (resultCode == RESULT_OK) {
-		  			changePhotoUsingCamera(data);
+		  			changePhotoUsingCamera();
 		  		}
 		  		break;
 		  	case PHOTO_USING_GALLERY_RESPONSE:
@@ -580,7 +584,14 @@ public class TreeEditDisplay extends TreeDisplay {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	        	   	mImageCaptureUri = Uri.fromFile(
+	        	   		new File(
+	        	   			Environment.getExternalStorageDirectory(),
+	        	   			"otm_tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg"
+	        	   	));
+	        	   	Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);                     
+	                intent.putExtra("return-data", true);
 	       			startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
 	           }
 	       });
@@ -612,15 +623,32 @@ public class TreeEditDisplay extends TreeDisplay {
 		}
 	}
 	
-	protected void changePhotoUsingCamera(Intent data) {
-		Bitmap bm = (Bitmap) data.getExtras().get("data");
-		submitBitmap(bm);
+	protected void changePhotoUsingCamera() {
+		Bitmap bm = retrieveBitmapFromCamera(mImageCaptureUri);
+		if (bm != null) {submitBitmap(bm);}
 	}
 	protected void changePhotoUsingGallery(Intent data) {
 		Uri selectedImage = data.getData();
         Bitmap bm = retrieveBitmapFromGallery(selectedImage);
         submitBitmap(bm);
 	}
+	protected Bitmap retrieveBitmapFromCamera(Uri mImageUri) {
+	    this.getContentResolver().notifyChange(mImageUri, null);
+	    ContentResolver cr = this.getContentResolver();
+	    Bitmap bitmap;
+	    try
+	    {
+	        bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
+	        return bitmap;
+	    }
+	    catch (Exception e)
+	    {
+	        Toast.makeText(this, "Failed to load image from camera", Toast.LENGTH_SHORT).show();
+	        Log.d(App.LOG_TAG, "Failed to load image from camera", e);
+	        return null;
+	    }
+	}
+	
 	protected Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
 		String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
