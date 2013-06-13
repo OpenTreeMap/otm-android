@@ -64,7 +64,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         try {
 	        boolean needsSection = false;
 	        char section = species.getCommonName().toUpperCase().charAt(0);
-	        if (isDigit(section)) {
+	        if (isNonAlpha(section)) {
 	        	section = 'A';
 	        }
 	        
@@ -132,6 +132,16 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     	TextView separator;
     	TextView commonName;
         TextView scientificName;
+    }
+    
+    /*
+     * Check if the character is a letter 
+     * */
+    boolean isNonAlpha(char c) {
+    	char tick = '\'';
+    	char qt = '"';
+    			
+    	return isDigit(c) || c == tick || c == qt;
     }
     
     boolean isDigit(char c) {
