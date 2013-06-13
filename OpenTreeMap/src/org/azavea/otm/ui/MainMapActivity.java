@@ -640,6 +640,8 @@ public class MainMapActivity extends MapActivity{
 				newPlot.setAddressCity(city);
 				newPlot.setAddressZip(zip);
 				newPlot.setAddress(streetAddress);
+			} else {
+				newPlot.setAddress("No Address");
 			}
 			
 			newPlot.setTree(new Tree());
