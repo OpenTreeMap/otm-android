@@ -23,8 +23,12 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 public abstract class PhotoActivity extends Activity {
+	public static int PHOTO_HEIGHT = 768;
+	public static int PHOTO_WIDTH = 1024;
+
 	public static int PHOTO_USING_CAMERA_RESPONSE = 7;
 	public static int PHOTO_USING_GALLERY_RESPONSE = 8;
 	
@@ -37,22 +41,21 @@ public abstract class PhotoActivity extends Activity {
 	
 	// Bind your change photo button to this handler.
 	public void handleChangePhotoClick(View view) {
-		Log.d(LOG_TAG, "changePhoto");
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 	       			try {
-						File outputFile = createTempImageFile();
+						File outputFile = createImageFile();
 						outputFilePath = outputFile.getAbsolutePath();
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
 						startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
 						
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.e(App.LOG_TAG, "Unable to initiate camera", e);
+						Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
 					}  			
-	       			
 	           }
 	       });
 		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
@@ -65,19 +68,21 @@ public abstract class PhotoActivity extends Activity {
 
 		AlertDialog alert = builder.create();
 		alert.show();
-		
 	}	
 
 	/*
 	 * Helper functions
 	 */
 
-	public static File createTempImageFile() throws IOException {
+	public static File createImageFile() throws IOException {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String imageFileName = "otm_tmp_" + timeStamp + "_";
+		String imageFileName = "otm_tmp_" + timeStamp + ".jpg";
 
-		File image = new File(
-			    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imageFileName);  
+		File localImageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/TreeMap");
+		if (!localImageDir.exists()) {
+			localImageDir.mkdir();
+		}
+		File image = new File(localImageDir.getAbsolutePath(), imageFileName);  
 		
 	    return image;
 	}
@@ -87,17 +92,27 @@ public abstract class PhotoActivity extends Activity {
 	// variable.
 	abstract void submitBitmap(Bitmap bm);
 
-	protected void changePhotoUsingCamera(String filePath) {
+	public static Bitmap getCorrectedCameraBitmap(String filePath) {
+		// Add the original file to the device's gallery
+		galleryAddPic(filePath);
+		
+		// Scale and re-orient the image, save to server
 		Bitmap bm = getScaledImage(filePath);
-		Bitmap bmCorrect = rotateImage(getApplicationContext(), bm, Uri.parse(filePath));
-		submitBitmap(bmCorrect);
+		return rotateImage(App.getInstance(), bm, Uri.parse(filePath));
+	}
+	
+	protected void changePhotoUsingCamera(String filePath) {
+		submitBitmap(getCorrectedCameraBitmap(filePath));
+	}
+	
+	public static Bitmap getCorrectedGalleryBitmap(Intent data) {
+		Uri selectedImage = data.getData();
+        Bitmap bm = retrieveBitmapFromGallery(selectedImage);
+        return rotateImage(App.getInstance(), bm, selectedImage);
 	}
 	
 	protected void changePhotoUsingGallery(Intent data) {
-		Uri selectedImage = data.getData();
-        Bitmap bm = retrieveBitmapFromGallery(selectedImage);
-        Bitmap bmCorrect = rotateImage(getApplicationContext(), bm, selectedImage);
-        submitBitmap(bmCorrect);
+        submitBitmap(getCorrectedGalleryBitmap(data));
 	}
 
 	// Note: You may need to override this method if your activity
@@ -113,10 +128,10 @@ public abstract class PhotoActivity extends Activity {
 		}
 	}
 	
-	protected Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
+	protected static Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
 		String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-        Cursor cursor = getContentResolver().query(
+        Cursor cursor = App.getInstance().getContentResolver().query(
                            selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
 
@@ -127,7 +142,15 @@ public abstract class PhotoActivity extends Activity {
         return getScaledImage(filePath);
 	}
 
-	public static Bitmap getScaledImage(String filePath) {
+	private static void galleryAddPic(String filePath) {
+	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+	    File f = new File(filePath);
+	    Uri contentUri = Uri.fromFile(f);
+	    mediaScanIntent.setData(contentUri);
+	    App.getInstance().sendBroadcast(mediaScanIntent);
+	}
+	
+	private static Bitmap getScaledImage(String filePath) {
 		// Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
@@ -136,7 +159,7 @@ public abstract class PhotoActivity extends Activity {
         int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/1024, photoH/768);
+        int scaleFactor = Math.min(photoW/PHOTO_WIDTH, photoH/PHOTO_HEIGHT);
       
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
@@ -146,7 +169,7 @@ public abstract class PhotoActivity extends Activity {
         return BitmapFactory.decodeFile(filePath, bmOptions);
 	}
 	
-	public static Bitmap rotateImage(Context context, Bitmap sourceBitmap, Uri uri) {
+	private static Bitmap rotateImage(Context context, Bitmap sourceBitmap, Uri uri) {
 		Matrix matrix = new Matrix();
 		float rotation = rotationForImage(context, uri);
 		if (rotation != 0f) {
@@ -158,7 +181,7 @@ public abstract class PhotoActivity extends Activity {
 		return resizedBitmap;
 	}
 	
-	public static float rotationForImage(Context context, Uri uri) {
+	private static float rotationForImage(Context context, Uri uri) {
 		String scheme = uri.getScheme();
 		if (scheme != null && scheme.equals("content")) {
 	        String[] projection = { Images.ImageColumns.ORIENTATION };
