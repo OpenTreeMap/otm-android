@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Map.Entry;
 
@@ -22,31 +23,23 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.os.Handler.Callback;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.widget.EditText;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class TreeEditDisplay extends TreeDisplay {
 
