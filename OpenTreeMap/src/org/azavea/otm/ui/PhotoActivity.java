@@ -75,12 +75,20 @@ public abstract class PhotoActivity extends Activity {
 	 */
 
 	public static File createImageFile() throws IOException {
+		if (!isExternalStorageWritable()) {
+			Toast.makeText(App.getInstance(), 
+					"Unable to write to filesystem.  If you are connected via USB, remove and try again", 
+					Toast.LENGTH_LONG).show();
+		}
+		
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = "otm_tmp_" + timeStamp + ".jpg";
 
 		File localImageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/TreeMap");
 		if (!localImageDir.exists()) {
-			localImageDir.mkdir();
+			if (!localImageDir.mkdir()) {
+				localImageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+			}
 		}
 		File image = new File(localImageDir.getAbsolutePath(), imageFileName);  
 		
@@ -119,6 +127,7 @@ public abstract class PhotoActivity extends Activity {
 	//       requires more activity results.  In that case, you
 	//       should be able to call super.onActivityResult first.
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == PHOTO_USING_CAMERA_RESPONSE) {
 				changePhotoUsingCamera(outputFilePath);
@@ -214,5 +223,14 @@ public abstract class PhotoActivity extends Activity {
 	        return 270;
 	    }
 	    return 0;
+    }
+    
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 }
