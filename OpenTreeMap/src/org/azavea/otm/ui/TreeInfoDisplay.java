@@ -126,8 +126,6 @@ public class TreeInfoDisplay extends TreeDisplay{
 		
 	}
 	
-
-    
     @Override 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
 	  super.onActivityResult(requestCode, resultCode, data); 
