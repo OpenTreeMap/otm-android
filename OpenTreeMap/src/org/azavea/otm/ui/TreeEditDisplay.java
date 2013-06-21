@@ -56,7 +56,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
 	protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
-	private Uri mImageCaptureUri;
+	private static String outputFilePath;
 	
 	private RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
 
@@ -109,14 +109,18 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	private JsonHttpResponseHandler addTreePhotoHandler = new JsonHttpResponseHandler() {
 		public void onSuccess(JSONObject response) {
-			Log.d("AddTreePhoto", "addTreePhotoHandler.onSuccess");
-			Log.d("AddTreePhoto", response.toString());
+
 			try {
 				if (response.get("status").equals("success")) {
 					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
 					plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
 					photoHasBeenChanged = true;
-					savePhotoDialog.dismiss();
+					
+					if (savePhotoDialog != null) savePhotoDialog.dismiss();
+					if (addMode()) {
+						if (saveDialog != null) saveDialog.dismiss();
+						finish();
+					}
 					
 				} else {
 					Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
@@ -128,24 +132,17 @@ public class TreeEditDisplay extends TreeDisplay {
 		};
 		
 		public void onFailure(Throwable e, JSONObject errorResponse) {
-			Log.e("AddTreePhoto", "addTreePhotoHandler.onFailure");
-			Log.e("AddTreePhoto", errorResponse.toString());
-			Log.e("AddTreePhoto", e.getMessage());
 			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
-			Log.e("addTreePhoto", "addTreePhotoHandler.handleFailureMessage");
-			Log.e("addTreePhoto", "e.toString " + e.toString());
-			Log.e("addTreePhoto", "responseBody: " + responseBody);
-			Log.e("addTreePhoto", "e.getMessage: " + e.getMessage());
-			Log.e("addTreePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
 			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 	};
+	private Bitmap newTreePhoto;
 	
 	public void onCreate(Bundle savedInstanceState) {
     	mapFragmentId = R.id.vignette_map_edit_mode;
@@ -314,7 +311,7 @@ public class TreeEditDisplay extends TreeDisplay {
 	private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
 		try {
 			// You can only change a tree picture if there is a tree
-			if ((plot.getId() != 0) &&   (plot.getTree() != null)) {
+			if (addMode() || (plot.getId() != 0) &&   (plot.getTree() != null)) {
 				View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
 				fieldList.addView(thePanel);
 			}	
@@ -464,9 +461,11 @@ public class TreeEditDisplay extends TreeDisplay {
 				public void dataReceived(Plot updatedPlot) {
 					// The tree was updated, so return to the info page, and bring along
 					// the data for the new plot, which was the response from the update
-					setResultOk(updatedPlot);
-					saveDialog.dismiss();
-					finish();
+					if (addMode()) {
+						savePhotoForRecentlyAddedPlot(updatedPlot, saveDialog);
+					} else {
+						doFinish(updatedPlot, saveDialog);
+					}
 				}
 				
 				@Override
@@ -479,8 +478,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			};
  
 			// check if we are adding a new tree or editing an existing one.
-			if ((getIntent().getStringExtra("new_tree") != null) &&
-					getIntent().getStringExtra("new_tree").equals("1")) {
+			if (addMode()) {
 				rg.addTree(App.getInstance(), plot, responseHandler);
 			} else {			
 				rg.updatePlot(App.getInstance(), plot.getId(), plot, responseHandler);
@@ -493,6 +491,39 @@ public class TreeEditDisplay extends TreeDisplay {
 		}
 	}
 
+	protected void savePhotoForRecentlyAddedPlot(Plot updatedPlot, ProgressDialog saveDialog)  {
+		if (this.newTreePhoto != null) {
+			RequestGenerator rc = new RequestGenerator();
+			try {
+				setResultOk(updatedPlot);
+				rc.addTreePhoto(App.getInstance(), updatedPlot.getId(), this.newTreePhoto, addTreePhotoHandler);
+			} catch (JSONException e) {
+				Log.e(App.LOG_TAG, "Unable to upload photo", e);
+				Toast.makeText(getBaseContext(), 
+						"Photo could not be added, please try again", Toast.LENGTH_SHORT).show();
+				doFinish(updatedPlot, saveDialog);
+			}
+			
+		} else {
+			doFinish(updatedPlot, saveDialog);
+		}
+		
+	}
+	
+	private void doFinish(Plot updatedPlot, ProgressDialog saveDialog) {
+		saveDialog.dismiss();
+		setResultOk(updatedPlot);
+		finish();
+	}
+
+	/**
+	 * Is the intent in add tree mode?
+	 * */
+	private boolean addMode(){
+		return (getIntent().getStringExtra("new_tree") != null) &&
+				getIntent().getStringExtra("new_tree").equals("1");
+	}
+	
 	/**
 	 * Set the result code to OK and set the updated plot as an intent extra
 	 * @param updatedPlot
@@ -502,8 +533,6 @@ public class TreeEditDisplay extends TreeDisplay {
 		resultIntent.putExtra("plot", updatedPlot.getData().toString());
 		setResult(RESULT_OK, resultIntent);
 	}
-	
-
 
     @Override
     public void onBackPressed() {
@@ -545,9 +574,10 @@ public class TreeEditDisplay extends TreeDisplay {
 					showPositionOnMap();
 		  		}
 		  		break;
+
 		  	case PHOTO_USING_CAMERA_RESPONSE:
 		  		if (resultCode == RESULT_OK) {
-		  			changePhotoUsingCamera();
+		  			changePhotoUsingCamera(outputFilePath);
 		  		}
 		  		break;
 		  	case PHOTO_USING_GALLERY_RESPONSE:
@@ -569,23 +599,26 @@ public class TreeEditDisplay extends TreeDisplay {
 	
 	
 	/* Photo Editing Functions
-	 * TODO: refactor, see PhotoActivity
 	 **/		
 	// Bind your change photo button to this handler.
 	public void changeTreePhoto(View view) {
 		Log.d("PHOTO", "changePhoto");
+		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	        	   	mImageCaptureUri = Uri.fromFile(
-	        	   		new File(
-	        	   			Environment.getExternalStorageDirectory(),
-	        	   			"otm_tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg"
-	        	   	));
-	        	   	Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-	                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);                     
-	                intent.putExtra("return-data", true);
-	       			startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
+	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+	       			try {
+						File outputFile = PhotoActivity.createImageFile();
+						outputFilePath = outputFile.getAbsolutePath();
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+						startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
+						
+					} catch (IOException e) {
+						Log.e(App.LOG_TAG, "Unable to initiate camera", e);
+						Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
+					}  			
 	           }
 	       });
 		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
@@ -598,7 +631,6 @@ public class TreeEditDisplay extends TreeDisplay {
 
 		AlertDialog alert = builder.create();
 		alert.show();
-		
 	}	
 	
 	// This function is called at the end of the whole camera process. You might
@@ -608,53 +640,28 @@ public class TreeEditDisplay extends TreeDisplay {
 		RequestGenerator rc = new RequestGenerator();
 				
 		try {
-			savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-			rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+			if (addMode()) {
+				// If we're in the process of adding a tree, we can't save it to the
+				// server yet, so store the bitmap locally until the tree is created
+				this.newTreePhoto = bm;
+			} else {
+				// If there already is a tree, add the photo immediately
+				savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
+				rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+			}
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Error updating tree photo.", e);
 			savePhotoDialog.dismiss();
 		}
 	}
 	
-	protected void changePhotoUsingCamera() {
-		Bitmap bm = retrieveBitmapFromCamera(mImageCaptureUri);
-		if (bm != null) {submitBitmap(bm);}
-	}
-	protected void changePhotoUsingGallery(Intent data) {
-		Uri selectedImage = data.getData();
-        Bitmap bm = retrieveBitmapFromGallery(selectedImage);
-        submitBitmap(bm);
-	}
-	protected Bitmap retrieveBitmapFromCamera(Uri mImageUri) {
-	    this.getContentResolver().notifyChange(mImageUri, null);
-	    ContentResolver cr = this.getContentResolver();
-	    Bitmap bitmap;
-	    try
-	    {
-	        bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
-	        return bitmap;
-	    }
-	    catch (Exception e)
-	    {
-	        Toast.makeText(this, "Failed to load image from camera", Toast.LENGTH_SHORT).show();
-	        Log.d(App.LOG_TAG, "Failed to load image from camera", e);
-	        return null;
-	    }
+	protected void changePhotoUsingCamera(String filePath) {
+		Bitmap pic = PhotoActivity.getCorrectedCameraBitmap(filePath);
+		if (pic!= null) {submitBitmap(pic);}
 	}
 	
-	protected Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
-		String[] filePathColumn = {MediaStore.Images.Media.DATA};
+	protected void changePhotoUsingGallery(Intent data) {
+        submitBitmap(PhotoActivity.getCorrectedGalleryBitmap(data));
+	}
 
-        Cursor cursor = getContentResolver().query(
-                           selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        
-        cursor.close();
-        Bitmap fullSizeBitmap = BitmapFactory.decodeFile(filePath);
-        return fullSizeBitmap;
-	}	
-	/* End of photo stuff*/
 }
