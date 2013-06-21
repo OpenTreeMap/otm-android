@@ -1,16 +1,8 @@
 package org.azavea.otm.ui;
 
-//import org.azavea.map.OTMMapView;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Locale;
-
-import org.azavea.map.WMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
-import org.azavea.otm.map.TileProviderFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,18 +14,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
