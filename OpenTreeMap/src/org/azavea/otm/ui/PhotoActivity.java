@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.Toast;
 
 public abstract class PhotoActivity extends Activity {
-	public static int PHOTO_HEIGHT = 768;
-	public static int PHOTO_WIDTH = 1024;
+	public static double PHOTO_HEIGHT = 768;
+	public static double PHOTO_WIDTH = 1024;
 
 	public static int PHOTO_USING_CAMERA_RESPONSE = 7;
 	public static int PHOTO_USING_GALLERY_RESPONSE = 8;
@@ -168,7 +168,7 @@ public abstract class PhotoActivity extends Activity {
         int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/PHOTO_WIDTH, photoH/PHOTO_HEIGHT);
+        int scaleFactor = (int) Math.ceil(Math.min(photoW/PHOTO_WIDTH, photoH/PHOTO_HEIGHT));
       
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
