@@ -86,7 +86,7 @@ public abstract class PhotoActivity extends Activity {
 
 		File localImageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/TreeMap");
 		if (!localImageDir.exists()) {
-			if (!localImageDir.mkdir()) {
+			if (!localImageDir.mkdirs()) {
 				localImageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 			}
 		}
