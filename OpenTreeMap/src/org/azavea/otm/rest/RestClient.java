@@ -1,6 +1,5 @@
 package org.azavea.otm.rest;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -9,7 +8,6 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.azavea.otm.App;
-import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 
 import android.content.Context;
