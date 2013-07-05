@@ -420,7 +420,8 @@ public class MainMapActivity extends MapActivity{
 		
 		try {
 	        plotUpdatedByView.setText("By " + plot.getLastUpdatedBy());
-	        if (plot.getAddress().length() != 0) {
+	        String addr = plot.getAddress(); 
+	        if (addr != null && addr.length() != 0) {
 	        	plotAddressView.setText(plot.getAddress());
 	        }
 			Tree tree = plot.getTree();

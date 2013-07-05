@@ -111,6 +111,10 @@ public class Plot extends Model {
 	}
 	
 	public String getAddress() throws JSONException {
+		if (data.get("address").equals(null)) {
+			return null;
+		}
+		// getString will perform a toString and give you "null"
 		return data.getString("address");
 	}
 	
