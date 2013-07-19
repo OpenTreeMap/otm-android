@@ -14,6 +14,19 @@ The source for the OpenTreeMap web application is available on github
 A default skin is included in this repository under ExampleApp.
 
 
+A note on google-play-services_lib
+----------------------------------
+
+The google-play-services library is downloaded from the SDK manager
+
+To use:
+
++ Download google-play-services using the SDK manager
++ include it in your workspace
++ Make sure that the reference to google-play-services_lib in project.properties is  correct.  (In Eclipse : Properties/Android/Reference)
+
+Tested with revision 9
+
 License
 ---------------
 
