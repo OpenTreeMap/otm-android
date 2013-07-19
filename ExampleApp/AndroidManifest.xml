@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.azavea.otm"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="org.example.opentreemap"
+    android:versionCode="2"
+    android:versionName="1.01" >
 	
-   
-    <permission
-    android:name="org.azavea.otm.permission.MAPS_RECEIVE"
+	<permission
+    android:name="org.example.opentreemap.permission.MAPS_RECEIVE"
     android:protectionLevel="signature"/>
+  	<uses-permission android:name="org.example.opentreemap.permission.MAPS_RECEIVE"/>
+   
   	
+    
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
-
+	
+	<uses-permission android:name="org.example.opentreemap.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -23,8 +26,11 @@
     android:glEsVersion="0x00020000"
     android:required="true"/>
     <application android:name="App" android:label="@string/app_name" android:icon="@drawable/app_icon">
-    
-       <activity
+       	<meta-data
+      		android:name="com.google.android.maps.v2.API_KEY"
+     		android:value="@string/gmap_api_key"/>
+    	
+    	<activity
        	    android:label="@string/app_name"
        	    android:name="org.azavea.otm.ui.SplashScreenActivity"
        	    android:screenOrientation="portrait"
@@ -34,13 +40,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
        	</activity>
-       	
-       
+        
         <activity
             android:label="@string/app_name"
             android:name="org.azavea.otm.ui.TabLayout"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar" 
+        >
         </activity>        
+        
         <activity
             android:name="org.azavea.otm.ui.LoginActivity"
             android:label="@string/app_name"
@@ -98,7 +105,7 @@
         <activity
             android:name="org.azavea.otm.ui.Register"
             android:label="@string/app_name"
-            android:noHistory="true">
+            >
         </activity>
         <activity
           android:name="org.azavea.otm.ui.TreeMove"
@@ -112,3 +119,4 @@
     </application>
 
 </manifest>
+

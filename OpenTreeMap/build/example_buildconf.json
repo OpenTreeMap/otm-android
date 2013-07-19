@@ -1,0 +1,49 @@
+{	
+    "README": {
+        "gmap_api_keys" : "Google maps api keys. Manage with the google apis console. The api key is tied to the SHA1 of your signing certificate, so my debug key will be different than your debug key.",
+        "paths/src" : "paths to the OpenTreeMap library, and to the various theme projects - RELATIVE workspace",
+        "paths/apk" : "paths to the apk files which are produced as a result of running the fabric build step - RELATIVE workspace",
+        "paths/android_sdks" : "the ABSOLUTE path to the android sdks, IE the files installed with the ADT sdk manager.",
+        "paths/release_certificates" : "the ABSOLUTE paths to the signing certificates",
+        "constants" : "constants required for the release certs",
+        "keystore_alias": "the alias for the certificate being used."
+    },
+
+	"gmap_api_keys" : {
+    	"debug" : {
+			"example": "YOUR-V2-GMAP-API-KEY-HERE-DEBUG", 
+		},
+		"release" : {
+			"example" : "YOUR-PRODUCTION-GMAP-API-KEY",
+		}
+	},
+
+	"paths": {
+        "workspace":  {
+            "example":  "/Users/username/projects/android",
+        },
+
+        "src": {
+            "example": "/otm/ExampleApp"
+        },
+        "apk": {
+            "debug" : {
+                "example" : "/otm/ExampleApp/bin/ExampleApp.apk",
+            },
+            "release" : {
+                "example": "/otm/ExampleApp/bin/ExampleApp-release-unsigned.apk",
+            }
+        },
+        "android_sdks" : "/Users/username/projects/android/android-sdks",
+        "release_certificates": {
+            "example"   : "/var/jenkins/static/example.keystore",
+         }
+    },
+    "keystore_alias": {
+        "example": "'example cert'",
+    },    
+    
+    "constants": {
+        "example": "secret"
+   }
+}
