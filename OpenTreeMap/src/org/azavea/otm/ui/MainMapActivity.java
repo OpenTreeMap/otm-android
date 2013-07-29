@@ -100,6 +100,7 @@ public class MainMapActivity extends MapActivity{
     TileOverlay filterTileOverlay;
     WMSTileProvider filterTileProvider;
     TileOverlay treeTileOverlay;
+    TileOverlay canopyTileOverlay;
     private Location currentLocation;
     
     private String fullSizeTreeImageUrl = null;
@@ -393,6 +394,12 @@ public class MainMapActivity extends MapActivity{
     	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
     	treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
     	treeTileOverlay.setZIndex(50);
+    	
+    	TileProvider canopyTileProvider = TileProviderFactory.getCanopyTileCacheTileProvider();
+    	if (canopyTileProvider != null) {
+    		canopyTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(canopyTileProvider));
+    		canopyTileOverlay.setZIndex(49);
+    	}
     	
         // Set up the filter layer
         filterTileProvider = TileProviderFactory.getFilterLayerTileProvider();

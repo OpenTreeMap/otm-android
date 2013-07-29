@@ -119,6 +119,7 @@ public class App extends Application {
 		editor.putString("base_url", context.getString(R.string.base_url))
 			  .putString("wms_url", context.getString(R.string.wms_url))
 			  .putString("tms_url", context.getString(R.string.tms_url))
+			  .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
 			  .putString("image_url", context.getString(R.string.image_url))
 			  .putString("api_key", context.getString(R.string.api_key))
 			  .putString("num_tiles_x", context.getString(R.string.num_tiles_x))

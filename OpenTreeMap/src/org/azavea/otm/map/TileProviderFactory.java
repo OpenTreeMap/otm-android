@@ -111,5 +111,15 @@ public class TileProviderFactory {
 	}
 		
 	
+	public static TileProvider getCanopyTileCacheTileProvider() {
+		SharedPreferences prefs = App.getSharedPreferences();
+		String baseUrl = prefs.getString("canopy_tms_url", "");
+		if ( (baseUrl == null) || (baseUrl.equals(""))) {
+			return null;
+		} else {
+			return new TMSTileProvider(256, 256, baseUrl);
+		}
+	}
+	
 	
 }

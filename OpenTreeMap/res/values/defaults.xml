@@ -4,6 +4,7 @@
     <string name="base_url">override in child app</string>
     <string name="wms_url">override in child app</string>
 	<string name="tms_url">override in child app</string>
+	<string name="canopy_tms_url"></string>
 	<string name="image_url">override in child app</string>
     <string name="api_key">override in child app</string>
     <string name="num_tiles_x">1</string>
