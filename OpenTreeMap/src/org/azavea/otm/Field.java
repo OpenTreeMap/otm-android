@@ -262,7 +262,7 @@ public class Field {
 		        }
 	        	
         		// Special case for tree diameter.  Make a synced circumference field
-	        	if (this.key.equals("dynamic-cirumference")) {
+	        	if (this.key.equals("dynamic-circumference")) {
 	        		container.setId(R.id.dynamic_circumference);
 	        		
 	        	} else if (this.key.equals("tree.dbh")) {
