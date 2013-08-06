@@ -38,6 +38,9 @@ def ufm():
 def gr():
     env["skin"] = "gr"
 
+def sd():
+	env["skin"] = "sd"
+
 def __both():
 	env["otm_lib_path"] = buildconf["paths"]["src"]["otm_lib"]
 	env["project_path"] = buildconf["paths"]["workspace"][env["skin"]] + buildconf["paths"]["src"][env["skin"]]
