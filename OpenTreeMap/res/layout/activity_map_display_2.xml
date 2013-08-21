@@ -26,7 +26,7 @@
 	        android:layout_width="0dp"
 	        android:layout_weight="8"
 	        android:layout_height="fill_parent"
-	        android:hint="search location"
+	        android:hint="@string/search_field_hint"
 	        android:imeOptions="actionSearch"
 	        android:background="@color/mainBackgroundColor"
 	        android:layout_margin="4dp"

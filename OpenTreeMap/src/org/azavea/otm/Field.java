@@ -285,7 +285,15 @@ public class Field {
 				// if a species Id is set.  We can grab these straight from the tree object
 				// since the species list may still be loading
 				String sciName = (String)getValueForKey("tree.sci_name", json);
-				String commonName = (String)getValueForKey("tree.species_name", json);
+				String commonName = "";
+				try {
+					commonName = (String)getValueForKey("tree.species_name", json);
+				} catch (Exception e) {
+					// GL #337 not consistently getting back the same species_name data
+					// for trees without species. seems like it can either be null or the
+					//entire key not present.
+					e.printStackTrace();
+				}
 				choiceButton.setText(commonName + "\n" + sciName);
 			} else {
 				choiceButton.setText(R.string.unspecified_field_value);

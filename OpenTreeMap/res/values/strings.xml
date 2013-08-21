@@ -103,4 +103,6 @@
 	<string name="iso_locale_language">English</string>
 	<string name="iso_locale_country">US</string>
 	<string name="default_measure_units">in</string>
+	
+	<string name="search_field_hint">search location</string>
 </resources>
