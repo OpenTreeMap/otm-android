@@ -207,10 +207,14 @@ public class NearbyList implements InfoList {
 
 	private String getSpecies(Plot p) {
 		String species;
+		String speciesDefault = "Species missing";
 		try {
 			species = p.getTree().getSpeciesName();
+			if (species == null) {
+				species = speciesDefault;
+			}
 		} catch (Exception e) {
-			species = "Species missing";
+			species = speciesDefault;
 		}
 		return species;
 	}
