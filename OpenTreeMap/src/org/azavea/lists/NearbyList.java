@@ -1,5 +1,6 @@
 package org.azavea.lists;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
@@ -197,8 +198,9 @@ public class NearbyList implements InfoList {
 			unitString = " m. Diameter";
 		}
 		String diameter;
+		DecimalFormat df2 = new DecimalFormat("#.##");
 		try {
-			diameter = p.getTree().getDbh()+ unitString;
+			diameter = df2.format(p.getTree().getDbh()) + unitString;
 		} catch (Exception e) {
 			diameter = "Diameter missing";
 		}
