@@ -62,7 +62,7 @@ public class ListDisplay extends Activity implements ListObserver {
         dialog = ProgressDialog.show(ListDisplay.this, "", 
                 "Loading. Please wait...", true);
 		
-		infoList = App.getNearbyList();
+		infoList = App.getNearbyList(this);
 		infoList.addObserver(this);
 		infoList.setupLocationUpdating(getApplicationContext());
 		listView.setOnItemClickListener(getOnClickListener());
