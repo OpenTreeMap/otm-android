@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.rest.RequestGenerator;
@@ -38,19 +39,22 @@ public class NearbyList implements InfoList {
 	private LocationManager locationManager;
 	private boolean filterRecent;
 	private boolean filterPending;
+	private Context context;
 	
-	public NearbyList() {
+	public NearbyList(Context context) {
 		lat = App.getStartPos().latitude;
 		lon = App.getStartPos().longitude;
 		filterRecent = false;
 		filterPending = false;
+		this.context = context;
 	}
 	
-	public NearbyList(double lat, double lon) {
+	public NearbyList(Context context, double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
 		filterRecent = false;
 		filterPending = false;
+		this.context= context;
 	}
 	
 	public void setupLocationUpdating(Context applicationContext) {
@@ -209,7 +213,7 @@ public class NearbyList implements InfoList {
 
 	private String getSpecies(Plot p) {
 		String species;
-		String speciesDefault = "Species missing";
+		String speciesDefault = context.getString(R.string.species_missing);
 		try {
 			species = p.getTree().getSpeciesName();
 			if (species == null) {

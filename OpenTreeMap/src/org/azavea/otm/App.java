@@ -182,9 +182,9 @@ public class App extends Application {
 		return asyncHttpClient;
 	}
 	
-	public static NearbyList getNearbyList() {
+	public static NearbyList getNearbyList(Context context) {
 		if (nearbyList == null) {
-			nearbyList = new NearbyList();
+			nearbyList = new NearbyList(context );
 		}
 		
 		return nearbyList;
