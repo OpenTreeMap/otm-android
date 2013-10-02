@@ -29,5 +29,92 @@
     <item name="android:textStyle">bold</item>
    </style> 
 
+   
+   
+   <style name="LocationBar" parent="@android:style/ButtonBar">
+      <item name="android:background">@color/primaryGradientColorOffEnd</item>
+      <item name="android:padding">3dp</item>
+   </style>
+   <style name="LocationSearchField" parent="android:Widget.Holo.EditText">
+      <item name="android:background">@color/mainBackgroundColor</item>
+      <item name="android:imeOptions">actionSearch</item>
+      <item name="android:layout_margin">4dp</item>
+      <item name="android:padding">4dp</item>
+   </style>
+   <style name="LocationSearchButton" parent="android:Widget.Holo.ImageButton">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:contentDescription">address</item>
+   </style>
+   <style name="FilterDisplay" parent="android:Widget.Holo.TextView">
+      <item name="android:background">@color/black_start</item>
+      <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+      <item name="android:visibility">gone</item>
+   </style>
+   <style name="MyLocationButton" parent="android:Widget.Holo.ImageButton">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:contentDescription">@string/show_location</item>
+      <item name="android:layout_marginRight">3dp</item>
+      <item name="android:layout_marginTop">3dp</item>
+   </style>
+   <style name="AddTreeStep1">
+      <item name="android:background">@color/black_start</item>
+      <item name="android:visibility">visible</item>
+   </style>
+   <style name="TreeAddInstructions" parent="android:Widget.Holo.TextView">
+      <item name="android:background">@color/black_start</item>
+      <item name="android:gravity">center</item>
+      <item name="android:padding">10dp</item>
+   </style>
+   <style name="AddTreeStep2">
+      <item name="android:background">@color/black_start</item>
+      <item name="android:visibility">visible</item>
+   </style>
+   <style name="TreeAddInstructionText2" parent="android:Widget.Holo.TextView">
+      <item name="android:background">@color/black_start</item>
+      <item name="android:gravity">center</item>
+      <item name="android:padding">10dp</item>
+   </style>
+   <style name="TreeAddButton" parent="@android:attr/buttonStyleSmall">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:layout_margin">10dp</item>
+      <item name="android:padding">@dimen/padding_12</item>
+      <item name="android:textColor">#FFFFFF</item>
+   </style>
+   <style name="PlotPopup">
+      <item name="android:background">@color/popup_background</item>
+      <item name="android:minHeight">110dp</item>
+      <item name="android:visibility">invisible</item>
+   </style>
+   <style name="PlotImage">
+      <item name="android:background">@color/no_image_background</item>
+      <item name="android:layout_marginLeft">10dp</item>
+      <item name="android:layout_marginRight">10dp</item>
+      <item name="android:layout_marginTop">12dp</item>
+      <item name="android:minHeight">80dp</item>
+      <item name="android:minWidth">80dp</item>
+   </style>
+   <style name="PlotSpecies" parent="android:Widget.Holo.TextView">
+      <item name="android:layout_marginTop">4dp</item>
+      <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+      <item name="android:textColor">@color/text_dark</item>
+   </style>
+   <style name="PlotAddress" parent="android:Widget.Holo.TextView">
+      <item name="android:ellipsize">end</item>
+      <item name="android:maxLines">1</item>
+      <item name="android:scrollHorizontally">true</item>
+      <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+      <item name="android:textColor">@color/text_dark</item>
+   </style>
+   <style name="PlotDiameter" parent="android:Widget.Holo.TextView">
+      <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+   </style>
+   <style name="PlotUpdatedBy" parent="android:Widget.Holo.TextView">
+      <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+   </style>
+   <style name="DoAddTreeButton" parent="android:Widget.Holo.Button">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:layout_marginLeft">2dp</item>
+      <item name="android:textColor">#FFFFFF</item>
+   </style>
 </resources>
  
