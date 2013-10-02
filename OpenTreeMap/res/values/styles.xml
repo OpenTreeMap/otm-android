@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-  <!-- Header divider used with separated list adapter. -->
+	<!-- 
+	These styles are currently arranged by layout.
+	I used Refactor-Android-Extract Style to build them.
+	My goal was to leave this in a state that is cleaner and more
+	style-able.
+	-->
+    <!-- 
+    ******************************************* 
+    Misc styles that I have yet to organize....
+    *******************************************
+     -->
+    <!-- Header divider used with separated list adapter. -->
   <style name="listSeparatorTextViewStyle">
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -30,7 +41,11 @@
    </style> 
 
    
-   
+   <!--
+   ********************************************
+     Styles from activity_map_display_2.xml 
+   ********************************************
+   -->
    <style name="LocationBar" parent="@android:style/ButtonBar">
       <item name="android:background">@color/primaryGradientColorOffEnd</item>
       <item name="android:padding">3dp</item>
@@ -115,6 +130,84 @@
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:layout_marginLeft">2dp</item>
       <item name="android:textColor">#FFFFFF</item>
+   </style>
+   
+   
+   <!-- 
+   ******************************************
+   change_password.xml
+   ******************************************
+    -->
+    
+    <!--  for example here's an easy win, these two styles are exactly
+    the same! -->
+   <style name="OldPassword" parent="android:Widget.Holo.EditText">
+      <item name="android:ems">10</item>
+      <item name="android:inputType">textPassword</item>
+   </style>
+   
+   <style name="NewPassword" parent="android:Widget.Holo.EditText">
+      <item name="android:ems">10</item>
+      <item name="android:inputType">textPassword</item>
+   </style>
+   
+   
+   <!-- 
+   ************************************************
+   profile_activity_anonymous.xml
+   ************************************************
+    -->
+   <style name="LoginMessage" parent="android:Widget.Holo.TextView">
+      <item name="android:gravity">center</item>
+      <item name="android:layout_marginLeft">@dimen/padding_medium</item>
+      <item name="android:layout_marginRight">@dimen/padding_medium</item>
+   </style>
+   
+   <style name="LoginMessageLinearLayout">
+      <item name="android:paddingLeft">20dp</item>
+      <item name="android:paddingRight">20dp</item>
+   </style>
+   
+   <style name="LoginButton" parent="android:Widget.Holo.Button">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:layout_marginBottom">17dp</item>
+      <item name="android:padding">12dp</item>
+      <item name="android:textColor">@color/white</item>
+   </style>
+   
+   <!-- 
+   ************************************************************
+   profile_activity_logged_in.xml
+   ************************************************************
+    -->
+   <style name="ProfileActivityLoggedInMainLinearLayout">
+      <item name="android:background">@color/black_end</item>
+   </style>
+   
+   <style name="UserFields">
+      <item name="android:background">@color/lgrey_end</item>
+      <item name="android:focusable">true</item>
+      <item name="android:focusableInTouchMode">true</item>
+      <item name="android:gravity">center</item>
+      <item name="android:orientation">vertical</item>
+   </style>
+   <style name="LogoutButton" parent="android:Widget.Holo.Button">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:layout_marginBottom">10dp</item>
+      <item name="android:layout_marginTop">20dp</item>
+      <item name="android:padding">12dp</item>
+      <item name="android:textColor">@color/white</item>
+   </style>
+   <style name="ChangePasswordButton" parent="android:Widget.Holo.Button">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:layout_marginBottom">10dp</item>
+      <item name="android:padding">12dp</item>
+      <item name="android:textColor">@color/white</item>
+   </style>
+   <style name="ChangeProfilePictureButton" parent="android:Widget.Holo.Button">
+      <item name="android:background">@drawable/btn_primary</item>
+      <item name="android:padding">12dp</item>
+      <item name="android:textColor">@color/white</item>
    </style>
 </resources>
  
