@@ -3,13 +3,14 @@
 <resources>
 	<!-- 
 	These styles are currently arranged by layout.
-	I used Refactor-Android-Extract Style to build them.
+	I used (top menu eclipse) Refactor-Android-Extract Style to build them.
 	My goal was to leave this in a state that is cleaner and more
 	style-able.
 	-->
+	
     <!-- 
     ******************************************* 
-    Misc styles that I have yet to organize....
+    Misc styles that have yet to be organized...
     *******************************************
      -->
     <!-- Header divider used with separated list adapter. -->
@@ -46,26 +47,26 @@
      Styles from activity_map_display_2.xml 
    ********************************************
    -->
-   <style name="LocationBar" parent="@android:style/ButtonBar">
+   <style name="LocationBar">
       <item name="android:background">@color/primaryGradientColorOffEnd</item>
       <item name="android:padding">3dp</item>
    </style>
-   <style name="LocationSearchField" parent="android:Widget.Holo.EditText">
+   <style name="LocationSearchField">
       <item name="android:background">@color/mainBackgroundColor</item>
       <item name="android:imeOptions">actionSearch</item>
       <item name="android:layout_margin">4dp</item>
       <item name="android:padding">4dp</item>
    </style>
-   <style name="LocationSearchButton" parent="android:Widget.Holo.ImageButton">
+   <style name="LocationSearchButton">
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:contentDescription">address</item>
    </style>
-   <style name="FilterDisplay" parent="android:Widget.Holo.TextView">
+   <style name="FilterDisplay" >
       <item name="android:background">@color/black_start</item>
       <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
       <item name="android:visibility">gone</item>
    </style>
-   <style name="MyLocationButton" parent="android:Widget.Holo.ImageButton">
+   <style name="MyLocationButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:contentDescription">@string/show_location</item>
       <item name="android:layout_marginRight">3dp</item>
@@ -75,7 +76,7 @@
       <item name="android:background">@color/black_start</item>
       <item name="android:visibility">visible</item>
    </style>
-   <style name="TreeAddInstructions" parent="android:Widget.Holo.TextView">
+   <style name="TreeAddInstructions" >
       <item name="android:background">@color/black_start</item>
       <item name="android:gravity">center</item>
       <item name="android:padding">10dp</item>
@@ -84,7 +85,7 @@
       <item name="android:background">@color/black_start</item>
       <item name="android:visibility">visible</item>
    </style>
-   <style name="TreeAddInstructionText2" parent="android:Widget.Holo.TextView">
+   <style name="TreeAddInstructionText2">
       <item name="android:background">@color/black_start</item>
       <item name="android:gravity">center</item>
       <item name="android:padding">10dp</item>
@@ -108,25 +109,25 @@
       <item name="android:minHeight">80dp</item>
       <item name="android:minWidth">80dp</item>
    </style>
-   <style name="PlotSpecies" parent="android:Widget.Holo.TextView">
+   <style name="PlotSpecies" >
       <item name="android:layout_marginTop">4dp</item>
       <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
       <item name="android:textColor">@color/text_dark</item>
    </style>
-   <style name="PlotAddress" parent="android:Widget.Holo.TextView">
+   <style name="PlotAddress" >
       <item name="android:ellipsize">end</item>
       <item name="android:maxLines">1</item>
       <item name="android:scrollHorizontally">true</item>
       <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
       <item name="android:textColor">@color/text_dark</item>
    </style>
-   <style name="PlotDiameter" parent="android:Widget.Holo.TextView">
+   <style name="PlotDiameter" >
       <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
    </style>
-   <style name="PlotUpdatedBy" parent="android:Widget.Holo.TextView">
+   <style name="PlotUpdatedBy" >
       <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
    </style>
-   <style name="DoAddTreeButton" parent="android:Widget.Holo.Button">
+   <style name="DoAddTreeButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:layout_marginLeft">2dp</item>
       <item name="android:textColor">#FFFFFF</item>
@@ -141,12 +142,12 @@
     
     <!--  for example here's an easy win, these two styles are exactly
     the same! -->
-   <style name="OldPassword" parent="android:Widget.Holo.EditText">
+   <style name="OldPassword" >
       <item name="android:ems">10</item>
       <item name="android:inputType">textPassword</item>
    </style>
    
-   <style name="NewPassword" parent="android:Widget.Holo.EditText">
+   <style name="NewPassword" >
       <item name="android:ems">10</item>
       <item name="android:inputType">textPassword</item>
    </style>
@@ -157,7 +158,7 @@
    profile_activity_anonymous.xml
    ************************************************
     -->
-   <style name="LoginMessage" parent="android:Widget.Holo.TextView">
+   <style name="LoginMessage" >
       <item name="android:gravity">center</item>
       <item name="android:layout_marginLeft">@dimen/padding_medium</item>
       <item name="android:layout_marginRight">@dimen/padding_medium</item>
@@ -168,7 +169,7 @@
       <item name="android:paddingRight">20dp</item>
    </style>
    
-   <style name="LoginButton" parent="android:Widget.Holo.Button">
+   <style name="LoginButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:layout_marginBottom">17dp</item>
       <item name="android:padding">12dp</item>
@@ -191,20 +192,20 @@
       <item name="android:gravity">center</item>
       <item name="android:orientation">vertical</item>
    </style>
-   <style name="LogoutButton" parent="android:Widget.Holo.Button">
+   <style name="LogoutButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:layout_marginBottom">10dp</item>
       <item name="android:layout_marginTop">20dp</item>
       <item name="android:padding">12dp</item>
       <item name="android:textColor">@color/white</item>
    </style>
-   <style name="ChangePasswordButton" parent="android:Widget.Holo.Button">
+   <style name="ChangePasswordButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:layout_marginBottom">10dp</item>
       <item name="android:padding">12dp</item>
       <item name="android:textColor">@color/white</item>
    </style>
-   <style name="ChangeProfilePictureButton" parent="android:Widget.Holo.Button">
+   <style name="ChangeProfilePictureButton" >
       <item name="android:background">@drawable/btn_primary</item>
       <item name="android:padding">12dp</item>
       <item name="android:textColor">@color/white</item>
