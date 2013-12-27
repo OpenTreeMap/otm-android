@@ -1,6 +1,5 @@
 package org.azavea.otm.ui;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +18,11 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.azavea.map.WMSTileProvider;
-
+import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
@@ -33,7 +30,6 @@ import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.Tree;
 import org.azavea.otm.map.FallbackGeocoder;
-import org.azavea.otm.map.TileProviderFactory;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
@@ -46,28 +42,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-//import android.location.LocationManager;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -97,10 +84,12 @@ public class MainMapActivity extends MapActivity{
     private GoogleMap mMap;
     private TextView filterDisplay;
 
+    TMSTileProvider filterTileProvider;
+    TMSTileProvider canopyTileProvider;
     TileOverlay filterTileOverlay;
-    WMSTileProvider filterTileProvider;
-    TileOverlay treeTileOverlay;
     TileOverlay canopyTileOverlay;
+    TileOverlay boundaryTileOverlay;
+
     private Location currentLocation;
     
     private String fullSizeTreeImageUrl = null;
@@ -173,24 +162,6 @@ public class MainMapActivity extends MapActivity{
     	}
     };
 
-    // on response, set the global cqlFilter property, and cause the tile layer,
-    // which has a reference to this property, to refresh.
-    JsonHttpResponseHandler handleNewFilterCql = new JsonHttpResponseHandler() {
-    	public void onSuccess(JSONObject data) {
-    		String cqlFilterString = data.optString("cql_string");
-       		Log.d("CQL-FILTERS", cqlFilterString);
-    		filterTileProvider.setCql(cqlFilterString);
-    		filterTileOverlay.clearTileCache();
-    	};
-    	protected void handleFailureMessage(Throwable arg0, String arg1) {
-    		Toast.makeText(MainMapActivity.this, "Error processing filters", Toast.LENGTH_SHORT).show();
-    		Log.e(App.LOG_TAG, arg1);
-    		arg0.printStackTrace();
-    		filterTileProvider.setCql("1=0");
-    	};
-    };
-
-
     /*******************************************************
      * Overrides for the Activity base class
      *******************************************************/
@@ -205,7 +176,7 @@ public class MainMapActivity extends MapActivity{
         setUpMapIfNeeded();
 		plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
 		setPopupViews();
-		clearTMSCache();
+		clearTileCache();
         if (plotPopup.getVisibility() == View.VISIBLE) {
         	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
         }
@@ -216,7 +187,7 @@ public class MainMapActivity extends MapActivity{
         super.onResume();
         setUpMapIfNeeded();
         setTreeAddMode(CANCEL);
-        clearTMSCache();
+        clearTileCache();
     
         if (plotPopup.getVisibility() == View.VISIBLE) {
         	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
@@ -232,14 +203,13 @@ public class MainMapActivity extends MapActivity{
  	  		if (resultCode == Activity.RESULT_OK) { 
  	  			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
  	  			setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
- 	  			if (activeFilters.toString().equals("")) {
- 	  				filterTileProvider.setCql("");
- 	  				filterTileOverlay.clearTileCache();
- 	  			} else {
- 	  				RequestGenerator rc = new RequestGenerator();
- 	  				rc.getCqlForFilters(activeFilters, handleNewFilterCql);
+                filterTileProvider.clearParameters();
+
+ 	  			if (activeFilters.toString().length() > 0) {
+ 	  				filterTileProvider.setParameter("test", "test");
  	  			}
- 	  		} 
+               filterTileOverlay.clearTileCache();
+ 	  		}	
  	  		break; 
  	  	case INFO_INTENT:
  	  		if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
@@ -383,35 +353,41 @@ public class MainMapActivity extends MapActivity{
         }       
     }
     
-    private void setUpMap() {
+	private void setUpMap() {
     	SharedPreferences prefs = App.getSharedPreferences();
 		int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
-    	
+		String baseTileUrl = prefs.getString("tiler_url", null);
+		String plotFeature = prefs.getString("plot_feature", null);
+		String boundaryFeature = prefs.getString("boundary_feature", null);
+
     	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));  
     	mMap.getUiSettings().setZoomControlsEnabled(false);
-    
-        
-    	TileProvider treeTileProvider = TileProviderFactory.getTileCacheTileProvider();
-    	treeTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(treeTileProvider));
-    	treeTileOverlay.setZIndex(50);
     	
-    	TileProvider canopyTileProvider = TileProviderFactory.getCanopyTileCacheTileProvider();
-    	if (canopyTileProvider != null) {
-    		canopyTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(canopyTileProvider));
-    		canopyTileOverlay.setZIndex(49);
-    	}
-    	
-        // Set up the filter layer
-        filterTileProvider = TileProviderFactory.getFilterLayerTileProvider();
-        filterTileProvider.setCql("1=0");
-        filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
-        filterTileOverlay.setZIndex(100);
-       
-        // Set up the default click listener
-        mMap.setOnMapClickListener(showPopupMapClickListener);
-        
-        setTreeAddMode(CANCEL);
-		setUpBasemapControls();
+    	TileProvider boundaryTileProvider;
+		try {
+			boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
+            boundaryTileOverlay = mMap.addTileOverlay(
+            		new TileOverlayOptions().tileProvider(boundaryTileProvider).zIndex(0));
+
+            // Canopy layer shows all trees, is always on, but is 'dimmed'
+            // while a filter is active
+            canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
+            //canopyTileOverlay = mMap.addTileOverlay(
+            //		new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
+
+            // Set up the filter layer
+            filterTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
+            filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
+            filterTileProvider.setRangeParameter("tree.diameter", "50", "1001");
+           
+            // Set up the default click listener
+            mMap.setOnMapClickListener(showPopupMapClickListener);
+            
+            setTreeAddMode(CANCEL);
+            setUpBasemapControls();
+		} catch (Exception e) {
+			// TODO: Toast
+		}
    
     }
     
@@ -534,7 +510,7 @@ public class MainMapActivity extends MapActivity{
     	Criteria crit = new Criteria();
 		crit.setAccuracy(Criteria.ACCURACY_FINE);
 		LocationManager locationManager = 
-    			(LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+    			(LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager != null) {
     		String provider = locationManager.getBestProvider(crit, true);
     		
@@ -774,10 +750,14 @@ public class MainMapActivity extends MapActivity{
 		
 	}
     
-    private void clearTMSCache() {
-    	if (treeTileOverlay != null) {
-			treeTileOverlay.clearTileCache();
+    private void clearTileCache() {
+    	if (canopyTileOverlay != null) {
+			canopyTileOverlay.clearTileCache();
 		}
+    	
+    	if (filterTileOverlay != null) {
+    		filterTileOverlay.clearTileCache();
+    	}
     }
     
     private void bindEnterKeyListenerToLocationSearchBar() {
