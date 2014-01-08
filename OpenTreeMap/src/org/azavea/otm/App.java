@@ -38,7 +38,7 @@ public class App extends Application {
 	
 	private static SharedPreferences sharedPreferences = null;
 	private static boolean pendingEnabled = false;
-	private static InstanceInfo currentInstance = new InstanceInfo(16, "a87ff679a2f3e71d9181a67b7542122c","Test Instance");
+	private static InstanceInfo currentInstance = new InstanceInfo(16, "e4da3b7fbbce2345d7772b0674a318d5","mm");
 	
 	private static AsyncHttpClient asyncHttpClient;
 	

@@ -128,7 +128,8 @@ public class MainMapActivity extends MapActivity{
 							Plot plot = response.getFirst();
 							if (plot != null) {
 								Log.d("TREE_CLICK", plot.getData().toString());
-								Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + plot.getGeometry().getLon() + ", Y:" + plot.getGeometry().getLat());
+								Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + 
+										plot.getGeometry().getX() + ", Y:" + plot.getGeometry().getY());
 								showPopup(plot);
 							} else {
 								hidePopup();
@@ -433,7 +434,7 @@ public class MainMapActivity extends MapActivity{
 			
 			
 			}
-			LatLng position = new LatLng(plot.getGeometry().getLat(), plot.getGeometry().getLon());				
+			LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());				
 			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
 				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
 			} else {
@@ -595,8 +596,8 @@ public class MainMapActivity extends MapActivity{
 			Geometry newGeometry = new Geometry();
 			double lat = plotMarker.getPosition().latitude;
 			double lon = plotMarker.getPosition().longitude;
-			newGeometry.setLat(lat);
-			newGeometry.setLon(lon);
+			newGeometry.setY(lat);
+			newGeometry.setX(lon);
 			newPlot.setGeometry(newGeometry);
     		
 			List<Address> addresses = null;

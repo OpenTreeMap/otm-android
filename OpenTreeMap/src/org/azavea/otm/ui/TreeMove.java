@@ -50,8 +50,8 @@ public class TreeMove extends TreeDisplay{
     	LatLng position = plotMarker.getPosition();
     	try {
     		Geometry g = plot.getGeometry();
-    	   	g.setLat(position.latitude);
-    	   	g.setLon(position.longitude);
+    	   	g.setY(position.latitude);
+    	   	g.setX(position.longitude);
     	   	plot.setGeometry(g);
      	} catch (JSONException e) {
     		e.printStackTrace();

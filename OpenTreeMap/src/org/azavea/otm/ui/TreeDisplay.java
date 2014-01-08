@@ -48,8 +48,8 @@ public class TreeDisplay extends MapActivity{
     
     protected LatLng getPlotLocation(Plot plot) {
     	try {
-			double lon = plot.getGeometry().getLon();
-			double lat = plot.getGeometry().getLat();
+			double lon = plot.getGeometry().getX();
+			double lat = plot.getGeometry().getY();
 			return new LatLng(lat, lon);
     	} catch (Exception e) {
     		return null;
