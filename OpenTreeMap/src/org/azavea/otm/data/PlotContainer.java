@@ -13,7 +13,7 @@ public class PlotContainer extends ModelContainer<Plot> {
 				new LinkedHashMap<Integer,Plot>(data.length());
 		for (int i = 0; i < data.length(); i++) {
 			Plot plot = new Plot();
-			plot.setData(data.getJSONObject(i));
+			plot.setupPlot(data.getJSONObject(i));
 			plotList.put(plot.getId(), plot);
 		}
 		return plotList;
@@ -23,7 +23,7 @@ public class PlotContainer extends ModelContainer<Plot> {
 		Plot plot = null;
 		if (data.length() > 0) {
 			plot = new Plot();
-			plot.setData(data.getJSONObject(0));
+			plot.setupPlot(data.getJSONObject(0));
 		}
 		return plot;
 	}
