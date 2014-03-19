@@ -38,9 +38,7 @@ public class App extends Application {
 	
 	private static SharedPreferences sharedPreferences = null;
 	private static boolean pendingEnabled = false;
-	
-	private static int tileRequestSequenceId = 0;
-	
+	private static InstanceInfo currentInstance = new InstanceInfo(16, "e4da3b7fbbce2345d7772b0674a318d5","mm");
 	
 	private static AsyncHttpClient asyncHttpClient;
 	
@@ -101,7 +99,7 @@ public class App extends Application {
 		}
 		return sharedPreferences;
 	}
-	
+
 	public static boolean isPendingEnabled() {
 		return pendingEnabled;
 	}
@@ -117,18 +115,15 @@ public class App extends Application {
 		Editor editor = prefs.edit();
 		Context context = instance.getApplicationContext();
 		editor.putString("base_url", context.getString(R.string.base_url))
-			  .putString("wms_url", context.getString(R.string.wms_url))
-			  .putString("tms_url", context.getString(R.string.tms_url))
+			  .putString("tiler_url", context.getString(R.string.tiler_url))
+			  .putString("plot_feature", context.getString(R.string.plot_feature))
+			  .putString("boundary_feature", context.getString(R.string.boundary_feature))
 			  .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
 			  .putString("image_url", context.getString(R.string.image_url))
 			  .putString("api_key", context.getString(R.string.api_key))
-			  .putString("num_tiles_x", context.getString(R.string.num_tiles_x))
-			  .putString("num_tiles_y", context.getString(R.string.num_tiles_y))
 			  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
 			  .putString("start_lat", context.getString(R.string.start_lat))
 			  .putString("start_lon", context.getString(R.string.start_lon))
-			  .putString("tree_highlight_layer", context.getString(R.string.tree_highlight_layer))
-			  .putString("tree_highlight_style", context.getString(R.string.tree_highlight_style))
 			  .putString("search_bbox_lower_left_lat", context.getString(R.string.search_bbox_lower_left_lat))
 			  .putString("search_bbox_lower_left_lon", context.getString(R.string.search_bbox_lower_left_lon))
 			  .putString("search_bbox_upper_right_lat", context.getString(R.string.search_bbox_upper_right_lat))
@@ -165,15 +160,6 @@ public class App extends Application {
         loadPendingStatus();
     }
 	
-	public static int getTileRequestSeqId() {
-		return tileRequestSequenceId;
-	}
-	
-	public static void incTileRequestSeqId() {
-		tileRequestSequenceId++;
-	}
-	
-	
 	public static AsyncHttpClient getAsyncHttpClient() {
 		if (asyncHttpClient == null) {
 			asyncHttpClient = new AsyncHttpClient();
@@ -198,5 +184,13 @@ public class App extends Application {
 		double lond = Double.parseDouble(lon);
 		return new LatLng(latd, lond);
 		
+	}
+
+	public static InstanceInfo getCurrentInstance() {
+		return currentInstance;
+	}
+
+	public static void setCurrentInstance(InstanceInfo currentInstance) {
+		App.currentInstance = currentInstance;
 	}	
 }

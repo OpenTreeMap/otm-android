@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.azavea.otm.App;
+import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Password;
@@ -82,8 +83,9 @@ public class RequestGenerator {
 	}
 
 	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  ContainerRestHandler<PlotContainer> handler) {
-		String url = "/locations/" + geoY + "," + geoX + "/plots";
+		String url = getInstanceNameUri() +  "/locations/" + geoY + "," + geoX + "/plots";
 		Log.d("NEAREST_PLOT", "rp: " + rp.toString());
+		Log.d("NEAREST_PLOT", "url: " + url);
 		try {
 			if (loginManager.isLoggedIn()) {
 				client.getWithAuthentication(App.getInstance(), url, 
@@ -100,6 +102,14 @@ public class RequestGenerator {
 	}
 
 	
+	private String getInstanceNameUri() {
+		InstanceInfo instance = App.getCurrentInstance();
+		if (instance != null) {
+			return "/" + instance.getName();
+		}
+		return "";
+	}
+
 	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending, 
 			ContainerRestHandler<PlotContainer> handler) {
 		SharedPreferences sharedPrefs = App.getSharedPreferences();

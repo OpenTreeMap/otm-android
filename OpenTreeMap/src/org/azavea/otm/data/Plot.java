@@ -16,6 +16,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 public class Plot extends Model {
 	
 	private PendingStatus hasPending = PendingStatus.Unset;
+	private JSONObject plotDetails = null;
 	
 	enum PendingStatus {
 		Pending,
@@ -53,29 +54,38 @@ public class Plot extends Model {
 		setLastUpdated(lastUpdated);
 		setLastUpdatedBy(lastUpdatedBy);
 	}
-	
+
+	public void setupPlot(JSONObject fullPlot) {
+		this.setData(fullPlot);
+		try {
+			this.plotDetails = fullPlot.getJSONObject("plot");
+		} catch (JSONException e) {
+			this.plotDetails = null;
+		}
+	}
+
 	public int getId() throws JSONException {
-		return data.getInt("id");
+		return plotDetails.getInt("id");
 	}
 	
 	public void setId(int id) throws JSONException {
-		data.put("id", id);
+		plotDetails.put("id", id);
 	}
 	
 	public long getWidth() throws JSONException {
-		return getLongOrDefault("plot_width", 0l);
+		return getLongOrDefault("width", 0l);
 	}
 	
 	public void setWidth(long width) throws JSONException {
-		data.put("plot_width", width);
+		plotDetails.put("width", width);
 	}
 	
 	public long getLength() throws JSONException {
-		return getLongOrDefault("plot_length", 0l);
+		return getLongOrDefault("length", 0l);
 	}
 	
 	public void setLength(long length) throws JSONException {
-		data.put("plot_length", length);
+		plotDetails.put("length", length);
 	}
 	
 	public String getType() throws JSONException {
@@ -87,11 +97,11 @@ public class Plot extends Model {
 	}
 	
 	public boolean isReadOnly() throws JSONException {
-		return data.getBoolean("readonly");
+		return plotDetails.getBoolean("readonly");
 	}
 	
 	public void setReadOnly(boolean readOnly) throws JSONException {
-		data.put("readonly", readOnly);
+		plotDetails.put("readonly", readOnly);
 	}
 	
 	public String getPowerlineConflictPotential() throws JSONException {
@@ -119,34 +129,33 @@ public class Plot extends Model {
 	}
 	
 	public void setAddress(String address) throws JSONException {
-		data.put("address", address);
-		data.put("address_street", address);
+		plotDetails.put("address_street", address);
 		data.put("edit_address_street", address);
 		data.put("geocode_address", address);
 	}
 	
 	public String getAddressStreet() throws JSONException {
-		return data.getString("address_street");
+		return plotDetails.getString("address_street");
 	}
 	
 	public void setAddressStreet(String addressStreet) throws JSONException {
-		data.put("address_street", addressStreet);
+		plotDetails.put("address_street", addressStreet);
 	}
 	
 	public String getAddressCity() throws JSONException {
-		return data.getString("address_city");
+		return plotDetails.getString("address_city");
 	}
 	
 	public void setAddressCity(String addressCity) throws JSONException {
-		data.put("address_city", addressCity);
+		plotDetails.put("address_city", addressCity);
 	}
 	
 	public String getAddressZip() throws JSONException {
-		return data.getString("address_zip");
+		return plotDetails.getString("address_zip");
 	}
 	
 	public void setAddressZip(String addressZip) throws JSONException {
-		data.put("address_zip", addressZip);
+		plotDetails.put("address_zip", addressZip);
 	}
 	
 	public String getDataOwner() throws JSONException {
@@ -158,7 +167,7 @@ public class Plot extends Model {
 	}
 	
 	public String getLastUpdated() throws JSONException {
-		return data.getString("last_updated");
+		return data.getJSONObject("latest_update").getString("created");
 	}
 	
 	public void setLastUpdated(String lastUpdated) throws JSONException {
@@ -166,7 +175,11 @@ public class Plot extends Model {
 	}
 	
 	public String getLastUpdatedBy() throws JSONException {
-		return data.getString("last_updated_by");
+		JSONObject lastUser = data.getJSONArray("recent_activity").getJSONObject(0);
+		if (lastUser != null) {
+			return lastUser.getString("username");
+		}
+		return "";
 	}
 	
 	public void setLastUpdatedBy(String lastUpdatedBy) throws JSONException {
@@ -188,12 +201,12 @@ public class Plot extends Model {
 	
 	public Geometry getGeometry() throws JSONException {
 		Geometry retGeom = new Geometry();
-		retGeom.setData(data.getJSONObject("geometry"));
+		retGeom.setData(plotDetails.getJSONObject("geom"));
 		return retGeom;
 	}
 	
 	public void setGeometry(Geometry geom) throws JSONException {
-		data.put("geometry", geom.getData());
+		plotDetails.put("geom", geom.getData());
 	}
 	
 	public boolean canEditPlot() throws JSONException {

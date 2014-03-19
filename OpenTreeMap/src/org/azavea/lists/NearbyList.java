@@ -248,8 +248,8 @@ public class NearbyList implements InfoList {
 		float[] distance = new float[1];
 		
 		try {
-			double plotLat = p.getGeometry().getLat();
-			double plotLon = p.getGeometry().getLon();
+			double plotLat = p.getGeometry().getY();
+			double plotLon = p.getGeometry().getX();
 			Location.distanceBetween(lat, lon, plotLat, plotLon, distance);
 			return distance[0];
 		} catch (Exception e) {

@@ -22,3 +22,5 @@ fabfile.pyc
 buildconf.json
 
 extern
+/ExampleApp/.settings/org.eclipse.jdt.core.prefs
+/azavea_android/

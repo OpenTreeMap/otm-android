@@ -13,8 +13,8 @@ public class Geometry extends Model {
 	public Geometry(int srid, double lat, double lon) throws JSONException {
 		this();
 		setSrid(srid);
-		setLat(lat);
-		setLon(lon);
+		setY(lat);
+		setX(lon);
 	}
 	
 	public int getSrid() throws JSONException {
@@ -25,32 +25,26 @@ public class Geometry extends Model {
 		data.put("srid", srid);
 	}
 	
-	public double getLat() throws JSONException {
-		return data.getDouble("lat");
+	public double getY() throws JSONException {
+        return data.getDouble("y");
 	}
-	public double getLatE6() throws JSONException {
-		return this.getLat()*1E6;
+	public double getYE6() throws JSONException {
+		return this.getY()*1E6;
 	}
 	
-	public void setLat(double lat) throws JSONException {
+	public void setY(double lat) throws JSONException {
 		data.put("lat", lat);
 	}
 	
-	public double getLon() throws JSONException {
-		//Code around discrepency in API Longitude attribute specification
-		try {
-			return data.getDouble("lng");
-		} catch (JSONException e) {
-			return data.getDouble("lon");
-		}
+	public double getX() throws JSONException {
+        return data.getDouble("x");
 	}
-	public double getLonE6() throws JSONException {
-		return this.getLon()*1E6;
+
+	public double getXE6() throws JSONException {
+		return this.getX()*1E6;
 	}
-	public void setLon(double lon) throws JSONException {
-		// Code around discrepency in API Longitude attribute specification
-		data.put("lng", lon);
-		data.put("lon", lon);
+	public void setX(double lon) throws JSONException {
+		data.put("x", lon);
 	}
 	
 	public RequestParams toParams() throws JSONException {
