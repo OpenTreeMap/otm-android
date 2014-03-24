@@ -1,31 +1,55 @@
-# OpenTreeMap for Android
+OpenTreeMap for Android
+=======================
 
-## Getting Started
+Development Instructions
+------------------------
 
-OpenTreeMap for Android has 2 major dependencies:
+### Eclipse/ADT Setup
 
-  - An OpenTreeMap web application installation
-  - A "skin,"  which is a child application that uses the OTM library.
+* Install libraries that eclipse needs to run:
+  ```bash
+  apt-get install ia32-libs
+  ```
 
-The source for the OpenTreeMap web application is available on github
+* download the ADT bundle of eclipse
 
-<a href="https://github.com/azavea/OpenTreeMap">https://github.com/azavea/OpenTreeMap</a>
+* unzip it to become ~/adt
 
-A default skin is included in this repository under ExampleApp.
+* set your workspace to whatever you like, does not have to be where the code or the adt lives.
 
+* Using the SDK Manager, install necessary software:
+  * From Extras, install `Google Play services`
+  * For all the SDK versions that you will use, (currently API 8, API 16, API <latest>), grab:
+    * `SDK Platform`
+    * `Google APIs` (ARM if there's a choice)
+    * `System Image` (if you are using an emulator)
 
-A note on google-play-services_lib
-----------------------------------
+### Device Setup
 
-The google-play-services library is downloaded from the SDK manager
+You'll need to setup your device for debugging, because emulators aren't really viable.
+Follow these instructions:
+http://developer.android.com/tools/device.html
 
-To use:
+### App Setup
 
-+ Download google-play-services using the SDK manager
-+ include it in your workspace
-+ Make sure that the reference to google-play-services_lib in project.properties is  correct.  (In Eclipse : Properties/Android/Reference)
+* clone the OpenTreeMap_Android repo to wherever you store code
 
-Tested with revision 9
+* clone the whatever version of the app you plan to develop in lieu of ExampleApp inside this repo
+
+* The google-play-services library should have been downloaded, include it in your workspace:
+  * Click `File > Import`, `Android > Existing Code`
+  * Navigate to `<adt_folder>/sdk/extras/google/google_play_services/libproject/google-play-services_lib`
+
+* Make sure that the reference to google-play-services_lib in project.properties is correct.
+  * (In Eclipse : Properties/Android/Reference)
+
+* Setup google maps API key. See [PDF](https://github.com/OpenTreeMap/OpenTreeMap-Android/blob/9b67bd669825ac0d87f7799d5ad79695f08c95a7/howto.pdf) for suggestions.
+
+### Weird Bugs
+
+If you get version problems with ADT and the SDK, checkout [this thread](http://code.google.com/p/android/issues/detail?id=67325).
+
+If your debug.keystore is not generated, you probably won't be able to run the [keytool command](https://developers.google.com/maps/documentation/android/start#obtain_a_google_maps_api_key). You can create one by right-clicking the project, Android Tools, Export *signed* application and even if it fails it should make debug.keystore.
 
 USDA Grant
 ---------------
