@@ -8,6 +8,8 @@
 	<string name="canopy_tms_url"></string>
 	<string name="image_url">override in child app</string>
     <string name="api_key">override in child app</string>
+    <string name="access_key">override in child app</string>
+    <string name="secret_key">override in child app</string>
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
     <string name="start_lat">39.952622</string>
