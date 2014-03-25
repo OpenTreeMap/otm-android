@@ -175,7 +175,7 @@ public class RequestGenerator {
 	
 	public void logIn(Context context, String username, String password, 
 			JsonHttpResponseHandler handler) {
-			client.getWithAuthentication(context, "/login", username, password, null, handler);
+			client.getWithAuthentication(context, "/user", username, password, null, handler);
 	}
 	
 	public void getAllSpecies(JsonHttpResponseHandler handler) {
