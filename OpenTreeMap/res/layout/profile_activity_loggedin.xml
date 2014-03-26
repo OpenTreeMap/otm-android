@@ -19,7 +19,7 @@
 		    	android:gravity="center"
 		    	>
 			    	
-			    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			    <LinearLayout 
 			        android:id="@+id/user_fields"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
@@ -32,7 +32,6 @@
 
 		        
 		        <LinearLayout
-					 xmlns:android="http://schemas.android.com/apk/res/android"
 					 android:layout_height="wrap_content"
 					 android:layout_width="fill_parent"
 					 android:orientation="vertical"
@@ -76,7 +75,7 @@
 
 				</LinearLayout>		        
 
-		         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		         <LinearLayout 
 			        android:id="@+id/user_edits"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
@@ -86,13 +85,6 @@
 			    	android:weightSum="1.0"
 			    	android:gravity="center"
 			   	>
-
-       		        <TextView
-       		            android:id="@+id/textView1"
-       		            android:layout_width="fill_parent"
-       		            android:layout_height="wrap_content"
-       		            android:layout_marginTop="20dp"
-       		            android:text="@string/recent_edits_caption" />
 
 		         </LinearLayout>
 					         
