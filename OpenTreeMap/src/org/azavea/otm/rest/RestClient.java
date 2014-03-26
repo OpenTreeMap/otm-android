@@ -2,6 +2,13 @@ package org.azavea.otm.rest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.http.Header;
 import org.apache.http.entity.ByteArrayEntity;
@@ -27,7 +34,7 @@ import com.loopj.android.http.RequestParams;
 public class RestClient {
     private String baseUrl;
 
-    private String apiKey;
+    private String host;
 
     private AsyncHttpClient client;
 
@@ -35,12 +42,24 @@ public class RestClient {
 
     private String appVersion;
 
+    private RequestSignature reqSigner;
+
     public RestClient() {
         prefs = App.getSharedPreferences();
         baseUrl = getBaseUrl();
-        apiKey = getApiKey();
         appVersion = getAppVersion();
         client = createHttpClient();
+        reqSigner = new RequestSignature(prefs.getString("secret_key", ""));
+
+        // The underlying request mechanism doesn't appear to set the HOST
+        // header correctly, so include the header manually - it is required
+        // to generate a matching signature on the api server.
+        try {
+            // Authority is servername[:port] if port is not 80
+            host = new URI(baseUrl).getAuthority();
+        } catch (URISyntaxException e) {
+            Log.e(App.LOG_TAG, "Could not determine valid HOST from base URL");
+        }
     }
 
     // Dependency injection to support mocking
@@ -53,11 +72,45 @@ public class RestClient {
         client.cancelRequests(context, true);
     }
 
+    private void get(String url, RequestParams params,
+            ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
+
+        try {
+            String reqUrl = getAbsoluteUrl(url);
+            RequestParams reqParams = prepareParams(params);
+            headers.add(reqSigner.getSignatureHeader("GET", reqUrl, reqParams));
+
+            Header[] fullHeaders = prepareHeaders(headers);
+
+            client.get(App.getInstance(), reqUrl, fullHeaders, reqParams,
+                    responseHandler);
+        } catch (Exception e) {
+            String msg = "Failure making GET request";
+            Log.e(App.LOG_TAG, msg, e);
+            responseHandler.onFailure(e, msg);
+        }
+    }
+
+    /**
+     * Signed GET request with no authentication
+     */
     public void get(String url, RequestParams params,
             AsyncHttpResponseHandler responseHandler) {
-        RequestParams reqParams = prepareParams(params);
-        Log.d("rc", baseUrl);
-        client.get(getAbsoluteUrl(url), reqParams, responseHandler);
+
+        this.get(url, params, null, responseHandler);
+    }
+
+    /**
+     * Signed GET request with basic authentication headers
+     */
+    public void getWithAuthentication(String url, String username,
+            String password, RequestParams params,
+            AsyncHttpResponseHandler responseHandler) {
+
+        Header[] authHeader = 
+            { createBasicAuthenticationHeader(username, password) };
+        this.get(url, params, new ArrayList<Header>(Arrays.asList(authHeader)),
+                responseHandler);
     }
 
     public void post(Context context, String url, int id, Model model,
@@ -91,19 +144,6 @@ public class RestClient {
         completeUrl = prepareUrl(completeUrl);
         client.put(context, completeUrl, new StringEntity(model.getData()
                 .toString()), "application/json", response);
-    }
-
-    /**
-     * Executes a get request and adds basic authentication headers to the
-     * request.
-     */
-    public void getWithAuthentication(Context context, String url,
-            String username, String password, RequestParams params,
-            AsyncHttpResponseHandler responseHandler) {
-        RequestParams reqParams = prepareParams(params);
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        client.get(context, getAbsoluteUrl(url), headers, reqParams,
-                responseHandler);
     }
 
     /**
@@ -224,7 +264,7 @@ public class RestClient {
 
     private RequestParams prepareParams(RequestParams params) {
         // We'll always need a RequestParams object since we'll always
-        // be sending an apikey
+        // be sending credentials
         RequestParams reqParams;
         if (params == null) {
             reqParams = new RequestParams();
@@ -232,26 +272,86 @@ public class RestClient {
             reqParams = params;
         }
 
-        reqParams.put("apikey", apiKey);
+        reqParams.put("timestamp", getTimestamp());
+        reqParams.put("access_key", getAccessKey());
 
         return reqParams;
     }
 
     private String prepareUrl(String url) {
-        // Not all methods of AsynchHttpClients take a requestParams.
+        // Not all methods of AsynchHttpClient take a requestParams.
         // Sometimes we will need to put the api key and other data
         // directly in the URL.
-        return url + "?apikey=" + getApiKey();
+        return url + "?" + getTimestampQuery() + "&" + getAccessKeyQuery();
+    }
+
+    /**
+     * Ensure all required headers are present
+     * 
+     * @param additionalHeaders
+     *            List of headers specific to a single request
+     * @return Complete list of headers necessary for API request
+     */
+    private Header[] prepareHeaders(ArrayList<Header> additionalHeaders) {
+        BasicHeader defaultHeader = new BasicHeader("Host", host);
+
+        if (additionalHeaders != null) {
+            ArrayList<Header> headers =
+                    (ArrayList<Header>) additionalHeaders.clone();
+            headers.add(defaultHeader);
+
+            return headers.toArray(new Header[headers.size()]);
+        } else {
+            return new Header[] { defaultHeader };
+        }
+    }
+
+    /**
+     * Ensure all required headers are present
+     * 
+     * @return Complete list of headers necessary for API request
+     */
+    private Header[] prepareHeaders() {
+        return prepareHeaders(null);
+    }
+
+    /***
+     * Current timestamp string in UTC format for API request verification
+     * 
+     * @return Query string format of "timestamp={UTC Timestamp}"
+     */
+    private String getTimestampQuery() {
+        return "timestamp=" + getTimestamp();
+    }
+
+    /***
+     * 
+     * @return Current timestamp string in UTC format for API request
+     *         verification
+     */
+    private String getTimestamp() {
+        SimpleDateFormat dateFormatUtc = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss");
+        dateFormatUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormatUtc.format(new Date());
+    }
+
+    /***
+     * Configured Access Key for API request verification
+     * 
+     * @return Query string format of "access_key={ACCESSKEY}"
+     */
+    private String getAccessKeyQuery() {
+        return "access_key=" + getAccessKey();
+    }
+
+    private String getAccessKey() {
+        return prefs.getString("access_key", "");
     }
 
     private String getBaseUrl() {
         String baseUrl = prefs.getString("base_url", "");
         return baseUrl;
-    }
-
-    private String getApiKey() {
-        String apiKey = prefs.getString("api_key", "");
-        return apiKey;
     }
 
     private String getAbsoluteUrl(String relativeUrl) {
