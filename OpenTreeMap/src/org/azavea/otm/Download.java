@@ -53,7 +53,7 @@ public class Download extends Activity
     
     public void testAuth(View view) {
     	RestClient rc = new RestClient();
-    	rc.getWithAuthentication(this, "/login", "administrator", 
+    	rc.getWithAuthentication("/login", "administrator", 
 				"123456", new RequestParams(), new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject resp) {

@@ -38,7 +38,8 @@ public class App extends Application {
 	
 	private static SharedPreferences sharedPreferences = null;
 	private static boolean pendingEnabled = false;
-	private static InstanceInfo currentInstance = new InstanceInfo(16, "e4da3b7fbbce2345d7772b0674a318d5","mm");
+	// TODO: get from site
+	private static InstanceInfo currentInstance = new InstanceInfo(49, "e4da3b7fbbce2345d7772b0674a318d5","gkg");
 	
 	private static AsyncHttpClient asyncHttpClient;
 	
@@ -121,6 +122,8 @@ public class App extends Application {
 			  .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
 			  .putString("image_url", context.getString(R.string.image_url))
 			  .putString("api_key", context.getString(R.string.api_key))
+			  .putString("access_key", context.getString(R.string.access_key))
+			  .putString("secret_key", context.getString(R.string.secret_key))
 			  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
 			  .putString("start_lat", context.getString(R.string.start_lat))
 			  .putString("start_lon", context.getString(R.string.start_lon))

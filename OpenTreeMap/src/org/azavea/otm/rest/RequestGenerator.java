@@ -69,7 +69,7 @@ public class RequestGenerator {
 		String url = "/locations/" + geoY + "," + geoX + "/plots";
 		try {
 			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(App.getInstance(), url, 
+				client.getWithAuthentication(url, 
 						loginManager.loggedInUser.getUserName(), 
 						loginManager.loggedInUser.getPassword(), 
 						null, handler);
@@ -88,7 +88,7 @@ public class RequestGenerator {
 		Log.d("NEAREST_PLOT", "url: " + url);
 		try {
 			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(App.getInstance(), url, 
+				client.getWithAuthentication(url, 
 						loginManager.loggedInUser.getUserName(), 
 						loginManager.loggedInUser.getPassword(), 
 						rp, handler);
@@ -124,7 +124,7 @@ public class RequestGenerator {
 		
 		try {
 			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(App.getInstance(), url, 
+				client.getWithAuthentication(url, 
 						loginManager.loggedInUser.getUserName(), 
 						loginManager.loggedInUser.getPassword(), 
 						params, handler);
@@ -159,7 +159,7 @@ public class RequestGenerator {
 			params.put("offset", Integer.toString(offset));
 			params.put("length", Integer.toString(count));
 			
-			client.getWithAuthentication(context, "/user/" + user.getId() + "/edits", 
+			client.getWithAuthentication("/user/" + user.getId() + "/edits", 
 					loginManager.loggedInUser.getUserName(), 
 					loginManager.loggedInUser.getPassword(),
 						new RequestParams(params), handler);
@@ -175,7 +175,7 @@ public class RequestGenerator {
 	
 	public void logIn(Context context, String username, String password, 
 			JsonHttpResponseHandler handler) {
-			client.getWithAuthentication(context, "/login", username, password, null, handler);
+			client.getWithAuthentication("/user", username, password, null, handler);
 	}
 	
 	public void getAllSpecies(JsonHttpResponseHandler handler) {
