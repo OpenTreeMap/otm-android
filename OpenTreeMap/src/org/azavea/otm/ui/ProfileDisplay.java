@@ -41,12 +41,13 @@ public class ProfileDisplay extends PhotoActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// The fields on User which are displayed on Profile Page
 		userFields = new String[][] { 
 				{ "Username", "username" },
 				{ "First Name", "firstname" }, 
 				{ "Last Name", "lastname" },
-				{ getResources().getString(R.string.zip_code), "zipcode" }, 
-				{ "Reputation", "reputation" } 
+				{ "Organization", "organization" }
 		};
 		loadProfile();
 		
@@ -73,6 +74,9 @@ public class ProfileDisplay extends PhotoActivity {
 			setContentView(R.layout.profile_activity_loggedin);
 			renderUserFields(user, userFields);
 			
+			
+			/* Presently, OTM2 is not loading User Edits.
+			 * 
 			NotifyingScrollView scroll = (NotifyingScrollView)findViewById(R.id.userFieldsScroll);
 			scroll.setOnScrollToBottomListener(new NotifyingScrollView.OnScrollToBottomListener() {
 				
@@ -80,7 +84,9 @@ public class ProfileDisplay extends PhotoActivity {
 				public void OnScrollToBottom() {
 					addMoreEdits();
 				}
-			});
+			}); 
+			
+			*/
 		} else {
 			setContentView(R.layout.profile_activity_anonymous);
 		}
@@ -109,6 +115,13 @@ public class ProfileDisplay extends PhotoActivity {
 	}
 
 	public void renderRecentEdits(final LayoutInflater layout) {
+	    
+	    // Presently, OTM2 edits are instance based and we are not loading
+	    // user recent edits for the profile page.  I want to leave the 
+	    // edits display code uncommented, so just return early for now
+	    boolean showEdits = false;
+	    if (!showEdits) return;
+	    
 		// Don't load additional edits if there are edits currently loading
 		if (loadingRecentEdits == true) {
 			return;

@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/item_grey_end" >
 
     <Button
         android:id="@+id/login"
@@ -48,28 +49,30 @@
         android:textColor="@color/black_end" />
 
     <EditText
-        android:id="@+id/login_password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_username"
-        android:layout_below="@+id/login_username"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="6dp"
-        android:ems="10"
-        android:hint="@string/hint_password"
-        android:inputType="textPassword" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
         android:id="@+id/login_username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:ems="10"
         android:hint="@string/hint_email"
-        android:inputType="text" />
+        android:inputType="text" >
+
+        <requestFocus />
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_username"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/login_username"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword" >
+
+    </EditText>
+
 
 </RelativeLayout>
