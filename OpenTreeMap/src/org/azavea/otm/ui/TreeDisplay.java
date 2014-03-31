@@ -2,6 +2,7 @@ package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public class TreeDisplay extends MapActivity{
         super.onCreate(savedInstanceState);
         try {
 			plot = new Plot();
-			plot.setData(new JSONObject(getIntent().getStringExtra("plot")));
+			plot.setupPlot(new JSONObject(getIntent().getStringExtra("plot")));
 			plotLocation = getPlotLocation(plot);
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not retrieve Tree information", 
@@ -48,10 +49,12 @@ public class TreeDisplay extends MapActivity{
     
     protected LatLng getPlotLocation(Plot plot) {
     	try {
-			double lon = plot.getGeometry().getX();
-			double lat = plot.getGeometry().getY();
+    	    Geometry geom = plot.getGeometry();
+			double lon = geom.getX();
+			double lat = geom.getY();
 			return new LatLng(lat, lon);
     	} catch (Exception e) {
+    	    Log.e(App.LOG_TAG, "Unable to get plot geometry", e);
     		return null;
     	}
     }

@@ -134,8 +134,8 @@ public class Tree extends Model {
 		data.put("readonly", readOnly);
 	}
 
-	public String getSpecies() throws JSONException{
-		return data.getString("species");
+	public JSONObject getSpecies() {
+		return data.optJSONObject("species");
 	}
 
 	public void setSpecies(String species) throws JSONException {

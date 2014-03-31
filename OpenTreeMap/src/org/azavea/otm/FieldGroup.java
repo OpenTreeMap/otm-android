@@ -7,11 +7,14 @@ import java.util.Map.Entry;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,26 +30,32 @@ public class FieldGroup {
 	public FieldGroup() {
 		this.title = "";
 	}
-	
-	public FieldGroup(String title) {
-		this.title = title;
+
+	public FieldGroup(JSONObject groupDefinition, 
+	        Map<String,JSONObject> fieldDefinitions) throws JSONException {
+
+        this.title = groupDefinition.optString("header");
+        JSONArray fieldKeys = groupDefinition.getJSONArray("field_keys");
+        
+        for (int i = 0; i < fieldKeys.length(); i++) {
+            String key = fieldKeys.getString(i);
+            addField(key, fieldDefinitions.get(key));
+        }
 	}
 	
 	public void addFields(Map<String,Field> fields) {
 		this.fields = fields;
 	}
 
-	public void addFields(NodeList fieldDefs) {
-		if (fieldDefs != null) {
-			for (int i=0; i < fieldDefs.getLength(); i++) {
-				Node def = fieldDefs.item(i);
-				if (def.getNodeType() == Node.ELEMENT_NODE) {
-					addField(Field.makeField(def));
-				}
-			}
-		}
+	public void addField(String key, JSONObject fieldDef) {
+	    if (fieldDef == null) {
+	        Log.w(App.LOG_TAG, "Missing field definition for display field: " + key);
+	        return;
+	    }
+	    
+	    this.fields.put(key, Field.makeField(fieldDef));
 	}
-	
+
 	public void addField(Field field) {
 		this.fields.put(field.key, field);
 	}

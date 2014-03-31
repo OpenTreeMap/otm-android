@@ -8,7 +8,7 @@ import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.BaseFilter;
-import org.azavea.otm.filters.ChoiceFilter;
+//import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.rest.RequestGenerator;
@@ -109,8 +109,8 @@ public class FilterManager {
 			return new RangeFilter(cqlKey, nearestPlotKey, name);
 		} else if (type.equals("OTMListFilter")) {
 			return new SpeciesFilter(cqlKey, nearestPlotKey, name);
-		} else if (type.equals("OTMChoiceFilter")) {
-			return new ChoiceFilter(cqlKey, nearestPlotKey, name, choice);
+//		} else if (type.equals("OTMChoiceFilter")) {
+//			return new ChoiceFilter(cqlKey, nearestPlotKey, name, choice);
 		}
 		else {
 			throw new Exception("Invalid filter type defined in config: " + type);

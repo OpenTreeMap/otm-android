@@ -1,20 +1,17 @@
 package org.azavea.otm;
 
-import org.w3c.dom.Node;
 
 public class Choice {
-	private int id;
+	private Object value;
 	private String text;
 	
-	public Choice(Node choiceDef) {
-		id = Integer.parseInt(
-				choiceDef.getAttributes().getNamedItem("value").getNodeValue());
-		text = choiceDef.getTextContent() != null ? 
-				choiceDef.getTextContent() : "<Unknown>";
+	public Choice(String display, Object value) {
+	    this.value = value;
+	    text = display;
 	}
 	
-	public int getId() {
-		return id;
+	public Object getId() {
+		return value;
 	}
 	
 	public String getText() {

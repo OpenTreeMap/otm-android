@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:textColor="@color/primaryColor"
-            android:textSize="@dimen/padding_large" />
+            android:textSize="24dp" />
 
         <LinearLayout
             android:id="@+id/fields"

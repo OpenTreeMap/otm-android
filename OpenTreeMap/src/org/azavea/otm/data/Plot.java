@@ -17,6 +17,7 @@ public class Plot extends Model {
 	
 	private PendingStatus hasPending = PendingStatus.Unset;
 	private JSONObject plotDetails = null;
+	private Species species = null;
 	
 	enum PendingStatus {
 		Pending,
@@ -59,6 +60,14 @@ public class Plot extends Model {
 		this.setData(fullPlot);
 		try {
 			this.plotDetails = fullPlot.getJSONObject("plot");
+			if (this.hasTree()) {
+			    Tree tree = this.getTree();
+			    JSONObject speciesData = tree.getSpecies();
+			    if (speciesData != null) {
+                    this.species = new Species();
+                    species.setData(speciesData);
+			    }
+			}
 		} catch (JSONException e) {
 			this.plotDetails = null;
 		}
@@ -348,5 +357,18 @@ public class Plot extends Model {
 		}
 	}
 
+    public String getScienticName() {
+        if (this.species != null) {
+            return this.species.getScientificName();
+        }
+        return null;
+    }
+
+    public String getCommonName() {
+        if (this.species != null) {
+            return this.species.getCommonName();
+        } 
+        return null;
+    }
 	
 }

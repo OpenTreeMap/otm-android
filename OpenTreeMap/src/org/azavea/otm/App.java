@@ -27,7 +27,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 /**
  * A global singleton object to maintain application state
  */
@@ -64,16 +63,6 @@ public class App extends Application {
 	 * Static access to single search manager instance
 	 */
 	public static FilterManager getFilterManager() {
-		if (filterManager == null) {
-			checkAppInstance();
-			try {
-				filterManager = new FilterManager(instance);
-			} catch (Exception e) {
-				Toast.makeText(appInstance, "Unable to access filter manager", 
-						Toast.LENGTH_LONG).show();
-				Log.e(LOG_TAG, "Unable to create filter manager", e);
-			}
-		}
 		return filterManager;
 	}
 	
@@ -81,16 +70,6 @@ public class App extends Application {
 	 * Static access to single field manager instance
 	 */
 	public static FieldManager getFieldManager() {
-		if (fieldManager == null) {
-			checkAppInstance();
-			try {
-				fieldManager = new FieldManager(instance);
-			} catch (Exception e) {
-				Toast.makeText(appInstance, "Unable to access field manager", 
-						Toast.LENGTH_LONG).show();
-				Log.e(LOG_TAG, "Unable to create field manager", e);
-			}
-		}
 		return fieldManager;
 	}
 	
@@ -228,5 +207,18 @@ public class App extends Application {
 
 	public static void setCurrentInstance(InstanceInfo currentInstance) {
 		App.currentInstance = currentInstance;
+
+        try {
+            fieldManager = new FieldManager(currentInstance.getFieldDefinitions(),
+                    currentInstance.getDisplayFieldKeys());
+            
+            // TODO:  Starting position, colors, filter manager, etc
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Unable to create field manager from instance", e);
+            Toast.makeText(appInstance, "Error setting up OpenTreeMap", 
+                    Toast.LENGTH_LONG).show();
+        }
+		
 	}	
 }
