@@ -8,17 +8,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.FilterManager;
 import com.loopj.android.http.AsyncHttpClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.azavea.otm.R;
+import org.azavea.otm.data.Model;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.RestHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,16 +42,15 @@ public class App extends Application {
 	
 	private static SharedPreferences sharedPreferences = null;
 	private static boolean pendingEnabled = false;
-	// TODO: get from site
-	private static InstanceInfo currentInstance = new InstanceInfo(49, "e4da3b7fbbce2345d7772b0674a318d5","gkg");
-	
+	private static InstanceInfo currentInstance;
+
 	private static AsyncHttpClient asyncHttpClient;
-	
+
 	public static App getAppInstance() {
 		checkAppInstance();
 		return appInstance;
 	}
-	
+
 	public static LoginManager getLoginManager() {
 		if (loginManager == null) {
 			checkAppInstance();
@@ -121,7 +124,6 @@ public class App extends Application {
 			  .putString("boundary_feature", context.getString(R.string.boundary_feature))
 			  .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
 			  .putString("image_url", context.getString(R.string.image_url))
-			  .putString("api_key", context.getString(R.string.api_key))
 			  .putString("access_key", context.getString(R.string.access_key))
 			  .putString("secret_key", context.getString(R.string.secret_key))
 			  .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
@@ -152,7 +154,35 @@ public class App extends Application {
 			Log.e(LOG_TAG, "Invalid pending configuration xml file", e);
 		}
 	}
-	
+
+	private void checkAndSetDefaultMapInstance() {
+	    // If an instance was set with the compiled configuration, 
+	    // this version of the app will always use that instance
+	    // code.  Otherwise, the instance is selected from those
+	    // available to the logged in user.
+	    final String instance = appInstance.getString(R.string.instance_code);
+	    if (!TextUtils.isEmpty(instance)) {
+	        
+	        RequestGenerator rg = new RequestGenerator();
+	        rg.getInstanceInfo(instance, 
+	                new RestHandler<InstanceInfo>(new InstanceInfo()) {
+
+                @Override
+                public void onFailure(Throwable e, String message){
+                    Log.e(App.LOG_TAG, "Unable to Load Instance: " + instance, e);
+                    Toast.makeText(appInstance, "Cannot load configured instance.",
+                            Toast.LENGTH_LONG).show();
+                }			
+
+	            @Override
+	            public void dataReceived(InstanceInfo response) {
+	                setCurrentInstance(response);
+	            }
+	            
+	        }); 	        
+	    }
+    }
+
 	@Override
     public void onCreate() {
         super.onCreate();
@@ -161,9 +191,10 @@ public class App extends Application {
         // the app can try to auto log in on any saved credentials
         getLoginManager();
         loadPendingStatus();
+        checkAndSetDefaultMapInstance();
     }
-	
-	public static AsyncHttpClient getAsyncHttpClient() {
+
+    public static AsyncHttpClient getAsyncHttpClient() {
 		if (asyncHttpClient == null) {
 			asyncHttpClient = new AsyncHttpClient();
 		}
@@ -186,10 +217,12 @@ public class App extends Application {
 		double latd = Double.parseDouble(lat);
 		double lond = Double.parseDouble(lon);
 		return new LatLng(latd, lond);
-		
 	}
 
-	public static InstanceInfo getCurrentInstance() {
+	public InstanceInfo getCurrentInstance() {
+	    if (currentInstance == null) {
+	        checkAndSetDefaultMapInstance();
+	    }
 		return currentInstance;
 	}
 
