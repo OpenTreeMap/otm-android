@@ -84,8 +84,7 @@ public class RequestGenerator {
 
 	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  ContainerRestHandler<PlotContainer> handler) {
 		String url = getInstanceNameUri() +  "/locations/" + geoY + "," + geoX + "/plots";
-		Log.d("NEAREST_PLOT", "rp: " + rp.toString());
-		Log.d("NEAREST_PLOT", "url: " + url);
+
 		try {
 			if (loginManager.isLoggedIn()) {
 				client.getWithAuthentication(url, 
@@ -101,11 +100,24 @@ public class RequestGenerator {
 		}
 	}
 
-	
+	/**
+	 * Request information on a specific OTM instance 
+	 * @param urlName Short URL slug name of instance
+	 */
+	public void getInstanceInfo(String urlName, 
+	        JsonHttpResponseHandler handler) {
+
+	    String url = "/instance/" + urlName;
+	    
+	    // Note: Public instances do not require auth, but private do.
+	    // This will need to be modified when we support private maps
+        client.get(url, null, handler);
+	}
+
 	private String getInstanceNameUri() {
-		InstanceInfo instance = App.getCurrentInstance();
+		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
 		if (instance != null) {
-			return "/" + instance.getName();
+			return "/instance/" + instance.getUrlName();
 		}
 		return "";
 	}
@@ -179,7 +191,7 @@ public class RequestGenerator {
 	}
 	
 	public void getAllSpecies(JsonHttpResponseHandler handler) {
-		client.get("/species", null, handler);
+		client.get(getInstanceNameUri() +  "species", null, handler);
 	}
 
 	public void deleteCurrentTreeOnPlot(Context context, int plotId, JsonHttpResponseHandler handler)

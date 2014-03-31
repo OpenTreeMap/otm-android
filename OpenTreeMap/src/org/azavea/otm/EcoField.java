@@ -20,9 +20,9 @@ public class EcoField extends Field {
 	
 	// Eco fields are calculated, not edited, so they have much less
 	// information in their definition.
-	protected EcoField(String key, String label, int minimumToEdit, 
+	protected EcoField(String key, String label, boolean canEdit, 
 			String keyboard, String format, String type)	{
-		super(key, label, minimumToEdit, keyboard, format, type, null, null, null, false);
+		super(key, label, canEdit, keyboard, format, type, null, null, null, false, "", 0);
 	}
 	
 	@Override

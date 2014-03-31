@@ -119,13 +119,13 @@ public class ChangePassword extends Activity{
 	
 	private void alert(int msg) {
 		String s = this.getString(msg);
-		Toast.makeText(App.getInstance(), s, Toast.LENGTH_LONG).show();		
+		Toast.makeText(App.getAppInstance(), s, Toast.LENGTH_LONG).show();		
 	}
 	
 	private void changePassword() throws UnsupportedEncodingException, JSONException {
 		newPassword = ((EditText)findViewById(R.id.newPassword1)).getText().toString();
 		RequestGenerator rc = new RequestGenerator();
-		rc.changePassword(App.getInstance(), newPassword, changePasswordResponseHandler);
+		rc.changePassword(App.getAppInstance(), newPassword, changePasswordResponseHandler);
 	}
 		
 	public void handleChangePasswordClick(View view) {

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <!--Instance code should only be set if this app is meant to be compiled
+    	and distributed as a single, standalone app.  Otherwise, leave blank -->
+    <string name="instance_code"></string>
+
     <string name="base_url">override in child app</string>
     <string name="tiler_url">override in child app</string>
     <string name="boundary_feature">override in child app</string>
     <string name="plot_feature">override in child app</string>
 	<string name="canopy_tms_url"></string>
 	<string name="image_url">override in child app</string>
-    <string name="api_key">override in child app</string>
     <string name="access_key">override in child app</string>
     <string name="secret_key">override in child app</string>
     <string name="max_nearby_plots">10</string>

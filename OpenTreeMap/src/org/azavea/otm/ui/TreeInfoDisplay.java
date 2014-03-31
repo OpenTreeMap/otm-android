@@ -65,7 +65,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     	}
     	catch (Exception e) {
     		Log.e(App.LOG_TAG, "Unable to render tree view", e);
-    		Toast.makeText(App.getInstance(), 
+    		Toast.makeText(App.getAppInstance(), 
     				"Unable to render view for display", Toast.LENGTH_SHORT).show();
     		finish();
     	}
@@ -74,24 +74,15 @@ public class TreeInfoDisplay extends TreeDisplay{
    
 	private void setHeaderValues(Plot plot) {
 		try {
-			setText(R.id.address, plot.getAddress());
+			setText(R.id.address, plot.getAddressStreet());
 			
 			Tree tree = plot.getTree();
 			String defaultText = getResources().getString(R.string.species_missing);
 			if (tree != null) {
-				setText(R.id.species, tree.getSpeciesName(defaultText));
+				setText(R.id.species, plot.getTitle());
 			} else {
 				setText(R.id.species, defaultText);
 			}
-			try {
-				DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				DateFormat outputFormat = new SimpleDateFormat(getString(R.string.date_time_format));
-				Date updated = inputFormat.parse(plot.getLastUpdated());
-				setText(R.id.updated_on, "Updated " + outputFormat.format(updated));	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			setText(R.id.updated_by, "By " + plot.getLastUpdatedBy());
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not access plot information for display", 
 					Toast.LENGTH_SHORT).show();

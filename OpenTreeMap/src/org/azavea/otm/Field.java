@@ -25,26 +25,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Field {
 	private static final String TREE_SPECIES = "tree.species";
-
-	private HashMap<String,String> unitFormatter = new HashMap<String,String>(){
-		private static final long serialVersionUID = 1L;
-	{
-		put("inch", "in");
-		put("feet", "ft");
-		put("meter", "m");
-		put("mile", "mi");
-	}};
 
 	// Any choices associated with this field, keyed by value
 	private Map<Integer,Choice> choiceMap;
@@ -69,11 +62,21 @@ public class Field {
 	 * Label to identify the field on a view
 	 */
 	public String label;
+
+	/**
+	 * Does the current user have permission to edit?
+	 */
+	public boolean canEdit;
 	
 	/**
-	 * The minimum reputation points needed to edit this field
+	 * The text to append to the value as a unit
 	 */
-	public int minimumToEdit;
+	public String unitText;
+
+	/**
+	 * Number of significant digits to round to
+	 */
+	public int digits;
 	
 	/**
 	 * How to format units 
@@ -89,12 +92,11 @@ public class Field {
 	 * The keyboard type to use when editing this field
 	 */
 	public String keyboardResource = "text";
-	
+
 	/**
-	 * The choice name if this is a user select-able field
+	 * List of key/val pairs of choice options for this field 
 	 */
-	public String choiceName = null;
-	
+	public JSONArray choicesDef = null;
 	/**
 	 *  Refers to a key in the json which determines this field.  Currently
 	 *  it is only setup to support species list picker
@@ -105,65 +107,61 @@ public class Field {
 	
 	public boolean editViewOnly = false;
 	
-	protected Field(String key, String label, int minimumToEdit, String keyboard, 
-			String format, String type, String choice, String owner, String infoUrl,
-			boolean editViewOnly) {
+	protected Field(String key, String label, boolean canEdit, String keyboard, 
+			String format, String type, JSONArray choices, String owner, 
+			String infoUrl,	boolean editViewOnly, String units, int digits) {
 		this.key = key;
 		this.label = label;
-		this.minimumToEdit = minimumToEdit;
+		this.canEdit = canEdit;
 		this.keyboardResource = keyboard;
 		this.format = format;
 		this.type = type;
-		this.choiceName = choice;
 		this.owner = owner;
 		this.infoUrl = infoUrl;
 		this.editViewOnly = editViewOnly;
+		this.unitText = units;
+		this.digits = digits;
 	}
 	
-	public static Field makeField(Node fieldNode) {
-		// Key, label and minToEdit are required
-		String key = fieldNode.getAttributes().getNamedItem("key")
-				.getNodeValue();
-		String label = fieldNode.getAttributes().getNamedItem("label")
-				.getNodeValue();
-		int minimumToEdit = Integer.parseInt(fieldNode.getAttributes().
-				getNamedItem("minimumToEdit").getNodeValue());
-		
-		// Keyboard style will default to text if it's not present
-		Node node = fieldNode.getAttributes().getNamedItem("keyboard");
-		String keyboardResource = node == null ? "text" : node.getNodeValue();	
-		
-		node = fieldNode.getAttributes().getNamedItem("format");
-		String format = node == null ? null : node.getNodeValue();
-		
-		node = fieldNode.getAttributes().getNamedItem("type");
-		String type = node == null ? null : node.getNodeValue();	
-		
-		node = fieldNode.getAttributes().getNamedItem("choice");
-		String choice = node == null ? null : node.getNodeValue();
+	public static Field makeField(JSONObject fieldDef) {
 
-		node = fieldNode.getAttributes().getNamedItem("owner");
-		String owner = node == null ? null : node.getNodeValue();
+		String key = fieldDef.optString("field_key");
+		String label = fieldDef.optString("display_name");
+		boolean canEdit = fieldDef.optBoolean("can_write");
+		String format = fieldDef.optString("data_type");
+		String keyboardResource = format == "double" ? "numberDecimal" : "text";
+		JSONArray choices = fieldDef.optJSONArray("choices");
+		String units = fieldDef.optString("units");
+		int digits = fieldDef.optInt("digits");
 		
-		node = fieldNode.getAttributes().getNamedItem("info_url");
-		String infoUrl = node == null ? null : node.getNodeValue();
-
-		node = fieldNode.getAttributes().getNamedItem("editViewOnly");
-		boolean editViewOnly = node == null ? false : Boolean.parseBoolean(node.getNodeValue());
-
+		// Eco?
+		String type = "";
 		
+		String owner = "";
+
+		// tree.species gets special rendering rules
+		if (key.equals(TREE_SPECIES)) {
+		    owner = TREE_SPECIES;
+		    format = "string";
+		}
+		
+		// NOTE: Not enabled for OTM2 yet
+		String infoUrl = fieldDef.optString("info_url");
+		boolean editViewOnly = false;
+
 		if (type != null && type.equals("eco")) {
-			return new EcoField(key, label, minimumToEdit, keyboardResource, format, type);
+			return new EcoField(key, label, canEdit, keyboardResource, format, type);
 		} else {
-			return new Field(key, label, minimumToEdit, keyboardResource, format, 
-					type, choice, owner, infoUrl, editViewOnly);
+			return new Field(key, label, canEdit, keyboardResource, format, 
+					type, choices, owner, infoUrl, editViewOnly, units, digits);
 		}
 	}
 	
 	/* 
 	 * Render a view to display the given model field in view mode
 	 */	
-	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) throws JSONException {
+	public View renderForDisplay(LayoutInflater layout, Plot model, Context context) 
+	        throws JSONException {
 		loadChoices();
 		
 		// our ui elements
@@ -173,9 +171,14 @@ public class Field {
     	View infoButton = container.findViewById(R.id.info);
     	View pendingButton = container.findViewById(R.id.pending);
         
+    	if (this.owner != null && this.owner.equals(TREE_SPECIES)) {
+    	    return renderSpeciesFields(layout, model, context, container,
+                    label, fieldValue);
+    	}
+
     	//set the label (simple)
     	label.setText(this.label);
-    	
+
     	// is this field pending (based on its own notion of pending or its owners.)
     	Boolean pending = (this.owner == null) ? 
     			isKeyPending(this.key, model) :
@@ -211,13 +214,36 @@ public class Field {
         
         // If the field has a URL attached to it as an info description (IE for pests)
         // display the link.
-        if (this.infoUrl != null) {
+        if (!TextUtils.isEmpty(this.infoUrl)) {
         	infoButton.setVisibility(View.VISIBLE);
         	bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
         }
         
         return container;
 	}
+
+    private View renderSpeciesFields(LayoutInflater layout, Plot model,
+            Context context, View container, TextView label, TextView fieldValue)
+            throws JSONException {
+
+        // tree.species gets exploded to a double row with sci name and common name
+        label.setText("Scientific Name");
+        fieldValue.setText(formatUnit(model.getScienticName()));
+
+        View containerCommon = layout.inflate(R.layout.plot_field_row, null);
+        TextView labelCommon = (TextView)containerCommon.findViewById(R.id.field_label);
+        TextView fieldValueCommon = (TextView)containerCommon.findViewById(R.id.field_value);
+        
+        labelCommon.setText("Common Name");
+        fieldValueCommon.setText(formatUnit(model.getCommonName()));
+        
+        LinearLayout doubleRow = new LinearLayout(context);
+        doubleRow.addView(container);
+        doubleRow.addView(containerCommon);
+        
+        doubleRow.setOrientation(LinearLayout.VERTICAL);
+        return doubleRow;
+    }
 
 	/* 
 	 * Render a view to display the given model field in edit mode
@@ -228,7 +254,7 @@ public class Field {
 		View container = null;
 		loadChoices();
 		
-		if (user.getReputation() >= this.minimumToEdit) {
+		if (this.canEdit) {
 			container = layout.inflate(R.layout.plot_field_edit_row, null);
 			Object value = getValueForKey(this.key, model.getData());
 			
@@ -237,7 +263,7 @@ public class Field {
 	        Button choiceButton = (Button)container.findViewById(R.id.choice_select);
 	        
 	        // Show the correct type of input for this field
-	        if (this.choiceName != null) {
+	        if (this.choiceItems != null) {
 	        	edit.setVisibility(View.GONE);
 	        	choiceButton.setVisibility(View.VISIBLE);
 	        	this.valueView = choiceButton;
@@ -311,12 +337,12 @@ public class Field {
 	}
 
 	private void loadChoices() {
-		Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
-		if (choices != null && !choices.equals(null)) {
-			this.choiceMap = choices.getChoices();
-			this.choiceItems = choices.getItems();
-			this.choiceValues = choices.getValues();
-		}
+//		Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
+//		if (choices != null && !choices.equals(null)) {
+//			this.choiceMap = choices.getChoices();
+//			this.choiceItems = choices.getItems();
+//			this.choiceValues = choices.getValues();
+//		}
 	}
 
 	
@@ -388,9 +414,10 @@ public class Field {
 	public String formatUnit(Object value) {
 		// If there is no value, return an unspecified value
 		if (value == null || value.equals(null) || value.equals("")) {
-			return App.getInstance().getResources()
+			return App.getAppInstance().getResources()
 					.getString(R.string.unspecified_field_value);
-		} else if (hasChoices()) {
+		} 
+		if (hasChoices()) {
 			// If there are choices for this field, display the choice
 			// text, not the value
 			int v = Integer.parseInt(value.toString());
@@ -398,15 +425,20 @@ public class Field {
 			if (choice != null) {
 				return choice.getText();
 			}
-		} else if (format != null) {
-				return attemptToGetRoundedValueForObject(value) + " " + unitFormatter.get(format);
 		} 
-		return attemptToGetRoundedValueForObject(value);
+		
+		if (format != null) {
+		    if (format.equals("float")) {
+		        return formatWithDigits(value, this.digits) + " " + this.unitText;
+		    }
+		} 
+		return value + " " + this.unitText;
 	}
 	
-	public String attemptToGetRoundedValueForObject(Object value) {
+	public String formatWithDigits(Object value, int digits) {
 		try { // attempt to round 'value'
-			return String.format("%.2f", (Double)value);
+		    Double d = Double.parseDouble(value.toString());
+			return String.format("%." + digits + "f", d);
 		} catch (ClassCastException e) {
 			return value.toString();
 		}
@@ -602,7 +634,7 @@ public class Field {
 				
 			} catch (JSONException e) {
 				Log.e(App.LOG_TAG, "Unable to set new species on tree", e);
-				Toast.makeText(App.getInstance(), "Unable to set new species on tree", 
+				Toast.makeText(App.getAppInstance(), "Unable to set new species on tree", 
 						Toast.LENGTH_LONG).show();
 				
 			}

@@ -79,7 +79,6 @@ public class LoginManager {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			    	Log.d(App.LOG_TAG, "Login successful: " + username);
 			    	
 			    	data.putBoolean("success", true);
 		    		handleCallback(data);

@@ -62,7 +62,7 @@ public class ProfileDisplay extends PhotoActivity {
 	
 	public void addMoreEdits() {
 		if (!loadingRecentEdits) {
-			Toast.makeText(App.getInstance(), "Loading more edits...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(App.getAppInstance(), "Loading more edits...", Toast.LENGTH_SHORT).show();
 			renderRecentEdits(((Activity) this).getLayoutInflater());
 		}
 		
@@ -140,7 +140,7 @@ public class ProfileDisplay extends PhotoActivity {
 								
 							} catch (JSONException e) {
 								Log.e(App.LOG_TAG, "Could not parse user edits response", e);
-								Toast.makeText(App.getInstance(), "Could not retrieve user edits", 
+								Toast.makeText(App.getAppInstance(), "Could not retrieve user edits", 
 										Toast.LENGTH_SHORT).show();
 							} finally {
 								loadingRecentEdits = false;
@@ -205,7 +205,7 @@ public class ProfileDisplay extends PhotoActivity {
 						public void onFailure(Throwable e, String message) {
 							loadingRecentEdits = false;
 							Log.e(App.LOG_TAG, message);
-							Toast.makeText(App.getInstance(), "Could not retrieve user edits", 
+							Toast.makeText(App.getAppInstance(), "Could not retrieve user edits", 
 									Toast.LENGTH_SHORT).show();
 						}
 					});
@@ -240,7 +240,7 @@ public class ProfileDisplay extends PhotoActivity {
 	protected void submitBitmap(Bitmap bm) {
 		RequestGenerator rc = new RequestGenerator();
 		try {
-			rc.addProfilePhoto(App.getInstance(), bm, profilePictureResponseHandler);
+			rc.addProfilePhoto(App.getAppInstance(), bm, profilePictureResponseHandler);
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Error profile tree photo.", e);
 		}
@@ -252,20 +252,20 @@ public class ProfileDisplay extends PhotoActivity {
 			Log.d("AddProfilePhoto", response.toString());
 			try {
 				if (response.get("status").equals("success")) {
-					Toast.makeText(App.getInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();		
+					Toast.makeText(App.getAppInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();		
 				} else {
-					Toast.makeText(App.getInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
+					Toast.makeText(App.getAppInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
 					Log.d("AddProfilePhoto", "photo response no success");
 				}
 			} catch (JSONException e) {
-				Toast.makeText(App.getInstance(), "Unable to add profile photo", Toast.LENGTH_LONG).show();
+				Toast.makeText(App.getAppInstance(), "Unable to add profile photo", Toast.LENGTH_LONG).show();
 			}
 		};
 		public void onFailure(Throwable e, JSONObject errorResponse) {
 			Log.e("AddProfilePhoto", "addTreePhotoHandler.onFailure");
 			Log.e("AddProfilePhoto", errorResponse.toString());
 			Log.e("AddProfilePhoto", e.getMessage());
-			Toast.makeText(App.getInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
+			Toast.makeText(App.getAppInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();		
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
@@ -275,7 +275,7 @@ public class ProfileDisplay extends PhotoActivity {
 			Log.e("addProfilePhoto", "e.getMessage: " + e.getMessage());
 			Log.e("addProfilePhoto", "e.getCause: " + e.getCause());
 			e.printStackTrace();
-			Toast.makeText(App.getInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();					
+			Toast.makeText(App.getAppInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();					
 		};
 	};
 

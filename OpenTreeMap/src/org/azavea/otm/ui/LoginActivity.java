@@ -65,7 +65,7 @@ public class LoginActivity extends Activity {
 					finish();
 		            return true;
 				} else {
-					Toast.makeText(App.getInstance(), 
+					Toast.makeText(App.getAppInstance(), 
 							data.getString("message"), 
 							Toast.LENGTH_LONG).show();
 					return false;

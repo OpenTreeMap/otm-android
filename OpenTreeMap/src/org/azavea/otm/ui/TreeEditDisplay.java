@@ -63,21 +63,21 @@ public class TreeEditDisplay extends TreeDisplay {
 		@Override
 		public void onFailure(Throwable e, String message){
 			deleteDialog.dismiss();
-			Toast.makeText(App.getInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
+			Toast.makeText(App.getAppInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
 			Log.e(App.LOG_TAG, "Unable to delete tree.");
 		}				
 
 		@Override
 		protected void handleFailureMessage(Throwable e, String responseBody) {
 			deleteDialog.dismiss();
-			Toast.makeText(App.getInstance(), "Failure: Unable to delete tree", Toast.LENGTH_SHORT).show();
+			Toast.makeText(App.getAppInstance(), "Failure: Unable to delete tree", Toast.LENGTH_SHORT).show();
 			Log.e(App.LOG_TAG, "Unable to delete tree.", e);
 		}
 		
 		@Override
 		public void dataReceived(Plot response) {
 			deleteDialog.dismiss();
-			Toast.makeText(App.getInstance(), "The tree was deleted.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(App.getAppInstance(), "The tree was deleted.", Toast.LENGTH_SHORT).show();
 			Intent resultIntent = new Intent();
 			
 			// The tree was deleted, so return to the info page, and bring along
@@ -95,14 +95,14 @@ public class TreeEditDisplay extends TreeDisplay {
 			try {
 				if (response.getBoolean("ok")) {
 					deleteDialog.dismiss();
-					Toast.makeText(App.getInstance(), "The planting site was deleted.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(App.getAppInstance(), "The planting site was deleted.", Toast.LENGTH_SHORT).show();
 					setResult(RESULT_PLOT_DELETED);
 					finish();
 					
 				}
 			} catch (JSONException e) {
 				deleteDialog.dismiss();
-				Toast.makeText(App.getInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
+				Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
 			}
 		};
 	};
@@ -112,7 +112,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
 			try {
 				if (response.get("status").equals("success")) {
-					Toast.makeText(App.getInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
+					Toast.makeText(App.getAppInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();	
 					plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
 					photoHasBeenChanged = true;
 					
@@ -123,22 +123,22 @@ public class TreeEditDisplay extends TreeDisplay {
 					}
 					
 				} else {
-					Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
+					Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();		
 					Log.d("AddTreePhoto", "photo response no success");
 				}
 			} catch (JSONException e) {
-				Toast.makeText(App.getInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
+				Toast.makeText(App.getAppInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
 			}
 		};
 		
 		public void onFailure(Throwable e, JSONObject errorResponse) {
-			Toast.makeText(App.getInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
+			Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 		
 		protected void handleFailureMessage(Throwable e, String responseBody) {
 			e.printStackTrace();
-			Toast.makeText(App.getInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();
+			Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();
 			savePhotoDialog.dismiss();
 		};
 	};
@@ -355,7 +355,7 @@ public class TreeEditDisplay extends TreeDisplay {
 					
 					RequestGenerator rc = new RequestGenerator();
 					try {
-						rc.deleteCurrentTreeOnPlot(App.getInstance(), plot.getId(), deleteTreeHandler);
+						rc.deleteCurrentTreeOnPlot(App.getAppInstance(), plot.getId(), deleteTreeHandler);
 					} catch (JSONException e) {
 						Log.e(App.LOG_TAG, "Error deleting tree", e);
 					}
@@ -375,7 +375,7 @@ public class TreeEditDisplay extends TreeDisplay {
 				if (msg.getData().getBoolean("confirm")) {
 					RequestGenerator rc = new RequestGenerator();
 					try {
-						rc.deletePlot(App.getInstance(), plot.getId(), deletePlotHandler);
+						rc.deletePlot(App.getAppInstance(), plot.getId(), deletePlotHandler);
 					} catch (JSONException e) {
 						Log.e(App.LOG_TAG, "Error deleting tree plot", e);
 					}
@@ -401,7 +401,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
 			@Override
 			public void onClick(View v) {
-				Intent speciesSelector = new Intent(App.getInstance(), SpeciesListDisplay.class);
+				Intent speciesSelector = new Intent(App.getAppInstance(), SpeciesListDisplay.class);
 				startActivityForResult(speciesSelector, SPECIES_SELECTOR);
 			}
 		};
@@ -472,20 +472,20 @@ public class TreeEditDisplay extends TreeDisplay {
 				protected void handleFailureMessage(Throwable e, String responseBody) {
 					Log.e("REST", responseBody);
 					saveDialog.dismiss();
-					Toast.makeText(App.getInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(App.getAppInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
 					Log.e(App.LOG_TAG, "Could not save tree", e);
 				}
 			};
  
 			// check if we are adding a new tree or editing an existing one.
 			if (addMode()) {
-				rg.addTree(App.getInstance(), plot, responseHandler);
+				rg.addTree(App.getAppInstance(), plot, responseHandler);
 			} else {			
-				rg.updatePlot(App.getInstance(), plot.getId(), plot, responseHandler);
+				rg.updatePlot(App.getAppInstance(), plot.getId(), plot, responseHandler);
 			}
 		} catch (Exception e) {
 			Log.e(App.LOG_TAG, "Could not save edited plot info", e);
-			Toast.makeText(App.getInstance(), "Could not save tree info",
+			Toast.makeText(App.getAppInstance(), "Could not save tree info",
 					Toast.LENGTH_LONG).show();
 			saveDialog.dismiss();
 		}
@@ -496,7 +496,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			RequestGenerator rc = new RequestGenerator();
 			try {
 				setResultOk(updatedPlot);
-				rc.addTreePhoto(App.getInstance(), updatedPlot.getId(), this.newTreePhoto, addTreePhotoHandler);
+				rc.addTreePhoto(App.getAppInstance(), updatedPlot.getId(), this.newTreePhoto, addTreePhotoHandler);
 			} catch (JSONException e) {
 				Log.e(App.LOG_TAG, "Unable to upload photo", e);
 				Toast.makeText(getBaseContext(), 
@@ -647,7 +647,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			} else {
 				// If there already is a tree, add the photo immediately
 				savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-				rc.addTreePhoto(App.getInstance(), plot.getId(), bm, addTreePhotoHandler);
+				rc.addTreePhoto(App.getAppInstance(), plot.getId(), bm, addTreePhotoHandler);
 			}
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Error updating tree photo.", e);

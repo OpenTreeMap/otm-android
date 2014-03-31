@@ -24,16 +24,16 @@ public class Species extends Model implements Comparable<Object> {
 		data.put("id", id);
 	}
 
-	public String getScientificName() throws JSONException {
-		return data.getString("scientific_name");
+	public String getScientificName() {
+		return data.optString("scientific_name");
 	}
 
 	public void setScientificName(String scientificName) throws JSONException {
 		data.put("scientific_name", scientificName);
 	}
 
-	public String getCommonName() throws JSONException {
-		return data.getString("common_name");
+	public String getCommonName() {
+		return data.optString("common_name");
 	}
 
 	public void setCommonName(String commonName) throws JSONException {
@@ -60,28 +60,16 @@ public class Species extends Model implements Comparable<Object> {
 	public int compareTo(Object otherOne) 
 	{
 		Species other = (Species)otherOne;
-		try {
-			if (getCommonName().compareTo(other.getCommonName()) < 0) return -1;
-			if (getCommonName().compareTo(other.getCommonName())  > 0) return 1;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	  return 0;
+        if (getCommonName().compareTo(other.getCommonName()) < 0) return -1;
+        if (getCommonName().compareTo(other.getCommonName())  > 0) return 1;
+        return 0;
 	}
 
 	@Override
 	public String toString() {
-		try {
-			// Whatever value toString provides to an ArrayAdapter will be used
-			// in a simple wildcard filter.  By providing both names, both names
-			// can be filtered on
-			return getCommonName() + " " + getScientificName();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-		
+        // Whatever value toString provides to an ArrayAdapter will be used
+        // in a simple wildcard filter.  By providing both names, both names
+        // can be filtered on
+        return getCommonName() + " " + getScientificName();
 	}
 }

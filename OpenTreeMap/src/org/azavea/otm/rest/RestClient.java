@@ -74,6 +74,10 @@ public class RestClient {
 
     private void get(String url, RequestParams params,
             ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
+        
+        if (headers == null) {
+            headers = new ArrayList<Header>();
+        }
 
         try {
             String reqUrl = getAbsoluteUrl(url);
@@ -82,7 +86,7 @@ public class RestClient {
 
             Header[] fullHeaders = prepareHeaders(headers);
 
-            client.get(App.getInstance(), reqUrl, fullHeaders, reqParams,
+            client.get(App.getAppInstance(), reqUrl, fullHeaders, reqParams,
                     responseHandler);
         } catch (Exception e) {
             String msg = "Failure making GET request";

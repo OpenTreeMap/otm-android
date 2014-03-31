@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.rest.RequestGenerator;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -41,7 +43,9 @@ public abstract class PhotoActivity extends Activity {
 	
 	// Bind your change photo button to this handler.
 	public void handleChangePhotoClick(View view) {
-		
+	    // TODO TEMP
+	    App.getAppInstance().getCurrentInstance();
+	    
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
@@ -76,7 +80,7 @@ public abstract class PhotoActivity extends Activity {
 
 	public static File createImageFile() throws IOException {
 		if (!isExternalStorageWritable()) {
-			Toast.makeText(App.getInstance(), 
+			Toast.makeText(App.getAppInstance(), 
 					"Unable to write to filesystem.  If you are connected via USB, remove and try again", 
 					Toast.LENGTH_LONG).show();
 		}
@@ -106,7 +110,7 @@ public abstract class PhotoActivity extends Activity {
 		
 		// Scale and re-orient the image, save to server
 		Bitmap bm = getScaledImage(filePath);
-		return rotateImage(App.getInstance(), bm, Uri.parse(filePath));
+		return rotateImage(App.getAppInstance(), bm, Uri.parse(filePath));
 	}
 	
 	protected void changePhotoUsingCamera(String filePath) {
@@ -116,7 +120,7 @@ public abstract class PhotoActivity extends Activity {
 	public static Bitmap getCorrectedGalleryBitmap(Intent data) {
 		Uri selectedImage = data.getData();
         Bitmap bm = retrieveBitmapFromGallery(selectedImage);
-        return rotateImage(App.getInstance(), bm, selectedImage);
+        return rotateImage(App.getAppInstance(), bm, selectedImage);
 	}
 	
 	protected void changePhotoUsingGallery(Intent data) {
@@ -140,7 +144,7 @@ public abstract class PhotoActivity extends Activity {
 	protected static Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
 		String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-        Cursor cursor = App.getInstance().getContentResolver().query(
+        Cursor cursor = App.getAppInstance().getContentResolver().query(
                            selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
 
@@ -156,7 +160,7 @@ public abstract class PhotoActivity extends Activity {
 	    File f = new File(filePath);
 	    Uri contentUri = Uri.fromFile(f);
 	    mediaScanIntent.setData(contentUri);
-	    App.getInstance().sendBroadcast(mediaScanIntent);
+	    App.getAppInstance().sendBroadcast(mediaScanIntent);
 	}
 	
 	private static Bitmap getScaledImage(String filePath) {

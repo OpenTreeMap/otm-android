@@ -40,7 +40,7 @@ public class SpeciesListDisplay extends ListActivity {
 						renderSpeciesList();
 					} else
 						  {
-						Toast.makeText(App.getInstance(), "Could not get species list", 
+						Toast.makeText(App.getAppInstance(), "Could not get species list", 
 								Toast.LENGTH_SHORT).show();
 					}
 					return true;
