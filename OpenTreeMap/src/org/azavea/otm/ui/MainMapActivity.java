@@ -72,11 +72,9 @@ public class MainMapActivity extends MapActivity{
 	private static final int STEP2 = 2;
 	private static final int CANCEL = 3;
 	private static final int FINISH = 4;
-	
+
 	private TextView plotSpeciesView;
 	private TextView plotAddressView;
-	private TextView plotDiameterView;
-	private TextView plotUpdatedByView;
 	private ImageView plotImageView;
 	private RelativeLayout plotPopup;
 	private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
@@ -97,16 +95,16 @@ public class MainMapActivity extends MapActivity{
     // Map click listener for normal view mode
     private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {	
     	@Override
-		public void onMapClick(LatLng point) {		
+		public void onMapClick(LatLng point) {
 			Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-			
-			final ProgressDialog dialog = ProgressDialog.show(MainMapActivity.this, "", 
-                  "Loading. Please wait...", true);
+
+			final ProgressDialog dialog = ProgressDialog.show(MainMapActivity.this, "",
+			        "Loading. Please wait...", true);
 			dialog.show();
-			
+
 			final RequestGenerator rg = new RequestGenerator();
-			RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsNearestPlotRequestParams();
-	  			
+			RequestParams activeFilters = null;//App.getFilterManager().getActiveFiltersAsNearestPlotRequestParams();
+
 			rg.getPlotsNearLocation(
 				point.latitude,
 				point.longitude,
@@ -117,9 +115,7 @@ public class MainMapActivity extends MapActivity{
 					public void onFailure(Throwable e, String message) {
 						dialog.hide();
 						Log.e("TREE_CLICK",
-								"Error retrieving plots on map touch event: "
-										+ e.getMessage());
-						e.printStackTrace();
+								"Error retrieving plots on map touch event: ", e);
 					}
 			
 					@Override
@@ -127,18 +123,13 @@ public class MainMapActivity extends MapActivity{
 						try {
 							Plot plot = response.getFirst();
 							if (plot != null) {
-								Log.d("TREE_CLICK", plot.getData().toString());
-								Log.d("TREE_CLICK", "Using Plot (id: " + plot.getId() + ") with coords X: " + 
-										plot.getGeometry().getX() + ", Y:" + plot.getGeometry().getY());
 								showPopup(plot);
 							} else {
 								hidePopup();
 							}
 						} catch (JSONException e) {
 							Log.e("TREE_CLICK",
-									"Error retrieving plot info on map touch event: "
-											+ e.getMessage());
-							e.printStackTrace();
+									"Error retrieving plot info on map touch event: ", e);
 						} finally {
 							dialog.hide();
 						}
@@ -148,11 +139,11 @@ public class MainMapActivity extends MapActivity{
     };
     
     // Map click listener that allows us to add a tree
-    private OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {	
+    private OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
     	@Override
-		public void onMapClick(LatLng point) {		
-			Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-			
+		public void onMapClick(LatLng point) {
+    	    Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+
 			plotMarker =  mMap.addMarker(new MarkerOptions()
 		       .position(point)
 		       .title("New Tree")
@@ -397,44 +388,24 @@ public class MainMapActivity extends MapActivity{
     	findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     	
     	//set default text
-		plotDiameterView.setText(getString(R.string.dbh_missing));
 		plotSpeciesView.setText(getString(R.string.species_missing));
 		plotAddressView.setText(getString(R.string.address_missing));
 		plotImageView.setImageResource(R.drawable.ic_action_search);
 		
 		try {
-	        plotUpdatedByView.setText("By " + plot.getLastUpdatedBy());
-	        String addr = plot.getAddress(); 
+	        String addr = plot.getAddressStreet(); 
 	        if (addr != null && addr.length() != 0) {
-	        	plotAddressView.setText(plot.getAddress());
+	        	plotAddressView.setText(addr);
 	        }
-			Tree tree = plot.getTree();
-			if (tree != null) {
-				String speciesName;
-				try {
-					speciesName = tree.getSpeciesName();
-				} catch (JSONException e) {
-					speciesName = "No species name";
-				}
-				plotSpeciesView.setText(speciesName);
-			
-				if (tree.getDbh() != 0) {
-					String dbh = String.format("%.2f", tree.getDbh() );
-					plotDiameterView.setText(dbh +  
-							getString(R.string.default_measure_units) + " " + 
-							"Diameter");
-				} 
-				showImageOnPlotPopup(plot);
-				
-				try {
-					fullSizeTreeImageUrl = tree.getTreePhotoUrl();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			
-			
-			}
-			LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());				
+            String speciesName = plot.getTitle();
+            plotSpeciesView.setText(speciesName);
+        
+            showImageOnPlotPopup(plot);
+            
+            // TODO: PHOTOS
+            //fullSizeTreeImageUrl = tree.getTreePhotoUrl();
+
+            LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
 			if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
 				mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
 			} else {
@@ -448,7 +419,7 @@ public class MainMapActivity extends MapActivity{
 				.title("")
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
 		} catch (JSONException e) {
-			e.printStackTrace();
+		    Log.e(App.LOG_TAG, "Could not show tree popup", e);
 		}
 		currentPlot = plot;
 		plotPopup.setVisibility(View.VISIBLE);
@@ -465,8 +436,6 @@ public class MainMapActivity extends MapActivity{
 	private void setPopupViews() {
     	plotSpeciesView = (TextView) findViewById(R.id.plotSpecies);
     	plotAddressView = (TextView) findViewById(R.id.plotAddress);
-    	plotDiameterView = (TextView) findViewById(R.id.plotDiameter);
-    	plotUpdatedByView = (TextView) findViewById(R.id.plotUpdatedBy);
     	plotImageView = (ImageView) findViewById(R.id.plotImage);
     }
 
@@ -537,8 +506,8 @@ public class MainMapActivity extends MapActivity{
     	if (mMap == null) {
     		return;
     	}
-    	
-    	View step1 =findViewById(R.id.addTreeStep1);
+
+    	View step1 = findViewById(R.id.addTreeStep1);
     	View step2 = findViewById(R.id.addTreeStep2);
     	View filterAddButtons = findViewById(R.id.filter_add_buttons);
     	switch (step) {

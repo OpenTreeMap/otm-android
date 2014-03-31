@@ -72,6 +72,9 @@ public class Plot extends Model {
 		plotDetails.put("id", id);
 	}
 	
+	public String getTitle() {
+	    return this.data.optString("title", null);
+	}
 	public long getWidth() throws JSONException {
 		return getLongOrDefault("width", 0l);
 	}
@@ -288,8 +291,8 @@ public class Plot extends Model {
 	}
 
 	public boolean hasTree() {
-		return !data.isNull("tree");
-	}
+		return data.optBoolean("has_tree", false);
+	} 
 
 	public void createTree() throws JSONException {
 		this.setTree(new Tree());
