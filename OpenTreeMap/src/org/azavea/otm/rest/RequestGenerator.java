@@ -103,7 +103,7 @@ public class RequestGenerator {
 
 	
 	private String getInstanceNameUri() {
-		InstanceInfo instance = App.getCurrentInstance();
+		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
 		if (instance != null) {
 			return "/" + instance.getName();
 		}

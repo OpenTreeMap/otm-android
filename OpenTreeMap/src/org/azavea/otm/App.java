@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 public class App extends Application {
 	public static final String LOG_TAG = "AZ_OTM";
 	
-	private static App instance = null;
+	private static App appInstance = null;
 	private static LoginManager loginManager = null;
 	private static FilterManager filterManager = null;
 	private static FieldManager fieldManager = null;
@@ -43,15 +43,15 @@ public class App extends Application {
 	
 	private static AsyncHttpClient asyncHttpClient;
 	
-	public static App getInstance() {
-		checkInstance();
-		return instance;
+	public static App getAppInstance() {
+		checkAppInstance();
+		return appInstance;
 	}
 	
 	public static LoginManager getLoginManager() {
 		if (loginManager == null) {
-			checkInstance();
-			loginManager = new LoginManager(instance);
+			checkAppInstance();
+			loginManager = new LoginManager(appInstance);
 			loginManager.autoLogin();
 		}
 		return loginManager;
@@ -62,11 +62,11 @@ public class App extends Application {
 	 */
 	public static FilterManager getFilterManager() {
 		if (filterManager == null) {
-			checkInstance();
+			checkAppInstance();
 			try {
 				filterManager = new FilterManager(instance);
 			} catch (Exception e) {
-				Toast.makeText(instance, "Unable to access filter manager", 
+				Toast.makeText(appInstance, "Unable to access filter manager", 
 						Toast.LENGTH_LONG).show();
 				Log.e(LOG_TAG, "Unable to create filter manager", e);
 			}
@@ -79,11 +79,11 @@ public class App extends Application {
 	 */
 	public static FieldManager getFieldManager() {
 		if (fieldManager == null) {
-			checkInstance();
+			checkAppInstance();
 			try {
 				fieldManager = new FieldManager(instance);
 			} catch (Exception e) {
-				Toast.makeText(instance, "Unable to access field manager", 
+				Toast.makeText(appInstance, "Unable to access field manager", 
 						Toast.LENGTH_LONG).show();
 				Log.e(LOG_TAG, "Unable to create field manager", e);
 			}
@@ -93,8 +93,8 @@ public class App extends Application {
 	
 	public static SharedPreferences getSharedPreferences() {
 		if (sharedPreferences == null) {
-			checkInstance();
-			sharedPreferences = instance.getSharedPreferences(instance.getString(R.string.app_name), Context.MODE_PRIVATE);
+			checkAppInstance();
+			sharedPreferences = appInstance.getSharedPreferences(appInstance.getString(R.string.app_name), Context.MODE_PRIVATE);
 			// Set-up SharedPreferences if they haven't been set up before
 			setDefaultSharedPreferences(sharedPreferences);
 		}
@@ -105,8 +105,8 @@ public class App extends Application {
 		return pendingEnabled;
 	}
 
-	private static void checkInstance() {
-        if (instance == null)
+	private static void checkAppInstance() {
+        if (appInstance == null)
             throw new IllegalStateException("Application not created yet");
     }
 	
@@ -114,7 +114,7 @@ public class App extends Application {
 	// applications shared-preferences.
 	private static void setDefaultSharedPreferences(SharedPreferences prefs) {
 		Editor editor = prefs.edit();
-		Context context = instance.getApplicationContext();
+		Context context = appInstance.getApplicationContext();
 		editor.putString("base_url", context.getString(R.string.base_url))
 			  .putString("tiler_url", context.getString(R.string.tiler_url))
 			  .putString("plot_feature", context.getString(R.string.plot_feature))
@@ -138,7 +138,7 @@ public class App extends Application {
 	
 	private static void loadPendingStatus() {
 		// Load the pending setting from the included XML resource
-		InputStream filterFile = App.getInstance().getResources().openRawResource(R.raw.configuration);
+		InputStream filterFile = App.getAppInstance().getResources().openRawResource(R.raw.configuration);
 		try {
 			DocumentBuilder xml = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = xml.parse(filterFile);
@@ -156,7 +156,7 @@ public class App extends Application {
 	@Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        appInstance = this;
         // Create an instance of login manager immediately, so that
         // the app can try to auto log in on any saved credentials
         getLoginManager();

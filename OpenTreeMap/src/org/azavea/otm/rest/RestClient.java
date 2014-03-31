@@ -82,7 +82,7 @@ public class RestClient {
 
             Header[] fullHeaders = prepareHeaders(headers);
 
-            client.get(App.getInstance(), reqUrl, fullHeaders, reqParams,
+            client.get(App.getAppInstance(), reqUrl, fullHeaders, reqParams,
                     responseHandler);
         } catch (Exception e) {
             String msg = "Failure making GET request";

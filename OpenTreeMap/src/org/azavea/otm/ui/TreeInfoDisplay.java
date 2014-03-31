@@ -65,7 +65,7 @@ public class TreeInfoDisplay extends TreeDisplay{
     	}
     	catch (Exception e) {
     		Log.e(App.LOG_TAG, "Unable to render tree view", e);
-    		Toast.makeText(App.getInstance(), 
+    		Toast.makeText(App.getAppInstance(), 
     				"Unable to render view for display", Toast.LENGTH_SHORT).show();
     		finish();
     	}

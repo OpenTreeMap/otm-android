@@ -77,7 +77,7 @@ public class Register extends PhotoActivity{
 				alert(R.string.problem_creating_account);
 			}		
 			try {
-				rc.register(App.getInstance(), model, registrationResponseHandler);
+				rc.register(App.getAppInstance(), model, registrationResponseHandler);
 			} catch (Exception e) {
 				Log.e("Register", "exception in rc.addUser");
 				e.printStackTrace();
@@ -95,7 +95,7 @@ public class Register extends PhotoActivity{
 			if (responseIsSuccess(response)) {
 				// TODO, ??? what is the difference between passing in app context versus
 				// activity context?
-				loginManager.logIn(App.getInstance(), username, password, afterLoginSendProfilePictureAndFinish);
+				loginManager.logIn(App.getAppInstance(), username, password, afterLoginSendProfilePictureAndFinish);
 			}else {
 				Log.e("Register", response.toString());
 				alert(R.string.problem_creating_account);
@@ -171,14 +171,14 @@ public class Register extends PhotoActivity{
         .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	startActivity(new Intent(App.getInstance(), TabLayout.class));
+            	startActivity(new Intent(App.getAppInstance(), TabLayout.class));
             }
         })
         .show();
 	};
 	private void alert(int msg) {
 		String s = this.getString(msg);
-		Toast.makeText(App.getInstance(), s, Toast.LENGTH_LONG).show();		
+		Toast.makeText(App.getAppInstance(), s, Toast.LENGTH_LONG).show();		
 	}
 
 	
@@ -219,7 +219,7 @@ public class Register extends PhotoActivity{
 	private void sendProfilePicture() {	
 		RequestGenerator rc = new RequestGenerator();
 		try {
-			rc.addProfilePhoto(App.getInstance(), profilePicture, profilePictureResponseHandler);
+			rc.addProfilePhoto(App.getAppInstance(), profilePicture, profilePictureResponseHandler);
 		} catch (JSONException e) {
 			alert(R.string.problem_setting_profile_picture);
 			Log.e("Register", "Error formulating rc.addProfilePhoto request.");

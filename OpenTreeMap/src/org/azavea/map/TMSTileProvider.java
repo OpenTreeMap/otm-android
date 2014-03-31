@@ -37,7 +37,7 @@ public class TMSTileProvider extends UrlTileProvider {
 	}
 
 	private String formatTileUrl(int zoom, int x, int y) {
-		InstanceInfo instance = App.getCurrentInstance();
+		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
 		String url =  baseUrl + String.format(TILE_FORMAT, instance.getGeoRevId(), 
 				this.featureName, zoom, x, y);
 
