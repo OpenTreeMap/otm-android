@@ -1,19 +1,13 @@
 package org.azavea.otm.ui;
 
 
-import org.azavea.otm.R;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Window;
 import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 public abstract class MapActivity extends android.support.v4.app.FragmentActivity {
 	

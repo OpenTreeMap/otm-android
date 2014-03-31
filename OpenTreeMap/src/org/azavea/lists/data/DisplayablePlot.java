@@ -1,7 +1,6 @@
 package org.azavea.lists.data;
 
 import org.azavea.otm.data.Plot;
-import org.json.JSONException;
 
 public class DisplayablePlot implements DisplayableModel {
 	private Plot plot;

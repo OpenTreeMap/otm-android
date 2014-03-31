@@ -1,18 +1,12 @@
 package org.azavea.otm.ui;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.List;
-import java.util.Stack;
 import java.util.Vector;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.data.PendingEdit;
 import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
-import org.azavea.otm.data.UserType;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,21 +15,15 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.azavea.otm.Field;
 
 public class PendingItemDisplay extends Activity {
 

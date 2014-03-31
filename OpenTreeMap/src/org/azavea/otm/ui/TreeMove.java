@@ -1,39 +1,16 @@
 package org.azavea.otm.ui;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Currency;
-
-import org.azavea.otm.App;
-import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.Tree;
-import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class TreeMove extends TreeDisplay{
     public void onCreate(Bundle savedInstanceState) {

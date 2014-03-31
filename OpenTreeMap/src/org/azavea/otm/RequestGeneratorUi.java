@@ -7,20 +7,13 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
 
 public class RequestGeneratorUi extends Activity {
 	private TextView output;

@@ -7,8 +7,6 @@ import java.util.Date;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.rest.RequestGenerator;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;

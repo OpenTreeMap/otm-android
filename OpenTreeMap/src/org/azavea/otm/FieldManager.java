@@ -3,7 +3,6 @@ package org.azavea.otm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -22,35 +21,38 @@ public class FieldManager {
     // viewing for this application
     private Map<String, JSONObject> baseFields = new HashMap<String, JSONObject>();
 
-    public FieldManager(JSONObject fieldDefinitions, JSONArray displayList) 
-            throws Exception { 
+    public FieldManager(JSONObject fieldDefinitions, JSONArray displayList)
+            throws Exception {
         setBaseFieldDefinitions(fieldDefinitions);
         loadFieldDefinitions(displayList);
     }
 
     public Locale getLocale() {
-        return new Locale(App.getAppInstance().getString(R.string.iso_locale_language),
-                App.getAppInstance().getString(R.string.iso_locale_country));
+        return new Locale(App.getAppInstance().getString(
+                R.string.iso_locale_language), App.getAppInstance().getString(
+                R.string.iso_locale_country));
     }
 
-    private void setBaseFieldDefinitions(JSONObject fieldDefinitions) throws Exception {
+    private void setBaseFieldDefinitions(JSONObject fieldDefinitions)
+            throws Exception {
         try {
             baseFields.clear();
             Iterator<?> keys = fieldDefinitions.keys();
-            while(keys.hasNext()) {
-                String key = (String)keys.next();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
                 baseFields.put(key, fieldDefinitions.getJSONObject(key));
             }
 
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Bad Field Definition", e);
             throw new Exception("Incorrectly configured base field list");
-        } 
+        }
     }
 
     private void loadFieldDefinitions(JSONArray displayData) throws Exception {
         if (this.baseFields.isEmpty()) {
-            throw new Exception("Cannot load field definitions, base fields have not been set");
+            throw new Exception(
+                    "Cannot load field definitions, base fields have not been set");
         }
 
         try {
