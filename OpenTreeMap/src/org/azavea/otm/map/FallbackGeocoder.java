@@ -1,26 +1,16 @@
 package org.azavea.otm.map;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
-import org.azavea.otm.ui.MainMapActivity;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 

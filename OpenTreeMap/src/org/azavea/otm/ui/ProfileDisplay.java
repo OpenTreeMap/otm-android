@@ -10,7 +10,6 @@ import org.azavea.otm.data.EditEntryContainer;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.azavea.views.NotifyingScrollView;
 import org.json.JSONException;
 import org.json.JSONObject;
 

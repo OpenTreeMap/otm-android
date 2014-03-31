@@ -1,9 +1,6 @@
 package org.azavea.otm;
 
 import java.text.NumberFormat;
-import java.util.Locale;
-
-import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 

@@ -1,10 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.azavea.otm.App;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
@@ -21,12 +16,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TreeInfoDisplay extends TreeDisplay{

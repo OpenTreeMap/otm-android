@@ -1,7 +1,5 @@
 package org.azavea.otm.rest;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +14,10 @@ import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;

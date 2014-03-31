@@ -3,8 +3,6 @@ package org.azavea.otm;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 public class NestedJsonAndKey {
 
 	public NestedJsonAndKey(JSONObject json, String key) {
