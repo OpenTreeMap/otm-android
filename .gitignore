@@ -25,5 +25,8 @@ fabfile.pyc
 buildconf.json
 
 extern
-/ExampleApp/.settings/org.eclipse.jdt.core.prefs
-/azavea_android/
+
+# Templated files
+OpenTreeMapSkinned/src/
+OpenTreeMapSkinned/res/
+OpenTreeMapSkinned/AndroidManifest.xml
