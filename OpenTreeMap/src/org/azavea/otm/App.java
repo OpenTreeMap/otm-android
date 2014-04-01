@@ -14,6 +14,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Handler.Callback;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,6 +45,7 @@ public class App extends Application {
 
     private static AsyncHttpClient asyncHttpClient;
 
+    
     public static App getAppInstance() {
         checkAppInstance();
         return appInstance;
@@ -132,31 +135,35 @@ public class App extends Application {
         }
     }
 
-    private void checkAndSetDefaultMapInstance() {
+    private void checkAndSetDefaultMapInstance(final Callback callback) {
         // If an instance was set with the compiled configuration, 
         // this version of the app will always use that instance
         // code.  Otherwise, the instance is selected from those
         // available to the logged in user.
         final String instance = appInstance.getString(R.string.instance_code);
-        if (!TextUtils.isEmpty(instance)) {
-            
-            RequestGenerator rg = new RequestGenerator();
-            rg.getInstanceInfo(instance, 
-                    new RestHandler<InstanceInfo>(new InstanceInfo()) {
+        RestHandler<InstanceInfo> handler = 
+                new RestHandler<InstanceInfo>(new InstanceInfo()) {
 
-                @Override
-                public void onFailure(Throwable e, String message){
-                    Log.e(App.LOG_TAG, "Unable to Load Instance: " + instance, e);
-                    Toast.makeText(appInstance, "Cannot load configured instance.",
-                            Toast.LENGTH_LONG).show();
-                }        	
+            @Override
+            public void onFailure(Throwable e, String message){
+                Log.e(App.LOG_TAG, "Unable to Load Instance: " + instance, e);
+                Toast.makeText(appInstance, "Cannot load configured instance.",
+                        Toast.LENGTH_LONG).show();
+            }        	
 
-                @Override
-                public void dataReceived(InstanceInfo response) {
-                    setCurrentInstance(response);
+            @Override
+            public void dataReceived(InstanceInfo response) {
+                setCurrentInstance(response);
+                if (callback != null) {
+                    callback.handleMessage(null);
                 }
-                
-            });             
+            }
+            
+        };
+
+        if (!TextUtils.isEmpty(instance)) {
+            RequestGenerator rg = new RequestGenerator();
+            rg.getInstanceInfo(instance, handler);             
         }
     }
 
@@ -168,7 +175,7 @@ public class App extends Application {
         // the app can try to auto log in on any saved credentials
         getLoginManager();
         loadPendingStatus();
-        checkAndSetDefaultMapInstance();
+        checkAndSetDefaultMapInstance(null);
     }
 
     public static AsyncHttpClient getAsyncHttpClient() {
@@ -197,20 +204,16 @@ public class App extends Application {
     }
 
     public InstanceInfo getCurrentInstance() {
-        if (currentInstance == null) {
-            checkAndSetDefaultMapInstance();
-        }
         return currentInstance;
     }
 
     public static void setCurrentInstance(InstanceInfo currentInstance) {
         App.currentInstance = currentInstance;
-
         try {
             fieldManager = new FieldManager(currentInstance.getFieldDefinitions(),
                     currentInstance.getDisplayFieldKeys());
             
-            // TODO:  Starting position, colors, filter manager, etc
+            // TODO:  colors, filter manager, etc
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "Unable to create field manager from instance", e);
@@ -218,5 +221,24 @@ public class App extends Application {
                     Toast.LENGTH_LONG).show();
         }
     	
-    }	
+    }
+
+    /**
+     * Callback to ensure the instance has been loaded.
+     * @param callback
+     */
+    public void ensureInstanceLoaded(final Callback callback) {
+        if (currentInstance != null) {
+            callback.handleMessage(null);
+        } else {
+            checkAndSetDefaultMapInstance(new Callback() {
+
+                @Override
+                public boolean handleMessage(Message arg0) {
+                    callback.handleMessage(null);
+                    return true;
+                }});
+        }
+    }
+
 }

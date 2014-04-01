@@ -50,6 +50,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.os.Bundle;
+import android.os.Handler.Callback;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -161,30 +163,43 @@ public class MainMapActivity extends MapActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupLocationUpdating(MainMapActivity.this);
-        START_POS = App.getStartPos();
-        setContentView(R.layout.activity_map_display_2);
-        bindEnterKeyListenerToLocationSearchBar();
-        filterDisplay = (TextView)findViewById(R.id.filterDisplay);
-        setUpMapIfNeeded();
-        plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
-        setPopupViews();
-        clearTileCache();
-        if (plotPopup.getVisibility() == View.VISIBLE) {
-            findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
-        }
+
+        final ProgressDialog dialog = ProgressDialog.show(MainMapActivity.this, "", 
+                "Loading Map Info...", true);    	
+
+        App.getAppInstance().ensureInstanceLoaded(new Callback() {
+
+            @Override
+            public boolean handleMessage(Message arg0) {
+                START_POS = App.getStartPos();
+                setContentView(R.layout.activity_map_display_2);
+                bindEnterKeyListenerToLocationSearchBar();
+                filterDisplay = (TextView)findViewById(R.id.filterDisplay);
+                setUpMapIfNeeded();
+                plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+                setPopupViews();
+                clearTileCache();
+                if (plotPopup.getVisibility() == View.VISIBLE) {
+                    findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+                }
+                dialog.dismiss();
+                return true;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
-        setTreeAddMode(CANCEL);
-        clearTileCache();
-    
-        if (plotPopup.getVisibility() == View.VISIBLE) {
-            findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+        if (App.getAppInstance().getCurrentInstance() != null) {
+            setUpMapIfNeeded();
+            setTreeAddMode(CANCEL);
+            clearTileCache();
+        
+            if (plotPopup.getVisibility() == View.VISIBLE) {
+                findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);	
+            }
         }
-    	
     }
 
     @Override 
