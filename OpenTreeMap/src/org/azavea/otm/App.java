@@ -104,8 +104,6 @@ public class App extends Application {
               .putString("access_key", context.getString(R.string.access_key))
               .putString("secret_key", context.getString(R.string.secret_key))
               .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
-              .putString("start_lat", context.getString(R.string.start_lat))
-              .putString("start_lon", context.getString(R.string.start_lon))
               .putString("search_bbox_lower_left_lat", context.getString(R.string.search_bbox_lower_left_lat))
               .putString("search_bbox_lower_left_lon", context.getString(R.string.search_bbox_lower_left_lon))
               .putString("search_bbox_upper_right_lat", context.getString(R.string.search_bbox_upper_right_lat))
@@ -164,11 +162,12 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
+        checkAndSetDefaultMapInstance();
+
         // Create an instance of login manager immediately, so that
         // the app can try to auto log in on any saved credentials
         getLoginManager();
         loadPendingStatus();
-        checkAndSetDefaultMapInstance();
     }
 
     public static AsyncHttpClient getAsyncHttpClient() {
@@ -188,12 +187,10 @@ public class App extends Application {
     }
     
     public static LatLng getStartPos() {
-        SharedPreferences prefs = getSharedPreferences();
-        String lat = prefs.getString("start_lat", "");//("start_lat", "39.952622");
-        String lon = prefs.getString("start_lon", "");//("start_lon", "-75.165708");
-        double latd = Double.parseDouble(lat);
-        double lond = Double.parseDouble(lon);
-        return new LatLng(latd, lond);
+        InstanceInfo instance = getAppInstance().getCurrentInstance();
+        double lat = instance.getLat();
+        double lon = instance.getLon();
+        return new LatLng(lat, lon);
     }
 
     public InstanceInfo getCurrentInstance() {
