@@ -1,6 +1,5 @@
 package org.azavea.otm;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,23 +7,19 @@ import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.BaseFilter;
+import org.azavea.otm.filters.ChoiceFilter;
+import org.azavea.otm.filters.MissingFilter;
 //import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.json.JSONObject;
 
 import com.loopj.android.http.RequestParams;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler.Callback;
@@ -33,7 +28,6 @@ import android.view.View;
 
 
 public class FilterManager {
-	private Context context;
 	private RequestGenerator request = new RequestGenerator();
 	
 	// All filters loaded from configuration file, set with the latest state
@@ -43,11 +37,10 @@ public class FilterManager {
 	private LinkedHashMap<Integer,Species> species = new LinkedHashMap<Integer,Species>();
 	
 	
-	public FilterManager(Context context) throws Exception {
+	public FilterManager(JSONObject filterDefinitions) throws Exception {
 		Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
-		this.context = context;
 		loadSpeciesList();
-		loadFilterDefinitions();
+		loadFilterDefinitions(filterDefinitions);
 	}
 	
 	public void loadSpeciesList() {} {
@@ -55,11 +48,9 @@ public class FilterManager {
 	}
 	
 	public void loadSpeciesList(final Callback callback) {
-		Log.d(App.LOG_TAG, "Species requested");
 		
 		// If species were already lazy loaded, return immediately
     	if (species.size() > 0 && callback != null) {
-    		Log.d(App.LOG_TAG, "Species list already loaded");
     		handleSpeciesCallback(callback, true);
     		return;
     	}
@@ -70,14 +61,11 @@ public class FilterManager {
 			public void dataReceived(SpeciesContainer container) {
 				try {
 					species = (LinkedHashMap<Integer, Species>) container.getAll();
-					Log.d(App.LOG_TAG, "Species received: " + species.size());
 					if (callback != null) {
 						handleSpeciesCallback(callback, true);
 					}
 				} catch (JSONException e) {
-					//TODO: do we need to do something to notify the user that species weren't retrieved?
-					Log.e(App.LOG_TAG, "Error in Species retrieval: " + e.getMessage());
-					e.printStackTrace();
+					Log.e(App.LOG_TAG, "Error in Species retrieval", e);
 				}
 			}		
 			
@@ -99,49 +87,58 @@ public class FilterManager {
 		callback.handleMessage(resultMessage);
 	}
 	
-	private BaseFilter makeMapFilter(String cqlKey, String nearestPlotKey, String name, String type, 
-			String cqlTrueval, String nearestPlotTrueval, String choice) 
-			throws Exception {
+	private BaseFilter makeMapFilter(String key, String identifier, 
+	        String label, String type, JSONArray choices) throws Exception {
 		
-		if (type.equals("OTMBoolFilter")) {
-			return new BooleanFilter(cqlKey, nearestPlotKey, name, cqlTrueval, nearestPlotTrueval);
-		} else if (type.equals("OTMRangeFilter")) {
-			return new RangeFilter(cqlKey, nearestPlotKey, name);
-		} else if (type.equals("OTMListFilter")) {
-			return new SpeciesFilter(cqlKey, nearestPlotKey, name);
-//		} else if (type.equals("OTMChoiceFilter")) {
-//			return new ChoiceFilter(cqlKey, nearestPlotKey, name, choice);
+		if (type.equals("BOOL")) {
+			return new BooleanFilter(key, identifier, label);
+		} else if (type.equals("RANGE")) {
+			return new RangeFilter(key, identifier, label);
+		} else if (type.equals("SPECIES")) {
+			return new SpeciesFilter(key, identifier, label);
+		} else if (type.equals("MISSING")) {
+		    return new MissingFilter(key, identifier, label);
+		} else if (type.equals("CHOICE")) {
+			return new ChoiceFilter(key, identifier, label, choices);
 		}
 		else {
 			throw new Exception("Invalid filter type defined in config: " + type);
 		}
 	}
 	
-	private void loadFilterDefinitions() throws Exception {
-		// Load the filter definitions from the included XML resource, and parse them 
-		// into filter objects
-		InputStream filterFile = context.getResources().openRawResource(R.raw.configuration);
-		try {
-			DocumentBuilder xml = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = xml.parse(filterFile);
-			NodeList filters = doc.getElementsByTagName("filter");
-			for (int i=0; i < filters.getLength(); i++) {
-				Node filter = filters.item(i);
-				NamedNodeMap attributes = filter.getAttributes();
-				String cqlKey = attributes.getNamedItem("cql_key").getNodeValue();
-				String nearestPlotKey = attributes.getNamedItem("nearest_plot_key").getNodeValue();
-				String name = attributes.getNamedItem("name").getNodeValue();
-				String type = attributes.getNamedItem("type").getNodeValue();
-				
-				String choice = getOptionalNodeValue(attributes, "choice");
-				String cqlTrueval = getOptionalNodeValue(attributes, "cql_trueval");
-				String nearestPlotTrueval = getOptionalNodeValue(attributes, "nearest_plot_trueval");				
-				
-				allFilters.put(cqlKey, makeMapFilter(cqlKey, nearestPlotKey, name, type, cqlTrueval, nearestPlotTrueval, choice));
-			}
-		} catch (Exception e) {
-			throw new Exception("Invalid filter xml file", e);
-		}
+	private void loadFilterDefinitions(JSONObject filterGroups) {
+
+	    loadFilterDef(filterGroups.optJSONArray("standard"), false);
+	    loadFilterDef(filterGroups.optJSONArray("missing"), true);
+	}
+	
+	private void loadFilterDef(JSONArray filterDefs, Boolean isMissing) {
+	    if (filterDefs == null || filterDefs.length() == 0) {
+	        return;
+	    }
+
+	    String keyPrefix = isMissing ? "m:" : "s:";
+
+        for (int i=0; i < filterDefs.length(); i++) {
+            try {
+                JSONObject def = filterDefs.getJSONObject(i);
+                String identifier = def.getString("identifier");
+                String key = keyPrefix + identifier;
+                String label = def.getString("label");
+                String type = def.optString("search_type");
+                if (isMissing) {
+                    type = "MISSING";
+                }
+                JSONArray choices = def.optJSONArray("choices");
+
+                BaseFilter filter = 
+                        makeMapFilter(key, identifier, label, type, choices);
+                allFilters.put(key, filter);
+
+            } catch (Exception e) {
+                Log.e(App.LOG_TAG, "Could not create a filter from def # " + i, e);
+            }
+        }
 	}
 	
 	/**
@@ -222,16 +219,6 @@ public class FilterManager {
 			}
 		}
 		return rp;
-	}
-	
-	
-	private String getOptionalNodeValue(NamedNodeMap attributes, String key) {
-		Node node = attributes.getNamedItem(key);
-		String val = "";
-		if (node != null) {
-			val = node.getNodeValue();
-		}
-		return val;
 	}
 }
 	

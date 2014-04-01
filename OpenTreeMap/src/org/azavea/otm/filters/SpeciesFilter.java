@@ -2,7 +2,6 @@ package org.azavea.otm.filters;
 
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
-import org.json.JSONException;
 
 import com.loopj.android.http.RequestParams;
 
@@ -11,10 +10,10 @@ import android.view.View;
 public class SpeciesFilter extends BaseFilter {
 	public Species species = null;
 	
-	public SpeciesFilter(String cqlKey, String nearestPlotKey, String name) {
-		this.cqlKey = cqlKey;
-		this.nearestPlotKey = nearestPlotKey;
-		this.label = name;	
+	public SpeciesFilter(String key, String identifier, String label) {
+		this.key = key;
+		this.identifier = identifier;
+		this.label = label;	
 	}
 	
 	@Override
@@ -39,24 +38,11 @@ public class SpeciesFilter extends BaseFilter {
 
 	@Override
 	public void addToCqlRequestParams(RequestParams rp) {
-		try {
-			if (isActive()) {
-				rp.put(cqlKey,  ""+ species.getId());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	    // TODO: Not Implemented
 	}
 
 	@Override
 	public void addToNearestPlotRequestParams(RequestParams rp) {
-		try {
-			if (isActive()) {
-				rp.put(nearestPlotKey,  ""+ species.getId());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	    // TODO: Not Implemented
 	}
-	
 }

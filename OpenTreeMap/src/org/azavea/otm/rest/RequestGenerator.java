@@ -77,7 +77,7 @@ public class RequestGenerator {
 	}
 
 	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  ContainerRestHandler<PlotContainer> handler) {
-		String url = getInstanceNameUri() +  "/locations/" + geoY + "," + geoX + "/plots";
+		String url = getInstanceNameUri("/locations/" + geoY + "," + geoX + "/plots");
 
 		try {
 			if (loginManager.isLoggedIn()) {
@@ -108,10 +108,10 @@ public class RequestGenerator {
         client.get(url, null, handler);
 	}
 
-	private String getInstanceNameUri() {
+	private String getInstanceNameUri(String path) {
 		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
 		if (instance != null) {
-			return "/instance/" + instance.getUrlName();
+			return "/instance/" + instance.getUrlName() + "/" + path;
 		}
 		return "";
 	}
@@ -185,7 +185,7 @@ public class RequestGenerator {
 	}
 	
 	public void getAllSpecies(JsonHttpResponseHandler handler) {
-		client.get(getInstanceNameUri() +  "species", null, handler);
+		client.get(getInstanceNameUri("species"), null, handler);
 	}
 
 	public void deleteCurrentTreeOnPlot(Context context, int plotId, JsonHttpResponseHandler handler)

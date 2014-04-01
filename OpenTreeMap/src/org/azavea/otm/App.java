@@ -213,7 +213,9 @@ public class App extends Application {
             fieldManager = new FieldManager(currentInstance.getFieldDefinitions(),
                     currentInstance.getDisplayFieldKeys());
             
-            // TODO:  colors, filter manager, etc
+            filterManager = new FilterManager(currentInstance.getSearchDefinitions());
+
+            // TODO:  colors, etc
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "Unable to create field manager from instance", e);

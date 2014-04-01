@@ -69,4 +69,8 @@ public class InstanceInfo extends Model {
     public JSONObject getFieldDefinitions() {
         return (JSONObject)getField("fields");
     }
+
+    public JSONObject getSearchDefinitions() {
+        return (JSONObject)getField("search");
+    }
 }

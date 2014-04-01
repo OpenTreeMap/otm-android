@@ -12,9 +12,9 @@ public class RangeFilter extends BaseFilter {
 	private double min = DEFAULT;
 	private double max = DEFAULT;
 		
-	public RangeFilter(String cqlKey, String nearestPlotKey, String label) {
-		this.cqlKey = cqlKey;
-		this.nearestPlotKey = nearestPlotKey;
+	public RangeFilter(String key, String identifier, String label) {
+		this.key = key;
+		this.identifier = identifier; 
 		this.label = label;
 	}
 	
@@ -24,24 +24,6 @@ public class RangeFilter extends BaseFilter {
 	
 	public double getMax() {
 		return max;
-	}
-	
-	
-	// diameter_range=2-4.... diameter_range=0-8.... diameter_range=3-9999.....
-	private String queryValue() {
-		String qval = "";
-		if (min > 0) {
-			qval += Double.toString(min); 
-		} else {
-			qval += "0";
-		}
-		qval += "-";
-		if (max > 0) {
-			qval += Double.toString(max);
-		} else {
-			qval += "999999";
-		}
-		return qval;
 	}
 
 	@Override
@@ -75,18 +57,30 @@ public class RangeFilter extends BaseFilter {
 		max = DEFAULT;
 	}
 	
+	// diameter_range=2-4.... diameter_range=0-8.... diameter_range=3-9999.....
+	private String queryValue() {
+		String qval = "";
+		if (min > 0) {
+			qval += Double.toString(min); 
+		} else {
+			qval += "0";
+		}
+		qval += "-";
+		if (max > 0) {
+			qval += Double.toString(max);
+		} else {
+			qval += "999999";
+		}
+		return qval;
+	}
+
 	@Override
 	public void addToCqlRequestParams(RequestParams rp) {
-		rp.put(cqlKey, queryValue());
+	    //TODO Not Implemented
 	}
 	
 	@Override
 	public void addToNearestPlotRequestParams(RequestParams rp) {
-		if (getMin() > 0) {
-			rp.put(nearestPlotKey+"min", Double.toString(getMin()));
-		}
-		if (getMax() > 0) {
-			rp.put(nearestPlotKey+"max", Double.toString(getMax()));
-		}
+	    //TODO Not Implemented
 	}
 }
