@@ -34,7 +34,7 @@ http://developer.android.com/tools/device.html
 
 * clone the OpenTreeMap_Android repo to wherever you store code
 
-* clone the whatever version of the app you plan to develop in lieu of ExampleApp inside this repo
+* Put the appropriate values into the templates in OpenTreeMapSkinned (for more information, see the [OpenTreeMapSkinned README](OpenTreeMapSkinned/README.md))
 
 * The google-play-services library should have been downloaded, include it in your workspace:
   * Click `File > Import`, `Android > Existing Code`
