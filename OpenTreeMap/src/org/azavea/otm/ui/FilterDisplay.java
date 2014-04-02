@@ -8,6 +8,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.filters.BooleanFilter;
+import org.azavea.otm.filters.ChoiceFilter;
 //import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.BaseFilter;
@@ -16,6 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,8 +43,8 @@ public class FilterDisplay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_activity);
 
-        // filter_list = (LinearLayout)findViewById(R.id.filter_list);
-        // createFilterUI(App.getFilterManager().getFilters(), filter_list);
+        filter_list = (LinearLayout) findViewById(R.id.filter_list);
+        createFilterUI(App.getFilterManager().getFilters(), filter_list);
     }
 
     public void onComplete(View view) {
@@ -111,14 +114,14 @@ public class FilterDisplay extends Activity {
                 view = makeRangeFilter((RangeFilter) filter, layout);
             } else if (filter instanceof SpeciesFilter) {
                 view = makeListFilter((SpeciesFilter) filter, layout);
-                // } else if (filter instanceof ChoiceFilter) {
-                // view = makeChoiceFilter((ChoiceFilter)filter, layout);
+            } else if (filter instanceof ChoiceFilter) {
+                view = makeChoiceFilter((ChoiceFilter) filter, layout);
             } else {
                 Log.e(App.LOG_TAG,
                         "Invalid filter specified, unable to create UI");
             }
-            view.setTag(R.id.filter_key, filter.cqlKey); // this is a bit
-                                                         // arbitrary...
+            view.setTag(R.id.filter_key, filter.key); // this is a bit
+                                                      // arbitrary...
             parent.addView(view);
         }
     }
@@ -169,54 +172,60 @@ public class FilterDisplay extends Activity {
         return speciesFilter;
     }
 
-    // private View makeChoiceFilter(final ChoiceFilter filter, LayoutInflater
-    // layout) {
-    // View choiceLayout = layout.inflate(R.layout.filter_choice_control, null);
-    // final Button choiceButton =
-    // (Button)choiceLayout.findViewById(R.id.choice_filter);
-    //
-    // choiceButton.setText(filter.getSelectedLabelText());
-    //
-    // // Tag will hold the default label for clear events
-    // choiceButton.setTag(filter.label);
-    //
-    // choiceButton.setOnClickListener(new OnClickListener() {
-    //
-    // @Override
-    // public void onClick(View v) {
-    // AlertDialog dialog = new AlertDialog.Builder(choiceButton.getContext())
-    // .setTitle(filter.label)
-    // .setSingleChoiceItems(filter.choices.getItems().toArray(new String[0]),
-    // filter.getSelectedIndex(),
-    // new DialogInterface.OnClickListener() {
-    //
-    // @Override
-    // public void onClick(DialogInterface dialog, int which) {
-    // filter.setSelectedIndex(which);
-    // choiceButton.setText(filter.getSelectedLabelText());
-    // dialog.dismiss();
-    // }
-    // })
-    // .create();
-    //
-    // dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Clear", new
-    // DialogInterface.OnClickListener() {
-    //
-    // @Override
-    // public void onClick(DialogInterface dialog, int which) {
-    // filter.setSelectedIndex(-1);
-    // choiceButton.setText(filter.getSelectedLabelText());
-    //
-    // }
-    // });
-    //
-    // dialog.show();
-    //
-    // }
-    // });
-    //
-    // return choiceLayout;
-    // }
+    private View makeChoiceFilter(final ChoiceFilter filter,
+            LayoutInflater layout) {
+
+        View choiceLayout = layout
+                .inflate(R.layout.filter_choice_control, null);
+        final Button choiceButton = (Button) choiceLayout
+                .findViewById(R.id.choice_filter);
+
+        choiceButton.setText(filter.getSelectedLabelText());
+
+        // Tag will hold the default label for clear events
+        choiceButton.setTag(filter.label);
+
+        choiceButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(choiceButton
+                        .getContext())
+                        .setTitle(filter.label)
+                        .setSingleChoiceItems(filter.getChoicesText(),
+                                filter.getSelectedIndex(),
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                            int which) {
+                                        filter.setSelectedIndex(which);
+                                        choiceButton.setText(filter
+                                                .getSelectedLabelText());
+                                        dialog.dismiss();
+                                    }
+                                }).create();
+
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Clear",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                filter.setSelectedIndex(-1);
+                                choiceButton.setText(filter
+                                        .getSelectedLabelText());
+
+                            }
+                        });
+
+                dialog.show();
+
+            }
+        });
+
+        return choiceLayout;
+    }
 
     private void resetSpecies(BaseFilter filter) {
         updateSpecies(filter, null);

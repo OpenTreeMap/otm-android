@@ -1,80 +1,116 @@
-//package org.azavea.otm.filters;
-//
-//import org.azavea.otm.App;
-//import org.azavea.otm.Choices;
-//
-//import android.view.View;
-//
-//import com.loopj.android.http.RequestParams;
-//
-//public class ChoiceFilter extends BaseFilter{
-//	public Choices choices;
-//	private int DEFAULT = -1;
-//	private int selectedIndex = DEFAULT;
-//	
-//	public ChoiceFilter(String cqlKey, String nearestPlotKey, String label, String choiceKey) {
-//		this.cqlKey = cqlKey;
-//		this.nearestPlotKey = nearestPlotKey;
-//		this.label = label;
-//		this.choices = null; //App.getFieldManager().getChoicesByName(choiceKey);
-//	}
-//	
-//	
-//	@Override
-//	public boolean isActive() {
-//		return selectedIndex > DEFAULT; 
-//	}
-//
-//	@Override
-//	public void updateFromView(View view) {}
-//	
-//
-//	@Override
-//	public void clear() {
-//		this.selectedIndex = DEFAULT;
-//	}
-//
-//	@Override
-//	public void addToCqlRequestParams(RequestParams rp) {
-//		// Id of the choice at selected index
-//		int value = choices.getValues().get(selectedIndex);
-//		String typeValue = String.valueOf(value);
-//		if (this.choices.getValueType().equals("bool")) {
-//			typeValue = String.valueOf(value == 1);
-//		}
-//		// API expects <key>_<value>=1: pests_1=1, pests_2=1
-//		rp.put(cqlKey + "_" + value, typeValue);
-//		
-//	}
-//
-//	public Integer getSelectedIndex() {
-//		return this.selectedIndex;
-//	}
-//	
-//	public void setSelectedIndex(Integer index) {
-//		selectedIndex = index;
-//	}
-//	
-//	public String getSelectedValueText() {
-//		if (isActive()) {
-//			return this.choices.getItems().get(this.selectedIndex);
-//		} else { 
-//			return "";
-//		}
-//	}
-//	
-//	public String getSelectedLabelText() {
-//		String labelText = this.label;
-//		if (isActive()) {
-//			labelText += ": " + getSelectedValueText();
-//		}
-//		return labelText;
-//	}
-//
-//
-//	@Override
-//	public void addToNearestPlotRequestParams(RequestParams rp) {
-//		//TODO, I don't think the NP end point supports this filter!
-//	}
-//
-//}
+package org.azavea.otm.filters;
+
+import java.util.ArrayList;
+
+import org.azavea.otm.App;
+import org.azavea.otm.Choice;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+
+import com.loopj.android.http.RequestParams;
+
+public class ChoiceFilter extends BaseFilter {
+    public Choice[] choices;
+    private int DEFAULT = -1;
+    private int selectedIndex = DEFAULT;
+
+    public ChoiceFilter(String key, String identifier, String label,
+            JSONArray choices) {
+        this.key = key;
+        this.identifier = identifier;
+        this.label = label;
+        this.choices = loadChoices(choices);
+    }
+
+    private Choice[] loadChoices(JSONArray choiceDefs) {
+
+        ArrayList<Choice> choices = new ArrayList<Choice>();
+        for (int i = 0; i < choiceDefs.length(); i++) {
+            try {
+                JSONObject c = choiceDefs.getJSONObject(i);
+                String display = c.getString("display_value");
+                String value = c.getString("value");
+
+                choices.add(new Choice(display, value));
+            } catch (JSONException e) {
+                Log.e(App.LOG_TAG, "Improperly configured choices for filter: "
+                        + this.identifier, e);
+                continue;
+            }
+        }
+        // The Android UI doesn't need to display and empty value
+        // which the API often returns as the first item
+        if (TextUtils.isEmpty(choices.get(0).getText())) {
+            choices.remove(0);
+        }
+        return choices.toArray(new Choice[choices.size()]);
+    }
+
+    @Override
+    public boolean isActive() {
+        return selectedIndex > DEFAULT;
+    }
+
+    @Override
+    public void updateFromView(View view) {
+    }
+
+    @Override
+    public void clear() {
+        this.selectedIndex = DEFAULT;
+    }
+
+    @Override
+    public void addToCqlRequestParams(RequestParams rp) {
+        // TODO Not Implemented
+    }
+
+    @Override
+    public void addToNearestPlotRequestParams(RequestParams rp) {
+        // TODO Not Implemented
+    }
+
+    public Integer getSelectedIndex() {
+        return this.selectedIndex;
+    }
+
+    public void setSelectedIndex(Integer index) {
+        selectedIndex = index;
+    }
+
+    public String getSelectedValueText() {
+        String text = "";
+        if (isActive()) {
+            Choice choice = this.choices[this.selectedIndex];
+            if (choice != null) {
+                text = choice.getText();
+            }
+        }
+        return text;
+    }
+
+    public String getSelectedLabelText() {
+        String labelText = this.label;
+        if (isActive()) {
+            labelText += ": " + getSelectedValueText();
+        }
+        return labelText;
+    }
+
+    /**
+     * Get an array of the text of each choice value
+     * 
+     */
+    public CharSequence[] getChoicesText() {
+        String[] texts = new String[this.choices.length];
+        for (int i = 0; i < this.choices.length; i++) {
+            texts[i] = this.choices[i].getText();
+        }
+        return texts;
+    }
+}

@@ -9,25 +9,20 @@ import android.widget.ToggleButton;
 
 public class BooleanFilter extends BaseFilter {
 	public boolean active;
-	private String cqlTrueval = "";
-	private String nearestPlotTrueval = "";
-	
 
-	public BooleanFilter(String cqlKey, String nearestPlotKey, String label, String cqlTrueval, String nearestPlotTrueval) {
-		initialize(cqlKey, nearestPlotKey, label, cqlTrueval, nearestPlotTrueval, false);
+	public BooleanFilter(String key, String identifier, String label) {
+		initialize(key, identifier, label, false);
 	}
 	
-	public BooleanFilter(String cqlKey, String nearestPlotKey, String label, String cqlTrueval, String nearestPlotTrueval, boolean active) {
-		initialize(cqlKey, nearestPlotKey, label, cqlTrueval, nearestPlotTrueval, active);
+	public BooleanFilter(String key, String identifier, String label, boolean active) {
+		initialize(key, identifier, label, active);
 	}
 	
-	private void initialize(String cqlKey, String nearestPlotKey, String label,  String cqlTrueval, String nearestPlotTrueval, boolean active) {
-		this.cqlKey = cqlKey;
-		this.nearestPlotKey = nearestPlotKey;
+	private void initialize(String key, String identifier, String label, boolean active) {
+		this.key = key;
+		this.identifier = identifier;
 		this.active = active;
 		this.label = label;
-		this.cqlTrueval = cqlTrueval;
-		this.nearestPlotTrueval = nearestPlotTrueval;
 	}
 
 	@Override
@@ -47,19 +42,11 @@ public class BooleanFilter extends BaseFilter {
 	
 	@Override
 	public void addToCqlRequestParams(RequestParams rp) {
-		if (cqlTrueval.equals("")) {
-			rp.put(cqlKey, Boolean.toString(active));
-		} else {
-			rp.put(cqlKey,  cqlTrueval);
-		}
+	    // TODO: Not Implemented
 	}
 	
 	public void addToNearestPlotRequestParams(RequestParams rp) {
-		if (nearestPlotTrueval.equals("")) {
-			rp.put(nearestPlotKey, Boolean.toString(active));
-		} else {
-			rp.put(nearestPlotKey, nearestPlotTrueval);
-		}
+	    // TODO: Not Implemented
 	}
 	
 }

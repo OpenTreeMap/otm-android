@@ -5,17 +5,16 @@ import com.loopj.android.http.RequestParams;
 import android.view.View;
 
 public abstract class BaseFilter {
+    /**
+     * A unique, deterministic key for the filter - since the same identifier
+     * can be used in multiple filters (missing, standard).
+     */
+    public String key;
+    
 	/**
-	 * The key for the filter which is used as a query string argument
-	 * (Modulo the 2 end points: CQL and nearest plot.)
+	 * Filter field identifier
 	 */
-	public String cqlKey;
-	public String nearestPlotKey;
-	
-	/**
-	 * The name to display on the filter bar when active
-	 */
-	public String displayName;
+	public String identifier;
 	
 	/**
 	 * The name to display as a filter label
