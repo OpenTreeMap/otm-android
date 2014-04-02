@@ -3,7 +3,6 @@ package org.azavea.otm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -25,12 +24,6 @@ public class FieldManager {
             throws Exception {
         setBaseFieldDefinitions(fieldDefinitions);
         loadFieldDefinitions(displayList);
-    }
-
-    public Locale getLocale() {
-        return new Locale(App.getAppInstance().getString(
-                R.string.iso_locale_language), App.getAppInstance().getString(
-                R.string.iso_locale_country));
     }
 
     private void setBaseFieldDefinitions(JSONObject fieldDefinitions)

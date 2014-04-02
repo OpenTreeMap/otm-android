@@ -82,11 +82,6 @@ public class Field {
     public String format;
     
     /**
-     * Field type as defined in the configuration XML
-     */
-    public String type;
-    
-    /**
      * The keyboard type to use when editing this field
      */
     public String keyboardResource = "text";
@@ -106,19 +101,24 @@ public class Field {
     public boolean editViewOnly = false;
     
     protected Field(String key, String label, boolean canEdit, String keyboard, 
-            String format, String type, JSONArray choices, String owner, 
-            String infoUrl,    boolean editViewOnly, String units, int digits) {
+            String format, JSONArray choices, String owner, 
+            String infoUrl, boolean editViewOnly, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
         this.keyboardResource = keyboard;
         this.format = format;
-        this.type = type;
         this.owner = owner;
         this.infoUrl = infoUrl;
         this.editViewOnly = editViewOnly;
         this.unitText = units;
         this.digits = digits;
+    }
+    
+    protected Field(String key, String label) {
+        this.key = key;
+        this.label = label;
+        this.canEdit = false;
     }
     
     public static Field makeField(JSONObject fieldDef) {
@@ -132,12 +132,8 @@ public class Field {
         String units = fieldDef.optString("units");
         int digits = fieldDef.optInt("digits");
     	
-        // Eco?
-        String type = "";
-    	
-        String owner = "";
-
         // tree.species gets special rendering rules
+        String owner = "";
         if (key.equals(TREE_SPECIES)) {
             owner = TREE_SPECIES;
             format = "string";
@@ -147,12 +143,8 @@ public class Field {
         String infoUrl = fieldDef.optString("info_url");
         boolean editViewOnly = false;
 
-        if (type != null && type.equals("eco")) {
-            return new EcoField(key, label, canEdit, keyboardResource, format, type);
-        } else {
-            return new Field(key, label, canEdit, keyboardResource, format, 
-                    type, choices, owner, infoUrl, editViewOnly, units, digits);
-        }
+        return new Field(key, label, canEdit, keyboardResource, format, 
+                choices, owner, infoUrl, editViewOnly, units, digits);
     }
     
     /* 

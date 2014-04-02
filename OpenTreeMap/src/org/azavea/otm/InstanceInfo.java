@@ -73,4 +73,13 @@ public class InstanceInfo extends Model {
     public JSONObject getSearchDefinitions() {
         return (JSONObject) getField("search");
     }
+
+    public JSONArray getEcoFields() {
+        JSONObject eco = this.data.optJSONObject("eco");
+        if (eco != null && eco.optBoolean("supportsEcoBenefits")) {
+            JSONArray benefits = eco.optJSONArray("benefits");
+            return benefits;
+        }
+        return null;
+    }
 }

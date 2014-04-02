@@ -105,4 +105,7 @@
 	<string name="default_measure_units">in</string>
 	
 	<string name="search_field_hint">search location</string>
+	
+	<string name="eco_fieldgroup_header">Yearly Ecosystem Services</string>
+	<string name="eco_currencey_saved_text">saved</string>
 </resources>

@@ -110,6 +110,9 @@ public class RequestGenerator {
 
 	private String getInstanceNameUri(String path) {
 		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
+		if (path.charAt(0) == '/') {
+		    path = path.substring(1);
+		}
 		if (instance != null) {
 			return "/instance/" + instance.getUrlName() + "/" + path;
 		}

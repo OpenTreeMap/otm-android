@@ -23,8 +23,8 @@ public class FieldGroup {
 	private Map<String,Field> fields = new LinkedHashMap<String, Field>();
 	private enum DisplayMode { VIEW, EDIT};
 	
-	public FieldGroup() {
-		this.title = "";
+	public FieldGroup(String title) {
+		this.title = title;
 	}
 
 	public FieldGroup(JSONObject groupDefinition, 

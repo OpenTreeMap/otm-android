@@ -1,10 +1,13 @@
 package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
+import org.azavea.otm.EcoField;
+import org.azavea.otm.Field;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +46,6 @@ public class TreeInfoDisplay extends TreeDisplay{
             fieldList.removeAllViewsInLayout();
             LayoutInflater layout = ((Activity)this).getLayoutInflater();
     
-    		Log.d(App.LOG_TAG, "Setting header values");
     		setHeaderValues(plot);
     		showPositionOnMap();
     		for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
@@ -52,7 +54,14 @@ public class TreeInfoDisplay extends TreeDisplay{
     				fieldList.addView(fieldGroup);
     			}
     		}
-    		
+
+            // Eco benefit fields are not defined on the instance, but directly
+            // on the plot.  Create and render a field group on the fly
+    		View ecoFields = createEcoGroup(plot, layout);
+    		if (ecoFields != null) {
+    		    fieldList.addView(ecoFields);
+    		}
+
     		showImage(plot);
     	}
     	catch (Exception e) {
@@ -61,9 +70,32 @@ public class TreeInfoDisplay extends TreeDisplay{
     				"Unable to render view for display", Toast.LENGTH_SHORT).show();
     		finish();
     	}
-        
+
     }
-   
+    
+    private View createEcoGroup(Plot plot, LayoutInflater layout) {
+
+        View ecoDisplay = null;
+        FieldGroup ecoGroup = new FieldGroup(getString(R.string.eco_fieldgroup_header));
+        JSONObject benefits = (JSONObject)plot.getField("benefits");
+        if (benefits != null) {
+            JSONArray eco = benefits.optJSONArray("plot");
+            if (eco != null) {
+                for (int i=0; i<eco.length(); i++) {
+                    JSONObject ecoField = eco.optJSONObject(i);
+                    if (ecoField != null) {
+                        ecoGroup.addField((Field)new EcoField(ecoField));
+                    }
+                }
+
+                ecoDisplay = ecoGroup.renderForDisplay(layout, plot,
+                        TreeInfoDisplay.this);
+            }
+        }
+
+        return ecoDisplay;
+    }
+
 	private void setHeaderValues(Plot plot) {
 		try {
 			setText(R.id.address, plot.getAddressStreet());
