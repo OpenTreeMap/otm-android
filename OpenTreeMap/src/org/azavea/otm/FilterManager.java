@@ -42,9 +42,6 @@ public class FilterManager {
     }
 
     public void loadSpeciesList() {
-    }
-
-    {
         loadSpeciesList(null);
     }
 

@@ -481,7 +481,7 @@ public class TreeEditDisplay extends TreeDisplay {
 			if (addMode()) {
 				rg.addTree(App.getAppInstance(), plot, responseHandler);
 			} else {			
-				rg.updatePlot(App.getAppInstance(), plot.getId(), plot, responseHandler);
+				rg.updatePlot(plot.getId(), plot, responseHandler);
 			}
 		} catch (Exception e) {
 			Log.e(App.LOG_TAG, "Could not save edited plot info", e);
@@ -565,7 +565,7 @@ public class TreeEditDisplay extends TreeDisplay {
 		  	case TREE_MOVE:
 		  		if (resultCode == Activity.RESULT_OK) {
 				  	try {
-						plot.setData(new JSONObject(data.getStringExtra("plot")));
+						plot.setupPlot(new JSONObject(data.getStringExtra("plot")));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

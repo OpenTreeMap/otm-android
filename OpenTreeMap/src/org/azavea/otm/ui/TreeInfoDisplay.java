@@ -155,9 +155,15 @@ public class TreeInfoDisplay extends TreeDisplay{
 	  				// The plot has been edited, reload the info page
 	  				plot = new Plot();
 	  				try {
-						plot.setData(new JSONObject(plotJSON));
+						plot.setupPlot(new JSONObject(plotJSON));
 						loadPlotInfo();
 						
+						// Updating may have changed the georev
+						App.getAppInstance().getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
+						
+                        plotLocation = getPlotLocation(plot);
+						showPositionOnMap();
+
 						// Pass along the updated plot
 						Intent updatedPlot = new Intent();
 						updatedPlot.putExtra("plot", plotJSON);

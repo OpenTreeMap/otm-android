@@ -1,6 +1,7 @@
 package org.azavea.otm;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +37,14 @@ import android.widget.Toast;
 
 public class Field {
     private static final String TREE_SPECIES = "tree.species";
+    private static final Object TREE_DIAMETER = "tree.diameter";
 
-    // Any choices associated with this field, keyed by value
-    private Map<Integer,Choice> choiceMap;
-    
-    // If this field has a choice list, these are the strings to display as choices
-    private ArrayList<String> choiceItems = new ArrayList<String>();
-    
-    // If this field has a choice list, these are the integer values 
-    // associated with the choice
-    private ArrayList<Integer> choiceValues = new ArrayList<Integer>();
+    // Any choices associated with this field, keyed by value with order preserved
+    private Map<String,Choice> choiceMap = new LinkedHashMap<String, Choice>();
+   
+    // The order of values loaded into selection panel.  Used to map index to keys in ChoiceMap 
+    private ArrayList<String> choiceSelectionIndex = new ArrayList<String>();
+    private ArrayList<String> choiceDisplayValues = new ArrayList<String>();
     
     // This is the view control, either button or EditText, which has the user value
     private View valueView = null;
@@ -82,11 +81,6 @@ public class Field {
     public String format;
     
     /**
-     * The keyboard type to use when editing this field
-     */
-    public String keyboardResource = "text";
-
-    /**
      * List of key/val pairs of choice options for this field 
      */
     public JSONArray choicesDef = null;
@@ -100,19 +94,32 @@ public class Field {
     
     public boolean editViewOnly = false;
     
-    protected Field(String key, String label, boolean canEdit, String keyboard, 
+    protected Field(String key, String label, boolean canEdit, 
             String format, JSONArray choices, String owner, 
             String infoUrl, boolean editViewOnly, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
-        this.keyboardResource = keyboard;
         this.format = format;
         this.owner = owner;
         this.infoUrl = infoUrl;
         this.editViewOnly = editViewOnly;
         this.unitText = units;
         this.digits = digits;
+       
+        if (choices != null) {
+            for (int i=0; i<choices.length(); i++) {
+                JSONObject choiceDef = choices.optJSONObject(i);
+                Choice choice = new Choice(choiceDef.optString("display_value"), 
+                        choiceDef.optString("value"));
+                
+                // Dialog choice lists take only an array of strings,
+                // and we must later get value by selection index
+                choiceMap.put(choice.getValue(), choice);
+                choiceSelectionIndex.add(choice.getValue());
+                choiceDisplayValues.add(choice.getText());
+            }
+        }
     }
     
     protected Field(String key, String label) {
@@ -127,7 +134,6 @@ public class Field {
         String label = fieldDef.optString("display_name");
         boolean canEdit = fieldDef.optBoolean("can_write");
         String format = fieldDef.optString("data_type");
-        String keyboardResource = format == "double" ? "numberDecimal" : "text";
         JSONArray choices = fieldDef.optJSONArray("choices");
         String units = fieldDef.optString("units");
         int digits = fieldDef.optInt("digits");
@@ -136,14 +142,13 @@ public class Field {
         String owner = "";
         if (key.equals(TREE_SPECIES)) {
             owner = TREE_SPECIES;
-            format = "string";
         }
     	
         // NOTE: Not enabled for OTM2 yet
         String infoUrl = fieldDef.optString("info_url");
         boolean editViewOnly = false;
 
-        return new Field(key, label, canEdit, keyboardResource, format, 
+        return new Field(key, label, canEdit, format, 
                 choices, owner, infoUrl, editViewOnly, units, digits);
     }
     
@@ -152,7 +157,6 @@ public class Field {
      */	
     public View renderForDisplay(LayoutInflater layout, Plot model, Context context) 
             throws JSONException {
-        loadChoices();
     	
         // our ui elements
         View container = layout.inflate(R.layout.plot_field_row, null);
@@ -165,7 +169,7 @@ public class Field {
             return renderSpeciesFields(layout, model, context, container,
                     label, fieldValue);
         }
-
+        
         //set the label (simple)
         label.setText(this.label);
 
@@ -242,7 +246,6 @@ public class Field {
             throws JSONException {
     	
         View container = null;
-        loadChoices();
     	
         if (this.canEdit) {
             container = layout.inflate(R.layout.plot_field_edit_row, null);
@@ -251,20 +254,22 @@ public class Field {
             ((TextView)container.findViewById(R.id.field_label)).setText(this.label);
             EditText edit = (EditText)container.findViewById(R.id.field_value);
             Button choiceButton = (Button)container.findViewById(R.id.choice_select);
+            TextView unitLabel = ((TextView)container.findViewById(R.id.field_unit));
             
             // Show the correct type of input for this field
-            if (this.choiceItems != null) {
+            if (this.choiceMap.size() > 0 ) {
                 edit.setVisibility(View.GONE);
+                unitLabel.setVisibility(View.GONE);
                 choiceButton.setVisibility(View.VISIBLE);
                 this.valueView = choiceButton;
                 setupChoiceDisplay(choiceButton, value);
             	
-            } else if (this.owner != null) {
+            } else if (!TextUtils.isEmpty(this.owner)) {
                 edit.setVisibility(View.GONE);
+                unitLabel.setVisibility(View.GONE);
                 choiceButton.setVisibility(View.VISIBLE);
                 this.valueView = choiceButton;
                 setupOwnedField(choiceButton, value, model);
-            	
             } else {
                 String safeValue = (value != null && !value.equals(null)) 
                         ? value.toString() : ""; 
@@ -272,18 +277,15 @@ public class Field {
                 choiceButton.setVisibility(View.GONE);
                 edit.setText(safeValue);
                 this.valueView = edit;
-            	
-                if (this.keyboardResource != null) {
+                unitLabel.setText(this.unitText);
+
+                if (this.format != null) {
                     setFieldKeyboard(edit); 
                 }
             	
                 // Special case for tree diameter.  Make a synced circumference field
-                if (this.key.equals("dynamic-circumference")) {
-                    container.setId(R.id.dynamic_circumference);
-                	
-                } else if (this.key.equals("tree.dbh")) {
-                    container.setId(R.id.dynamic_dbh);
-                	
+                if (this.key.equals(TREE_DIAMETER)){
+                    return makeDynamicDbhFields(layout, context, container);
                 }
             }
         }
@@ -291,26 +293,44 @@ public class Field {
         return container;
     }
 
+    /**
+     * Explode tree.diameter to include a circumference field which can
+     * update each other
+     */
+    private View makeDynamicDbhFields(LayoutInflater layout, Context context,
+            View container) {
+        container.setId(R.id.dynamic_dbh);
+        View circ = layout.inflate(R.layout.plot_field_edit_row, null);
+
+        circ.setId(R.id.dynamic_circumference);
+        circ.findViewById(R.id.choice_select).setVisibility(View.GONE);
+        ((TextView)circ.findViewById(R.id.field_label))
+            .setText(R.string.circumference_label);
+        setFieldKeyboard((EditText)circ.findViewById(R.id.field_value));
+        ((TextView)container.findViewById(R.id.field_unit)).setText(this.unitText);
+
+        LinearLayout dynamicDbh = new LinearLayout(context);
+        dynamicDbh.setOrientation(LinearLayout.VERTICAL);
+        dynamicDbh.addView(container);
+        dynamicDbh.addView(circ);
+        return dynamicDbh;
+    }
+
     private void setupOwnedField(Button choiceButton, Object value, Model model) {
         if (this.owner.equals(TREE_SPECIES)) {
             JSONObject json  = model.getData();
-            Object speciesId = getValueForKey(this.owner, json);
+            Object species = getValueForKey(this.owner, json);
         	
-            if (speciesId != null) {
+            if (!species.equals(null)) {
                 // Set the button text to the common and sci name, which should be there
                 // if a species Id is set.  We can grab these straight from the tree object
                 // since the species list may still be loading
-                String sciName = (String)getValueForKey("tree.sci_name", json);
-                String commonName = "";
-                try {
-                    commonName = (String)getValueForKey("tree.species_name", json);
-                } catch (Exception e) {
-                    // GL #337 not consistently getting back the same species_name data
-                    // for trees without species. seems like it can either be null or the
-                    //entire key not present.
-                    e.printStackTrace();
-            	}
+                String sciName = (String)getValueForKey("tree.species.scientific_name", json);
+                String commonName = (String)getValueForKey("tree.species.common_name", json);
                 choiceButton.setText(commonName + "\n" + sciName);
+                Species speciesValue = new Species();
+                speciesValue.setData((JSONObject)species);
+                this.setValue(speciesValue);
             } else {
                 choiceButton.setText(R.string.unspecified_field_value);
         	}
@@ -326,25 +346,13 @@ public class Field {
         }
     }
 
-    private void loadChoices() {
-//        Choices choices = App.getFieldManager().getChoicesByName(this.choiceName);
-//        if (choices != null && !choices.equals(null)) {
-//            this.choiceMap = choices.getChoices();
-//            this.choiceItems = choices.getItems();
-//            this.choiceValues = choices.getValues();
-//        }
-    }
-
-    
     private void setupChoiceDisplay(final Button choiceButton, Object value) {
     	
         choiceButton.setText(R.string.unspecified_field_value);
-        final int v = (value == null || value.equals(null) || value.equals("")) 
-                ? -1 : Integer.parseInt(value.toString()); 
     	
-        if (value != null) {
-            Choice currentChoice = choiceMap.get(v);
-            if (currentChoice != null) {
+        if (!value.equals(null)) {
+            Choice currentChoice = choiceMap.get(value);
+            if (!currentChoice.equals(null)) {
                 choiceButton.setText(currentChoice.getText());
         	}
         }
@@ -365,19 +373,23 @@ public class Field {
                 int checkedChoiceIndex = -1;
 
                 if (currentValue != null && !currentValue.equals(null)) {
-                    int val = Integer.parseInt(currentValue.toString());					
-                    checkedChoiceIndex = editedField.choiceValues.indexOf(val);
+                    checkedChoiceIndex = editedField.choiceSelectionIndex.indexOf(currentValue);
             	} 
 
                 new AlertDialog.Builder(choiceButton.getContext())
                     .setTitle(editedField.label)
-                    .setSingleChoiceItems(editedField.choiceItems.toArray(new String[0]), checkedChoiceIndex, 
+                    .setSingleChoiceItems(editedField.choiceDisplayValues.toArray(new String[0]), checkedChoiceIndex, 
                             new DialogInterface.OnClickListener() {
             			
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                choiceButton.setText(editedField.choiceItems.get(which));
-                                choiceButton.setTag(R.id.choice_button_value_tag, editedField.choiceValues.get(which));
+                                String displayText = editedField.choiceDisplayValues.get(which);
+                                if (TextUtils.isEmpty(displayText)) {
+                                    choiceButton.setText(R.string.unspecified_field_value);
+                                } else {
+                                    choiceButton.setText(displayText);
+                                }
+                                choiceButton.setTag(R.id.choice_button_value_tag, editedField.choiceSelectionIndex.get(which));
                                 dialog.dismiss();
                 			}
                 		})
@@ -387,14 +399,14 @@ public class Field {
     }
 
     private void setFieldKeyboard(EditText edit) {
-        if (this.keyboardResource.equals("numberDecimal")) {
+        if (this.format.equals("float")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        } else if (this.keyboardResource.equalsIgnoreCase("number")) {
+        } else if (this.format.equalsIgnoreCase("int")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else if (this.keyboardResource.equalsIgnoreCase("text")) {
-            edit.setInputType(InputType.TYPE_CLASS_TEXT);
-        } else if (this.keyboardResource.equalsIgnoreCase("dateTime")) {
+        } else if (this.format.equalsIgnoreCase("dateTime")) {
             edit.setInputType(InputType.TYPE_CLASS_DATETIME);
+        } else {
+            edit.setInputType(InputType.TYPE_CLASS_TEXT);
         }
     }
     
@@ -410,8 +422,7 @@ public class Field {
         if (hasChoices()) {
             // If there are choices for this field, display the choice
             // text, not the value
-            int v = Integer.parseInt(value.toString());
-            Choice choice = this.choiceMap.get(v);
+            Choice choice = this.choiceMap.get(value);
             if (choice != null) {
                 return choice.getText();
         	}
@@ -527,7 +538,7 @@ public class Field {
             // If this field is owned by another field, save the current
             // value to the owner, not to the displayed field
             String updateKey = this.key;
-            if (this.owner != null) {
+            if (!TextUtils.isEmpty(this.owner)) {
                 updateKey = this.owner;
             } 
             // If the model doesn't have they key, add it.  This creates
@@ -538,7 +549,7 @@ public class Field {
                     && currentValue != null) {
                 p.createTree();
         	}
-
+            
             setValueForKey(updateKey, model.getData(), currentValue);
         }
     }
@@ -547,16 +558,16 @@ public class Field {
         if (this.valueView != null) {
             // For proper JSON encoding of types, we'll use the keyboard type
             // to cast the edited value to the desired Java type.  Choice buttons
-            // are assumed to always be int
+            // are assumed to always be strings
         	
             if (this.valueView instanceof EditText) {
                 EditText text = (EditText)valueView;
-                if (hasNoValue(text.getText().toString())) {
+                if (TextUtils.isEmpty((text.getText().toString()))) {
                     return null;
             	}
         		
                 int inputType = text.getInputType();
-        		
+
                 if ((inputType & InputType.TYPE_CLASS_TEXT) == InputType.TYPE_CLASS_TEXT) {
                     return text.getText().toString();
             		
@@ -572,9 +583,13 @@ public class Field {
         		
             } else if (this.valueView instanceof Button) {
                 Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
-                if (choiceVal != null && !choiceVal.equals(null) && !choiceVal.equals("")) {
-                    return Integer.parseInt(choiceVal.toString());
+                
+                if (choiceVal == null || choiceVal.equals(null) || 
+                        TextUtils.isEmpty(choiceVal.toString())) {
+                    return null;
             	}
+                
+                return choiceVal;
         		
             } else {
                 throw new Exception("Unknown ValueView type for field editing");
@@ -582,14 +597,6 @@ public class Field {
         } 
         return null;
     	
-    }
-
-    /**
-     * Check if the value of an edit text has any kind of value
-     * 
-     */
-    private boolean hasNoValue(String text) {
-        return text.equals(null) || text == null || text.trim().equals("");
     }
 
     public void attachClickListener(OnClickListener speciesClickListener) {
@@ -605,28 +612,19 @@ public class Field {
      */
     public void setValue(Object value) {
         if (this.owner != null && this.owner.equals(TREE_SPECIES)) {
-        	
-            try {
-                Species species = (Species)value;
-        		
-                if (this.valueView != null) {
-        		
-                    Button speciesButton = (Button)this.valueView;
-        		
-                    if (species != null) {
-            			
-                        speciesButton.setTag(R.id.choice_button_value_tag, species.getId());
-                        String label = species.getCommonName() + "\n" + species.getScientificName();
-                        speciesButton.setText(label);
-        		
-            		}
-            	}
-        		
-            } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Unable to set new species on tree", e);
-                Toast.makeText(App.getAppInstance(), "Unable to set new species on tree", 
-                        Toast.LENGTH_LONG).show();
-        	}
+            Species species = (Species)value;
+            
+            if (this.valueView != null) {
+            
+                Button speciesButton = (Button)this.valueView;
+            
+                if (species != null) {
+                    
+                    speciesButton.setTag(R.id.choice_button_value_tag, species.getData());
+                    String label = species.getCommonName() + "\n" + species.getScientificName();
+                    speciesButton.setText(label);
+                }
+            }
         }
     }
     

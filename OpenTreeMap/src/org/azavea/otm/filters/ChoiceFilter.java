@@ -65,7 +65,7 @@ public class ChoiceFilter extends BaseFilter {
 
     @Override
     public JSONObject getFilterObject() {
-        return buildNestedFilter(this.identifier, "IS", choices[this.selectedIndex].getId());
+        return buildNestedFilter(this.identifier, "IS", choices[this.selectedIndex].getValue());
     }
 
     public Integer getSelectedIndex() {

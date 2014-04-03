@@ -1,7 +1,6 @@
 package org.azavea.otm.rest;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,7 +23,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Base64;
 import android.util.Log;
-import android.webkit.URLUtil;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -185,7 +183,7 @@ public class RestClient {
             throws UnsupportedEncodingException {
 
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        String body = model.getData().toString().substring(0);
+        String body = model.getData().toString();
 
         put(url, id, new ArrayList<Header>(Arrays.asList(headers)), 
                 body, response);
@@ -197,7 +195,7 @@ public class RestClient {
             throws UnsupportedEncodingException {
 
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        String body = model.getData().toString().substring(0);
+        String body = model.getData().toString();
 
         put(url, -1, new ArrayList<Header>(Arrays.asList(headers)), 
                 body, response);
