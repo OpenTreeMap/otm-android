@@ -146,11 +146,11 @@ public class RequestGenerator {
 		}		
 	}
 	
-	public void updatePlot(Context context, int id, Plot plot, 
+	public void updatePlot(int id, Plot plot, 
 			AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
 		if (loginManager.isLoggedIn()) {
 			try {
-				client.putWithAuthentication(context, "/plots/", 
+				client.putWithAuthentication(getInstanceNameUri("plots/"), 
 						loginManager.loggedInUser.getUserName(), 
 						loginManager.loggedInUser.getPassword(), id, plot, handler);
 			} catch (JSONException e) {
@@ -223,13 +223,14 @@ public class RequestGenerator {
 		
 	}
 	
-	public void changePassword(Context context, String newPassword, JsonHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException {
+	public void changePassword(Context context, String newPassword, JsonHttpResponseHandler handler) 
+	        throws JSONException, UnsupportedEncodingException {
 		Model password = new Password(newPassword);
 	
-		client.putWithAuthentication(context, 
-				"/user/" + loginManager.loggedInUser.getId() + "/password", 
+		client.putWithAuthentication("/user/" + loginManager.loggedInUser.getId() + "/password", 
 				loginManager.loggedInUser.getUserName(), 
-				loginManager.loggedInUser.getPassword(),  password, handler);
+				loginManager.loggedInUser.getPassword(),  
+				password, handler);
 	}
 	
 	private void handleBadResponse(JSONException e) {

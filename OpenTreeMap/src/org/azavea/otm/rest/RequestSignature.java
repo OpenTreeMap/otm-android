@@ -34,13 +34,13 @@ public class RequestSignature {
      * This assumes that the URL has been constructed with the access key and
      * the timestamp already appended.
      */
-    public String getSignature(String verb, String url, RequestParams params)
-            throws Exception {
+    public String getSignature(String verb, String url, RequestParams params, 
+            String body) throws Exception {
         // Add the params to the existing query string arguments, or add as new
         String separator = url.contains("?") ? "&" : "?";
         url += separator + params.toString();
 
-        return getSignature(verb, url, "");
+        return getSignature(verb, url, body);
     }
 
     /**
@@ -75,19 +75,30 @@ public class RequestSignature {
         String sortedQuery = TextUtils.join("&", query);
 
         String payload = verb + "\n" + hostWithPort + "\n" + path + "\n"
-                + sortedQuery + body;
+                + sortedQuery + Base64.encodeToString(body.getBytes("UTF-8"), Base64.NO_WRAP);
 
         String signature = calculateHMAC(payload);
         return signature;
     }
-
+    
     /**
      * Generate HMAC API signature header to include in all requests
      */
     public Header getSignatureHeader(String verb, String url,
             RequestParams params) throws Exception {
+        return getSignatureHeader(verb, url, params, "");
+    }
 
-        String sig = getSignature(verb, url, params);
+    public Header getSignatureHeader(String verb, String url,
+            String body) throws Exception {
+        String sig = getSignature(verb, url, body);
+        return new BasicHeader("X-Signature", sig);
+    }
+
+    public Header getSignatureHeader(String verb, String url,
+            RequestParams params, String body) throws Exception {
+
+        String sig = getSignature(verb, url, params, body);
         return new BasicHeader("X-Signature", sig);
     }
 

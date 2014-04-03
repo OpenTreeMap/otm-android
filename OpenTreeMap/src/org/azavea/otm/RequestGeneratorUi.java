@@ -73,7 +73,7 @@ public class RequestGeneratorUi extends Activity {
     	//plot.setPowerlineConflictPotential("5");
     	plot.setWidth(plot.getWidth()+1);
     	try {
-    		rg.updatePlot(this, 329, plot, new RestHandler<Plot>(new Plot()) {
+    		rg.updatePlot(329, plot, new RestHandler<Plot>(new Plot()) {
     			@Override
     			public void onSuccess(String resp) {
     				Log.d(App.LOG_TAG, resp);
