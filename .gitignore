@@ -14,9 +14,7 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
-OpenTreeMap/project.properties
 OpenTreeMapTests/.classpath
-OpenTreeMapTests/project.properties
 
 # Mac file cruft
 .DS_Store
@@ -25,5 +23,8 @@ fabfile.pyc
 buildconf.json
 
 extern
-/ExampleApp/.settings/org.eclipse.jdt.core.prefs
-/azavea_android/
+
+# Templated files
+OpenTreeMapSkinned/src/
+OpenTreeMapSkinned/res/
+OpenTreeMapSkinned/AndroidManifest.xml

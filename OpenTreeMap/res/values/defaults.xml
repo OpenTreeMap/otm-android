@@ -15,8 +15,6 @@
     <string name="secret_key">override in child app</string>
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
-    <string name="start_lat">39.952622</string>
-    <string name="start_lon">-75.165708</string>
     <string name="tree_highlight_layer">tree_search</string>
     <string name="tree_highlight_style">tree_highlight</string>
     <string name="search_bbox_lower_left_lat">39.56970506644249</string>
