@@ -60,7 +60,7 @@ public class RequestSignature {
         String path = uri.getPath();
 
         // Signature is generated against query arguments sorted by key
-        String[] query = uri.getQuery().split("&");
+        String[] query = uri.getQuery() != null ? uri.getQuery().split("&") : new String[] {};
         Arrays.sort(query);
 
         // The value of each query param must be URLEncoded, which isn't
