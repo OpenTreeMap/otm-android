@@ -74,7 +74,6 @@ public class RestClient {
 
     private void get(String url, RequestParams params,
             ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
-        
         if (headers == null) {
             headers = new ArrayList<Header>();
         }
