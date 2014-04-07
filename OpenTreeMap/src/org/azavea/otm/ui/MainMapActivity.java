@@ -377,11 +377,10 @@ public class MainMapActivity extends MapActivity{
             boundaryTileOverlay = mMap.addTileOverlay(
                     new TileOverlayOptions().tileProvider(boundaryTileProvider).zIndex(0));
 
-            // Canopy layer shows all trees, is always on, but is 'dimmed'
-            // while a filter is active
-            canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
-            //canopyTileOverlay = mMap.addTileOverlay(
-            //        new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
+            // Canopy layer shows all trees, is always on, but is 'dimmed' while a filter is active
+            canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature, 128);
+            canopyTileOverlay = mMap.addTileOverlay(
+                    new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
 
             // Set up the filter layer
             filterTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
@@ -396,7 +395,6 @@ public class MainMapActivity extends MapActivity{
         } catch (Exception e) {
             // TODO: Toast
         }
-
     }
 
 
