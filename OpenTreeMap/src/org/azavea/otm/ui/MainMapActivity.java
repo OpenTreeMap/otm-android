@@ -22,6 +22,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.azavea.map.FilterableTMSTileProvider;
 import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -84,8 +85,7 @@ public class MainMapActivity extends MapActivity{
     private GoogleMap mMap;
     private TextView filterDisplay;
 
-    TMSTileProvider filterTileProvider;
-    TMSTileProvider canopyTileProvider;
+    FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
@@ -372,6 +372,7 @@ public class MainMapActivity extends MapActivity{
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
         TileProvider boundaryTileProvider;
+        TileProvider canopyTileProvider;
         try {
             boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
             boundaryTileOverlay = mMap.addTileOverlay(
@@ -383,7 +384,7 @@ public class MainMapActivity extends MapActivity{
                     new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
 
             // Set up the filter layer
-            filterTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
+            filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
             filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
             filterTileProvider.setRangeParameter("tree.diameter", "50", "1001");
 

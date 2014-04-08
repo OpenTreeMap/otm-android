@@ -3,21 +3,22 @@ package org.azavea.map;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.azavea.otm.App;
 import org.azavea.otm.InstanceInfo;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.Tile;
@@ -27,21 +28,21 @@ public class TMSTileProvider implements TileProvider {
     private final static int TILE_HEIGHT = 256;
     private final static int TILE_WIDTH = 256;
 
-    // Url to the Tile Server
-    private String baseUrl; // http://example.com/tile/
-    private String featureName;
-    private int opacity;
-
     //  OTM2 specific tile requests are in the format of:
     //    {georev}/database/otm/table/{feature}/{z}/{x}/{y}.png
     private static final String TILE_FORMAT = "%s/database/otm/table/%s/%d/%d/%d.png";
 
-    private JSONObject parameters = new JSONObject();
+    // Url to the Tile Server
+    private final String baseUrl; // http://example.com/tile/
+    private final String featureName;
+    private final int opacity;
+    protected Set<String> displayList = new HashSet<String>();
 
     public TMSTileProvider(String baseUrl, String featureName) 
-    throws MalformedURLException {
+            throws MalformedURLException {
         this(baseUrl, featureName, 255);
     }
+
     public TMSTileProvider(String baseUrl, String featureName, int opacity)
             throws MalformedURLException {
         if (opacity < 0 || opacity > 255) {
@@ -52,53 +53,18 @@ public class TMSTileProvider implements TileProvider {
         this.opacity = opacity;
     }
 
-    private String formatTileUrl(int zoom, int x, int y) {
-        InstanceInfo instance = App.getAppInstance().getCurrentInstance();
-        String url =  baseUrl + String.format(TILE_FORMAT, instance.getGeoRevId(),
-                this.featureName, zoom, x, y);
-
-        url += "?instance_id=" + instance.getInstanceId();
-        String filters = this.parameters.toString().replace("\\", "");
-        try {
-            url += "&q=" + URLEncoder.encode(filters, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        Log.d("TILER-TMS", url);
-        return url;
-    }
-
-    public void setParameter(String key, String value) {
-        try {
-            this.parameters.put(key, value);
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Bad parameter", e);
-        }
-    }
-
-    public void setRangeParameter(String key, String min, String max) {
-        JSONObject vals = new JSONObject();
-        try {
-            vals.put("MIN", min);
-            vals.put("MAX", max);
-            this.parameters.put(key, vals);
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Bad range parameter", e);
-        }
-    }
-
-    /***
-     * Remove any query string parameters from the tile requests
-     */
-    public void clearParameters() {
-        this.parameters = new JSONObject();
-    }
-
     public URL getTileUrl(int x, int y, int zoom) {
+        InstanceInfo instance = App.getAppInstance().getCurrentInstance();
+        String displayList = new JSONArray(this.displayList).toString();
+
+        String urlString = baseUrl + String.format(TILE_FORMAT, instance.getGeoRevId(), this.featureName, zoom, x, y);
+        Uri.Builder urlBuilder = Uri.parse(urlString).buildUpon();
+        urlBuilder.appendQueryParameter("show", displayList);
+        urlBuilder.appendQueryParameter("instance_id", Integer.toString(instance.getInstanceId()));
+
         URL url = null;
         try {
-            url = new URL(formatTileUrl(zoom, x, y));
+            url = new URL(urlBuilder.build().toString());
         } catch (MalformedURLException e) {
             throw new AssertionError(e);
         }
@@ -147,5 +113,13 @@ public class TMSTileProvider implements TileProvider {
             return new Tile(TILE_WIDTH, TILE_HEIGHT, buffer.toByteArray());
         }
         return TileProvider.NO_TILE;
+    }
+
+    /***
+     * Sets the display filters
+     * @param models: the models to show on the map
+     */
+    public void setDisplayParameters(Collection<String> models) {
+        this.displayList = new HashSet<String>(models);
     }
 }
