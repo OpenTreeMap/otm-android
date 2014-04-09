@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <!--Instance code should only be set if this app is meant to be compiled
-    	and distributed as a single, standalone app.  Otherwise, leave blank -->
-    <string name="instance_code"></string>
-
-    <string name="base_url">override in child app</string>
-    <string name="tiler_url">override in child app</string>
-    <string name="boundary_feature">override in child app</string>
-    <string name="plot_feature">override in child app</string>
-	<string name="canopy_tms_url"></string>
-	<string name="image_url">override in child app</string>
-    <string name="access_key">override in child app</string>
-    <string name="secret_key">override in child app</string>
-    <string name="max_nearby_plots">10</string>
-    <string name="platform_ver_build">android-1.0-xx</string>
+    <string name="starting_zoom_level">12</string>
+    <string name="boundary_feature">treemap_boundary</string>
+    <string name="plot_feature">treemap_mapfeature</string>
     <string name="tree_highlight_layer">tree_search</string>
     <string name="tree_highlight_style">tree_highlight</string>
-    <string name="search_bbox_lower_left_lat">39.56970506644249</string>
-    <string name="search_bbox_lower_left_lon">-75.74523925781249</string>
-    <string name="search_bbox_upper_right_lat">40.43858586704328</string>
-    <string name="search_bbox_upper_right_lon">-74.6795654296875</string>
-    <string name="starting_zoom_level">12</string>
+    <string-array name="display_filters">
+        <item>Plot</item>
+    </string-array>
 </resources>
