@@ -82,7 +82,7 @@ public class InstanceInfo extends Model {
         }
         return null;
     }
-    
+
     public double getLat() {
         return getCenter("lat");
     }

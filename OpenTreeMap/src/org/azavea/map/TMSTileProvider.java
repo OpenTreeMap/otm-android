@@ -38,7 +38,7 @@ public class TMSTileProvider implements TileProvider {
     private final int opacity;
     protected Set<String> displayList = new HashSet<String>();
 
-    public TMSTileProvider(String baseUrl, String featureName) 
+    public TMSTileProvider(String baseUrl, String featureName)
             throws MalformedURLException {
         this(baseUrl, featureName, 255);
     }

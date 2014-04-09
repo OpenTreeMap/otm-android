@@ -49,7 +49,6 @@ public class FieldManager {
         }
 
         try {
-
             for (int i = 0; i < displayData.length(); i++) {
                 JSONObject fieldGroup = displayData.getJSONObject(i);
                 allDisplayFields.add(new FieldGroup(fieldGroup, baseFields));

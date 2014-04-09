@@ -12,6 +12,7 @@ import android.util.Log;
 
 public class FilterableTMSTileProvider extends TMSTileProvider {
     private JSONObject parameters = new JSONObject();
+
     public FilterableTMSTileProvider(String baseUrl, String featureName) 
             throws MalformedURLException {
         super(baseUrl, featureName);

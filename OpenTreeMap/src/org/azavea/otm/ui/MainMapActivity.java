@@ -96,7 +96,7 @@ public class MainMapActivity extends MapActivity{
     private String fullSizeTreeImageUrl = null;
 
     // Map click listener for normal view mode
-    private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {    
+    private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -205,42 +205,42 @@ public class MainMapActivity extends MapActivity{
     }
 
     @Override
-     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       super.onActivityResult(requestCode, resultCode, data);
-       switch(requestCode) {
-           case FILTER_INTENT:
-               if (resultCode == Activity.RESULT_OK) {
-                   RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
-                   setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
-                filterTileProvider.clearParameters();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case FILTER_INTENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
+                    setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
+                    filterTileProvider.clearParameters();
 
-                   if (activeFilters.toString().length() > 0) {
-                       filterTileProvider.setParameter("test", "test");
+                    if (activeFilters.toString().length() > 0) {
+                        filterTileProvider.setParameter("test", "test");
+                    }
+                    filterTileOverlay.clearTileCache();
                 }
-               filterTileOverlay.clearTileCache();
-               }
-               break;
-           case INFO_INTENT:
-               if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
+                break;
+            case INFO_INTENT:
+                if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
 
-                   try {
-                       // The plot was updated, so update the pop-up with any new data
-                       Plot updatedPlot = new Plot();
-                    String plotJSON = data.getExtras().getString("plot");
-                    updatedPlot.setData(new JSONObject(plotJSON));
-                    showPopup(updatedPlot);
+                    try {
+                        // The plot was updated, so update the pop-up with any new data
+                        Plot updatedPlot = new Plot();
+                        String plotJSON = data.getExtras().getString("plot");
+                        updatedPlot.setData(new JSONObject(plotJSON));
+                        showPopup(updatedPlot);
 
                     } catch (JSONException e) {
-                                Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
-                                hidePopup();
-                 }
-              } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
-                  hidePopup();
-                  // TODO: Do we need to refresh the map tile?
+                        Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+                        hidePopup();
+                    }
+                } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
+                    hidePopup();
+                    // TODO: Do we need to refresh the map tile?
                 }
-            break;
-       }
-     }
+                break;
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -495,7 +495,7 @@ public class MainMapActivity extends MapActivity{
          Context context = MainMapActivity.this;
         Criteria crit = new Criteria();
         crit.setAccuracy(Criteria.ACCURACY_FINE);
-        LocationManager locationManager = 
+        LocationManager locationManager =
                 (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null) {
             String provider = locationManager.getBestProvider(crit, true);
@@ -622,7 +622,7 @@ public class MainMapActivity extends MapActivity{
         EditText et = (EditText)findViewById(R.id.locationSearchField);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
         InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        im.hideSoftInputFromWindow(et.getWindowToken(), 0); 
+        im.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
     private void alertGeocodeError() {

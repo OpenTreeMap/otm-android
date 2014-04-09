@@ -10,32 +10,32 @@ public abstract class BaseFilter {
      * can be used in multiple filters (missing, standard).
      */
     public String key;
-    
-	/**
-	 * Filter field identifier
-	 */
-	public String identifier;
-	
-	/**
-	 * The name to display as a filter label
-	 */
-	public String label;
-	
-	/**
-	 *  Checks if this filter currently has an active value
-	 */
-	public abstract boolean isActive();
-	
-	/**
-	 *  Update the value of the filter, and its active status
-	 *  from a view of the corresponding type
-	 */
-	public abstract void updateFromView(View view);
 
-	/**
-	 *  Reset the filter to the default state
-	 */
-	public abstract void clear();
+    /**
+     * Filter field identifier
+     */
+    public String identifier;
+
+    /**
+     * The name to display as a filter label
+     */
+    public String label;
+
+    /**
+     *  Checks if this filter currently has an active value
+     */
+    public abstract boolean isActive();
+
+    /**
+     *  Update the value of the filter, and its active status
+     *  from a view of the corresponding type
+     */
+    public abstract void updateFromView(View view);
+
+    /**
+     *  Reset the filter to the default state
+     */
+    public abstract void clear();
 
 	/**
 	 *  Called when the filter is active...
