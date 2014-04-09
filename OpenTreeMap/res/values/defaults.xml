@@ -6,4 +6,7 @@
     <string name="plot_feature">treemap_mapfeature</string>
     <string name="tree_highlight_layer">tree_search</string>
     <string name="tree_highlight_style">tree_highlight</string>
+    <string-array name="display_filters">
+        <item>Plot</item>
+    </string-array>
 </resources>

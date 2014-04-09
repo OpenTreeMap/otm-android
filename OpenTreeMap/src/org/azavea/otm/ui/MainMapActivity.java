@@ -2,6 +2,7 @@ package org.azavea.otm.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -367,26 +368,26 @@ public class MainMapActivity extends MapActivity{
         String baseTileUrl = prefs.getString("tiler_url", null);
         String plotFeature = prefs.getString("plot_feature", null);
         String boundaryFeature = prefs.getString("boundary_feature", null);
+        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
-        TileProvider boundaryTileProvider;
-        TileProvider canopyTileProvider;
         try {
-            boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
+            TMSTileProvider boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
             boundaryTileOverlay = mMap.addTileOverlay(
                     new TileOverlayOptions().tileProvider(boundaryTileProvider).zIndex(0));
 
             // Canopy layer shows all trees, is always on, but is 'dimmed' while a filter is active
-            canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature, 128);
+            TMSTileProvider canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature, 76);
+            canopyTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
             canopyTileOverlay = mMap.addTileOverlay(
                     new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
 
             // Set up the filter layer
             filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
             filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
-            filterTileProvider.setRangeParameter("tree.diameter", "50", "1001");
+            filterTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
 
             // Set up the default click listener
             mMap.setOnMapClickListener(showPopupMapClickListener);
