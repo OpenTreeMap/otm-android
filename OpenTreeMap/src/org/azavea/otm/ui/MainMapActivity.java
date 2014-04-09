@@ -3,6 +3,7 @@ package org.azavea.otm.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,7 +17,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -210,13 +210,10 @@ public class MainMapActivity extends MapActivity{
         switch(requestCode) {
             case FILTER_INTENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    RequestParams activeFilters = App.getFilterManager().getActiveFiltersAsCqlRequestParams();
+                    Collection<JSONObject> activeFilters = App.getFilterManager().getActiveFilters();
                     setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
-                    filterTileProvider.clearParameters();
 
-                    if (activeFilters.toString().length() > 0) {
-                        filterTileProvider.setParameter("test", "test");
-                    }
+                    filterTileProvider.setParameters(activeFilters);
                     filterTileOverlay.clearTileCache();
                 }
                 break;

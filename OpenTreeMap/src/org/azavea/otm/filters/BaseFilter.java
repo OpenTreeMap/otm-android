@@ -1,7 +1,10 @@
 package org.azavea.otm.filters;
 
-import com.loopj.android.http.RequestParams;
+import org.azavea.otm.App;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.util.Log;
 import android.view.View;
 
 public abstract class BaseFilter {
@@ -37,15 +40,24 @@ public abstract class BaseFilter {
      */
     public abstract void clear();
 
-	/**
-	 *  Called when the filter is active...
-	 *  Add this filter to a RequestParams object configured for the CQL end point.
-	 */
-	public abstract void addToCqlRequestParams(RequestParams rp);
+    /**
+     *  Called when the filter is active...
+     *  Gets the filter object representation of this filter
+     */
+    public abstract JSONObject getFilterObject();
 
-	/**
-	 * Same as above method, but for the nearestPlot REST end point. 
-	 */
-	public abstract void addToNearestPlotRequestParams(RequestParams rp);
-	
+    protected JSONObject buildNestedFilter(String identifier, String predicate, Object value) {
+        JSONObject filter = null;
+        JSONObject predicatePair = new JSONObject();
+
+        try {
+            filter = new JSONObject();
+            predicatePair.put(predicate, value);
+            filter.put(identifier, predicatePair);
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Error creating JSONObject for filter", e);
+        }
+
+        return filter;
+    }
 }

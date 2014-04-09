@@ -127,21 +127,16 @@ public class FilterDisplay extends Activity {
     }
 
     private View makeRangeFilter(RangeFilter filter, LayoutInflater layout) {
-        RangeFilter range = (RangeFilter) filter;
         View rangeControl = layout.inflate(R.layout.filter_range_control, null);
-        ((TextView) rangeControl.findViewById(R.id.filter_label))
-                .setText(range.label);
+        ((TextView) rangeControl.findViewById(R.id.filter_label)).setText(filter.label);
         if (filter.isActive()) {
-            ((EditText) rangeControl.findViewById(R.id.min)).setText(Double
-                    .toString(range.getMin()));
-            ((EditText) rangeControl.findViewById(R.id.max)).setText(Double
-                    .toString(range.getMax()));
+            ((EditText) rangeControl.findViewById(R.id.min)).setText(filter.getMinString());
+            ((EditText) rangeControl.findViewById(R.id.max)).setText(filter.getMaxString());
         }
         return rangeControl;
     }
 
-    private View makeToggleFilter(final BooleanFilter filter,
-            LayoutInflater layout) {
+    private View makeToggleFilter(final BooleanFilter filter, LayoutInflater layout) {
         View toggle = layout.inflate(R.layout.filter_toggle_control, null);
         ((TextView) toggle.findViewById(R.id.filter_label))
                 .setText(filter.label);

@@ -1,16 +1,17 @@
 package org.azavea.otm.filters;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.loopj.android.http.RequestParams;
-
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 public class RangeFilter extends BaseFilter {
-    final private double DEFAULT = 0;
-    private double min = DEFAULT;
-    private double max = DEFAULT;
+    private Double min;
+    private Double max;
 
     public RangeFilter(String key, String identifier, String label) {
         this.key = key;
@@ -18,69 +19,60 @@ public class RangeFilter extends BaseFilter {
         this.label = label;
     }
 
-    public double getMin() {
-        return min;
+    public String getMinString() {
+        return this.min == null ? "" : Double.toString(this.min);
     }
 
-    public double getMax() {
-        return max;
+    public String getMaxString() {
+        return this.max == null ? "" : Double.toString(this.max);
     }
 
     @Override
     public boolean isActive() {
-        return (min > DEFAULT || max > DEFAULT) ? true : false;
+        return (min != null || max != null);
+    }
+
+    private Double parseNumber(View view, int rId) {
+        String min = ((EditText) view.findViewById(rId)).getText()
+                .toString().trim();
+        if (min != null && !"".equals(min)) {
+            return Double.parseDouble(min);
+        }
+        return null;
     }
 
     @Override
     public void updateFromView(View view) {
-        String min = ((EditText) view.findViewById(R.id.min)).getText()
-                .toString().trim();
-        String max = ((EditText) view.findViewById(R.id.max)).getText()
-                .toString().trim();
-
-        if (min != null && !"".equals(min)) {
-            this.min = Double.parseDouble(min);
-        } else {
-            this.min = DEFAULT;
-        }
-
-        if (max != null && !"".equals(max)) {
-            this.max = Double.parseDouble(max);
-        } else {
-            this.max = DEFAULT;
-        }
+        this.min = parseNumber(view, R.id.min);
+        this.max = parseNumber(view, R.id.max);
     }
 
     @Override
     public void clear() {
-        min = DEFAULT;
-        max = DEFAULT;
-    }
-
-    // diameter_range=2-4.... diameter_range=0-8.... diameter_range=3-9999.....
-    private String queryValue() {
-        String qval = "";
-        if (min > 0) {
-            qval += Double.toString(min);
-        } else {
-            qval += "0";
-        }
-        qval += "-";
-        if (max > 0) {
-            qval += Double.toString(max);
-        } else {
-            qval += "999999";
-        }
-        return qval;
+        this.min = null;
+        this.max = null;
     }
 
     @Override
-    public void addToCqlRequestParams(RequestParams rp) {
-        // TODO Not Implemented
-    }
+    public JSONObject getFilterObject() {
+        JSONObject filter = null;
+        JSONObject predicateFilter = new JSONObject();
 
-    @Override
-    public void addToNearestPlotRequestParams(RequestParams rp) {
-        // TODO Not Implemented
+        try {
+            if (min != null) {
+                predicateFilter.put("MIN", this.min);
+            }
+            if (max != null) {
+                predicateFilter.put("MAX", this.max);
+            }
+            if (predicateFilter.length() > 0) {
+                filter = new JSONObject();
+                filter.put(this.identifier, predicateFilter);
+            }
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Error creating JSONObject for filter", e);
+        }
+
+        return filter;
     }
 }

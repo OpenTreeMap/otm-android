@@ -2,8 +2,8 @@ package org.azavea.otm.filters;
 
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
-
-import com.loopj.android.http.RequestParams;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.view.View;
 
@@ -37,12 +37,11 @@ public class SpeciesFilter extends BaseFilter {
     }
 
     @Override
-    public void addToCqlRequestParams(RequestParams rp) {
-        // TODO: Not Implemented
-    }
-
-    @Override
-    public void addToNearestPlotRequestParams(RequestParams rp) {
-        // TODO: Not Implemented
+    public JSONObject getFilterObject() {
+        try {
+            return buildNestedFilter(this.identifier, "IS", this.species.getId());
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }

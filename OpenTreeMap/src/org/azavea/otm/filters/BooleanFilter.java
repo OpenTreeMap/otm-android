@@ -1,8 +1,7 @@
 package org.azavea.otm.filters;
 
 import org.azavea.otm.R;
-
-import com.loopj.android.http.RequestParams;
+import org.json.JSONObject;
 
 import android.view.View;
 import android.widget.ToggleButton;
@@ -41,11 +40,7 @@ public class BooleanFilter extends BaseFilter {
     }
 
     @Override
-    public void addToCqlRequestParams(RequestParams rp) {
-        // TODO: Not Implemented
-    }
-
-    public void addToNearestPlotRequestParams(RequestParams rp) {
-        // TODO: Not Implemented
+    public JSONObject getFilterObject() {
+        return buildNestedFilter(this.identifier, "IS", this.active);
     }
 }
