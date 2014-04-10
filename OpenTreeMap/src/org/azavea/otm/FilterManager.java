@@ -1,28 +1,28 @@
 package org.azavea.otm;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
-import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.BaseFilter;
+import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.MissingFilter;
-//import org.azavea.otm.filters.ChoiceFilter;
-import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.filters.RangeFilter;
+import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.RequestParams;
-
 import android.os.Bundle;
-import android.os.Message;
 import android.os.Handler.Callback;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -205,26 +205,13 @@ public class FilterManager {
     /**
      * Returns a RequestParams object loaded with the filter values.
      */
-    public RequestParams getActiveFiltersAsCqlRequestParams() {
-        RequestParams rp = new RequestParams();
-        for (Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
-            BaseFilter filter = entry.getValue();
+    public Collection<JSONObject> getActiveFilters() {
+        List<JSONObject> filterObjects = new ArrayList<JSONObject>();
+        for (BaseFilter filter : allFilters.values()) {
             if (filter.isActive()) {
-                filter.addToCqlRequestParams(rp);
+                filterObjects.add(filter.getFilterObject());
             }
         }
-        return rp;
-
-    }
-
-    public RequestParams getActiveFiltersAsNearestPlotRequestParams() {
-        RequestParams rp = new RequestParams();
-        for (Map.Entry<String, BaseFilter> entry : allFilters.entrySet()) {
-            BaseFilter filter = entry.getValue();
-            if (filter.isActive()) {
-                filter.addToNearestPlotRequestParams(rp);
-            }
-        }
-        return rp;
+        return filterObjects;
     }
 }

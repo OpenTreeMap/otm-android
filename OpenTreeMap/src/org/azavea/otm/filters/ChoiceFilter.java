@@ -12,8 +12,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.loopj.android.http.RequestParams;
-
 public class ChoiceFilter extends BaseFilter {
     public Choice[] choices;
     private int DEFAULT = -1;
@@ -66,13 +64,8 @@ public class ChoiceFilter extends BaseFilter {
     }
 
     @Override
-    public void addToCqlRequestParams(RequestParams rp) {
-        // TODO Not Implemented
-    }
-
-    @Override
-    public void addToNearestPlotRequestParams(RequestParams rp) {
-        // TODO Not Implemented
+    public JSONObject getFilterObject() {
+        return buildNestedFilter(this.identifier, "IS", choices[this.selectedIndex].getId());
     }
 
     public Integer getSelectedIndex() {
@@ -104,7 +97,7 @@ public class ChoiceFilter extends BaseFilter {
 
     /**
      * Get an array of the text of each choice value
-     * 
+     *
      */
     public CharSequence[] getChoicesText() {
         String[] texts = new String[this.choices.length];

@@ -2,16 +2,16 @@ package org.azavea.map;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 
-import org.azavea.otm.App;
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.net.Uri;
-import android.util.Log;
 
 public class FilterableTMSTileProvider extends TMSTileProvider {
-    private JSONObject parameters = new JSONObject();
+    private JSONArray parameters = null;
+
     public FilterableTMSTileProvider(String baseUrl, String featureName) 
             throws MalformedURLException {
         super(baseUrl, featureName);
@@ -30,7 +30,9 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
         }
 
         Uri.Builder urlBuilder = Uri.parse(unfilteredUrl.toString()).buildUpon();
-        urlBuilder.appendQueryParameter("q", this.parameters.toString());
+        if (this.parameters != null) {
+            urlBuilder.appendQueryParameter("q", this.parameters.toString());
+        }
 
         try {
             return new URL(urlBuilder.build().toString());
@@ -39,22 +41,15 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
         }
     }
 
-    public void setParameter(String key, String value) {
-        try {
-            this.parameters.put(key, value);
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Bad parameter", e);
+    public void setParameters(Collection<JSONObject> filters) {
+        clearParameters();
+        if (filters.isEmpty()) {
+            return;
         }
-    }
-
-    public void setRangeParameter(String key, String min, String max) {
-        JSONObject vals = new JSONObject();
-        try {
-            vals.put("MIN", min);
-            vals.put("MAX", max);
-            this.parameters.put(key, vals);
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Bad range parameter", e);
+        this.parameters = new JSONArray();
+        this.parameters.put("AND");
+        for (JSONObject filter : filters) {
+            this.parameters.put(filter);
         }
     }
 
@@ -62,6 +57,6 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
      * Remove any query string parameters from the tile requests
      */
     public void clearParameters() {
-        this.parameters = new JSONObject();
+        this.parameters = null;
     }
 }

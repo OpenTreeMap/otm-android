@@ -8,8 +8,8 @@
             android:id="@+id/filter_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:textColor="@color/text_dark"/>
 
@@ -24,7 +24,8 @@
                 android:layout_width="66dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="numberDecimal" >
+                android:inputType="numberDecimal"
+                android:textColor="@color/black_end" >
 
                 <requestFocus />
             </EditText>
@@ -43,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:textColor="@color/black_end" />
 
         </LinearLayout>
 

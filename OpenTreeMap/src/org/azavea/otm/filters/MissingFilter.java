@@ -1,6 +1,6 @@
 package org.azavea.otm.filters;
 
-import com.loopj.android.http.RequestParams;
+import org.json.JSONObject;
 
 /**
  * Boolean on/off filter for missing field
@@ -17,13 +17,8 @@ public class MissingFilter extends BooleanFilter {
     }
 
     @Override
-    public void addToCqlRequestParams(RequestParams rp) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void addToNearestPlotRequestParams(RequestParams rp) {
-        // TODO: Not Implemented
+    public JSONObject getFilterObject() {
+        return buildNestedFilter(this.identifier, "ISNULL", this.active);
     }
 
 }
