@@ -153,9 +153,6 @@ public class TreeInfoDisplay extends TreeDisplay {
                         plot.setupPlot(new JSONObject(plotJSON));
                         loadPlotInfo();
 
-                        // Updating may have changed the georev
-                        App.getAppInstance().getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
-
                         plotLocation = getPlotLocation(plot);
                         showPositionOnMap();
 

@@ -7,6 +7,46 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import org.azavea.map.FilterableTMSTileProvider;
+import org.azavea.map.TMSTileProvider;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.data.Tree;
+import org.azavea.otm.map.FallbackGeocoder;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Handler.Callback;
+import android.os.Message;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -23,53 +63,12 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.azavea.map.FilterableTMSTileProvider;
-import org.azavea.map.TMSTileProvider;
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.PlotContainer;
-import org.azavea.otm.data.Tree;
-import org.azavea.otm.map.FallbackGeocoder;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-
-import android.os.Bundle;
-import android.os.Handler.Callback;
-import android.os.Message;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 public class MainMapActivity extends MapActivity{
     private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
     private static final int INFO_INTENT = 2;
+    private static final int ADD_INTENT = 3;
 
     // modes for the add tree marker feature
     private static final int STEP1 = 1;
@@ -93,10 +92,10 @@ public class MainMapActivity extends MapActivity{
 
     private Location currentLocation;
 
-    private String fullSizeTreeImageUrl = null;
+    private final String fullSizeTreeImageUrl = null;
 
     // Map click listener for normal view mode
-    private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
+    private final OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -143,7 +142,7 @@ public class MainMapActivity extends MapActivity{
     };
 
     // Map click listener that allows us to add a tree
-    private OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
+    private final OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -219,29 +218,38 @@ public class MainMapActivity extends MapActivity{
                 break;
             case INFO_INTENT:
                 if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
-
-                    try {
-                        // The plot was updated, so update the pop-up with any new data
-                        Plot updatedPlot = new Plot();
-                        String plotJSON = data.getExtras().getString("plot");
-                        updatedPlot.setupPlot(new JSONObject(plotJSON));
-                        showPopup(updatedPlot);
-
-                    } catch (JSONException e) {
-                        Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
-                        hidePopup();
-                    }
+                    showPlotFromIntent(data);
                 } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
                     hidePopup();
                     // TODO: Do we need to refresh the map tile?
                 }
                 break;
+             
+            case ADD_INTENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    showPlotFromIntent(data);
+                }
+        }
+    }
+
+    private void showPlotFromIntent(Intent data) {
+        try {
+            // The plot was updated, so update the pop-up with any new data
+            Plot updatedPlot = new Plot();
+            String plotJSON = data.getExtras().getString("plot");
+            updatedPlot.setupPlot(new JSONObject(plotJSON));
+            showPopup(updatedPlot);
+
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+            hidePopup();
         }
     }
 
     @Override
     public void onBackPressed() {
         hidePopup();
+        removePlotMarker();
         setTreeAddMode(CANCEL);
     }
 
@@ -418,15 +426,9 @@ public class MainMapActivity extends MapActivity{
             // TODO: PHOTOS
             //fullSizeTreeImageUrl = tree.getTreePhotoUrl();
 
-            LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
-            if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
-            } else {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
-            }
-            if (plotMarker != null) {
-                plotMarker.remove();
-            }
+            LatLng position = zoomToPlot(plot);
+
+            removePlotMarker();
             plotMarker = mMap.addMarker(new MarkerOptions()
                 .position(position)
                 .title("")
@@ -439,11 +441,27 @@ public class MainMapActivity extends MapActivity{
         findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     }
 
+    private LatLng zoomToPlot(Plot plot) throws JSONException {
+        LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
+        if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+        } else {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
+        }
+        return position;
+    }
+
     private void hidePopup() {
         findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
         RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
         plotPopup.setVisibility(View.INVISIBLE);
         currentPlot = null;
+    }
+    
+    private void removePlotMarker() {
+        if (plotMarker != null) {
+            plotMarker.remove();
+        }
     }
 
     private void setPopupViews() {
@@ -469,7 +487,6 @@ public class MainMapActivity extends MapActivity{
         });
     }
 
-
      private void setFilterDisplay(String activeFilterDisplay) {
          if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
              filterDisplay.setVisibility(View.GONE);
@@ -477,7 +494,6 @@ public class MainMapActivity extends MapActivity{
              filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
              filterDisplay.setVisibility(View.VISIBLE);
          }
-
     }
 
      private void zoomMapToLocation(Location l) {
@@ -532,17 +548,11 @@ public class MainMapActivity extends MapActivity{
                 break;
             case STEP1:
                 hidePopup();
-                if (plotMarker != null) {
-                    plotMarker.remove();
-                    plotMarker = null;
-                }
+                removePlotMarker();
                 filterAddButtons.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
                 step1.setVisibility(View.VISIBLE);
-                /*if (plotMarker != null) {
-                    plotMarker.remove();
-                    plotMarker = null;
-                }*/
+
                 if (mMap != null) {
                     mMap.setOnMapClickListener(addMarkerMapClickListener);
                 }
@@ -564,7 +574,8 @@ public class MainMapActivity extends MapActivity{
                     String plotString = newPlot.getData().toString();
                     editPlotIntent.putExtra("plot", plotString );
                     editPlotIntent.putExtra("new_tree", "1");
-                    startActivity(editPlotIntent);
+                    startActivityForResult(editPlotIntent, ADD_INTENT);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     setTreeAddMode(CANCEL);
@@ -580,6 +591,9 @@ public class MainMapActivity extends MapActivity{
             double lon = plotMarker.getPosition().longitude;
             newGeometry.setY(lat);
             newGeometry.setX(lon);
+            
+            // We always get coordinates in lat/lon
+            newGeometry.setSrid(4326);
             newPlot.setGeometry(newGeometry);
 
             List<Address> addresses = null;
@@ -627,6 +641,7 @@ public class MainMapActivity extends MapActivity{
     }
 
     JsonHttpResponseHandler handleGoogleGeocodeResponse = new JsonHttpResponseHandler() {
+        @Override
         public void onSuccess(JSONObject data) {
             LatLng pos = FallbackGeocoder.decodeGoogleJsonResponse(data);
             if (pos == null) {
@@ -635,6 +650,7 @@ public class MainMapActivity extends MapActivity{
                 moveMapAndFinishGeocode(pos);
             }
         };
+        @Override
         protected void handleFailureMessage(Throwable arg0, String arg1) {
             alertGeocodeError();
         };

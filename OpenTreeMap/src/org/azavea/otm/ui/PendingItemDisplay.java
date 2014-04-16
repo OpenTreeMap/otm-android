@@ -12,8 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,22 +23,25 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
 public class PendingItemDisplay extends Activity {
 
 	// We will need the key IE "tree.dbh" so that we can find the pending
 	// edits in the plot
 	String key;
-		
-	// We are going to manage the current and pending values 
+
+	// We are going to manage the current and pending values
 	// through the CheckBox objects that we instantiate for them.
-	CheckBox selectedValue; 
+	CheckBox selectedValue;
 	CheckBox currentValue;
-	Vector<CheckBox> allPending = new Vector();
-	
-	public void onCreate(Bundle savedInstanceState) {
+	Vector<CheckBox> allPending = new Vector<CheckBox>();
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_item);
-        
+
         /*Render
             + label (IE "Diameter a Breast Height (in)")
             + current value (the value in the db that has been prev approved)
@@ -51,24 +52,24 @@ public class PendingItemDisplay extends Activity {
         if (label != null && label != "") {
         	renderTitle(label);
         }
-        		
+
  		String current = getIntent().getStringExtra("current");
  		renderCurrentValue(current);
- 		
+
  		String pending = getIntent().getStringExtra("pending");
  		if (pending != null && pending != "") {
  			try {
 				renderPendingValues(new JSONArray(getIntent().getStringExtra("pending")));
 			} catch (JSONException e) {
-				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG);
+				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
  		}
- 		
+
  		renderApprovalButtons();
-		
+
     }
-	
+
 	public boolean canApprovePendingEdits() {
 		if (App.getLoginManager().isLoggedIn()) {
 			return App.getLoginManager().loggedInUser.isAdmin();
@@ -76,32 +77,32 @@ public class PendingItemDisplay extends Activity {
 			return false;
 		}
 	}
-	
-	
+
+
 	private void renderCurrentValue(String value) {
 		View row = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
 		ViewGroup container = (ViewGroup) findViewById(R.id.currentValue);
 		currentValue = (CheckBox)row.findViewById(R.id.checkBox);
-		
+
 		((TextView)row.findViewById(R.id.user_name)).setText("");
 		((TextView)row.findViewById(R.id.date)).setText("");
-		
+
 		if (value == null || value.equals("")) { // no current value.
 			((TextView)row.findViewById(R.id.value)).setText("No current value");
-		} else {			
+		} else {
 			((TextView)row.findViewById(R.id.value)).setText(value);
 			if (canApprovePendingEdits()) {
 				currentValue.setOnClickListener(checkBoxClickListener);
 				currentValue.setVisibility(View.VISIBLE);
-			} 			
+			}
 		}
 		container.addView(row);
-		
+
 	}
-	
+
 	private void renderPendingValues(JSONArray pendingEdits) {
 		ViewGroup container = (ViewGroup) findViewById(R.id.pendingEdits);
-	
+
 		for (int i =0; i< pendingEdits.length(); i++) {
 			JSONObject pendingEdit;
 			try {
@@ -109,14 +110,14 @@ public class PendingItemDisplay extends Activity {
 				String value = pendingEdit.getString("value");
 				String username = pendingEdit.getString("username");
 				String date = pendingEdit.getString("date");
-				int id = (Integer) pendingEdit.getInt("id");
-				
+				int id = pendingEdit.getInt("id");
+
 				View pendingRow = getLayoutInflater().inflate(R.layout.pending_edit_row, null);
-							
+
 				((TextView)pendingRow.findViewById(R.id.value)).setText(value);
 				((TextView)pendingRow.findViewById(R.id.date)).setText(date);
 				((TextView)pendingRow.findViewById(R.id.user_name)).setText(username);
-				
+
 				if (canApprovePendingEdits()) {
 					CheckBox cb = (CheckBox)pendingRow.findViewById(R.id.checkBox);
 					allPending.add(cb);
@@ -126,22 +127,22 @@ public class PendingItemDisplay extends Activity {
 				}
 				container.addView(pendingRow);
 			} catch (JSONException e) {
-				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG);
+				Toast.makeText(PendingItemDisplay.this, "Error rendering pending edits", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	private void renderTitle(String label) {
 		((TextView)findViewById(R.id.pending_edit_label)).setText(label);
 	}
-	
+
 	private void renderApprovalButtons() {
 		if (canApprovePendingEdits()) {
 			findViewById(R.id.nav).setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	public OnClickListener checkBoxClickListener  = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -150,10 +151,10 @@ public class PendingItemDisplay extends Activity {
 			for (CheckBox cc : allPending) {
 				cc.setChecked(v == cc);
 			}
-		}					
+		}
 	};
-	
-	
+
+
 	public void handleSaveClick(View view) {
 		if (selectedValue == null) {
 			Toast.makeText(PendingItemDisplay.this, "Please select an item.", Toast.LENGTH_SHORT).show();
@@ -168,10 +169,10 @@ public class PendingItemDisplay extends Activity {
 			approve(selectedValue);
 		}
 	}
-	
+
 	private void approve(CheckBox c) {
 		RequestGenerator rc = new RequestGenerator();
-		
+
 		Object tag = c.getTag();
 		if (tag != null) {
 			Integer idToApprove = null;
@@ -182,29 +183,29 @@ public class PendingItemDisplay extends Activity {
 			}
 			if (idToApprove != null) {
 				try {
-					rc.approvePendingEdit(PendingItemDisplay.this, idToApprove.intValue(), handleApprovedPendingEdit);
+					rc.approvePendingEdit(idToApprove.intValue(), handleApprovedPendingEdit);
 				} catch (Exception e) {
 					Toast.makeText(PendingItemDisplay.this, "Error approving pending edit", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
-				} 
+				}
 			}
 		}
 	}
-	
+
 	private void rejectAll() throws JSONException {
 		if (allPending.size() != 0) {
 			int firstIdToReject = (Integer) allPending.get(0).getTag();
-			
+
 			RequestGenerator rc = new RequestGenerator();
 			try {
-				rc.rejectPendingEdit(PendingItemDisplay.this, firstIdToReject, createRejectionResponseHandlder(key));
+				rc.rejectPendingEdit(firstIdToReject, createRejectionResponseHandlder(key));
 			} catch (UnsupportedEncodingException e) {
 				Toast.makeText(PendingItemDisplay.this, "Error rejecting all pending edits", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
 	}
-		
+
 	public  JsonHttpResponseHandler createRejectionResponseHandlder(final String key) {
 		return new JsonHttpResponseHandler() {
 			@Override
@@ -216,7 +217,7 @@ public class PendingItemDisplay extends Activity {
 					doError();
 				}
 			}
-				
+
 			protected void processNextId(JSONObject plotData) throws JSONException {
 				Plot plot = new Plot();
 				plot.setData(plotData);
@@ -230,41 +231,44 @@ public class PendingItemDisplay extends Activity {
 					int nextIdToReject = ped.getPendingEdits().get(0).getId();
 					RequestGenerator rc = new RequestGenerator();
 					try {
-						rc.rejectPendingEdit(PendingItemDisplay.this, nextIdToReject, createRejectionResponseHandlder(key));
+						rc.rejectPendingEdit(nextIdToReject, createRejectionResponseHandlder(key));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 						doError();
-					} 
+					}
 				}
 			}
-			protected void handleFailureMessage(Throwable arg0, String arg1) {
+			@Override
+            protected void handleFailureMessage(Throwable arg0, String arg1) {
 				Log.e("PENDING", arg0.toString());
 				Log.e("PENDING", arg1);
 				doError();
 			}
-					
+
 			protected void doError() {
 				Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
 			}
 		};
 	}
-	
-	private JsonHttpResponseHandler handleApprovedPendingEdit = new JsonHttpResponseHandler() {
-		public void onSuccess(JSONObject plotData) {
+
+	private final JsonHttpResponseHandler handleApprovedPendingEdit = new JsonHttpResponseHandler() {
+		@Override
+        public void onSuccess(JSONObject plotData) {
 			Intent intent = new Intent();
 			intent.putExtra("plot", plotData.toString());
 			setResult(RESULT_OK, intent);
 			finish();
 		};
-		protected void handleFailureMessage(Throwable arg0, String arg1) {
+		@Override
+        protected void handleFailureMessage(Throwable arg0, String arg1) {
 			arg0.printStackTrace();
 			Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
-		};		
+		};
 	};
-	
+
 	public void handleCancelClick(View view) {
 		setResult(Activity.RESULT_CANCELED);
 		finish();
 	}
-	
+
 }

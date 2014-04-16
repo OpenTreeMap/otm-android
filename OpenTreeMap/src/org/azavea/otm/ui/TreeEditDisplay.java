@@ -483,7 +483,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
             // check if we are adding a new tree or editing an existing one.
             if (addMode()) {
-                rg.addTree(App.getAppInstance(), plot, responseHandler);
+                rg.addTree(plot, responseHandler);
             } else {
                 rg.updatePlot(plot.getId(), plot, responseHandler);
             }
@@ -516,6 +516,10 @@ public class TreeEditDisplay extends TreeDisplay {
     private void doFinish(Plot updatedPlot, ProgressDialog saveDialog) {
         saveDialog.dismiss();
         setResultOk(updatedPlot);
+
+        // Updating may have changed the georev
+        App.getAppInstance().getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
+
         finish();
     }
 
