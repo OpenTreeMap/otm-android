@@ -7,6 +7,46 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import org.azavea.map.FilterableTMSTileProvider;
+import org.azavea.map.TMSTileProvider;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.data.Tree;
+import org.azavea.otm.map.FallbackGeocoder;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Handler.Callback;
+import android.os.Message;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -22,48 +62,6 @@ import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmente
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.azavea.map.FilterableTMSTileProvider;
-import org.azavea.map.TMSTileProvider;
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.PlotContainer;
-import org.azavea.otm.data.Tree;
-import org.azavea.otm.map.FallbackGeocoder;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-
-import android.os.Bundle;
-import android.os.Handler.Callback;
-import android.os.Message;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainMapActivity extends MapActivity{
     private static LatLng START_POS;
@@ -93,10 +91,10 @@ public class MainMapActivity extends MapActivity{
 
     private Location currentLocation;
 
-    private String fullSizeTreeImageUrl = null;
+    private final String fullSizeTreeImageUrl = null;
 
     // Map click listener for normal view mode
-    private OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
+    private final OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -143,7 +141,7 @@ public class MainMapActivity extends MapActivity{
     };
 
     // Map click listener that allows us to add a tree
-    private OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
+    private final OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -539,10 +537,7 @@ public class MainMapActivity extends MapActivity{
                 filterAddButtons.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
                 step1.setVisibility(View.VISIBLE);
-                /*if (plotMarker != null) {
-                    plotMarker.remove();
-                    plotMarker = null;
-                }*/
+
                 if (mMap != null) {
                     mMap.setOnMapClickListener(addMarkerMapClickListener);
                 }
@@ -630,6 +625,7 @@ public class MainMapActivity extends MapActivity{
     }
 
     JsonHttpResponseHandler handleGoogleGeocodeResponse = new JsonHttpResponseHandler() {
+        @Override
         public void onSuccess(JSONObject data) {
             LatLng pos = FallbackGeocoder.decodeGoogleJsonResponse(data);
             if (pos == null) {
@@ -638,6 +634,7 @@ public class MainMapActivity extends MapActivity{
                 moveMapAndFinishGeocode(pos);
             }
         };
+        @Override
         protected void handleFailureMessage(Throwable arg0, String arg1) {
             alertGeocodeError();
         };

@@ -32,17 +32,17 @@ import com.loopj.android.http.RequestParams;
 // This class is designed to take care of the base-url
 // and otm api-key for REST requests
 public class RestClient {
-    private String baseUrl;
+    private final String baseUrl;
 
     private String host;
 
     private AsyncHttpClient client;
 
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
-    private String appVersion;
+    private final String appVersion;
 
-    private RequestSignature reqSigner;
+    private final RequestSignature reqSigner;
 
     public RestClient() {
         prefs = App.getSharedPreferences();
@@ -110,7 +110,7 @@ public class RestClient {
             String password, RequestParams params,
             AsyncHttpResponseHandler responseHandler) {
 
-        Header[] authHeader = 
+        Header[] authHeader =
             { createBasicAuthenticationHeader(username, password) };
         this.get(url, params, new ArrayList<Header>(Arrays.asList(authHeader)),
                 responseHandler);
@@ -139,14 +139,14 @@ public class RestClient {
         RequestParams reqParams = prepareParams(params);
         client.post(getAbsoluteUrl(url), reqParams, responseHandler);
     }
-    
+
     private void put (String url, int id,
             ArrayList<Header> headers,
             String body,
             AsyncHttpResponseHandler responseHandler){
-        
+
         try {
-            String reqUrl = safePathJoin(getAbsoluteUrl(url), 
+            String reqUrl = safePathJoin(getAbsoluteUrl(url),
                     id == -1 ? null : Integer.toString(id));
             String reqUrlWithParams = prepareUrl(reqUrl);
             if (headers == null) {
@@ -155,11 +155,11 @@ public class RestClient {
             headers.add(reqSigner.getSignatureHeader("PUT", reqUrlWithParams, body));
 
             Header[] fullHeaders = prepareHeaders(headers);
-            
+
             StringEntity bodyEntity = new StringEntity(body, "UTF-8");
-            client.put(App.getAppInstance(), reqUrlWithParams, fullHeaders, 
+            client.put(App.getAppInstance(), reqUrlWithParams, fullHeaders,
                     bodyEntity, "application/json", responseHandler);
-            
+
         } catch (Exception e) {
             String msg = "Failure making PUT request";
             Log.e(App.LOG_TAG, msg, e);
@@ -185,7 +185,7 @@ public class RestClient {
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
 
-        put(url, id, new ArrayList<Header>(Arrays.asList(headers)), 
+        put(url, id, new ArrayList<Header>(Arrays.asList(headers)),
                 body, response);
     }
 
@@ -197,9 +197,10 @@ public class RestClient {
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
 
-        put(url, -1, new ArrayList<Header>(Arrays.asList(headers)), 
+        put(url, -1, new ArrayList<Header>(Arrays.asList(headers)),
                 body, response);
     }
+
 
     private void post (String url, ArrayList<Header> headers, String body,
             AsyncHttpResponseHandler responseHandler){
@@ -251,8 +252,7 @@ public class RestClient {
     }
 
     // This overloading of the postWithAuthentication method takes a bitmap, and
-    // posts
-    // it as an PNG HTTP Entity.
+    // posts it as an PNG HTTP Entity.
     public void postWithAuthentication(Context context, String url, Bitmap bm,
             String username, String password,
             JsonHttpResponseHandler responseHandler, int timeout) {
@@ -302,10 +302,6 @@ public class RestClient {
         client.delete(context, completeUrl, headers, responseHandler);
     }
 
-    private RequestParams prepareParams() {
-        return prepareParams(null);
-    }
-
     private RequestParams prepareParams(RequestParams params) {
         // We'll always need a RequestParams object since we'll always
         // be sending credentials
@@ -331,7 +327,7 @@ public class RestClient {
 
     /**
      * Ensure all required headers are present
-     * 
+     *
      * @param additionalHeaders
      *            List of headers specific to a single request
      * @return Complete list of headers necessary for API request
@@ -350,18 +346,9 @@ public class RestClient {
         }
     }
 
-    /**
-     * Ensure all required headers are present
-     * 
-     * @return Complete list of headers necessary for API request
-     */
-    private Header[] prepareHeaders() {
-        return prepareHeaders(null);
-    }
-
     /***
      * Current timestamp string in UTC format for API request verification
-     * 
+     *
      * @return Query string format of "timestamp={UTC Timestamp}"
      */
     private String getTimestampQuery() {
@@ -369,7 +356,7 @@ public class RestClient {
     }
 
     /***
-     * 
+     *
      * @return Current timestamp string in UTC format for API request
      *         verification
      */
@@ -382,7 +369,7 @@ public class RestClient {
 
     /***
      * Configured Access Key for API request verification
-     * 
+     *
      * @return Query string format of "access_key={ACCESSKEY}"
      */
     private String getAccessKeyQuery() {
@@ -408,13 +395,13 @@ public class RestClient {
         if (base.charAt(base.length() - 1) == '/') {
             cleanBase = base.substring(0, base.length() - 1);
         }
-        
+
         if (path.charAt(0) == '/') {
             cleanPath = path.substring(1);
         }
         return cleanBase + "/" + cleanPath;
     }
-    
+
     private Header createBasicAuthenticationHeader(String username,
             String password) {
         String credentials = String.format("%s:%s", username, password);
