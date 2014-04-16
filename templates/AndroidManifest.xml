@@ -91,14 +91,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="org.azavea.otm.Download"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="org.azavea.otm.RequestGeneratorUi"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="org.azavea.otm.ui.ChangePassword"
             android:label="@string/app_name" >
         </activity>
