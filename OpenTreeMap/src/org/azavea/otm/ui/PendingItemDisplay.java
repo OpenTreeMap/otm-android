@@ -182,7 +182,7 @@ public class PendingItemDisplay extends Activity {
 			}
 			if (idToApprove != null) {
 				try {
-					rc.approvePendingEdit(PendingItemDisplay.this, idToApprove.intValue(), handleApprovedPendingEdit);
+					rc.approvePendingEdit(idToApprove.intValue(), handleApprovedPendingEdit);
 				} catch (Exception e) {
 					Toast.makeText(PendingItemDisplay.this, "Error approving pending edit", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
@@ -197,7 +197,7 @@ public class PendingItemDisplay extends Activity {
 			
 			RequestGenerator rc = new RequestGenerator();
 			try {
-				rc.rejectPendingEdit(PendingItemDisplay.this, firstIdToReject, createRejectionResponseHandlder(key));
+				rc.rejectPendingEdit(firstIdToReject, createRejectionResponseHandlder(key));
 			} catch (UnsupportedEncodingException e) {
 				Toast.makeText(PendingItemDisplay.this, "Error rejecting all pending edits", Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
@@ -230,7 +230,7 @@ public class PendingItemDisplay extends Activity {
 					int nextIdToReject = ped.getPendingEdits().get(0).getId();
 					RequestGenerator rc = new RequestGenerator();
 					try {
-						rc.rejectPendingEdit(PendingItemDisplay.this, nextIdToReject, createRejectionResponseHandlder(key));
+						rc.rejectPendingEdit(nextIdToReject, createRejectionResponseHandlder(key));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 						doError();

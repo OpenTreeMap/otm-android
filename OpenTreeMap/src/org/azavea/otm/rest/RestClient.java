@@ -201,36 +201,53 @@ public class RestClient {
                 body, response);
     }
 
+    private void post (String url, ArrayList<Header> headers, String body,
+            AsyncHttpResponseHandler responseHandler){
+
+        try {
+            String reqUrl = getAbsoluteUrl(url);
+            String reqUrlWithParams = prepareUrl(reqUrl);
+            if (headers == null) {
+                headers = new ArrayList<Header>();
+            }
+            headers.add(reqSigner.getSignatureHeader("POST", reqUrlWithParams, body));
+
+            Header[] fullHeaders = prepareHeaders(headers);
+
+            StringEntity bodyEntity = new StringEntity(body, "UTF-8");
+            client.post(App.getAppInstance(), reqUrlWithParams, fullHeaders,
+                    bodyEntity, "application/json", responseHandler);
+
+        } catch (Exception e) {
+            String msg = "Failure making POST request";
+            Log.e(App.LOG_TAG, msg, e);
+            responseHandler.onFailure(e, msg);
+        }
+    }
+
     /**
      * Executes a post request and adds basic authentication headers to the
      * request.
      */
-    public void postWithAuthentication(Context context, String url,
-            String username, String password, Model model,
-            AsyncHttpResponseHandler responseHandler)
+    public void postWithAuthentication(String url, String username, String password,
+            Model model, AsyncHttpResponseHandler responseHandler)
             throws UnsupportedEncodingException {
 
-        String completeUrl = getAbsoluteUrl(url);
-        completeUrl = prepareUrl(completeUrl);
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        StringEntity modelEntity = new StringEntity(model.getData().toString());
+        String body = null;
+        if (model != null) {
+            body = model.getData().toString();
+        }
 
-        Log.d("REST", model.getData().toString());
-        client.post(context, completeUrl, headers, modelEntity,
-                "application/json", responseHandler);
+        post(url, new ArrayList<Header>(Arrays.asList(headers)),
+                body, responseHandler);
     }
 
-    public void postWithAuthentication(Context context, String url,
-            String username, String password,
+    public void postWithAuthentication(String url, String username, String password,
             AsyncHttpResponseHandler responseHandler)
             throws UnsupportedEncodingException {
 
-        String completeUrl = getAbsoluteUrl(url);
-        completeUrl = prepareUrl(completeUrl);
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        StringEntity modelEntity = new StringEntity("");
-        client.post(context, completeUrl, headers, modelEntity,
-                "application/json", responseHandler);
+        postWithAuthentication(url, username, password, null, responseHandler);
     }
 
     // This overloading of the postWithAuthentication method takes a bitmap, and

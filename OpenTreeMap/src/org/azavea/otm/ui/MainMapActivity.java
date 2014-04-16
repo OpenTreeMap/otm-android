@@ -580,6 +580,9 @@ public class MainMapActivity extends MapActivity{
             double lon = plotMarker.getPosition().longitude;
             newGeometry.setY(lat);
             newGeometry.setX(lon);
+            
+            // We always get coordinates in lat/lon
+            newGeometry.setSrid(4326);
             newPlot.setGeometry(newGeometry);
 
             List<Address> addresses = null;

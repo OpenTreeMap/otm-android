@@ -32,34 +32,22 @@ public class Plot extends Model {
     };
     
     public Plot() {
-        data = new JSONObject();
-    }
-    
-    public Plot(int id, long width, long length, String type,
-            boolean readOnly, String powerlineConflictPotential,
-            String sidewalkDamage, String addressStreet, String addressCity,
-            String addressZip, String dataOwner, String lastUpdated,
-            String lastUpdatedBy) throws JSONException {
-        this();		
-    	
-        setId(id);
-        setWidth(width);
-        setLength(length);
-        setType(type);
-        setReadOnly(readOnly);
-        setPowerlineConflictPotential(powerlineConflictPotential);
-        setSidewalkDamage(sidewalkDamage);
-        setAddressStreet(addressStreet);
-        setAddressCity(addressCity);
-        setLastUpdated(lastUpdated);
-        setLastUpdatedBy(lastUpdatedBy);
+        // Basic plot json structure
+        JSONObject fullPlot = new JSONObject();
+        try {
+            fullPlot.put("plot", new JSONObject());
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Error creating empty plot", e);
+        }
+
+        this.setupPlot(fullPlot);
     }
 
     public void setupPlot(JSONObject fullPlot) {
         this.setData(fullPlot);
         try {
-            this.plotDetails = fullPlot.getJSONObject("plot");
-            if (this.hasTree()) {
+            this.plotDetails = fullPlot.optJSONObject("plot");
+            if (!plotDetails.equals(null) && this.hasTree()) {
                 Tree tree = this.getTree();
                 JSONObject speciesData = tree.getSpecies();
                 if (speciesData != null) {
@@ -141,8 +129,6 @@ public class Plot extends Model {
     
     public void setAddress(String address) throws JSONException {
         plotDetails.put("address_street", address);
-        data.put("edit_address_street", address);
-        data.put("geocode_address", address);
     }
     
     public String getAddressStreet() throws JSONException {
@@ -208,6 +194,7 @@ public class Plot extends Model {
     
     public void setTree(Tree tree) throws JSONException {
         data.put("tree", tree.getData());
+        data.put("has_tree", true);
     }
     
     public Geometry getGeometry() throws JSONException {

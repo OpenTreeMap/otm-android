@@ -246,17 +246,13 @@ public class RequestGenerator {
 		client.post(context, "/user/", user, handler);
 	}
 	
-	public void addTree(Context context, Plot plot, AsyncHttpResponseHandler handler) 
+
+	public void addTree(Plot plot, AsyncHttpResponseHandler handler)
 			throws JSONException, UnsupportedEncodingException {
-		client.postWithAuthentication(context, "/plots", 
-				loginManager.loggedInUser.getUserName(), 
+
+		client.postWithAuthentication(getInstanceNameUri("plots"),
+				loginManager.loggedInUser.getUserName(),
 				loginManager.loggedInUser.getPassword(), plot, handler);
-	}
-	
-	public void getCqlForFilters(RequestParams params, JsonHttpResponseHandler handler) {
-		Log.d("CQL-FILTERS", params.toString());
-		client.get("/cql-filter", params, handler);
-		
 	}
 	
 	public void rejectPendingEdit(Context context, int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {

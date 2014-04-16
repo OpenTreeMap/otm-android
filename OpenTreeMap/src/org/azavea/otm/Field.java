@@ -320,12 +320,9 @@ public class Field {
             JSONObject json = model.getData();
             Object species = getValueForKey(this.owner, json);
 
-            if (!species.equals(null)) {
-                // Set the button text to the common and sci name, which should
-                // be there
-                // if a species Id is set. We can grab these straight from the
-                // tree object
-                // since the species list may still be loading
+            // species could either be truly null, or an actual but empty JSONObject {} 
+            if (species != null && !species.equals(null)) {
+                // Set the button text to the common and sci name
                 String sciName = (String) getValueForKey("tree.species.scientific_name", json);
                 String commonName = (String) getValueForKey("tree.species.common_name", json);
                 choiceButton.setText(commonName + "\n" + sciName);
@@ -351,7 +348,8 @@ public class Field {
 
         choiceButton.setText(R.string.unspecified_field_value);
 
-        if (!value.equals(null)) {
+        // value could be a null json value, have to check both.
+        if (value != null && !value.equals(null)) {
             Choice currentChoice = choiceMap.get(value);
             if (!currentChoice.equals(null)) {
                 choiceButton.setText(currentChoice.getText());
