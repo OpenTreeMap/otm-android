@@ -99,8 +99,6 @@ public class App extends Application {
               .putString("tiler_url", context.getString(R.string.tiler_url))
               .putString("plot_feature", context.getString(R.string.plot_feature))
               .putString("boundary_feature", context.getString(R.string.boundary_feature))
-              .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
-              .putString("image_url", context.getString(R.string.image_url))
               .putString("access_key", context.getString(R.string.access_key))
               .putString("secret_key", context.getString(R.string.secret_key))
               .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))

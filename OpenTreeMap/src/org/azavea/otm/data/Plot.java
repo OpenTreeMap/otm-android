@@ -343,11 +343,6 @@ public class Plot extends Model {
         return Bitmap.createScaledBitmap(image, 80, 80, true);
     }
 
-    public static Bitmap createTreeDetail(byte[] imageData) {
-        return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length), 480, 480, true);
-    }
-
-
     public void assignNewTreePhoto(JSONObject image) throws JSONException {
         //TODO STUB
     }
