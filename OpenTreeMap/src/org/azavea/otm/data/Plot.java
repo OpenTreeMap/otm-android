@@ -7,8 +7,6 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -318,7 +316,6 @@ public class Plot extends Model {
      * @throws JSONException
      */
     public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException {
-        // TODO: If there is no tree, should we auto call fail on the handler?
         if (this.hasTree()) {
             ArrayList<Integer> imageIds = this.getTree().getImageIdList();
             if (imageIds != null && imageIds.size() > 0) {
@@ -329,18 +326,6 @@ public class Plot extends Model {
                 rg.getImage(this.getId(), imageId, handler);
             }
         }
-    }
-
-    /**
-     * Create standard sized bitmap image from tree photo data
-     *
-     * @param imageData
-     * @return
-     */
-    public static Bitmap createTreeThumbnail(byte[] imageData) {
-        Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-        // Use an 80x80px image thumbnail
-        return Bitmap.createScaledBitmap(image, 80, 80, true);
     }
 
     public void assignNewTreePhoto(JSONObject image) throws JSONException {

@@ -23,6 +23,7 @@
             android:contentDescription="Tree image"
             android:minHeight="80dp"
             android:minWidth="80dp"
+            android:scaleType="centerInside"
             android:onClick="handlePhotoDetailClick" />
 
         <TextView
