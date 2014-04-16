@@ -96,6 +96,7 @@ public class App extends Application {
         Editor editor = prefs.edit();
         Context context = appInstance.getApplicationContext();
         editor.putString("base_url", context.getString(R.string.base_url))
+              .putString("api_url", context.getString(R.string.api_url))
               .putString("tiler_url", context.getString(R.string.tiler_url))
               .putString("plot_feature", context.getString(R.string.plot_feature))
               .putString("boundary_feature", context.getString(R.string.boundary_feature))
