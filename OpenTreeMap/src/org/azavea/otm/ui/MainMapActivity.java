@@ -68,6 +68,7 @@ public class MainMapActivity extends MapActivity{
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
     private static final int INFO_INTENT = 2;
+    private static final int ADD_INTENT = 3;
 
     // modes for the add tree marker feature
     private static final int STEP1 = 1;
@@ -217,29 +218,38 @@ public class MainMapActivity extends MapActivity{
                 break;
             case INFO_INTENT:
                 if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
-
-                    try {
-                        // The plot was updated, so update the pop-up with any new data
-                        Plot updatedPlot = new Plot();
-                        String plotJSON = data.getExtras().getString("plot");
-                        updatedPlot.setupPlot(new JSONObject(plotJSON));
-                        showPopup(updatedPlot);
-
-                    } catch (JSONException e) {
-                        Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
-                        hidePopup();
-                    }
+                    showPlotFromIntent(data);
                 } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
                     hidePopup();
                     // TODO: Do we need to refresh the map tile?
                 }
                 break;
+             
+            case ADD_INTENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    showPlotFromIntent(data);
+                }
+        }
+    }
+
+    private void showPlotFromIntent(Intent data) {
+        try {
+            // The plot was updated, so update the pop-up with any new data
+            Plot updatedPlot = new Plot();
+            String plotJSON = data.getExtras().getString("plot");
+            updatedPlot.setupPlot(new JSONObject(plotJSON));
+            showPopup(updatedPlot);
+
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+            hidePopup();
         }
     }
 
     @Override
     public void onBackPressed() {
         hidePopup();
+        removePlotMarker();
         setTreeAddMode(CANCEL);
     }
 
@@ -416,15 +426,9 @@ public class MainMapActivity extends MapActivity{
             // TODO: PHOTOS
             //fullSizeTreeImageUrl = tree.getTreePhotoUrl();
 
-            LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
-            if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
-            } else {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
-            }
-            if (plotMarker != null) {
-                plotMarker.remove();
-            }
+            LatLng position = zoomToPlot(plot);
+
+            removePlotMarker();
             plotMarker = mMap.addMarker(new MarkerOptions()
                 .position(position)
                 .title("")
@@ -437,11 +441,27 @@ public class MainMapActivity extends MapActivity{
         findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     }
 
+    private LatLng zoomToPlot(Plot plot) throws JSONException {
+        LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
+        if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+        } else {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
+        }
+        return position;
+    }
+
     private void hidePopup() {
         findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
         RelativeLayout plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
         plotPopup.setVisibility(View.INVISIBLE);
         currentPlot = null;
+    }
+    
+    private void removePlotMarker() {
+        if (plotMarker != null) {
+            plotMarker.remove();
+        }
     }
 
     private void setPopupViews() {
@@ -467,7 +487,6 @@ public class MainMapActivity extends MapActivity{
         });
     }
 
-
      private void setFilterDisplay(String activeFilterDisplay) {
          if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
              filterDisplay.setVisibility(View.GONE);
@@ -475,7 +494,6 @@ public class MainMapActivity extends MapActivity{
              filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
              filterDisplay.setVisibility(View.VISIBLE);
          }
-
     }
 
      private void zoomMapToLocation(Location l) {
@@ -530,10 +548,7 @@ public class MainMapActivity extends MapActivity{
                 break;
             case STEP1:
                 hidePopup();
-                if (plotMarker != null) {
-                    plotMarker.remove();
-                    plotMarker = null;
-                }
+                removePlotMarker();
                 filterAddButtons.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
                 step1.setVisibility(View.VISIBLE);
@@ -559,7 +574,8 @@ public class MainMapActivity extends MapActivity{
                     String plotString = newPlot.getData().toString();
                     editPlotIntent.putExtra("plot", plotString );
                     editPlotIntent.putExtra("new_tree", "1");
-                    startActivity(editPlotIntent);
+                    startActivityForResult(editPlotIntent, ADD_INTENT);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     setTreeAddMode(CANCEL);
