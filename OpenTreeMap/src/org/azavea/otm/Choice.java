@@ -2,15 +2,15 @@ package org.azavea.otm;
 
 
 public class Choice {
-	private Object value;
+	private String value;
 	private String text;
 	
-	public Choice(String display, Object value) {
+	public Choice(String display, String value) {
 	    this.value = value;
 	    text = display;
 	}
 	
-	public Object getId() {
+	public String getValue() {
 		return value;
 	}
 	

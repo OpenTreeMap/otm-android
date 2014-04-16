@@ -139,46 +139,66 @@ public class RestClient {
         RequestParams reqParams = prepareParams(params);
         client.post(getAbsoluteUrl(url), reqParams, responseHandler);
     }
+    
+    private void put (String url, int id,
+            ArrayList<Header> headers,
+            String body,
+            AsyncHttpResponseHandler responseHandler){
+        
+        try {
+            String reqUrl = safePathJoin(getAbsoluteUrl(url), 
+                    id == -1 ? null : Integer.toString(id));
+            String reqUrlWithParams = prepareUrl(reqUrl);
+            if (headers == null) {
+                headers = new ArrayList<Header>();
+            }
+            headers.add(reqSigner.getSignatureHeader("PUT", reqUrlWithParams, body));
 
-    public void put(Context context, String url, int id, Model model,
-            AsyncHttpResponseHandler response)
-            throws UnsupportedEncodingException {
-        String completeUrl = getAbsoluteUrl(url) + id;
-        completeUrl = prepareUrl(completeUrl);
-        client.put(context, completeUrl, new StringEntity(model.getData()
-                .toString()), "application/json", response);
+            Header[] fullHeaders = prepareHeaders(headers);
+            
+            StringEntity bodyEntity = new StringEntity(body, "UTF-8");
+            client.put(App.getAppInstance(), reqUrlWithParams, fullHeaders, 
+                    bodyEntity, "application/json", responseHandler);
+            
+        } catch (Exception e) {
+            String msg = "Failure making PUT request";
+            Log.e(App.LOG_TAG, msg, e);
+            responseHandler.onFailure(e, msg);
+        }
+    }
+
+    public void put(String url, int id, Model model,
+            AsyncHttpResponseHandler response) {
+
+        put(url, id, null, model.getData().toString(), response);
     }
 
     /**
      * Executes a put request and adds basic authentication headers to the
      * request.
      */
-    public void putWithAuthentication(Context context, String url,
+    public void putWithAuthentication(String url,
             String username, String password, int id, Model model,
             AsyncHttpResponseHandler response)
             throws UnsupportedEncodingException {
 
-        String completeUrl = getAbsoluteUrl(url) + id;
-        completeUrl = prepareUrl(completeUrl);
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        StringEntity modelEntity = new StringEntity(model.getData().toString());
-        Log.d("REST", model.getData().toString());
-        client.put(context, completeUrl, headers, modelEntity,
-                "application/json", response);
+        String body = model.getData().toString();
+
+        put(url, id, new ArrayList<Header>(Arrays.asList(headers)), 
+                body, response);
     }
 
-    public void putWithAuthentication(Context context, String url,
+    public void putWithAuthentication(String url,
             String username, String password, Model model,
             AsyncHttpResponseHandler response)
             throws UnsupportedEncodingException {
 
-        String completeUrl = getAbsoluteUrl(url);
-        completeUrl = prepareUrl(completeUrl);
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
-        StringEntity modelEntity = new StringEntity(model.getData().toString());
+        String body = model.getData().toString();
 
-        client.put(context, completeUrl, headers, modelEntity,
-                "application/json", response);
+        put(url, -1, new ArrayList<Header>(Arrays.asList(headers)), 
+                body, response);
     }
 
     /**
@@ -263,6 +283,10 @@ public class RestClient {
         completeUrl = prepareUrl(completeUrl);
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         client.delete(context, completeUrl, headers, responseHandler);
+    }
+
+    private RequestParams prepareParams() {
+        return prepareParams(null);
     }
 
     private RequestParams prepareParams(RequestParams params) {
@@ -358,10 +382,22 @@ public class RestClient {
     }
 
     private String getAbsoluteUrl(String relativeUrl) {
-        Log.d(App.LOG_TAG, baseUrl + relativeUrl);
-        return baseUrl + relativeUrl;
+        return safePathJoin(baseUrl, relativeUrl);
     }
 
+    private String safePathJoin(String base, String path) {
+        String cleanBase = base;
+        String cleanPath = path;
+        if (base.charAt(base.length() - 1) == '/') {
+            cleanBase = base.substring(0, base.length() - 1);
+        }
+        
+        if (path.charAt(0) == '/') {
+            cleanPath = path.substring(1);
+        }
+        return cleanBase + "/" + cleanPath;
+    }
+    
     private Header createBasicAuthenticationHeader(String username,
             String password) {
         String credentials = String.format("%s:%s", username, password);

@@ -2,6 +2,7 @@ package org.azavea.otm.data;
 
 import java.util.ArrayList;
 
+import org.azavea.otm.App;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -367,6 +368,15 @@ public class Plot extends Model {
             return this.species.getCommonName();
         } 
         return null;
+    }
+
+    /**
+     * Get an updated georevhash from a plot update, or the current one
+     * if no new one exists
+     */
+    public String getUpdatedGeoRev() {
+        return this.data.optString("geoRevHash", 
+                App.getAppInstance().getCurrentInstance().getGeoRevId());
     }
     
 }

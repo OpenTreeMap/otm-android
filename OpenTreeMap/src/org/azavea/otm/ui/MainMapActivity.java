@@ -224,7 +224,7 @@ public class MainMapActivity extends MapActivity{
                         // The plot was updated, so update the pop-up with any new data
                         Plot updatedPlot = new Plot();
                         String plotJSON = data.getExtras().getString("plot");
-                        updatedPlot.setData(new JSONObject(plotJSON));
+                        updatedPlot.setupPlot(new JSONObject(plotJSON));
                         showPopup(updatedPlot);
 
                     } catch (JSONException e) {

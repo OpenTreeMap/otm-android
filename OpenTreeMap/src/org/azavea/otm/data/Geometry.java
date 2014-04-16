@@ -10,11 +10,11 @@ public class Geometry extends Model {
 		data = new JSONObject();
 	}
 	
-	public Geometry(int srid, double lat, double lon) throws JSONException {
+	public Geometry(int srid, double x, double y) throws JSONException {
 		this();
 		setSrid(srid);
-		setY(lat);
-		setX(lon);
+		setY(y);
+		setX(x);
 	}
 	
 	public int getSrid() throws JSONException {
@@ -28,26 +28,26 @@ public class Geometry extends Model {
 	public double getY() throws JSONException {
         return data.getDouble("y");
 	}
-	public double getYE6() throws JSONException {
-		return this.getY()*1E6;
-	}
 	
-	public void setY(double lat) throws JSONException {
-		data.put("lat", lat);
+	public void setY(double y) throws JSONException {
+		data.put("y", y);
 	}
 	
 	public double getX() throws JSONException {
         return data.getDouble("x");
 	}
 
-	public double getXE6() throws JSONException {
-		return this.getX()*1E6;
-	}
-	public void setX(double lon) throws JSONException {
-		data.put("x", lon);
+	public void setX(double x) throws JSONException {
+		data.put("x", x);
 	}
 	
 	public RequestParams toParams() throws JSONException {
 		return new RequestParams();
+	}
+	
+	@Override
+	public String toString() {
+	    return String.format("(%s, %s)", 
+	            this.data.optString("x"), this.data.optString("y"));
 	}
 }
