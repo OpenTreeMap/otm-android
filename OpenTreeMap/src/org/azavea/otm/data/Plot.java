@@ -20,9 +20,7 @@ public class Plot extends Model {
     private Species species = null;
 
     enum PendingStatus {
-        Pending,
-        NoPending,
-        Unset
+        Pending, NoPending, Unset
     }
 
     /**
@@ -44,11 +42,11 @@ public class Plot extends Model {
             Log.e(App.LOG_TAG, "Error creating empty plot", e);
         }
     }
-    
+
     public Plot(JSONObject data) {
         setData(data);
     }
-    
+
     @Override
     public void setData(JSONObject data) {
         super.setData(data);
@@ -65,7 +63,7 @@ public class Plot extends Model {
                     this.species = new Species();
                     species.setData(speciesData);
                 }
-        	}
+            }
         } catch (JSONException e) {
             this.plotDetails = null;
         }
@@ -82,6 +80,7 @@ public class Plot extends Model {
     public String getTitle() {
         return this.data.optString("title", null);
     }
+
     public long getWidth() throws JSONException {
         return getLongOrDefault("width", 0l);
     }
@@ -236,6 +235,7 @@ public class Plot extends Model {
 
     /***
      * Does this plot have current pending edits?
+     *
      * @throws JSONException
      */
     public boolean hasPendingEdits() throws JSONException {
@@ -248,7 +248,7 @@ public class Plot extends Model {
         if (!data.isNull("pending_edits")) {
             if (data.getJSONObject("pending_edits").length() > 0) {
                 pendings = true;
-        	}
+            }
         }
 
         // Cache for this instance
@@ -257,11 +257,12 @@ public class Plot extends Model {
     }
 
     /**
-     * Get a pending edit description for a given field key for a plot or
-     * tree
-     * @param key - name of field key
-     * @return An object representing a pending edit description for the field, or
-     * null if there are no pending edits
+     * Get a pending edit description for a given field key for a plot or tree
+     *
+     * @param key
+     *            name of field key
+     * @return An object representing a pending edit description for the field,
+     *         or null if there are no pending edits
      * @throws JSONException
      */
     public PendingEditDescription getPendingEditForKey(String key) throws JSONException {
@@ -269,15 +270,18 @@ public class Plot extends Model {
             JSONObject edits = data.getJSONObject("pending_edits");
             if (!edits.isNull(key)) {
                 return new PendingEditDescription(key, edits.getJSONObject(key));
-        	}
+            }
         }
         return null;
     }
 
     /**
      * Get a plot or tree permission from a plot json
-     * @param name: "tree" or "plot"
-     * @param editType "can_edit" or "can_delete"
+     *
+     * @param name
+     *            "tree" or "plot"
+     * @param editType
+     *            "can_edit" or "can_delete"
      * @return
      */
     private boolean getPermission(String name, String editType) {
@@ -288,8 +292,8 @@ public class Plot extends Model {
                 if (perm.has(name)) {
                     JSONObject json = perm.getJSONObject(name);
                     return json.getBoolean(editType);
-            	}
-        	}
+                }
+            }
             return false;
         } catch (JSONException e) {
             return false;
@@ -306,13 +310,14 @@ public class Plot extends Model {
 
     /**
      * Get the most recent tree photo for this plot, by way of an asynchronous
-     * response handler.  Use static helper methods on Plot to decode a photo
+     * response handler. Use static helper methods on Plot to decode a photo
      * response
-     * @param binary image handler which will receive callback from
-     * async http request
+     *
+     * @param binary
+     *            image handler which will receive callback from async http request
      * @throws JSONException
      */
-    public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException{
+    public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException {
         // TODO: If there is no tree, should we auto call fail on the handler?
         if (this.hasTree()) {
             ArrayList<Integer> imageIds = this.getTree().getImageIdList();
@@ -322,12 +327,13 @@ public class Plot extends Model {
 
                 RequestGenerator rg = new RequestGenerator();
                 rg.getImage(this.getId(), imageId, handler);
-        	}
+            }
         }
     }
 
     /**
      * Create standard sized bitmap image from tree photo data
+     *
      * @param imageData
      * @return
      */
@@ -338,8 +344,7 @@ public class Plot extends Model {
     }
 
     public static Bitmap createTreeDetail(byte[] imageData) {
-        return Bitmap.createScaledBitmap(
-                BitmapFactory.decodeByteArray(imageData, 0, imageData.length), 480, 480, true);
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length), 480, 480, true);
     }
 
 
@@ -362,8 +367,8 @@ public class Plot extends Model {
     }
 
     /**
-     * Get an updated georevhash from a plot update, or the current one
-     * if no new one exists
+     * Get an updated georevhash from a plot update, or the current one if no
+     * new one exists
      */
     public String getUpdatedGeoRev() {
         return this.data.optString("geoRevHash",
