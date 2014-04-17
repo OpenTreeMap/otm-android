@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -308,6 +309,13 @@ public class RestClient {
         completeUrl = prepareUrl(completeUrl);
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         client.delete(context, completeUrl, headers, responseHandler);
+    }
+
+    public void getImage(String imageUrl, BinaryHttpResponseHandler handler) {
+        if (imageUrl.startsWith("/")) {
+            imageUrl = safePathJoin(baseUrl, imageUrl);
+        }
+        client.get(imageUrl, handler);
     }
 
     private RequestParams prepareParams(RequestParams params) {

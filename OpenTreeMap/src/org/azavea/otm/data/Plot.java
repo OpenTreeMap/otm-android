@@ -1,9 +1,13 @@
 package org.azavea.otm.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.azavea.otm.App;
 import org.azavea.otm.rest.RequestGenerator;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -306,24 +310,51 @@ public class Plot extends Model {
         this.setTree(new Tree());
     }
 
+    public JSONObject getMostRecentPhoto() {
+        JSONArray photos = data.optJSONArray("photos");
+        if (photos != null && photos.length() > 0 && this.hasTree()) {
+            List<JSONObject> photoObjects = new ArrayList<JSONObject>(photos.length());
+            for (int i = 0; i < photos.length(); i++) {
+                JSONObject photo = photos.optJSONObject(i);
+                // If we start supporting multiple trees, we'll need to check the tree id here
+                if (photo != null && photo.optInt("id") != 0 && photo.has("image") && photo.has("thumbnail")) {
+                    photoObjects.add(photo);
+                }
+            }
+            return Collections.max(photoObjects, new Comparator<JSONObject>() {
+                @Override
+                public int compare(JSONObject a, JSONObject b) {
+                    return a.optInt("id") - b.optInt("id");
+                }
+            });
+        }
+        return null;
+    }
+
     /**
-     * Get the most recent tree photo for this plot, by way of an asynchronous
-     * response handler. Use static helper methods on Plot to decode a photo
-     * response
+     * Get the most recent tree thumbnail for this plot, by way of an
+     * asynchronous response handler.
      *
      * @param binary
-     *            image handler which will receive callback from async http request
+     *            image handler which will receive callback from async http
+     *            request
      * @throws JSONException
      */
-    public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException {
-        if (this.hasTree()) {
-            ArrayList<Integer> imageIds = this.getTree().getImageIdList();
-            if (imageIds != null && imageIds.size() > 0) {
-                // Always retrieve the most recent image
-                int imageId = imageIds.get(imageIds.size() - 1).intValue();
+    public void getTreeThumbnail(BinaryHttpResponseHandler handler) {
+        getTreeImage("thumbnail", handler);
+    }
 
+    public void getTreePhoto(BinaryHttpResponseHandler handler) {
+        getTreeImage("image", handler);
+    }
+
+    private void getTreeImage(String name, BinaryHttpResponseHandler handler) {
+        JSONObject photo = this.getMostRecentPhoto();
+        if (photo != null) {
+            String url = photo.optString(name);
+            if (url != null) {
                 RequestGenerator rg = new RequestGenerator();
-                rg.getImage(this.getId(), imageId, handler);
+                rg.getImage(url, handler);
             }
         }
     }

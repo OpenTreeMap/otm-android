@@ -55,8 +55,8 @@ public class RequestGenerator {
         client.get("/plots/" + id, null, handler);
     }
 
-    public void getImage(int plotId, int imageId, BinaryHttpResponseHandler binaryHttpResponseHandler) {
-        client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
+    public void getImage(String imageUrl, BinaryHttpResponseHandler binaryHttpResponseHandler) {
+        client.getImage(imageUrl, binaryHttpResponseHandler);
     }
 
     public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
