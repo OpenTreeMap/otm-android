@@ -239,7 +239,7 @@ public class ProfileDisplay extends PhotoActivity {
 	protected void submitBitmap(Bitmap bm) {
 		RequestGenerator rc = new RequestGenerator();
 		try {
-			rc.addProfilePhoto(App.getAppInstance(), bm, profilePictureResponseHandler);
+			rc.addProfilePhoto(bm, profilePictureResponseHandler);
 		} catch (JSONException e) {
 			Log.e(App.LOG_TAG, "Error profile tree photo.", e);
 		}

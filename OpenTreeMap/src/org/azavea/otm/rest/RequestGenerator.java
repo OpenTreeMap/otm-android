@@ -209,18 +209,22 @@ public class RequestGenerator {
 				handler);
 	}
 
-	public void addTreePhoto(Context context, int plotId, Bitmap bm,
+	public void addTreePhoto(Plot plot, Bitmap bm,
 			JsonHttpResponseHandler handler)
 			throws JSONException {
-		client.postWithAuthentication(context, "/plots/" + plotId + "/tree/photo", bm,
-				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
+	    String formattedPath = String.format("plots/%s/tree/photo", plot.getId());
+		client.postWithAuthentication(getInstanceNameUri(formattedPath), bm,
+				loginManager.loggedInUser.getUserName(), 
+				loginManager.loggedInUser.getPassword(),
 				handler, PHOTOUPLOADTIMEOUT);
 	}
 
-	public void addProfilePhoto(Context context, Bitmap bm, JsonHttpResponseHandler handler)
+	public void addProfilePhoto(Bitmap bm, JsonHttpResponseHandler handler)
 			throws JSONException {
-		client.postWithAuthentication(context, "/user/" + loginManager.loggedInUser.getId() + "/photo/profile", bm,
-				loginManager.loggedInUser.getUserName(), loginManager.loggedInUser.getPassword(),
+	    User user = loginManager.loggedInUser;
+	    String formattedPath = String.format("user/%s/photo/profile", user.getId());
+		client.postWithAuthentication(formattedPath, bm,
+				user.getUserName(), user.getPassword(),
 				handler, PHOTOUPLOADTIMEOUT);
 
 	}

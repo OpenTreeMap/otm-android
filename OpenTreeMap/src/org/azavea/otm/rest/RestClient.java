@@ -253,7 +253,7 @@ public class RestClient {
 
     // This overloading of the postWithAuthentication method takes a bitmap, and
     // posts it as an PNG HTTP Entity.
-    public void postWithAuthentication(Context context, String url, Bitmap bm,
+    public void postWithAuthentication(String url, Bitmap bm,
             String username, String password,
             JsonHttpResponseHandler responseHandler, int timeout) {
 
@@ -271,17 +271,22 @@ public class RestClient {
         byte[] bitmapdata = bos.toByteArray();
         ByteArrayEntity bae = new ByteArrayEntity(bitmapdata);
 
-        // This client needs authentication headers because there is no post
-        // method that takes both
-        // an entity and headers. I assert that we don't get anything for free
-        // anyway by having one
-        // global AsyncHttpClient object because instantiation of that class is
-        // so easy.
+        // No signature for http client which takes a BitmapEntity and a headers
+        // array, so creating a one-off client for this purpose
         AsyncHttpClient authenticatedClient = createAutheniticatedHttpClient(
                 username, password);
+       
+        try {
+            // Add the signature based on the base64 encoded representation of the bitmap
+            Header sig = reqSigner.getSignatureHeader("POST", completeUrl, bitmapdata);
+            authenticatedClient.addHeader(sig.getName(), sig.getValue());
+        } catch (Exception e) {
+            responseHandler.onFailure(e, "Unable to sign photo upload request");
+            return;
+        }
 
         authenticatedClient.setTimeout(timeout);
-        authenticatedClient.post(context, completeUrl, bae, contentType,
+        authenticatedClient.post(App.getAppInstance(), completeUrl, bae, contentType,
                 responseHandler);
     }
 

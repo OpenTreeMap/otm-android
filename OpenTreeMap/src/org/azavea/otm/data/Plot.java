@@ -333,13 +333,9 @@ public class Plot extends Model {
     }
 
 
-    public void assignNewTreePhoto(String title, int photoId) throws JSONException {
+    public void assignNewTreePhoto(JSONObject image) throws JSONException {
         Tree tree = this.getTree();
         if (tree != null) {
-            JSONObject image = new JSONObject();
-            image.put("title", title);
-            image.put("id", photoId);
-
             tree.addImageToList(image);
         }
     }
@@ -366,5 +362,4 @@ public class Plot extends Model {
         return this.data.optString("geoRevHash",
                 App.getAppInstance().getCurrentInstance().getGeoRevId());
     }
-
 }

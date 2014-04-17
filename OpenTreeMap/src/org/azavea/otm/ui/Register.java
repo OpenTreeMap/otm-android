@@ -219,7 +219,7 @@ public class Register extends PhotoActivity{
 	private void sendProfilePicture() {	
 		RequestGenerator rc = new RequestGenerator();
 		try {
-			rc.addProfilePhoto(App.getAppInstance(), profilePicture, profilePictureResponseHandler);
+			rc.addProfilePhoto(profilePicture, profilePictureResponseHandler);
 		} catch (JSONException e) {
 			alert(R.string.problem_setting_profile_picture);
 			Log.e("Register", "Error formulating rc.addProfilePhoto request.");

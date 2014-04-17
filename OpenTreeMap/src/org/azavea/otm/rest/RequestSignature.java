@@ -39,7 +39,7 @@ public class RequestSignature {
         String separator = url.contains("?") ? "&" : "?";
         url += separator + params.toString();
 
-        return getSignature(verb, url, body);
+        return getSignature(verb, url, body.getBytes("UTF-8"));
     }
 
     /**
@@ -51,7 +51,7 @@ public class RequestSignature {
      * the timestamp already appended.
      *
      */
-    public String getSignature(String verb, String url, String body) throws Exception {
+    public String getSignature(String verb, String url, byte[] body) throws Exception {
 
         URI uri = new URI(url);
         String hostWithPort = uri.getAuthority();
@@ -73,7 +73,7 @@ public class RequestSignature {
         String sortedQuery = TextUtils.join("&", query);
 
         String payload = verb + "\n" + hostWithPort + "\n" + path + "\n" + sortedQuery
-                + Base64.encodeToString(body.getBytes("UTF-8"), Base64.NO_WRAP);
+                + Base64.encodeToString(body, Base64.NO_WRAP);
 
         String signature = calculateHMAC(payload);
         return signature;
@@ -87,6 +87,10 @@ public class RequestSignature {
     }
 
     public Header getSignatureHeader(String verb, String url, String body) throws Exception {
+        return getSignatureHeader(verb, url, body.getBytes("UTF-8"));
+    }
+    
+    public Header getSignatureHeader(String verb, String url, byte[] body) throws Exception {
         String sig = getSignature(verb, url, body);
         return new BasicHeader("X-Signature", sig);
     }

@@ -113,9 +113,9 @@ public class TreeEditDisplay extends TreeDisplay {
         public void onSuccess(JSONObject response) {
 
             try {
-                if (response.get("status").equals("success")) {
+                if (response.has("image")) {
                     Toast.makeText(App.getAppInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();
-                    plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
+                    plot.assignNewTreePhoto(response);
                     photoHasBeenChanged = true;
 
                     if (savePhotoDialog != null) {
@@ -499,7 +499,7 @@ public class TreeEditDisplay extends TreeDisplay {
             RequestGenerator rc = new RequestGenerator();
             try {
                 setResultOk(updatedPlot);
-                rc.addTreePhoto(App.getAppInstance(), updatedPlot.getId(), this.newTreePhoto, addTreePhotoHandler);
+                rc.addTreePhoto(updatedPlot, this.newTreePhoto, addTreePhotoHandler);
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Unable to upload photo", e);
                 Toast.makeText(getBaseContext(), "Photo could not be added, please try again", Toast.LENGTH_SHORT)
@@ -650,14 +650,13 @@ public class TreeEditDisplay extends TreeDisplay {
         try {
             if (addMode()) {
                 // If we're in the process of adding a tree, we can't save it to
-                // the
-                // server yet, so store the bitmap locally until the tree is
+                // the server yet, so store the bitmap locally until the tree is
                 // created
                 this.newTreePhoto = bm;
             } else {
                 // If there already is a tree, add the photo immediately
                 savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-                rc.addTreePhoto(App.getAppInstance(), plot.getId(), bm, addTreePhotoHandler);
+                rc.addTreePhoto(plot, bm, addTreePhotoHandler);
             }
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Error updating tree photo.", e);
