@@ -33,21 +33,31 @@ public class Plot extends Model {
     };
 
     public Plot() {
-        // Basic plot json structure
-        JSONObject fullPlot = new JSONObject();
         try {
-            fullPlot.put("plot", new JSONObject());
+            // Basic empty plot json structure
+            JSONObject fullPlot = new JSONObject();
+            plotDetails = new JSONObject();
+            fullPlot.put("plot", plotDetails);
+            this.setData(fullPlot);
+
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Error creating empty plot", e);
         }
-
-        this.setupPlot(fullPlot);
+    }
+    
+    public Plot(JSONObject data) {
+        setData(data);
+    }
+    
+    @Override
+    public void setData(JSONObject data) {
+        super.setData(data);
+        setupPlotDetails(data);
     }
 
-    public void setupPlot(JSONObject fullPlot) {
-        this.setData(fullPlot);
+    private void setupPlotDetails(JSONObject data) {
         try {
-            this.plotDetails = fullPlot.optJSONObject("plot");
+            this.plotDetails = this.data.optJSONObject("plot");
             if (!plotDetails.equals(null) && this.hasTree()) {
                 Tree tree = this.getTree();
                 JSONObject speciesData = tree.getSpecies();
@@ -333,15 +343,8 @@ public class Plot extends Model {
     }
 
 
-    public void assignNewTreePhoto(String title, int photoId) throws JSONException {
-        Tree tree = this.getTree();
-        if (tree != null) {
-            JSONObject image = new JSONObject();
-            image.put("title", title);
-            image.put("id", photoId);
-
-            tree.addImageToList(image);
-        }
+    public void assignNewTreePhoto(JSONObject image) throws JSONException {
+        //TODO STUB
     }
 
     public String getScienticName() {
@@ -366,5 +369,4 @@ public class Plot extends Model {
         return this.data.optString("geoRevHash",
                 App.getAppInstance().getCurrentInstance().getGeoRevId());
     }
-
 }

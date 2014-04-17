@@ -48,10 +48,9 @@ public class TreeEditDisplay extends TreeDisplay {
     protected static final int TREE_MOVE = 2;
 
     private Field speciesField;
-    private boolean photoHasBeenChanged;
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
-    private ProgressDialog savePhotoDialog = null;
+    private final ProgressDialog savePhotoDialog = null;
 
     protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
     protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
@@ -113,20 +112,16 @@ public class TreeEditDisplay extends TreeDisplay {
         public void onSuccess(JSONObject response) {
 
             try {
-                if (response.get("status").equals("success")) {
-                    Toast.makeText(App.getAppInstance(), "The tree photo was added.", Toast.LENGTH_LONG).show();
-                    plot.assignNewTreePhoto(response.getString("title"), response.getInt("id"));
-                    photoHasBeenChanged = true;
+                if (response.has("image")) {
+                    plot.assignNewTreePhoto(response);
 
                     if (savePhotoDialog != null) {
                         savePhotoDialog.dismiss();
                     }
-                    if (addMode()) {
-                        if (saveDialog != null) {
-                            saveDialog.dismiss();
-                        }
-                        finish();
+                    if (saveDialog != null) {
+                        saveDialog.dismiss();
                     }
+                    finish();
 
                 } else {
                     Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
@@ -159,7 +154,6 @@ public class TreeEditDisplay extends TreeDisplay {
         setContentView(R.layout.plot_edit_activity);
         setUpMapIfNeeded();
         initializeEditPage();
-        photoHasBeenChanged = false;
         mMap.setOnMapClickListener(new OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
@@ -433,14 +427,7 @@ public class TreeEditDisplay extends TreeDisplay {
      *            you
      */
     public void cancel(boolean doFinish) {
-        // If the user cancels this activity, but has actually already
-        // changed the photo, we'll consider than an edit so the calling
-        // activity will know to refresh the dirty photo
-        if (this.photoHasBeenChanged) {
-            setResultOk(plot);
-        } else {
-            setResult(RESULT_CANCELED);
-        }
+        setResult(RESULT_CANCELED);
 
         if (doFinish) {
             finish();
@@ -461,15 +448,8 @@ public class TreeEditDisplay extends TreeDisplay {
             RestHandler responseHandler = new RestHandler<Plot>(new Plot()) {
                 @Override
                 public void dataReceived(Plot updatedPlot) {
-                    // The tree was updated, so return to the info page, and
-                    // bring along
-                    // the data for the new plot, which was the response from
-                    // the update
-                    if (addMode()) {
-                        savePhotoForRecentlyAddedPlot(updatedPlot, saveDialog);
-                    } else {
-                        doFinish(updatedPlot, saveDialog);
-                    }
+                    // Tree was updated, check if a photo needs to be also added
+                    savePhotoForPlot(updatedPlot, saveDialog);
                 }
 
                 @Override
@@ -494,22 +474,20 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     }
 
-    protected void savePhotoForRecentlyAddedPlot(Plot updatedPlot, ProgressDialog saveDialog) {
+    protected void savePhotoForPlot(Plot plot, ProgressDialog saveDialog) {
         if (this.newTreePhoto != null) {
             RequestGenerator rc = new RequestGenerator();
             try {
-                setResultOk(updatedPlot);
-                rc.addTreePhoto(App.getAppInstance(), updatedPlot.getId(), this.newTreePhoto, addTreePhotoHandler);
+                setResultOk(plot);
+                rc.addTreePhoto(plot, this.newTreePhoto, addTreePhotoHandler);
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Unable to upload photo", e);
                 Toast.makeText(getBaseContext(), "Photo could not be added, please try again", Toast.LENGTH_SHORT)
                         .show();
-                doFinish(updatedPlot, saveDialog);
-            }
-
-        } else {
-            doFinish(updatedPlot, saveDialog);
+            } 
         }
+
+        doFinish(plot, saveDialog);
 
     }
 
@@ -572,7 +550,7 @@ public class TreeEditDisplay extends TreeDisplay {
         case TREE_MOVE:
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    plot.setupPlot(new JSONObject(data.getStringExtra("plot")));
+                    plot.setData(new JSONObject(data.getStringExtra("plot")));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -645,24 +623,7 @@ public class TreeEditDisplay extends TreeDisplay {
     // want to call your rc.submit method here, or store the bm in a class level
     // variable.
     protected void submitBitmap(Bitmap bm) {
-        RequestGenerator rc = new RequestGenerator();
-
-        try {
-            if (addMode()) {
-                // If we're in the process of adding a tree, we can't save it to
-                // the
-                // server yet, so store the bitmap locally until the tree is
-                // created
-                this.newTreePhoto = bm;
-            } else {
-                // If there already is a tree, add the photo immediately
-                savePhotoDialog = ProgressDialog.show(this, "", "Saving Photo...", true);
-                rc.addTreePhoto(App.getAppInstance(), plot.getId(), bm, addTreePhotoHandler);
-            }
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error updating tree photo.", e);
-            savePhotoDialog.dismiss();
-        }
+        this.newTreePhoto = bm;
     }
 
     protected void changePhotoUsingCamera(String filePath) {

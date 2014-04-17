@@ -12,8 +12,7 @@ public class PlotContainer extends ModelContainer<Plot> {
 		LinkedHashMap<Integer,Plot> plotList = 
 				new LinkedHashMap<Integer,Plot>(data.length());
 		for (int i = 0; i < data.length(); i++) {
-			Plot plot = new Plot();
-			plot.setupPlot(data.getJSONObject(i));
+			Plot plot = new Plot(data.getJSONObject(i));
 			plotList.put(plot.getId(), plot);
 		}
 		return plotList;
@@ -22,8 +21,7 @@ public class PlotContainer extends ModelContainer<Plot> {
 	public Plot getFirst() throws JSONException {
 		Plot plot = null;
 		if (data.length() > 0) {
-			plot = new Plot();
-			plot.setupPlot(data.getJSONObject(0));
+			plot = new Plot(data.getJSONObject(0));
 		}
 		return plot;
 	}

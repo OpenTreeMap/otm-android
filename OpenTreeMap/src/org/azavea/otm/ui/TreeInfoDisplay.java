@@ -147,10 +147,9 @@ public class TreeInfoDisplay extends TreeDisplay {
                 String plotJSON = data.getStringExtra("plot");
                 if (plotJSON != null) {
 
-                    // The plot has been edited, reload the info page
-                    plot = new Plot();
                     try {
-                        plot.setupPlot(new JSONObject(plotJSON));
+                        // The plot has been edited, reload the info page
+                        plot = new Plot(new JSONObject(plotJSON));
                         loadPlotInfo();
 
                         plotLocation = getPlotLocation(plot);

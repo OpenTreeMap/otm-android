@@ -219,8 +219,7 @@ public class PendingItemDisplay extends Activity {
 			}
 
 			protected void processNextId(JSONObject plotData) throws JSONException {
-				Plot plot = new Plot();
-				plot.setData(plotData);
+				Plot plot = new Plot(plotData);
 				PendingEditDescription ped = plot.getPendingEditForKey(key);
 				if (ped == null) {
 					Intent intent = new Intent();
