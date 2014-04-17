@@ -1,11 +1,11 @@
 package org.azavea.otm.data;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EditEntry extends Model {
 	public EditEntry() throws JSONException {
@@ -20,8 +20,7 @@ public class EditEntry extends Model {
 	public Plot getPlot() throws JSONException {
 		Plot plot = null;
 		if (data.has("plot")) {
-			plot = new Plot();
-			plot.setData(data.getJSONObject("plot"));
+			plot = new Plot(data.getJSONObject("plot"));
 		}
 		return plot;
 	}

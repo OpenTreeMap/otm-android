@@ -572,7 +572,7 @@ public class TreeEditDisplay extends TreeDisplay {
         case TREE_MOVE:
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    plot.setupPlot(new JSONObject(data.getStringExtra("plot")));
+                    plot.setData(new JSONObject(data.getStringExtra("plot")));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

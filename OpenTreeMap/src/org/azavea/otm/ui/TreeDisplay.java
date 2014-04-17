@@ -7,6 +7,13 @@ import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -15,13 +22,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class TreeDisplay extends MapActivity{
 	protected LatLng plotLocation;
@@ -33,11 +33,11 @@ public class TreeDisplay extends MapActivity{
 	protected Marker  plotMarker;
 	protected int mapFragmentId;
 	
+    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         try {
-			plot = new Plot();
-			plot.setupPlot(new JSONObject(getIntent().getStringExtra("plot")));
+			plot = new Plot(new JSONObject(getIntent().getStringExtra("plot")));
 			plotLocation = getPlotLocation(plot);
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not retrieve Tree information", 
