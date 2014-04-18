@@ -61,25 +61,9 @@ public class RequestGenerator {
 	}
 
 
-	public void getPlotsNearLocation(double geoY, double geoX, ContainerRestHandler<PlotContainer> handler) {
-		String url = "/locations/" + geoY + "," + geoX + "/plots";
-		try {
-			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(url,
-						loginManager.loggedInUser.getUserName(),
-						loginManager.loggedInUser.getPassword(),
-						null, handler);
-			} else {
-				client.get(url, null, handler);
-			}
-		} catch (JSONException e) {
-			// If user json error, request with no auth
-			client.get(url, null, handler);
-		}
-	}
-
-	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  ContainerRestHandler<PlotContainer> handler) {
-		String url = getInstanceNameUri("/locations/" + geoY + "," + geoX + "/plots");
+	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  
+	        ContainerRestHandler<PlotContainer> handler) {
+		String url = getInstanceNameUri(String.format("locations/%s,%s/plots", geoY, geoX));
 
 		try {
 			if (loginManager.isLoggedIn()) {
@@ -130,22 +114,8 @@ public class RequestGenerator {
 		params.put("max_plots", maxPlots);
 		params.put("filter_recent", Boolean.toString(recent));
 		params.put("filter_pending", Boolean.toString(pending));
-
-		String url = "/locations/" + geoY + "," + geoX + "/plots";
-
-		try {
-			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(url,
-						loginManager.loggedInUser.getUserName(),
-						loginManager.loggedInUser.getPassword(),
-						params, handler);
-			} else {
-				client.get(url, params, handler);
-			}
-		} catch (JSONException e) {
-			// If user json error, request with no auth
-			client.get(url, params, handler);
-		}
+		
+		getPlotsNearLocation(geoY, geoX, params, handler);
 	}
 
 	public void updatePlot(int id, Plot plot,
