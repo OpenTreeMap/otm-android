@@ -109,4 +109,5 @@
 	
 	<string name="eco_fieldgroup_header">Yearly Ecosystem Services</string>
 	<string name="eco_currencey_saved_text">saved</string>
+	<string name="diameter_missing">Diameter missing</string>
 </resources>
