@@ -29,26 +29,22 @@ public class Tree extends Model {
         data.put("id", id);
     }
 
-    public double getDbh() throws JSONException {
-        return getDbh(false);
+    public double getDiameter() throws JSONException {
+        return getDiameter(false);
     }
 
-    public double getDbh(boolean getCurrentOnly) throws JSONException {
+    public double getDiameter(boolean getCurrentOnly) throws JSONException {
         if (getCurrentOnly) {
-            return getDoubleOrDefault("dbh", 0d);
+            return getDoubleOrDefault("tree.diameter", 0d);
         }
 
         // Use the field value, which could be a recent pending value
-        Object value = Field.getValueForKey("tree.dbh", plot);
+        Object value = Field.getValueForKey("tree.diameter", plot);
         if (value != null) {
             return Double.parseDouble(value.toString());
         } else {
             return 0d;
         }
-    }
-
-    public void setDbh(double dbh) throws JSONException {
-        data.put("dbh", dbh);
     }
 
     public String getDateRemoved() throws JSONException {
@@ -241,7 +237,7 @@ public class Tree extends Model {
         JSONArray ids = data.getJSONArray("images");
         for (int i = 0; i < ids.length(); i++) {
             JSONObject image = ids.getJSONObject(i);
-            idList.add((Integer) image.getInt("id"));
+            idList.add(image.getInt("id"));
         }
         return idList;
     }

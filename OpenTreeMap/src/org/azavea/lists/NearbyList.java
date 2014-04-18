@@ -1,12 +1,12 @@
 package org.azavea.lists;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
+import org.azavea.otm.Field;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
@@ -26,11 +26,11 @@ public class NearbyList implements InfoList {
 	private PlotContainer nearbyPlots;
 	private double lat;
 	private double lon;
-	private ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
+	private final ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
 	private LocationManager locationManager;
 	private boolean filterRecent;
 	private boolean filterPending;
-	private Context context;
+	private final Context context;
 	
 	public NearbyList(Context context) {
 		lat = App.getStartPos().latitude;
@@ -48,7 +48,8 @@ public class NearbyList implements InfoList {
 		this.context= context;
 	}
 	
-	public void setupLocationUpdating(Context applicationContext) {
+	@Override
+    public void setupLocationUpdating(Context applicationContext) {
 		locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
 		
 		LocationListener locationListener = new LocationListener() {
@@ -185,20 +186,19 @@ public class NearbyList implements InfoList {
 	}
 
 	private String getDiameter(Plot p) {
-		Locale l = Locale.getDefault();
-		String unitString;
-		if (l != null && l.equals(Locale.US)) {
-			unitString = " in. Diameter";
-		} else {
-			unitString = " m. Diameter";
-		}
-		String diameter;
-		DecimalFormat df2 = new DecimalFormat("#.##");
-		try {
-			diameter = df2.format(p.getTree().getDbh()) + unitString;
-		} catch (Exception e) {
-			diameter = "Diameter missing";
-		}
+	    String dbhKey = "tree.diameter";
+		Field dbhField = App.getFieldManager().getField(dbhKey);
+        String diameter = context.getString(R.string.diameter_missing);  
+        
+        try {
+            Double dbh = p.getTree().getDiameter();
+            
+            if (dbhField != null && dbh > 0d) {
+                diameter = Double.toString(dbh) + " " + dbhField.unitText;
+            }
+        } catch(Exception e) {
+            Log.e(App.LOG_TAG, "Unable to get list diameter", e);
+        }
 		return diameter;
 	}
 
@@ -206,7 +206,7 @@ public class NearbyList implements InfoList {
 		String species;
 		String speciesDefault = context.getString(R.string.species_missing);
 		try {
-			species = p.getTree().getSpeciesName();
+			species = p.getTitle();
 			if (species == null) {
 				species = speciesDefault;
 			}
