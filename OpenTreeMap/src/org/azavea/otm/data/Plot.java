@@ -360,7 +360,12 @@ public class Plot extends Model {
     }
 
     public void assignNewTreePhoto(JSONObject image) throws JSONException {
-        //TODO STUB
+        JSONArray photos = data.optJSONArray("photos");
+        if (photos == null) {
+            photos = new JSONArray();
+            data.put("photos", photos);
+        }
+        photos.put(image);
     }
 
     public String getScienticName() {
