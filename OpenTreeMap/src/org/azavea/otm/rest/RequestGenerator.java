@@ -87,11 +87,23 @@ public class RequestGenerator {
 	public void getInstanceInfo(String urlName,
 	        JsonHttpResponseHandler handler) {
 
-	    String url = "/instance/" + urlName;
-
 	    // Note: Public instances do not require auth, but private do.
 	    // This will need to be modified when we support private maps
-        client.get(url, null, handler);
+	    String url = "/instance/" + urlName;
+	    User user = loginManager.loggedInUser;
+
+	    try {
+            if (loginManager.isLoggedIn()) {
+                client.getWithAuthentication(url,
+                        user.getUserName(),
+                        user.getPassword(),
+                        null, handler);
+            } else {
+                client.get(url, null, handler);
+            }
+	    } catch (JSONException e) {
+                client.get(url, null, handler);
+	    }
 	}
 
 	private String getInstanceNameUri(String path) {

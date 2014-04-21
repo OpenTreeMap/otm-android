@@ -18,8 +18,8 @@ import android.util.Log;
 public class LoginManager {
 	private final String userKey = "user";
 	private final String passKey = "pass";
-	private Context context;
-	private SharedPreferences prefs;
+	private final Context context;
+	private final SharedPreferences prefs;
 	
 	public User loggedInUser = null;
 	
@@ -36,6 +36,7 @@ public class LoginManager {
 			final Callback callback) {
 		
 		final RequestGenerator rg = new RequestGenerator();
+
 		try {
 			rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
 		    	
@@ -44,7 +45,16 @@ public class LoginManager {
 		    	
 		    	private void handleCallback(Bundle resp) {
 			    	resultMessage.setData(data);
-			    	callback.handleMessage(resultMessage);
+			    	
+			    	App.reloadInstanceInfo(new Callback() {
+                        
+                        @Override
+                        public boolean handleMessage(Message msg) {
+                            callback.handleMessage(resultMessage);
+                            return true;
+                        }
+                    });
+
 		    	}
 
 				@Override
@@ -85,7 +95,6 @@ public class LoginManager {
 				}
 			});
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -94,6 +103,9 @@ public class LoginManager {
 		loggedInUser = null;
 		prefs.edit().remove(userKey).commit();
 		prefs.edit().remove(passKey).commit();
+		
+        // Previous instance info is now invalid
+		App.reloadInstanceInfo(null);
 	}
 	
 	/** 
@@ -113,6 +125,11 @@ public class LoginManager {
 					return true; 
 				}
 			});
+		} else {
+            // If there is no user to auto login, the app still needs to 
+            // make an instance request, which is otherwise associated and instigated
+		    // after a login attempt
+            App.reloadInstanceInfo(null);
 		}
 	}
 	

@@ -167,26 +167,39 @@ public class MainMapActivity extends MapActivity{
 
         final ProgressDialog dialog = ProgressDialog.show(MainMapActivity.this, "",
                 "Loading Map Info...", true);
-
-        App.getAppInstance().ensureInstanceLoaded(new Callback() {
+        
+        Callback instanceLoaded = new Callback() {
 
             @Override
-            public boolean handleMessage(Message arg0) {
-                START_POS = App.getStartPos();
-                setContentView(R.layout.activity_map_display_2);
-                bindEnterKeyListenerToLocationSearchBar();
-                filterDisplay = (TextView)findViewById(R.id.filterDisplay);
-                setUpMapIfNeeded();
-                plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
-                setPopupViews();
-                clearTileCache();
-                if (plotPopup.getVisibility() == View.VISIBLE) {
-                    findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                }
-                dialog.dismiss();
-                return true;
+            public boolean handleMessage(Message result) {
+                try {
+                    if (result.getData().getBoolean("success")) {
+                        START_POS = App.getStartPos();
+                        setContentView(R.layout.activity_map_display_2);
+                        bindEnterKeyListenerToLocationSearchBar();
+                        filterDisplay = (TextView)findViewById(R.id.filterDisplay);
+                        setUpMapIfNeeded();
+                        plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
+                        setPopupViews();
+                        clearTileCache();
+                        if (plotPopup.getVisibility() == View.VISIBLE) {
+                            findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+                        }
+                    }
+                    return true;
+
+                } catch (Exception e) {
+                    Log.e(App.LOG_TAG, "Unable to setup map", e);
+                    Toast.makeText(App.getAppInstance(), "Unable to setup map", Toast.LENGTH_LONG).show();
+                    return false;
+
+                } finally {
+                    dialog.dismiss();
+                } 
             }
-        });
+        };
+        // Check for an instance before loading the map
+        App.getAppInstance().ensureInstanceLoaded(instanceLoaded);
     }
 
     @Override
