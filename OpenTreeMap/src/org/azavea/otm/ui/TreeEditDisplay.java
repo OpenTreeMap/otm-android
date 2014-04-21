@@ -413,7 +413,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
             RequestGenerator rg = new RequestGenerator();
 
-            RestHandler responseHandler = new RestHandler<Plot>(new Plot()) {
+            RestHandler<Plot> responseHandler = new RestHandler<Plot>(new Plot()) {
                 @Override
                 public void dataReceived(Plot updatedPlot) {
                     // Tree was updated, check if a photo needs to be also added
