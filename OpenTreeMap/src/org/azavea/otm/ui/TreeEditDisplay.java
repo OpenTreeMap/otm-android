@@ -200,8 +200,16 @@ public class TreeEditDisplay extends TreeDisplay {
         setupDeleteButtons(layout, fieldList);
     }
 
+    /**
+     * If the tree.diameter field exists for editing, also include a synced
+     * circumference field so that the user can enter either measurement
+     */
     private void setupCircumferenceField(LayoutInflater layout) {
-        final EditText dbh = (EditText) findViewById(R.id.dynamic_dbh).findViewById(R.id.field_value);
+        View dbhField = findViewById(R.id.dynamic_dbh);
+        if (dbhField == null) {
+            return;
+        }
+        final EditText dbh = (EditText) dbhField.findViewById(R.id.field_value);
         final EditText cir = (EditText) findViewById(R.id.dynamic_circumference).findViewById(R.id.field_value);
 
         dbh.addTextChangedListener(new TextWatcher() {
