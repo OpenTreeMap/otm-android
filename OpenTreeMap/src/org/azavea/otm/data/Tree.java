@@ -1,10 +1,6 @@
 package org.azavea.otm.data;
 
-import java.util.ArrayList;
-
-import org.azavea.otm.App;
 import org.azavea.otm.Field;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +57,7 @@ public class Tree extends Model {
 
     /**
      * Get the current or pending value for species name
-     * 
+     *
      * @param getCurrentOnly
      *            , if True return the actual saved value, otherwise return
      *            pending value if it exists
@@ -208,64 +204,5 @@ public class Tree extends Model {
 
     public void setStewardName(String stewardName) throws JSONException {
         data.put("steward_name", stewardName);
-    }
-
-    /**
-     * Add an image definition to the list of available images. This is useful
-     * after a new image is added to the server, without having to request the
-     * plot/tree again
-     * 
-     * @param image
-     * @throws JSONException
-     */
-    public void addImageToList(JSONObject image) throws JSONException {
-        JSONArray images;
-        if (data.isNull("images")) {
-            images = new JSONArray();
-            data.put("images", images);
-        } else {
-            images = data.getJSONArray("images");
-        }
-        images.put(image);
-    }
-
-    public ArrayList<Integer> getImageIdList() throws JSONException {
-        ArrayList<Integer> idList = new ArrayList<Integer>();
-        if (data.isNull("images")) {
-            return null;
-        }
-        JSONArray ids = data.getJSONArray("images");
-        for (int i = 0; i < ids.length(); i++) {
-            JSONObject image = ids.getJSONObject(i);
-            idList.add(image.getInt("id"));
-        }
-        return idList;
-    }
-
-    public String getTreePhotoUrl() throws JSONException {
-        if (data.isNull("images")) {
-            return null;
-        }
-
-        // loop through the image array and pluck out
-        // the image with the highest ID (the most current image.)
-        JSONArray images = data.getJSONArray("images");
-        String urlLeaf = null;
-        int maxId = -1;
-        for (int i = 0; i < images.length(); i++) {
-            JSONObject image = images.getJSONObject(i);
-            int imageId = image.getInt("id");
-            if (imageId > maxId) {
-                maxId = imageId;
-                urlLeaf = image.getString("url");
-            }
-        }
-
-        if (urlLeaf == null) {
-            return null;
-        }
-
-        String urlStem = App.getSharedPreferences().getString("image_url", "");
-        return urlStem + urlLeaf;
     }
 }

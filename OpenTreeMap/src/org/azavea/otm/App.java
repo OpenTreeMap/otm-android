@@ -6,9 +6,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.azavea.lists.NearbyList;
-import org.azavea.otm.FilterManager;
-import com.loopj.android.http.AsyncHttpClient;
-import com.google.android.gms.maps.model.LatLng;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.RestHandler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import android.app.Application;
 import android.content.Context;
@@ -20,12 +22,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.azavea.otm.R;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.RestHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.AsyncHttpClient;
 
 /**
  * A global singleton object to maintain application state
@@ -98,11 +96,10 @@ public class App extends Application {
         Editor editor = prefs.edit();
         Context context = appInstance.getApplicationContext();
         editor.putString("base_url", context.getString(R.string.base_url))
+              .putString("api_url", context.getString(R.string.api_url))
               .putString("tiler_url", context.getString(R.string.tiler_url))
               .putString("plot_feature", context.getString(R.string.plot_feature))
               .putString("boundary_feature", context.getString(R.string.boundary_feature))
-              .putString("canopy_tms_url", context.getString(R.string.canopy_tms_url))
-              .putString("image_url", context.getString(R.string.image_url))
               .putString("access_key", context.getString(R.string.access_key))
               .putString("secret_key", context.getString(R.string.secret_key))
               .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
@@ -133,12 +130,12 @@ public class App extends Application {
     }
 
     private void checkAndSetDefaultMapInstance(final Callback callback) {
-        // If an instance was set with the compiled configuration, 
+        // If an instance was set with the compiled configuration,
         // this version of the app will always use that instance
         // code.  Otherwise, the instance is selected from those
         // available to the logged in user.
         final String instance = appInstance.getString(R.string.instance_code);
-        RestHandler<InstanceInfo> handler = 
+        RestHandler<InstanceInfo> handler =
                 new RestHandler<InstanceInfo>(new InstanceInfo()) {
 
             @Override
@@ -214,7 +211,7 @@ public class App extends Application {
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "Unable to create field manager from instance", e);
-            Toast.makeText(appInstance, "Error setting up OpenTreeMap", 
+            Toast.makeText(appInstance, "Error setting up OpenTreeMap",
                     Toast.LENGTH_LONG).show();
         }
     }

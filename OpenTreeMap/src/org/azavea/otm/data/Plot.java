@@ -1,14 +1,16 @@
 package org.azavea.otm.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.azavea.otm.App;
 import org.azavea.otm.rest.RequestGenerator;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -20,9 +22,7 @@ public class Plot extends Model {
     private Species species = null;
 
     enum PendingStatus {
-        Pending,
-        NoPending,
-        Unset
+        Pending, NoPending, Unset
     }
 
     /**
@@ -44,11 +44,11 @@ public class Plot extends Model {
             Log.e(App.LOG_TAG, "Error creating empty plot", e);
         }
     }
-    
+
     public Plot(JSONObject data) {
         setData(data);
     }
-    
+
     @Override
     public void setData(JSONObject data) {
         super.setData(data);
@@ -65,7 +65,7 @@ public class Plot extends Model {
                     this.species = new Species();
                     species.setData(speciesData);
                 }
-        	}
+            }
         } catch (JSONException e) {
             this.plotDetails = null;
         }
@@ -82,6 +82,7 @@ public class Plot extends Model {
     public String getTitle() {
         return this.data.optString("title", null);
     }
+
     public long getWidth() throws JSONException {
         return getLongOrDefault("width", 0l);
     }
@@ -236,6 +237,7 @@ public class Plot extends Model {
 
     /***
      * Does this plot have current pending edits?
+     *
      * @throws JSONException
      */
     public boolean hasPendingEdits() throws JSONException {
@@ -248,7 +250,7 @@ public class Plot extends Model {
         if (!data.isNull("pending_edits")) {
             if (data.getJSONObject("pending_edits").length() > 0) {
                 pendings = true;
-        	}
+            }
         }
 
         // Cache for this instance
@@ -257,11 +259,12 @@ public class Plot extends Model {
     }
 
     /**
-     * Get a pending edit description for a given field key for a plot or
-     * tree
-     * @param key - name of field key
-     * @return An object representing a pending edit description for the field, or
-     * null if there are no pending edits
+     * Get a pending edit description for a given field key for a plot or tree
+     *
+     * @param key
+     *            name of field key
+     * @return An object representing a pending edit description for the field,
+     *         or null if there are no pending edits
      * @throws JSONException
      */
     public PendingEditDescription getPendingEditForKey(String key) throws JSONException {
@@ -269,15 +272,18 @@ public class Plot extends Model {
             JSONObject edits = data.getJSONObject("pending_edits");
             if (!edits.isNull(key)) {
                 return new PendingEditDescription(key, edits.getJSONObject(key));
-        	}
+            }
         }
         return null;
     }
 
     /**
      * Get a plot or tree permission from a plot json
-     * @param name: "tree" or "plot"
-     * @param editType "can_edit" or "can_delete"
+     *
+     * @param name
+     *            "tree" or "plot"
+     * @param editType
+     *            "can_edit" or "can_delete"
      * @return
      */
     private boolean getPermission(String name, String editType) {
@@ -288,8 +294,8 @@ public class Plot extends Model {
                 if (perm.has(name)) {
                     JSONObject json = perm.getJSONObject(name);
                     return json.getBoolean(editType);
-            	}
-        	}
+                }
+            }
             return false;
         } catch (JSONException e) {
             return false;
@@ -304,47 +310,62 @@ public class Plot extends Model {
         this.setTree(new Tree());
     }
 
+    public JSONObject getMostRecentPhoto() {
+        JSONArray photos = data.optJSONArray("photos");
+        if (photos != null && photos.length() > 0 && this.hasTree()) {
+            List<JSONObject> photoObjects = new ArrayList<JSONObject>(photos.length());
+            for (int i = 0; i < photos.length(); i++) {
+                JSONObject photo = photos.optJSONObject(i);
+                // If we start supporting multiple trees, we'll need to check the tree id here
+                if (photo != null && photo.optInt("id") != 0 && photo.has("image") && photo.has("thumbnail")) {
+                    photoObjects.add(photo);
+                }
+            }
+            return Collections.max(photoObjects, new Comparator<JSONObject>() {
+                @Override
+                public int compare(JSONObject a, JSONObject b) {
+                    return a.optInt("id") - b.optInt("id");
+                }
+            });
+        }
+        return null;
+    }
+
     /**
-     * Get the most recent tree photo for this plot, by way of an asynchronous
-     * response handler.  Use static helper methods on Plot to decode a photo
-     * response
-     * @param binary image handler which will receive callback from
-     * async http request
+     * Get the most recent tree thumbnail for this plot, by way of an
+     * asynchronous response handler.
+     *
+     * @param binary
+     *            image handler which will receive callback from async http
+     *            request
      * @throws JSONException
      */
-    public void getTreePhoto(BinaryHttpResponseHandler handler) throws JSONException{
-        // TODO: If there is no tree, should we auto call fail on the handler?
-        if (this.hasTree()) {
-            ArrayList<Integer> imageIds = this.getTree().getImageIdList();
-            if (imageIds != null && imageIds.size() > 0) {
-                // Always retrieve the most recent image
-                int imageId = imageIds.get(imageIds.size() - 1).intValue();
+    public void getTreeThumbnail(BinaryHttpResponseHandler handler) {
+        getTreeImage("thumbnail", handler);
+    }
 
+    public void getTreePhoto(BinaryHttpResponseHandler handler) {
+        getTreeImage("image", handler);
+    }
+
+    private void getTreeImage(String name, BinaryHttpResponseHandler handler) {
+        JSONObject photo = this.getMostRecentPhoto();
+        if (photo != null) {
+            String url = photo.optString(name);
+            if (url != null) {
                 RequestGenerator rg = new RequestGenerator();
-                rg.getImage(this.getId(), imageId, handler);
-        	}
+                rg.getImage(url, handler);
+            }
         }
     }
 
-    /**
-     * Create standard sized bitmap image from tree photo data
-     * @param imageData
-     * @return
-     */
-    public static Bitmap createTreeThumbnail(byte[] imageData) {
-        Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-        // Use an 80x80px image thumbnail
-        return Bitmap.createScaledBitmap(image, 80, 80, true);
-    }
-
-    public static Bitmap createTreeDetail(byte[] imageData) {
-        return Bitmap.createScaledBitmap(
-                BitmapFactory.decodeByteArray(imageData, 0, imageData.length), 480, 480, true);
-    }
-
-
     public void assignNewTreePhoto(JSONObject image) throws JSONException {
-        //TODO STUB
+        JSONArray photos = data.optJSONArray("photos");
+        if (photos == null) {
+            photos = new JSONArray();
+            data.put("photos", photos);
+        }
+        photos.put(image);
     }
 
     public String getScienticName() {
@@ -362,8 +383,8 @@ public class Plot extends Model {
     }
 
     /**
-     * Get an updated georevhash from a plot update, or the current one
-     * if no new one exists
+     * Get an updated georevhash from a plot update, or the current one if no
+     * new one exists
      */
     public String getUpdatedGeoRev() {
         return this.data.optString("geoRevHash",

@@ -26,12 +26,15 @@ import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 // This class is designed to take care of the base-url
 // and otm api-key for REST requests
 public class RestClient {
+    private final String apiUrl;
+
     private final String baseUrl;
 
     private String host;
@@ -46,6 +49,7 @@ public class RestClient {
 
     public RestClient() {
         prefs = App.getSharedPreferences();
+        apiUrl = getApiUrl();
         baseUrl = getBaseUrl();
         appVersion = getAppVersion();
         client = createHttpClient();
@@ -56,7 +60,7 @@ public class RestClient {
         // to generate a matching signature on the api server.
         try {
             // Authority is servername[:port] if port is not 80
-            host = new URI(baseUrl).getAuthority();
+            host = new URI(apiUrl).getAuthority();
         } catch (URISyntaxException e) {
             Log.e(App.LOG_TAG, "Could not determine valid HOST from base URL");
         }
@@ -307,6 +311,13 @@ public class RestClient {
         client.delete(context, completeUrl, headers, responseHandler);
     }
 
+    public void getImage(String imageUrl, BinaryHttpResponseHandler handler) {
+        if (imageUrl.startsWith("/")) {
+            imageUrl = safePathJoin(baseUrl, imageUrl);
+        }
+        client.get(imageUrl, handler);
+    }
+
     private RequestParams prepareParams(RequestParams params) {
         // We'll always need a RequestParams object since we'll always
         // be sending credentials
@@ -385,13 +396,18 @@ public class RestClient {
         return prefs.getString("access_key", "");
     }
 
+    private String getApiUrl() {
+        String apiUrl = prefs.getString("api_url", "");
+        return apiUrl;
+    }
+
     private String getBaseUrl() {
         String baseUrl = prefs.getString("base_url", "");
         return baseUrl;
     }
 
     private String getAbsoluteUrl(String relativeUrl) {
-        return safePathJoin(baseUrl, relativeUrl);
+        return safePathJoin(apiUrl, relativeUrl);
     }
 
     private String safePathJoin(String base, String path) {
