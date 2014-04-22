@@ -28,3 +28,5 @@ extern
 OpenTreeMapSkinned/src/
 OpenTreeMapSkinned/res/
 OpenTreeMapSkinned/AndroidManifest.xml
+
+OpenTreeMapTests/project.properties
