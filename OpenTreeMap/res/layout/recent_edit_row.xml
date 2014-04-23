@@ -32,7 +32,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
-        android:background="@drawable/rounded_corners"
         android:minHeight="30dip"
         android:minWidth="30dip"
         android:textColor="@color/text_light"
