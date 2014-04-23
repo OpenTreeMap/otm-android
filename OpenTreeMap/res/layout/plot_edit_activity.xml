@@ -9,7 +9,6 @@
         android:layout_height="wrap_content" >
 
         <fragment
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/vignette_map_edit_mode"
             android:layout_width="fill_parent"
             android:layout_height="100dp"
@@ -25,7 +24,6 @@
     </FrameLayout>
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scroller"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -33,11 +31,10 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/field_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +50,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/btn_primary"
                 android:onClick="saveEdit"
-                android:text="Save" >
+                android:text="@string/save_plot_edit_button" >
             </Button>
 
             <Button
@@ -63,7 +60,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/btn_danger"
                 android:onClick="cancelEdit"
-                android:text="Cancel" >
+                android:text="@string/cancel" >
             </Button>
         </LinearLayout>
     </ScrollView>

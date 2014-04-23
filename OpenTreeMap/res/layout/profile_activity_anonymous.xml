@@ -3,7 +3,6 @@
     android:layout_height="fill_parent" >
 
     <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/loginMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

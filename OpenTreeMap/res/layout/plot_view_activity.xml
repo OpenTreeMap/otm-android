@@ -83,7 +83,7 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -102,7 +102,7 @@
                 android:background="@drawable/btn_primary"
                 android:onClick="doEdit"
                 android:paddingTop="10dp"
-                android:text="Edit" >
+                android:text="@string/plot_edit_button" >
             </Button>
         </LinearLayout>
     </ScrollView>
