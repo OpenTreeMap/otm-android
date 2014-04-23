@@ -6,23 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.joelapenna.foursquared.widget.SegmentedButton
+    <include
         android:id="@+id/segmented"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        foursquared:btnPaddingBottom="7dip"
-        foursquared:btnPaddingTop="7dip"
-        foursquared:cornerRadius="4dip"
-        foursquared:gradientColorOffEnd="@color/primaryGradientColorOffEnd"
-        foursquared:gradientColorOffStart="@color/primaryGradientColorOffStart"
-        foursquared:gradientColorOnEnd="@color/primaryGradientColorOnEnd"
-        foursquared:gradientColorOnStart="@color/primaryGradientColorOnStart"
-        foursquared:gradientColorSelectedEnd="@color/primaryGradientColorSelectedEnd"
-        foursquared:gradientColorSelectedStart="@color/primaryGradientColorSelectedStart"
-        foursquared:strokeColor="@color/primaryStrokeColor"
-        foursquared:strokeWidth="1dip"
-        foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue" />
+        layout="@layout/segmented_button" />
 
     <ListView
         android:id="@+id/listItems"

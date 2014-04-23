@@ -12,25 +12,14 @@
         android:layout_height="fill_parent"
         class="com.google.android.gms.maps.SupportMapFragment" />
 
-    <com.joelapenna.foursquared.widget.SegmentedButton
+    <include
         android:id="@+id/basemap_controls"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        foursquared:btnPaddingBottom="7dip"
-        foursquared:btnPaddingTop="7dip"
-        foursquared:cornerRadius="4dip"
-        foursquared:gradientColorOffEnd="@color/primaryGradientColorOffEnd"
-        foursquared:gradientColorOffStart="@color/primaryGradientColorOffStart"
-        foursquared:gradientColorOnEnd="@color/primaryGradientColorOnEnd"
-        foursquared:gradientColorOnStart="@color/primaryGradientColorOnStart"
-        foursquared:gradientColorSelectedEnd="@color/primaryGradientColorSelectedEnd"
-        foursquared:gradientColorSelectedStart="@color/primaryGradientColorSelectedStart"
-        foursquared:strokeColor="@color/primaryStrokeColor"
-        foursquared:strokeWidth="1dip"
-        foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue" />
+        android:layout_alignParentTop="true"
+        layout="@layout/segmented_button" />
 
     <LinearLayout
         android:layout_width="match_parent"
