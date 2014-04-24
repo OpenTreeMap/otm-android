@@ -408,7 +408,7 @@ public class MainMapActivity extends MapActivity{
         //set default text
         plotSpeciesView.setText(getString(R.string.species_missing));
         plotAddressView.setText(getString(R.string.address_missing));
-        plotImageView.setImageResource(R.drawable.ic_action_search);
+        plotImageView.setImageResource(R.drawable.missing_tree_photo);
 
         try {
             String addr = plot.getAddressStreet();

@@ -41,13 +41,11 @@
              android:layout_toLeftOf="@id/field_unit">
          </EditText>
 
-
          </RelativeLayout>
 
-     <Button
-         android:id="@+id/choice_select"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:drawableRight="@drawable/ic_action_search"/>
-       
+    <Button
+        android:id="@+id/choice_select"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
