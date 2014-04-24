@@ -1,104 +1,96 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
-       <org.azavea.views.NotifyingScrollView
-           android:id="@+id/userFieldsScroll"
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           onScrollToBotton="addMoreEdits" >
+    <org.azavea.views.NotifyingScrollView
+        android:id="@+id/userFieldsScroll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        onScrollToBotton="addMoreEdits" >
 
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="1.0" >
 
-			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:orientation="vertical"
-		        android:focusable="true"
-		    	android:focusableInTouchMode="true" 
-		    	android:weightSum="1.0"
-		    	android:gravity="center"
-		    	>
-			    	
-               <TextView
-                   android:id="@+id/profile_header"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:layout_gravity="top"
-                   android:layout_margin="5dp"
-                   android:text="User Profile Details"
-                   android:textAppearance="?android:attr/textAppearanceMedium"
-                   android:textColor="@color/black_start"
-                   android:textSize="20sp" />
+            <TextView
+                android:id="@+id/profile_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:layout_margin="5dp"
+                android:text="User Profile Details"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/black_start"
+                android:textSize="20sp" />
 
-			    <LinearLayout
-			        android:id="@+id/user_fields"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:focusable="true"
-			        android:focusableInTouchMode="true"
-			        android:gravity="center"
-			        android:orientation="vertical" />
-		        
-		        <LinearLayout
-					 android:layout_height="wrap_content"
-					 android:layout_width="fill_parent"
-					 android:orientation="vertical"
-					 android:gravity="center"
-					 >
-we
-					 <Button
-					     android:id="@+id/logout"
-					     android:layout_height="wrap_content"
-					     android:layout_width="match_parent"
-					     android:layout_marginBottom="10dp"
-					     android:layout_marginTop="20dp"
-					     android:background="@drawable/btn_primary"
-					     android:onClick="logoutUser"
-					     android:text="@string/logoutButton"
-					     android:textColor="@color/white" 
-					     android:padding="12dp"/>
+            <LinearLayout
+                android:id="@+id/user_fields"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:orientation="vertical" />
 
- 		        
-		            <Button
-		                android:id="@+id/change_password"
-		                android:layout_width="match_parent"
-		                android:layout_height="wrap_content"
-		                android:layout_marginBottom="10dp"
-		                android:background="@drawable/btn_primary"
-		                android:onClick="changePassword"
-		                android:padding="12dp"
-		                android:text="@string/change_password"
-		                android:textColor="@color/white" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical" >
 
-					 <Button
-					     android:id="@+id/change_profile_picture"
-					     android:layout_width="match_parent"
-					     android:layout_height="wrap_content"
-					     android:background="@drawable/btn_primary"
-					     android:onClick="handleChangePhotoClick"
-					     android:padding="12dp"
-					     android:text="@string/change_picture"
-					     android:textColor="@color/white"
-					     android:visibility="gone" />
+                <Button
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_primary"
+                    android:onClick="logoutUser"
+                    android:padding="12dp"
+                    android:text="@string/logoutButton"
+                    android:textColor="@color/white" />
 
-				</LinearLayout>		        
+                <Button
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_primary"
+                    android:onClick="logoutUser"
+                    android:padding="12dp"
+                    android:text="@string/logoutButton"
+                    android:textColor="@color/white" />
 
-		         <LinearLayout 
-			        android:id="@+id/user_edits"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:orientation="vertical"
-			        android:focusable="true"
-			    	android:focusableInTouchMode="true" 
-			    	android:weightSum="1.0"
-			    	android:gravity="center"
-			   	>
+                <Button
+                    android:id="@+id/change_profile_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_primary"
+                    android:onClick="handleChangePhotoClick"
+                    android:padding="12dp"
+                    android:text="@string/change_picture"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-		         </LinearLayout>
-					         
-		    </LinearLayout>
-
-
-       </org.azavea.views.NotifyingScrollView>
+            <LinearLayout
+                android:id="@+id/user_edits"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="1.0" >
+            </LinearLayout>
+        </LinearLayout>
+    </org.azavea.views.NotifyingScrollView>
 
 </LinearLayout>

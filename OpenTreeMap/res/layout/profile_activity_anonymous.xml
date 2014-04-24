@@ -1,38 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/loginMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:layout_marginRight="@dimen/padding_medium"
+        android:gravity="center"
+        android:text="@string/profile_text" />
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-        
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/loginMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/padding_medium"
-            android:layout_marginRight="@dimen/padding_medium"
-            android:gravity="center"
-            android:text="@string/profile_text" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginMessage"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/loginMessage"
-	        android:layout_centerHorizontal="true"
-	        android:paddingLeft="20dp"
-	        android:paddingRight="20dp"
-        >
-        
-	        <Button
-	            android:id="@+id/login"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_marginBottom="17dp"
-	            android:background="@drawable/btn_primary"
-	            android:onClick="showLogin"
-	            android:padding="12dp"
-	            android:text="@string/loginButtonText"
-	            android:textColor="@color/white" />
-      </LinearLayout>
-    </RelativeLayout>
+            android:layout_marginBottom="17dp"
+            android:background="@drawable/btn_primary"
+            android:onClick="showLogin"
+            android:padding="12dp"
+            android:text="@string/loginButtonText"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:foursquared="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    xmlns:foursquared="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent" >
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-	  android:id="@+id/map"
-	  android:layout_width="fill_parent"
-	  android:layout_height="fill_parent"
-	  class="com.google.android.gms.maps.SupportMapFragment"/>
-    
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+
     <LinearLayout
         android:id="@+id/location_bar"
         style="@android:style/ButtonBar"
@@ -20,108 +20,103 @@
         android:layout_alignParentTop="true"
         android:background="@color/primaryGradientColorOffEnd"
         android:padding="3dp" >
-        
-	    <EditText
-	        android:id="@+id/locationSearchField"
-	        android:layout_width="0dp"
-	        android:layout_weight="8"
-	        android:layout_height="fill_parent"
-	        android:hint="@string/search_field_hint"
-	        android:inputType="text"
-	        android:imeOptions="actionSearch"
-	        android:background="@color/mainBackgroundColor"
-	        android:layout_margin="4dp"
-	        android:padding="4dp"
-	        >
-	    </EditText>
-	    <ImageButton
-	        android:id="@+id/locationSearchButton"
-	        android:layout_width="0dp"
-	        android:layout_weight="2"
-	        android:layout_height="44dp"
-	        android:contentDescription="address"
-	        android:src="@android:drawable/ic_menu_search"
-	        android:onClick="handleLocationSearchClick"
-	        android:background="@drawable/btn_primary"
-	    ></ImageButton>
 
-	</LinearLayout>
+        <EditText
+            android:id="@+id/locationSearchField"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="8"
+            android:background="@color/mainBackgroundColor"
+            android:hint="@string/search_field_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:padding="4dp" >
+        </EditText>
 
-  	    <TextView
-  	        android:id="@+id/filterDisplay"
-  	        android:layout_width="fill_parent"
-  	        android:layout_height="wrap_content"
-  	        android:layout_below="@+id/location_bar"
-  	        android:background="@color/black_start"
-  	        android:visibility="gone"
-  	        android:textAppearance="?android:attr/textAppearanceSmall" />
- 
-    <ImageButton
-	        android:id="@+id/mylocationbutton"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="3dp"
-	        android:layout_marginTop="3dp"
-	        android:layout_below="@+id/filterDisplay"
-	        android:layout_width="44dp"
-	        android:layout_height="44dp"
-	        android:contentDescription="@string/show_location"
-	        android:onClick="showMyLocation"
-	        android:src="@android:drawable/ic_menu_mylocation"
-	        android:background="@drawable/btn_primary"
-	 />
-    
-    
-	<LinearLayout 
-	    android:id="@+id/addTreeStep1"
-	    android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/plotPopup"
+        <ImageButton
+            android:id="@+id/locationSearchButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="2"
+            android:background="@drawable/btn_primary"
+            android:contentDescription="address"
+            android:onClick="handleLocationSearchClick"
+            android:src="@android:drawable/ic_menu_search" >
+        </ImageButton>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/filterDisplay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location_bar"
         android:background="@color/black_start"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/mylocationbutton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/filterDisplay"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/btn_primary"
+        android:contentDescription="@string/show_location"
+        android:onClick="showMyLocation"
+        android:src="@android:drawable/ic_menu_mylocation" />
+
+    <LinearLayout
+        android:id="@+id/addTreeStep1"
         android:layout_width="match_parent"
-        android:visibility="visible">
-	    
-	    <TextView
-	            android:id="@+id/treeAddInstructions"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:padding="10dp"
-	            android:background="@color/black_start"
-	            android:gravity="center"
-	            android:text="Step 1: Tap to add a tree marker" />
-	</LinearLayout>	
-	    
-	<LinearLayout 
-	    android:id="@+id/addTreeStep2"
-	    android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plotPopup"
         android:background="@color/black_start"
-        android:visibility="visible">
-		    
-	    <TextView
-	            android:layout_width="0dp"
-	            android:layout_weight="8"
-	            android:layout_height="match_parent"
-	            android:padding="10dp"
-	            android:background="@color/black_start"
-	            android:gravity="center"
-	            android:text="Step 2: Long press to move the tree into position, then click next." />
-	    
-	   	<Button
-	        android:id="@+id/treeAddNext"
-	        style="?android:attr/buttonStyleSmall"
-	        android:layout_width="0dp"
-	        android:layout_weight="2"
-	        android:layout_height="wrap_content"
-	        android:text="Next" 
-	       	android:background="@drawable/btn_primary"
-	        android:padding="@dimen/padding_12"
-	        android:onClick="submitNewTree"
-	        android:layout_margin="10dp"
-	        android:textColor="#FFFFFF"
-	        />
-    
-    </LinearLayout>    
-    
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/treeAddInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/black_start"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Step 1: Tap to add a tree marker" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addTreeStep2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/plotPopup"
+        android:background="@color/black_start"
+        android:visibility="visible" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@color/black_start"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Step 2: Long press to move the tree into position, then click next." />
+
+        <Button
+            android:id="@+id/treeAddNext"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/btn_primary"
+            android:onClick="submitNewTree"
+            android:padding="@dimen/padding_12"
+            android:text="Next"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/plotPopup"
         android:layout_width="fill_parent"
@@ -133,8 +128,8 @@
         android:layout_centerHorizontal="true"
         android:background="@color/popup_background"
         android:minHeight="110dp"
-        android:visibility="invisible"
-        android:onClick="showFullTreeInfo" >
+        android:onClick="showFullTreeInfo"
+        android:visibility="invisible" >
 
         <ImageView
             android:id="@+id/plotImage"
@@ -171,69 +166,59 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/plotSpecies"
             android:layout_toRightOf="@+id/plotImage"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_dark" 
-         	android:ellipsize="end"
-			android:maxLines="1"
-			android:scrollHorizontally="true"/>
-
+            android:textColor="@color/text_dark" />
     </RelativeLayout>
 
-	<com.joelapenna.foursquared.widget.SegmentedButton
-      android:id="@+id/basemap_controls"
-      android:layout_width="200dp"
-      android:layout_height="wrap_content"
-      foursquared:gradientColorOnStart="@color/primaryGradientColorOnStart"
-      foursquared:gradientColorOnEnd="@color/primaryGradientColorOnEnd"
-      foursquared:gradientColorOffStart="@color/primaryGradientColorOffStart"
-      foursquared:gradientColorOffEnd="@color/primaryGradientColorOffEnd"
-      foursquared:gradientColorSelectedStart="@color/primaryGradientColorSelectedStart"
-      foursquared:gradientColorSelectedEnd="@color/primaryGradientColorSelectedEnd"
-      foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue"
-      foursquared:strokeColor="@color/primaryStrokeColor"
-      foursquared:strokeWidth="1dip"
-      foursquared:cornerRadius="4dip"
-      foursquared:btnPaddingTop="7dip"
-      foursquared:btnPaddingBottom="7dip" 
-      android:layout_below="@+id/filterDisplay"
-      android:layout_marginTop="5dp"
-      android:layout_marginLeft="5dp"/>
-	
-	<LinearLayout
-	    android:id="@+id/filter_add_buttons"
-	    android:layout_alignParentBottom="true"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="5dp"
-	 >
-	    <Button 
-	        android:text="Filter"
-	        android:layout_width="0dp"
-	        android:layout_weight=".5"
-	        android:layout_height="wrap_content"
-	        android:onClick="doFilter"
-	        android:background="@drawable/btn_primary"
-	        android:layout_marginRight="2dp"
-	        android:textColor="#FFFFFF"
-	        />
-	    <Button 
-	        android:text="Add Tree"
-	        android:layout_width="0dp"
-	        android:layout_weight=".5"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/btn_primary"
-	        android:onClick="doAddTree"
-	        android:layout_marginLeft="2dp"
-	        android:textColor="#FFFFFF"
-	        
-	       
-	        />
-	    
-	    
-	</LinearLayout>
-    
+    <com.joelapenna.foursquared.widget.SegmentedButton
+        android:id="@+id/basemap_controls"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterDisplay"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        foursquared:btnPaddingBottom="7dip"
+        foursquared:btnPaddingTop="7dip"
+        foursquared:cornerRadius="4dip"
+        foursquared:gradientColorOffEnd="@color/primaryGradientColorOffEnd"
+        foursquared:gradientColorOffStart="@color/primaryGradientColorOffStart"
+        foursquared:gradientColorOnEnd="@color/primaryGradientColorOnEnd"
+        foursquared:gradientColorOnStart="@color/primaryGradientColorOnStart"
+        foursquared:gradientColorSelectedEnd="@color/primaryGradientColorSelectedEnd"
+        foursquared:gradientColorSelectedStart="@color/primaryGradientColorSelectedStart"
+        foursquared:strokeColor="@color/primaryStrokeColor"
+        foursquared:strokeWidth="1dip"
+        foursquared:textStyle="@style/TextViewStyleHeaderButtonBlue" />
+
+    <LinearLayout
+        android:id="@+id/filter_add_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp" >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_weight=".5"
+            android:background="@drawable/btn_primary"
+            android:onClick="doFilter"
+            android:text="Filter"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight=".5"
+            android:background="@drawable/btn_primary"
+            android:onClick="doAddTree"
+            android:text="Add Tree"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
 </RelativeLayout>
-
-
-
-

@@ -21,16 +21,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword"
-        android:hint="@string/password" />
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/register_password2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword"
-        android:hint="@string/verify_password" />
+        android:hint="@string/verify_password"
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/register_username"
@@ -39,26 +39,25 @@
         android:ems="10"
         android:hint="@string/username" />
 
-        
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-	    <EditText
-	        android:id="@+id/register_firstName"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:ems="10"
-	     	android:hint="@string/first_name" 
-	     	android:layout_weight="1"/>
-	
-	    <EditText
-	        android:id="@+id/register_lastName"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:ems="10" 
-	        android:hint="@string/last_name"
-	        android:layout_weight="1"
-	        />	    
+
+        <EditText
+            android:id="@+id/register_firstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/first_name" />
+
+        <EditText
+            android:id="@+id/register_lastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/last_name" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,13 +89,11 @@
             android:text="@string/add_profile_picture"
             android:textColor="@color/text_dark"
             android:visibility="gone" />
-
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        >
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/register"
@@ -113,7 +110,6 @@
             android:paddingTop="@dimen/padding_small"
             android:text="@string/Register"
             android:textColor="@color/white" />
-       
     </RelativeLayout>
 
 </LinearLayout>

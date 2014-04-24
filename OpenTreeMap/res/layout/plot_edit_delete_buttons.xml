@@ -6,25 +6,25 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:paddingTop="40dip" >
-	    	
-			<Button
-			    android:id="@+id/delete_tree"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="@dimen/padding_medium"
-			    android:background="@drawable/warning_action_button"
-			    android:onClick="deleteTree"
-			    android:text="@string/delete_tree"
-			    android:textColor="@color/white" />
-	
-			<Button
-			    android:id="@+id/delete_plot"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="@dimen/padding_medium"
-			    android:background="@drawable/warning_action_button"
-			    android:onClick="deletePlot"
-			    android:text="@string/delete_plot"
-			    android:textColor="@color/white" />
-			
+
+    <Button
+        android:id="@+id/delete_tree"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:background="@drawable/warning_action_button"
+        android:onClick="deleteTree"
+        android:text="@string/delete_tree"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/delete_plot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:background="@drawable/warning_action_button"
+        android:onClick="deletePlot"
+        android:text="@string/delete_plot"
+        android:textColor="@color/white" />
+
 </LinearLayout>
