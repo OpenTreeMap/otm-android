@@ -1,6 +1,7 @@
 package org.azavea.otm;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,6 +17,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.TextUtils;
@@ -40,8 +42,10 @@ public class App extends Application {
     private static SharedPreferences sharedPreferences = null;
     private static boolean pendingEnabled = false;
     private static InstanceInfo currentInstance;
+    private static boolean loadingInstance = false;
 
     private static AsyncHttpClient asyncHttpClient;
+    private static ArrayList<Callback> registeredInstanceCallbacks = new ArrayList<Callback>();
 
     public static App getAppInstance() {
         checkAppInstance();
@@ -86,8 +90,9 @@ public class App extends Application {
     }
 
     private static void checkAppInstance() {
-        if (appInstance == null)
+        if (appInstance == null) {
             throw new IllegalStateException("Application not created yet");
+        }
     }
 
     // (re)Load the relevant resources into the
@@ -135,22 +140,48 @@ public class App extends Application {
         // code.  Otherwise, the instance is selected from those
         // available to the logged in user.
         final String instance = appInstance.getString(R.string.instance_code);
-        RestHandler<InstanceInfo> handler =
+        loadingInstance = true;
+        RestHandler<InstanceInfo> handler = 
                 new RestHandler<InstanceInfo>(new InstanceInfo()) {
+
+            private void handleRegisteredCallbacks(Message msg) {
+                if (registeredInstanceCallbacks.size() > 0) {
+                    for (Callback registeredCallback : registeredInstanceCallbacks) {
+                        registeredCallback.handleMessage(msg);
+                    }
+                    registeredInstanceCallbacks.clear();
+                }
+            }
+
+            private void handleCallback(boolean success) {
+                Message msg = new Message();
+                Bundle data = new Bundle(); data.putBoolean("success", success);
+                msg.setData(data);
+                
+                // Flag to track if instance request is pending
+                loadingInstance = false;
+
+                if (callback != null) {
+                    callback.handleMessage(msg);
+                }
+                
+                // In addition to the direct caller, other callbacks may have been 
+                // registered to be notified of instance loaded status
+                handleRegisteredCallbacks(msg);
+            }
 
             @Override
             public void onFailure(Throwable e, String message){
                 Log.e(App.LOG_TAG, "Unable to Load Instance: " + instance, e);
                 Toast.makeText(appInstance, "Cannot load configured instance.",
                         Toast.LENGTH_LONG).show();
+                handleCallback(false);
             }
 
             @Override
             public void dataReceived(InstanceInfo response) {
                 setCurrentInstance(response);
-                if (callback != null) {
-                    callback.handleMessage(null);
-                }
+                handleCallback(true);
             }
         };
 
@@ -164,7 +195,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
-        checkAndSetDefaultMapInstance(null);
 
         // Create an instance of login manager immediately, so that
         // the app can try to auto log in on any saved credentials
@@ -198,7 +228,19 @@ public class App extends Application {
     public InstanceInfo getCurrentInstance() {
         return currentInstance;
     }
+    
+    /***
+     * Clear the current instance info and force a reload of the configured instance
+     * @param callback to call when instance is loaded
+     */
+    public static void reloadInstanceInfo(Callback callback) {
+        currentInstance = null;
+        getAppInstance().checkAndSetDefaultMapInstance(callback);
+    }
 
+    /***
+     * Given the provided instance, create fields and filters
+     */
     public static void setCurrentInstance(InstanceInfo currentInstance) {
         App.currentInstance = currentInstance;
         try {
@@ -217,21 +259,28 @@ public class App extends Application {
     }
 
     /**
-     * Callback to ensure the instance has been loaded.
+     * Callback to ensure the instance has been loaded, either via a loaded, pending
+     * or missing instance info. This method is safe to call at any time to wait for
+     * instance info before proceeding with the callback.
      * @param callback
      */
     public void ensureInstanceLoaded(final Callback callback) {
         if (currentInstance != null) {
-            callback.handleMessage(null);
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            data.putBoolean("success", true);
+            msg.setData(data);
+            
+            callback.handleMessage(msg);
         } else {
-            checkAndSetDefaultMapInstance(new Callback() {
-
-                @Override
-                public boolean handleMessage(Message arg0) {
-                    callback.handleMessage(null);
-                    return true;
-                }});
-        }
+            // If an instance request is pending, register for a callback on completion,
+            // otherwise, force an instance request
+            if (loadingInstance) {
+                registeredInstanceCallbacks.add(callback);
+            } else {
+                reloadInstanceInfo(callback);
+            }
+        } 
     }
 
 }

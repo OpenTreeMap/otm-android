@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
-	private LoginManager loginManager = App.getLoginManager();
-	
+	private final LoginManager loginManager = App.getLoginManager();
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
