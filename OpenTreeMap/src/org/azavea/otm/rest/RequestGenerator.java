@@ -25,7 +25,6 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-
 public class RequestGenerator {
 	private RestClient client;
 	LoginManager loginManager = App.getLoginManager();
@@ -56,10 +55,9 @@ public class RequestGenerator {
 		client.get("/plots/" + id, null, handler);
 	}
 
-	public void getImage(int plotId, int imageId, BinaryHttpResponseHandler binaryHttpResponseHandler) {
-		client.get("/plots/" + plotId + "/tree/photo/" + imageId, null, binaryHttpResponseHandler);
-	}
-
+    public void getImage(String imageUrl, BinaryHttpResponseHandler binaryHttpResponseHandler) {
+        client.getImage(imageUrl, binaryHttpResponseHandler);
+    }
 
 	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  
 	        ContainerRestHandler<PlotContainer> handler) {
@@ -253,8 +251,4 @@ public class RequestGenerator {
 		client.postWithAuthentication(url, loginManager.loggedInUser.getUserName(),
 				loginManager.loggedInUser.getPassword(), handler);
 	}
-
-
-
-
 }

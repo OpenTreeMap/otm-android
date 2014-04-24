@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,8 +26,6 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 public class TreeInfoDisplay extends TreeDisplay {
     public final static int EDIT_REQUEST = 1;
     ImageView plotImage;
-    private String fullSizeTreeImageUrl;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mapFragmentId = R.id.vignette_map_view_mode;
@@ -114,11 +112,10 @@ public class TreeInfoDisplay extends TreeDisplay {
         // Default if there is no image returned
         plotImage.setImageResource(R.drawable.ic_action_search);
 
-        plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
+        plot.getTreeThumbnail(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
             public void onSuccess(byte[] imageData) {
-                Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
-                plotImage.setImageBitmap(scaledImage);
+                plotImage.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
             }
 
             @Override
@@ -127,13 +124,6 @@ public class TreeInfoDisplay extends TreeDisplay {
                 Log.e(App.LOG_TAG, "Could not retreive tree image", e);
             }
         });
-
-        try {
-            fullSizeTreeImageUrl = plot.getTree().getTreePhotoUrl();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -203,8 +193,6 @@ public class TreeInfoDisplay extends TreeDisplay {
     }
 
     public void handlePhotoDetailClick(View view) {
-        if (fullSizeTreeImageUrl != null) {
-            showPhotoDetail(fullSizeTreeImageUrl);
-        }
+        plot.getTreePhoto(this.getPhotoDetailHandler());
     }
 }

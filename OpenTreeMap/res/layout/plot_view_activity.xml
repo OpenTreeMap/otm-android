@@ -2,113 +2,106 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/base" 
-    android:orientation="vertical">
+    android:background="@color/base"
+    android:orientation="vertical" >
 
-	<RelativeLayout
-	    android:id="@+id/header"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@color/primaryColor"
-	    android:color="@color/text_dark" >
-	    
-		<ImageView
-		    android:id="@+id/plot_photo"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentLeft="true"
-		    android:layout_alignParentTop="true"
-		    android:layout_marginLeft="15dp"
-		    android:layout_marginTop="7dp"
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
+        android:color="@color/text_dark" >
+
+        <ImageView
+            android:id="@+id/plot_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="7dp"
+            android:contentDescription="Tree image"
             android:minHeight="80dp"
             android:minWidth="80dp"
-            android:contentDescription="Tree image"
-            android:onClick="handlePhotoDetailClick"
-            />
-	    
-		<TextView
-		    android:id="@+id/address"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignTop="@+id/plot_photo"
-		    android:layout_marginLeft="16dp"
-		    android:layout_toRightOf="@+id/plot_photo"
-		    android:text="@string/no_address"
-		    android:textColor="@color/white" 
-		    android:ellipsize="end"
-			android:maxLines="1"
-			android:scrollHorizontally="true"
-/>
+            android:scaleType="centerInside"
+            android:onClick="handlePhotoDetailClick" />
 
-		<TextView
-		    android:id="@+id/species"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignLeft="@+id/address"
-		    android:layout_below="@+id/address"
-		    android:text="@string/species_missing"
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/plot_photo"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/plot_photo"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text="@string/no_address"
+            android:textColor="@color/white" />
 
-		<TextView
-		    android:id="@+id/updated_on"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignLeft="@+id/species"
-		    android:layout_below="@+id/species"
-		    android:layout_centerVertical="true"
-		    android:textColor="@color/text_dark" />
+        <TextView
+            android:id="@+id/species"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/address"
+            android:layout_below="@+id/address"
+            android:text="@string/species_missing"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white" />
 
-		<TextView
-		    android:id="@+id/updated_by"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignLeft="@+id/updated_on"
-		    android:layout_below="@+id/updated_on"
-		    android:textColor="@color/text_dark" />
-	</RelativeLayout>
-	
-	<fragment
-		  android:id="@+id/vignette_map_view_mode"
-		  android:layout_width="fill_parent"
-		  android:layout_height="100dp"
-		  class="com.google.android.gms.maps.SupportMapFragment"/>
-    
-	
-		
-	<ScrollView
-	    android:id="@+id/scroller"
-	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
-	 >
-		
-	    <LinearLayout
-	       	android:layout_width="fill_parent"
-	       	android:layout_height="fill_parent"
-	       	android:orientation="vertical"
-	     > 
-		    <LinearLayout
-			    android:id="@+id/field_list"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:orientation="vertical"
-		        android:paddingLeft="10dp"
-		        >        	
-		    </LinearLayout>
-		    
-		   <Button
-		       android:layout_width="fill_parent"
-		       android:layout_height="wrap_content"
-		       android:layout_gravity="center"
-		       android:layout_marginBottom="10dp"
-		       android:background="@drawable/btn_primary"
-		       android:onClick="doEdit"
-		       android:paddingTop="10dp"
-		       android:text="Edit" >
+        <TextView
+            android:id="@+id/updated_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/species"
+            android:layout_below="@+id/species"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_dark" />
 
-		    </Button>
-	    </LinearLayout>	    
-	   	    
-	    
-	</ScrollView>
-</LinearLayout>	
+        <TextView
+            android:id="@+id/updated_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/updated_on"
+            android:layout_below="@+id/updated_on"
+            android:textColor="@color/text_dark" />
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/vignette_map_view_mode"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+
+    <ScrollView
+        android:id="@+id/scroller"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/field_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp" >
+            </LinearLayout>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_primary"
+                android:onClick="doEdit"
+                android:paddingTop="10dp"
+                android:text="Edit" >
+            </Button>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -58,7 +58,6 @@ public class TreeEditDisplay extends TreeDisplay {
     private static String outputFilePath;
 
     private final RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
-
         @Override
         public void onFailure(Throwable e, String message) {
             deleteDialog.dismiss();
@@ -86,7 +85,6 @@ public class TreeEditDisplay extends TreeDisplay {
             setResult(RESULT_OK, resultIntent);
             finish();
         }
-
     };
 
     private final JsonHttpResponseHandler deletePlotHandler = new JsonHttpResponseHandler() {
@@ -107,44 +105,6 @@ public class TreeEditDisplay extends TreeDisplay {
         };
     };
 
-    private final JsonHttpResponseHandler addTreePhotoHandler = new JsonHttpResponseHandler() {
-        @Override
-        public void onSuccess(JSONObject response) {
-
-            try {
-                if (response.has("image")) {
-                    plot.assignNewTreePhoto(response);
-
-                    if (savePhotoDialog != null) {
-                        savePhotoDialog.dismiss();
-                    }
-                    if (saveDialog != null) {
-                        saveDialog.dismiss();
-                    }
-                    finish();
-
-                } else {
-                    Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
-                    Log.d("AddTreePhoto", "photo response no success");
-                }
-            } catch (JSONException e) {
-                Toast.makeText(App.getAppInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
-            }
-        };
-
-        @Override
-        public void onFailure(Throwable e, JSONObject errorResponse) {
-            Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
-            savePhotoDialog.dismiss();
-        };
-
-        @Override
-        protected void handleFailureMessage(Throwable e, String responseBody) {
-            e.printStackTrace();
-            Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG).show();
-            savePhotoDialog.dismiss();
-        };
-    };
     private Bitmap newTreePhoto;
 
     @Override
@@ -453,7 +413,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
             RequestGenerator rg = new RequestGenerator();
 
-            RestHandler responseHandler = new RestHandler<Plot>(new Plot()) {
+            RestHandler<Plot> responseHandler = new RestHandler<Plot>(new Plot()) {
                 @Override
                 public void dataReceived(Plot updatedPlot) {
                     // Tree was updated, check if a photo needs to be also added
@@ -482,25 +442,60 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     }
 
-    protected void savePhotoForPlot(Plot plot, ProgressDialog saveDialog) {
+    protected void savePhotoForPlot(final Plot updatedPlot, final ProgressDialog saveDialog) {
         if (this.newTreePhoto != null) {
             RequestGenerator rc = new RequestGenerator();
             try {
-                setResultOk(plot);
-                rc.addTreePhoto(plot, this.newTreePhoto, addTreePhotoHandler);
+                rc.addTreePhoto(updatedPlot, this.newTreePhoto, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        try {
+                            if (response.has("image")) {
+                                updatedPlot.assignNewTreePhoto(response);
+
+                                if (savePhotoDialog != null) {
+                                    savePhotoDialog.dismiss();
+                                }
+                                doFinish(updatedPlot, saveDialog);
+
+                            } else {
+                                Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG)
+                                        .show();
+                                Log.d("AddTreePhoto", "photo response no success");
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(App.getAppInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
+                        }
+                    };
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject errorResponse) {
+                        Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
+                        savePhotoDialog.dismiss();
+                    };
+
+                    @Override
+                    protected void handleFailureMessage(Throwable e, String responseBody) {
+                        e.printStackTrace();
+                        Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG)
+                                .show();
+                        savePhotoDialog.dismiss();
+                    };
+                });
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Unable to upload photo", e);
                 Toast.makeText(getBaseContext(), "Photo could not be added, please try again", Toast.LENGTH_SHORT)
                         .show();
-            } 
+            }
+        } else {
+            doFinish(updatedPlot, saveDialog);
         }
-
-        doFinish(plot, saveDialog);
-
     }
 
     private void doFinish(Plot updatedPlot, ProgressDialog saveDialog) {
-        saveDialog.dismiss();
+        if (saveDialog != null) {
+            saveDialog.dismiss();
+        }
         setResultOk(updatedPlot);
 
         // Updating may have changed the georev

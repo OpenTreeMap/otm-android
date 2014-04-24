@@ -26,7 +26,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -91,8 +91,6 @@ public class MainMapActivity extends MapActivity{
     TileOverlay boundaryTileOverlay;
 
     private Location currentLocation;
-
-    private final String fullSizeTreeImageUrl = null;
 
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
@@ -237,7 +235,7 @@ public class MainMapActivity extends MapActivity{
                     // TODO: Do we need to refresh the map tile?
                 }
                 break;
-             
+
             case ADD_INTENT:
                 if (resultCode == Activity.RESULT_OK) {
                     showPlotFromIntent(data);
@@ -269,8 +267,8 @@ public class MainMapActivity extends MapActivity{
      * Event handlers bound to the view.
      *********************************************/
     public void handlePhotoDetailClick(View view) {
-        if (fullSizeTreeImageUrl != null) {
-            showPhotoDetail(fullSizeTreeImageUrl);
+        if (this.currentPlot != null) {
+            currentPlot.getTreePhoto(this.getPhotoDetailHandler());
         }
     }
 
@@ -435,9 +433,6 @@ public class MainMapActivity extends MapActivity{
 
             showImageOnPlotPopup(plot);
 
-            // TODO: PHOTOS
-            //fullSizeTreeImageUrl = tree.getTreePhotoUrl();
-
             LatLng position = zoomToPlot(plot);
 
             removePlotMarker();
@@ -469,7 +464,7 @@ public class MainMapActivity extends MapActivity{
         plotPopup.setVisibility(View.INVISIBLE);
         currentPlot = null;
     }
-    
+
     private void removePlotMarker() {
         if (plotMarker != null) {
             plotMarker.remove();
@@ -483,12 +478,11 @@ public class MainMapActivity extends MapActivity{
     }
 
     private void showImageOnPlotPopup(Plot plot) throws JSONException {
-        plot.getTreePhoto(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
+        plot.getTreeThumbnail(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
             public void onSuccess(byte[] imageData) {
-                Bitmap scaledImage = Plot.createTreeThumbnail(imageData);
                 ImageView plotImage = (ImageView) findViewById(R.id.plotImage);
-                plotImage.setImageBitmap(scaledImage);
+                plotImage.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
             }
 
             @Override
@@ -603,7 +597,7 @@ public class MainMapActivity extends MapActivity{
             double lon = plotMarker.getPosition().longitude;
             newGeometry.setY(lat);
             newGeometry.setX(lon);
-            
+
             // We always get coordinates in lat/lon
             newGeometry.setSrid(4326);
             newPlot.setGeometry(newGeometry);
