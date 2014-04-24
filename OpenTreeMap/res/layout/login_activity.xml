@@ -2,58 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/item_grey_end" >
+    android:background="@color/main_background_color" >
 
     <Button
         android:id="@+id/login"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        style="@style/login_button"
         android:layout_below="@+id/login_password"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:background="@drawable/btn_primary"
+        android:background="@color/primary_color"
         android:onClick="login"
-        android:padding="@dimen/padding_12"
-        android:text="@string/login"
-        android:textColor="@color/white" />
-
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/login"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:background="@drawable/btn_danger"
-        android:onClick="cancel"
-        android:padding="@dimen/padding_12"
-        android:text="@string/cancel"
-        android:textColor="@color/white" />
+        android:text="@string/login" />
 
     <Button
         android:id="@+id/register"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/cancel"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:background="@drawable/btn"
+        style="@style/login_button"
+        android:layout_below="@+id/login"
         android:onClick="register"
-        android:padding="@dimen/padding_12"
-        android:text="@string/Register"
-        android:textColor="@color/black_end" />
+        android:text="@string/Register" />
 
     <EditText
         android:id="@+id/login_username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        style="@style/login_textbox"
         android:hint="@string/hint_email"
         android:inputType="text" >
 
@@ -62,12 +30,8 @@
 
     <EditText
         android:id="@+id/login_password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_username"
-        android:layout_alignParentRight="true"
+        style="@style/login_textbox"
         android:layout_below="@+id/login_username"
-        android:layout_marginBottom="20dp"
         android:hint="@string/hint_password"
         android:inputType="textPassword" >
     </EditText>

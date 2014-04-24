@@ -17,28 +17,27 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/primaryGradientColorOffEnd"
+        android:background="@color/main_background_color"
         android:padding="3dp" >
 
         <EditText
             android:id="@+id/locationSearchField"
+            style="@style/textbox"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_margin="4dp"
             android:layout_weight="8"
-            android:background="@color/mainBackgroundColor"
             android:hint="@string/search_field_hint"
             android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:padding="4dp" >
+            android:inputType="text" >
+
         </EditText>
 
         <ImageButton
             android:id="@+id/locationSearchButton"
+            style="@style/button_primary"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="2"
-            android:background="@drawable/btn_primary"
             android:contentDescription="@string/search_field_button"
             android:onClick="handleLocationSearchClick"
             android:src="@android:drawable/ic_menu_search" >
@@ -47,22 +46,21 @@
 
     <TextView
         android:id="@+id/filterDisplay"
+        style="@style/small_map_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/location_bar"
-        android:background="@color/black_start"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/mylocationbutton"
+        style="@style/button_primary"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/filterDisplay"
         android:layout_marginRight="3dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/btn_primary"
         android:contentDescription="@string/show_location"
         android:onClick="showMyLocation"
         android:src="@android:drawable/ic_menu_mylocation" />
@@ -72,16 +70,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plotPopup"
-        android:background="@color/black_start"
+        android:background="@color/main_background_color"
         android:visibility="visible" >
 
         <TextView
             android:id="@+id/treeAddInstructions"
+            style="@style/add_tree_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/black_start"
-            android:gravity="center"
-            android:padding="10dp"
             android:text="@string/add_tree_step_1" />
     </LinearLayout>
 
@@ -90,30 +86,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plotPopup"
-        android:background="@color/black_start"
+        android:background="@color/main_background_color"
         android:visibility="visible" >
 
         <TextView
+            style="@style/add_tree_label"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
-            android:background="@color/black_start"
-            android:gravity="center"
-            android:padding="10dp"
             android:text="@string/add_tree_step_2" />
 
         <Button
             android:id="@+id/treeAddNext"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="2"
-            android:background="@drawable/btn_primary"
+            style="@style/small_button_primary"
             android:onClick="submitNewTree"
-            android:padding="@dimen/padding_12"
-            android:text="@string/add_tree_next_button"
-            android:textColor="#FFFFFF" />
+            android:text="@string/add_tree_next_button" />
     </LinearLayout>
 
     <RelativeLayout
@@ -131,55 +118,35 @@
         android:visibility="invisible" >
 
         <ImageView
+            style="@style/plot_thumbnail"
             android:id="@+id/plotImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/no_image_background"
-            android:maxHeight="80dp"
-            android:maxWidth="80dp"
-            android:contentDescription="@string/tree_photo_description"
-            android:minHeight="80dp"
-            android:minWidth="80dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             android:onClick="handlePhotoDetailClick" />
 
         <TextView
             android:id="@+id/plotSpecies"
+            style="@style/large_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/plotImage"
-            android:text="@string/species_missing"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/text_dark" />
+            android:text="@string/species_missing" />
 
         <TextView
             android:id="@+id/plotAddress"
+            style="@style/medium_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/plotSpecies"
-            android:layout_toRightOf="@+id/plotImage"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_dark" />
+            android:layout_toRightOf="@+id/plotImage" />
     </RelativeLayout>
 
     <include
+        android:id="@+id/basemap_controls"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/filterDisplay"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/basemap_controls"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
         layout="@layout/segmented_button" />
 
     <LinearLayout
@@ -187,27 +154,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="5dp" >
+        android:padding="6dp" >
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="2dp"
-            android:layout_weight=".5"
-            android:background="@drawable/btn_primary"
+            style="@style/map_button_primary"
             android:onClick="doFilter"
-            android:text="@string/filter_button"
-            android:textColor="#FFFFFF" />
+            android:text="@string/filter_button" />
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_weight=".5"
-            android:background="@drawable/btn_primary"
+            style="@style/map_button_primary"
             android:onClick="doAddTree"
-            android:text="@string/add_tree_button"
-            android:textColor="#FFFFFF" />
+            android:text="@string/add_tree_button" />
     </LinearLayout>
 
 </RelativeLayout>

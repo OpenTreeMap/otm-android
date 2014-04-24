@@ -5,12 +5,8 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/group_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:textColor="@color/primaryColor"
-        android:textSize="24dp" />
+        style="@style/plot_group_label"
+        android:id="@+id/group_name" />
 
     <LinearLayout
         android:id="@+id/fields"

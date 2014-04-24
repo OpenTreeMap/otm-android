@@ -6,10 +6,8 @@
 
     <EditText
         android:id="@+id/register_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/register_textbox"
         android:layout_marginTop="@dimen/padding_12"
-        android:ems="10"
         android:hint="@string/email_address"
         android:inputType="textEmailAddress" >
 
@@ -18,25 +16,19 @@
 
     <EditText
         android:id="@+id/register_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
+        style="@style/register_textbox"
         android:hint="@string/password"
         android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/register_password2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
+        style="@style/register_textbox"
         android:hint="@string/verify_password"
         android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/register_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
+        style="@style/register_textbox"
         android:hint="@string/username" />
 
     <LinearLayout
@@ -45,18 +37,14 @@
 
         <EditText
             android:id="@+id/register_firstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/register_textbox"
             android:layout_weight="1"
-            android:ems="10"
             android:hint="@string/first_name" />
 
         <EditText
             android:id="@+id/register_lastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/register_textbox"
             android:layout_weight="1"
-            android:ems="10"
             android:hint="@string/last_name" />
     </LinearLayout>
 
@@ -97,19 +85,11 @@
 
         <Button
             android:id="@+id/register"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/register_button"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/padding_medium"
-            android:layout_marginRight="@dimen/padding_medium"
-            android:layout_marginTop="@dimen/padding_24dp"
-            android:background="@drawable/btn_primary"
             android:onClick="handleRegisterClick"
-            android:paddingBottom="@dimen/padding_small"
-            android:paddingTop="@dimen/padding_small"
-            android:text="@string/Register"
-            android:textColor="@color/white" />
+            android:text="@string/Register" />
     </RelativeLayout>
 
 </LinearLayout>

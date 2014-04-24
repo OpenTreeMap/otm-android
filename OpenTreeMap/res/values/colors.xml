@@ -1,32 +1,26 @@
 <resources>
+    <color name="primary_color">#0A73B7</color>
+    <color name="secondary_color">#F7992F</color>
+
     <color name="base">#E9F0EF</color>
-    <color name="text_dark">#163314</color>
-    <color name="text_light">#BDC4BC</color>
-    <color name="popup_background">#ffffff</color>
+    <color name="text_dark">#010101</color>
+    <color name="text_medium">#939597</color>
+    <color name="text_light">#BBBDC0</color>
+    <color name="popup_background">#F1F2F2</color>
     <color name="no_image_background">#CCCCCC</color>
     <color name="warning_action">#ff8080</color>
     <color name="warning_action_end">#d23c3c</color>
-    <color name="white">#fff</color>
 
-    <!-- 427BBA, 0f93b8 -->
-    <color name="lgrey_end">#AEB2B7</color>
-    <color name="dgrey_end">#2C3137</color>
-    <color name="item_grey_end">#62707C</color>
-    <color name="black_start">#333333</color>
-    <color name="black_end">#181818</color>
-    <color name="grey_end">#8C9DAE</color>
+    <color name="line_dark">#221F1F</color>
+    <color name="line_medium">#939597</color>
+    <color name="line_light">#A7A9AB</color>
 
-    <!-- Basemap Picker, List Mode Picker (Rounded button bars)..etc -->
+    <color name="secondary_button">#A7A9AB</color>
 
-    <color name="primaryColor">#3aa27c</color>
-    <color name="primaryGradientColorOnStart">#4cc39d</color>
-    <color name="primaryGradientColorOnEnd">#3aa27c</color>
-    <color name="primaryGradientColorOffStart">#3b9e7d</color>
-    <color name="primaryGradientColorOffEnd">#2e8465</color>
-    <color name="primaryGradientColorSelectedStart">#FF00AA</color>
-    <color name="primaryGradientColorSelectedEnd">#FF00AA</color>
+    <color name="light_text_color">#FFFFFF</color>
+
     <color name="primaryStrokeColor">#32906e</color>
 
     <!-- Background color of all content panes -->
-    <color name="mainBackgroundColor">#ebf6f6</color>
+    <color name="main_background_color">#F1F2F2</color>
 </resources>

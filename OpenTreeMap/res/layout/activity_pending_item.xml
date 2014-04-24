@@ -9,7 +9,7 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical" 
 	    android:padding="20dp"
-	    android:background="@color/mainBackgroundColor"
+	    android:background="@color/main_background_color"
 	>
 	    
 		

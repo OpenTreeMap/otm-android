@@ -40,7 +40,7 @@
             android:name="org.azavea.otm.ui.SplashScreenActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/HoloNoTitle" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,12 +50,12 @@
         <activity
             android:name="org.azavea.otm.ui.TabLayout"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/HoloNoTitle" >
         </activity>
         <activity
             android:name="org.azavea.otm.ui.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
             android:name="org.azavea.otm.ui.MainMapActivity"

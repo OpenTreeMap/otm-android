@@ -23,14 +23,9 @@
 
         <Button
             android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="17dp"
-            android:background="@drawable/btn_primary"
+            style="@style/profile_login_button"
             android:onClick="showLogin"
-            android:padding="12dp"
-            android:text="@string/loginButtonText"
-            android:textColor="@color/white" />
+            android:text="@string/loginButtonText" />
     </LinearLayout>
 
 </RelativeLayout>

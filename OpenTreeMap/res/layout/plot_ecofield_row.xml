@@ -6,35 +6,16 @@
 
     <TextView
         android:id="@+id/field_label"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:textColor="@color/grey_end"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        style="@style/plot_row_label" />
 
     <TextView
         android:id="@+id/field_value"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="25dp"
-        android:text="@string/unspecified_eco_value"
-        android:textColor="@color/text_dark"
-        android:textSize="20dp" />
+        style="@style/plot_row_value"
+        android:text="@string/unspecified_eco_value" />
 
     <TextView
         android:id="@+id/field_money"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="25dp"
-        android:text="@string/unspecified_eco_field_money"
-        android:textColor="@color/text_dark"
-        android:textSize="20sp" />
+        style="@style/plot_row_value"
+        android:text="@string/unspecified_eco_field_money" />
 
 </LinearLayout>

@@ -34,11 +34,6 @@ public class LoginActivity extends Activity {
         return true;
     }
 
-    public void cancel(View view) {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
-
     public void login(View view) {
         String username = ((EditText) findViewById(R.id.login_username)).getText().toString().trim();
         String password = ((EditText) findViewById(R.id.login_password)).getText().toString().trim();

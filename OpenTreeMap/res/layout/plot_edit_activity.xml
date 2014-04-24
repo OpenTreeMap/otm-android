@@ -44,23 +44,9 @@
             </LinearLayout>
 
             <Button
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/btn_primary"
+                style="@style/plot_edit_button"
                 android:onClick="saveEdit"
                 android:text="@string/save_plot_edit_button" >
-            </Button>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/btn_danger"
-                android:onClick="cancelEdit"
-                android:text="@string/cancel" >
             </Button>
         </LinearLayout>
     </ScrollView>
