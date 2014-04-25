@@ -57,6 +57,18 @@ public class ListDisplay extends Activity implements ListObserver {
             }
         });
 
+    }
+
+    @Override 
+    public void onPause() {
+        super.onPause();
+        infoList.removeLocationUpdating();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        
         listView = (ListView) findViewById(R.id.listItems);
 
         dialog = ProgressDialog.show(ListDisplay.this, "", "Loading. Please wait...", true);
