@@ -21,10 +21,13 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:contentDescription="Tree image"
+            android:maxHeight="80dp"
+            android:maxWidth="80dp"
             android:minHeight="80dp"
             android:minWidth="80dp"
-            android:scaleType="centerInside"
-            android:onClick="handlePhotoDetailClick" />
+            android:onClick="handlePhotoDetailClick"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/address"
