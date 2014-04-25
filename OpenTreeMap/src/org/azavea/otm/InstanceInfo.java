@@ -96,9 +96,9 @@ public class InstanceInfo extends Model {
             JSONObject center = (JSONObject)getField("center");
             return center.getDouble(coordinatePart);
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Can't get center-part for instance:" 
+            Log.e(App.LOG_TAG, "Can't get center-part for instance:"
                 + coordinatePart, e);
-            return 0; 
+            return 0;
         }
     }
 }

@@ -165,7 +165,7 @@ public class MainMapActivity extends MapActivity{
 
         final ProgressDialog dialog = ProgressDialog.show(MainMapActivity.this, "",
                 "Loading Map Info...", true);
-        
+
         Callback instanceLoaded = new Callback() {
 
             @Override
@@ -193,7 +193,7 @@ public class MainMapActivity extends MapActivity{
 
                 } finally {
                     dialog.dismiss();
-                } 
+                }
             }
         };
         // Check for an instance before loading the map
