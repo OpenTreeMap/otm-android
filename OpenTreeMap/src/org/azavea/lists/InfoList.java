@@ -9,4 +9,5 @@ public interface InfoList {
 	public Object[] getListValues();
 	public void addObserver(ListObserver o);
 	public void setupLocationUpdating(Context applicationContext);
+    public void removeLocationUpdating();
 }

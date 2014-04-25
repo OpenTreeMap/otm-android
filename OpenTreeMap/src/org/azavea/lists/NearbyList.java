@@ -23,11 +23,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class NearbyList implements InfoList {
+    private static final long MIN_TIME_DELAY = 5000;
     private PlotContainer nearbyPlots;
     private double lat;
     private double lon;
     private final ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
     private LocationManager locationManager;
+    private LocationListener locationListener;
     private boolean filterRecent;
     private boolean filterPending;
     private final Context context;
@@ -52,7 +54,7 @@ public class NearbyList implements InfoList {
     public void setupLocationUpdating(Context applicationContext) {
         locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 lat = location.getLatitude();
@@ -79,10 +81,16 @@ public class NearbyList implements InfoList {
             }
         };
         if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+                    MIN_TIME_DELAY, 0, locationListener);
             setInitialLocation();
         }
 
+    }
+    
+    @Override
+    public void removeLocationUpdating() {
+        locationManager.removeUpdates(locationListener);
     }
 
     public void setFilterRecent(boolean filterRecent) {
