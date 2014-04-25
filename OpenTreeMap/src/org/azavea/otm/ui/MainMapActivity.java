@@ -672,14 +672,8 @@ public class MainMapActivity extends MapActivity{
             return;
         }
 
-        SharedPreferences prefs = App.getSharedPreferences();
-        FallbackGeocoder geocoder = new FallbackGeocoder(
-                MainMapActivity.this,
-                Double.parseDouble(prefs.getString("search_bbox_lower_left_lat", "")),
-                Double.parseDouble(prefs.getString("search_bbox_lower_left_lon", "")),
-                Double.parseDouble(prefs.getString("search_bbox_upper_right_lat", "")),
-                Double.parseDouble(prefs.getString("search_bbox_upper_right_lon", ""))
-        );
+        App app = App.getAppInstance();
+        FallbackGeocoder geocoder = new FallbackGeocoder(MainMapActivity.this, app.getCurrentInstance().getExtent());
 
         LatLng pos = geocoder.androidGeocode(address);
 

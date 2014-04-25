@@ -108,10 +108,6 @@ public class App extends Application {
               .putString("access_key", context.getString(R.string.access_key))
               .putString("secret_key", context.getString(R.string.secret_key))
               .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
-              .putString("search_bbox_lower_left_lat", context.getString(R.string.search_bbox_lower_left_lat))
-              .putString("search_bbox_lower_left_lon", context.getString(R.string.search_bbox_lower_left_lon))
-              .putString("search_bbox_upper_right_lat", context.getString(R.string.search_bbox_upper_right_lat))
-              .putString("search_bbox_upper_right_lon", context.getString(R.string.search_bbox_upper_right_lon))
               .putString("starting_zoom_level", context.getString(R.string.starting_zoom_level))
               .commit();
 

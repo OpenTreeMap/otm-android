@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
+import org.azavea.otm.InstanceInfo.InstanceExtent;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -18,10 +19,7 @@ import com.loopj.android.http.RequestParams;
 public class FallbackGeocoder {
 
     // search box
-    private final double lowerLeftLat;
-    private final double lowerLeftLon;
-    private final double upperRightLat;
-    private final double upperRightLon;
+    private final InstanceExtent extent;
 
     // activity context
     private final Context context;
@@ -30,13 +28,9 @@ public class FallbackGeocoder {
     private final AsyncHttpClient client;
 
     // construct with a reference to the context and a search bounding box.
-    public FallbackGeocoder(Context context, double lowerLeftLat, double lowerLeftLon, double upperRightLat,
-            double upperRightLon) {
+    public FallbackGeocoder(Context context, InstanceExtent extent) {
         this.context = context;
-        this.lowerLeftLat = lowerLeftLat;
-        this.lowerLeftLon = lowerLeftLon;
-        this.upperRightLat = upperRightLat;
-        this.upperRightLon = upperRightLon;
+        this.extent = extent;
         client = new AsyncHttpClient();
     }
 
@@ -44,8 +38,13 @@ public class FallbackGeocoder {
     public LatLng androidGeocode(String address) {
         Geocoder g = new Geocoder(this.context);
         try {
-            List<Address> a = g.getFromLocationName(address, 1, this.lowerLeftLat, this.lowerLeftLon,
-                    this.upperRightLat, this.upperRightLon);
+            List<Address> a;
+            if (extent != null) {
+                a = g.getFromLocationName(address, 1, extent.minLatitude, extent.minLongitude, extent.maxLatitude,
+                        extent.maxLongitude);
+            } else {
+                a = g.getFromLocationName(address, 1);
+            }
             if (a.size() == 0) {
                 return null;
             } else {
@@ -60,11 +59,17 @@ public class FallbackGeocoder {
 
     // Use Google's Http geocoder.
     public void httpGeocode(String address, JsonHttpResponseHandler handler) {
-        // Use this format to compose a url for google's geocode
-        String urlFormat = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=%s&bounds=%f,%f%%7c%f,%f";
-        // interpolate address and bounds into that format string
-        String url = String.format(Locale.US, urlFormat, URLEncoder.encode(address), this.lowerLeftLat,
-                this.lowerLeftLon, this.upperRightLat, this.upperRightLon);
+        String urlFormat = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=%s";
+        String url;
+        if (extent != null) {
+            // Use this format to compose a url for google's geocode
+            urlFormat += "&bounds=%f,%f%%7c%f,%f";
+            // interpolate address and bounds into that format string
+            url = String.format(Locale.US, urlFormat, URLEncoder.encode(address), extent.minLatitude,
+                    extent.minLongitude, extent.maxLatitude, extent.maxLongitude);
+        } else {
+            url = String.format(Locale.US, urlFormat, URLEncoder.encode(address));
+        }
 
         // execute the http request.
         client.get(url, new RequestParams(), handler);

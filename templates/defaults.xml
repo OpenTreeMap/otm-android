@@ -18,12 +18,6 @@
     <!-- Developer specific -->
     <string name="google_maps_api_key">%(google_maps_api_key)s</string>
 
-    <!-- TODO: Get these from the backend (incorrect values anyways) -->
-    <string name="search_bbox_lower_left_lat">39.56970506644249</string>
-    <string name="search_bbox_lower_left_lon">-75.74523925781249</string>
-    <string name="search_bbox_upper_right_lat">40.43858586704328</string>
-    <string name="search_bbox_upper_right_lon">-74.6795654296875</string>
-
     <!-- TODO: Constants should probably be in the main repo -->
     <string name="starting_zoom_level">12</string>
 </resources>
