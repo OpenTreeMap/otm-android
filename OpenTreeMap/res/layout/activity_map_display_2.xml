@@ -144,10 +144,13 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
-            
             android:background="@color/no_image_background"
+            android:maxHeight="80dp"
+            android:maxWidth="80dp"
             android:minHeight="80dp"
             android:minWidth="80dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:onClick="handlePhotoDetailClick" />
 
         <TextView

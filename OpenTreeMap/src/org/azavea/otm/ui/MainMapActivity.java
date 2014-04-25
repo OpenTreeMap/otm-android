@@ -104,7 +104,6 @@ public class MainMapActivity extends MapActivity{
 
             final RequestGenerator rg = new RequestGenerator();
             RequestParams activeFilters = null;
-            //App.getFilterManager().getActiveFiltersAsNearestPlotRequestParams();
 
             rg.getPlotsNearLocation(
                 point.latitude,
