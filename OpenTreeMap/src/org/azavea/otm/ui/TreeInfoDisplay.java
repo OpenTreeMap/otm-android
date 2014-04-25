@@ -6,7 +6,6 @@ import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,24 +69,30 @@ public class TreeInfoDisplay extends TreeDisplay {
 
     private View createEcoGroup(Plot plot, LayoutInflater layout) {
 
-        View ecoDisplay = null;
         FieldGroup ecoGroup = new FieldGroup(getString(R.string.eco_fieldgroup_header));
         JSONObject benefits = (JSONObject) plot.getField("benefits");
-        if (benefits != null) {
-            JSONArray eco = benefits.optJSONArray("plot");
-            if (eco != null) {
-                for (int i = 0; i < eco.length(); i++) {
-                    JSONObject ecoField = eco.optJSONObject(i);
-                    if (ecoField != null) {
-                        ecoGroup.addField(new EcoField(ecoField));
-                    }
-                }
-
-                ecoDisplay = ecoGroup.renderForDisplay(layout, plot, TreeInfoDisplay.this);
+        if (benefits == null) { 
+            return null;
+        }
+        JSONObject eco = benefits.optJSONObject("plot");
+        if (eco == null) {
+            return null;
+        }
+        String [] ecoKeys = App.getFieldManager().getEcoKeys();
+        if (ecoKeys == null) {
+            return null;
+        }
+        
+        // Render eco fields based on instance eco field key order
+        for (int i = 0; i < ecoKeys.length; i++) {
+            String key = ecoKeys[i];
+            JSONObject ecoField = eco.optJSONObject(key);
+            if (ecoField != null) {
+                ecoGroup.addField(new EcoField(ecoField));
             }
         }
+        return ecoGroup.renderForDisplay(layout, plot, TreeInfoDisplay.this);
 
-        return ecoDisplay;
     }
 
     private void setHeaderValues(Plot plot) {

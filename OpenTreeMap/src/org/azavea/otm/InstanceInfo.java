@@ -73,12 +73,26 @@ public class InstanceInfo extends Model {
     public JSONObject getSearchDefinitions() {
         return (JSONObject) getField("search");
     }
-
-    public JSONArray getEcoFields() {
+    
+    public JSONObject getPlotEcoFields() {
+        return getEcoFields("plot");
+    }
+    /**
+     * Get eco definitions for a particular model type.
+     * @param model ex: 'plot'
+     */
+    public JSONObject getEcoFields(String model) {
         JSONObject eco = this.data.optJSONObject("eco");
         if (eco != null && eco.optBoolean("supportsEcoBenefits")) {
             JSONArray benefits = eco.optJSONArray("benefits");
-            return benefits;
+            if (benefits != null) {
+                for (int i=0; i<benefits.length(); i++) {
+                    JSONObject ecoBen = benefits.optJSONObject(i);
+                    if (ecoBen != null && ecoBen.optString("model", "").equalsIgnoreCase(model)) {
+                        return ecoBen;
+                    }
+                }
+            }
         }
         return null;
     }

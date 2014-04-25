@@ -19,11 +19,35 @@ public class FieldManager {
     // All field definitions from the api server, these may not be meant for
     // viewing for this application
     private Map<String, JSONObject> baseFields = new HashMap<String, JSONObject>();
+   
+    // Ordered list of display keys for plot eco benefits
+    private String[] ecoKeys;
 
-    public FieldManager(JSONObject fieldDefinitions, JSONArray displayList)
+    public FieldManager(InstanceInfo instance)
             throws Exception {
-        setBaseFieldDefinitions(fieldDefinitions);
-        loadFieldDefinitions(displayList);
+
+        setBaseFieldDefinitions(instance.getFieldDefinitions());
+        loadFieldDefinitions(instance.getDisplayFieldKeys());
+        loadEcoBenefitKeys(instance.getPlotEcoFields());
+    }
+
+    private void loadEcoBenefitKeys(JSONObject plotEcoFields) {
+        // Eco benefits aren't normal field definitions, but rather just an ordered
+        // set of keys.  The field definitions are loaded with each plot.  If an
+        // instance has no plot eco bens or keys defined, don't display any
+        if (plotEcoFields == null) {
+            ecoKeys = null;
+            return;
+        }
+        JSONArray keys = plotEcoFields.optJSONArray("keys");
+        if (keys == null) {
+            ecoKeys = null;
+            return;
+        }
+        ecoKeys = new String[keys.length()];
+        for (int i=0; i<keys.length(); i++) {
+            ecoKeys[i] = keys.optString(i);
+        }
     }
 
     private void setBaseFieldDefinitions(JSONObject fieldDefinitions)
@@ -73,5 +97,9 @@ public class FieldManager {
     public FieldGroup[] getFieldGroups() {
         return allDisplayFields
                 .toArray(new FieldGroup[allDisplayFields.size()]);
+    }
+
+    public String[] getEcoKeys() {
+        return ecoKeys;
     }
 }
