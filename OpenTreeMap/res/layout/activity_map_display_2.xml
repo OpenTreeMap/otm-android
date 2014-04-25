@@ -27,6 +27,7 @@
 	        android:layout_weight="8"
 	        android:layout_height="fill_parent"
 	        android:hint="@string/search_field_hint"
+	        android:inputType="text"
 	        android:imeOptions="actionSearch"
 	        android:background="@color/mainBackgroundColor"
 	        android:layout_margin="4dp"

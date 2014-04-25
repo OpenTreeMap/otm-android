@@ -39,12 +39,13 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -174,7 +175,7 @@ public class MainMapActivity extends MapActivity{
                     if (result.getData().getBoolean("success")) {
                         START_POS = App.getStartPos();
                         setContentView(R.layout.activity_map_display_2);
-                        bindEnterKeyListenerToLocationSearchBar();
+                        bindActionToLocationSearchBar();
                         filterDisplay = (TextView)findViewById(R.id.filterDisplay);
                         setUpMapIfNeeded();
                         plotPopup = (RelativeLayout) findViewById(R.id.plotPopup);
@@ -754,12 +755,12 @@ public class MainMapActivity extends MapActivity{
         }
     }
 
-    private void bindEnterKeyListenerToLocationSearchBar() {
+    private void bindActionToLocationSearchBar() {
         EditText et = (EditText)findViewById(R.id.locationSearchField);
-        et.setOnKeyListener(new OnKeyListener() {
+        et.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     doLocationSearch();
                     return true;
                 } else {
