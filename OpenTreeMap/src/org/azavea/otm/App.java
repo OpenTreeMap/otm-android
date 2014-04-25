@@ -244,8 +244,7 @@ public class App extends Application {
     public static void setCurrentInstance(InstanceInfo currentInstance) {
         App.currentInstance = currentInstance;
         try {
-            fieldManager = new FieldManager(currentInstance.getFieldDefinitions(),
-                    currentInstance.getDisplayFieldKeys());
+            fieldManager = new FieldManager(currentInstance);
 
             filterManager = new FilterManager(currentInstance.getSearchDefinitions());
 

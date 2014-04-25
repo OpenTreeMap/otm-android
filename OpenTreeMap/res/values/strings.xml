@@ -107,7 +107,7 @@
 	
 	<string name="search_field_hint">search location</string>
 	
-	<string name="eco_fieldgroup_header">Yearly Ecosystem Services</string>
+	<string name="eco_fieldgroup_header">Ecosystem Benefits</string>
 	<string name="eco_currencey_saved_text">saved</string>
 	<string name="diameter_missing">Diameter missing</string>
 </resources>
