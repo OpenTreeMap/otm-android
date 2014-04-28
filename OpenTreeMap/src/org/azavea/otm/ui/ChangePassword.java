@@ -2,6 +2,13 @@ package org.azavea.otm.ui;
 
 import java.io.UnsupportedEncodingException;
 
+import org.azavea.otm.App;
+import org.azavea.otm.LoginManager;
+import org.azavea.otm.R;
+import org.azavea.otm.rest.RequestGenerator;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,13 +19,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.azavea.otm.App;
-import org.azavea.otm.LoginManager;
-import org.azavea.otm.R;
-import org.azavea.otm.rest.RequestGenerator;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ChangePassword extends Activity{
@@ -26,9 +26,10 @@ public class ChangePassword extends Activity{
 	LoginManager loginManager = App.getLoginManager();
 	
 	private JsonHttpResponseHandler changePasswordResponseHandler = new JsonHttpResponseHandler() {
-		public void onSuccess(JSONObject response) {
+		@Override
+        public void onSuccess(JSONObject response) {
 			try {
-				if (response.getString("status").equals("success")) {
+				if (response.has("username")) {
 					loginManager.loggedInUser.setPassword(newPassword);
 					notifyUserPasswordChangedAndFinish();
 				} else {
@@ -42,14 +43,16 @@ public class ChangePassword extends Activity{
 				alert(R.string.password_change_error);
 			}
 		};
-		public void onFailure(Throwable e, JSONObject errorResponse) {
+		@Override
+        public void onFailure(Throwable e, JSONObject errorResponse) {
 			Log.e("ChangePassword", "response.onFailure");
 			Log.e("ChangePassword", errorResponse.toString());
 			Log.e("ChangePassword", e.getMessage());
 			alert(R.string.password_change_error);
 		};
 		
-		protected void handleFailureMessage(Throwable e, String responseBody) {
+		@Override
+        protected void handleFailureMessage(Throwable e, String responseBody) {
 			Log.e("ChangePassword", "response.handleFailureMessage");
 			Log.e("ChangePassword", "e.toString " + e.toString());
 			Log.e("ChangePassword", "responseBody: " + responseBody);
