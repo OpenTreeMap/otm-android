@@ -6,29 +6,29 @@
     android:layout_height="wrap_content">
 
 	<TextView
-		style="?android:attr/listSeparatorTextViewStyle"
-		android:id="@+id/separator"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:textColor="@android:color/white" />
+	    android:id="@+id/separator"
+	    style="?android:attr/listSeparatorTextViewStyle"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:textColor="@android:color/black" />
 	
      <TextView
-     	android:id="@+id/common_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:textColor="#ffffff"
-        android:textSize="14dp"
-        android:textStyle="bold" />
+         android:id="@+id/common_name"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="5dp"
+         android:gravity="center_vertical"
+         android:textColor="@android:color/black"
+         android:textSize="14dp"
+         android:textStyle="bold" />
     
      <TextView
-        android:id="@+id/sci_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:textColor="#ffffff"
-        android:textSize="12dip" />
+         android:id="@+id/sci_name"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="5dp"
+         android:gravity="center_vertical"
+         android:textColor="@android:color/black"
+         android:textSize="12dip" />
        
 </LinearLayout>

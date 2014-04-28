@@ -43,13 +43,14 @@
         android:visibility="visible">
 		    
 	    <TextView
-	            android:layout_width="0dp"
-	            android:layout_weight="8"
-	            android:layout_height="match_parent"
-	            android:padding="10dp"
-	            android:background="@color/black_start"
-	            android:gravity="center"
-	            android:text="Long press to move the tree into position, then click next." />
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="8"
+	        android:background="@color/black_start"
+	        android:gravity="center"
+	        android:padding="10dp"
+	        android:text="Long press to move the tree into position, then click next."
+	        android:textColor="@color/white" />
 	    
 	   	<Button
 	        android:id="@+id/treeAddNext"
