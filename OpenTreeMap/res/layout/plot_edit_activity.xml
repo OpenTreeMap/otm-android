@@ -5,13 +5,27 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
 >
-	<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-	  android:id="@+id/vignette_map_edit_mode"
-	  android:layout_width="fill_parent"
-	  android:layout_height="100dp"
-	  class="com.google.android.gms.maps.SupportMapFragment"
-	  />
-    
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/vignette_map_edit_mode"
+          android:layout_width="fill_parent"
+          android:layout_height="100dp"
+          class="com.google.android.gms.maps.SupportMapFragment"
+          />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_chevron_right" />
+
+    </FrameLayout>
 	<ScrollView
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/scroller"
