@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--  Todo swap in some colored icons for the selected state -->
-    <item android:drawable="@drawable/ic_treemarker_active" android:state_selected="true" />
-    <item android:drawable="@drawable/ic_treemarker" />
+    <item android:drawable="@drawable/ic_tab_map_active" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_tab_map" />
 </selector>
