@@ -31,6 +31,7 @@ public class ChangePassword extends Activity {
             try {
                 if (response.has("username")) {
                     loginManager.loggedInUser.setPassword(newPassword);
+                    loginManager.storePassword(newPassword);
                     notifyUserPasswordChangedAndFinish();
                 } else {
                     alert(R.string.password_change_error);

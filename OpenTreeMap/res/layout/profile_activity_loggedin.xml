@@ -1,13 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black_end" >
+    android:layout_height="match_parent">
 
        <org.azavea.views.NotifyingScrollView
            android:id="@+id/userFieldsScroll"
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
            onScrollToBotton="addMoreEdits" >
+
 
 			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		        android:layout_width="fill_parent"
@@ -19,17 +19,25 @@
 		    	android:gravity="center"
 		    	>
 			    	
-			    <LinearLayout 
+               <TextView
+                   android:id="@+id/profile_header"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_gravity="top"
+                   android:layout_margin="5dp"
+                   android:text="User Profile Details"
+                   android:textAppearance="?android:attr/textAppearanceMedium"
+                   android:textColor="@color/black_start"
+                   android:textSize="20sp" />
+
+			    <LinearLayout
 			        android:id="@+id/user_fields"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
-			        android:orientation="vertical"
 			        android:focusable="true"
-			    	android:focusableInTouchMode="true" 
-			    	android:gravity="center"
-			    	android:background="@color/lgrey_end"
-			    	/>
-
+			        android:focusableInTouchMode="true"
+			        android:gravity="center"
+			        android:orientation="vertical" />
 		        
 		        <LinearLayout
 					 android:layout_height="wrap_content"
@@ -89,7 +97,6 @@
 		         </LinearLayout>
 					         
 		    </LinearLayout>
-
 
 
        </org.azavea.views.NotifyingScrollView>

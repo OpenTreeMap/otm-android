@@ -27,6 +27,13 @@ public class LoginManager {
         this.prefs = getPreferences();
     }
 
+    /**
+     * Store new password in user preferences
+     */
+    public void storePassword(String newpass) {
+        prefs.edit().putString(passKey, newpass).commit();
+    }
+
     public boolean isLoggedIn() {
         return loggedInUser != null;
     }
@@ -79,7 +86,7 @@ public class LoginManager {
                 @Override
                 public void dataReceived(User response) {
                     prefs.edit().putString(userKey, username).commit();
-                    prefs.edit().putString(passKey, password).commit();
+                    storePassword(password);
 
                     loggedInUser = response;
                     try {
