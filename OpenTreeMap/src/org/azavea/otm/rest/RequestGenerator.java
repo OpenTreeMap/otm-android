@@ -229,7 +229,7 @@ public class RequestGenerator {
 	}
 
 	public void register(Context context, User user, JsonHttpResponseHandler handler) throws UnsupportedEncodingException {
-		client.post(context, "/user/", user, handler);
+		client.post(context, "/user", user, handler);
 	}
 
 	public void addTree(Plot plot, AsyncHttpResponseHandler handler)
