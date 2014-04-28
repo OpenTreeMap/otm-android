@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,15 +31,14 @@ public class Register extends PhotoActivity {
     private Bitmap profilePicture;
     private final LoginManager loginManager = App.getLoginManager();
 
+    private ProgressDialog dialog; 
     /*
      * Activity overrides
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        // setDebuggingValues();
     }
 
     /*
@@ -51,10 +52,8 @@ public class Register extends PhotoActivity {
         String password2 = ((EditText) findViewById(R.id.register_password2)).getText().toString();
         String firstName = ((EditText) findViewById(R.id.register_firstName)).getText().toString();
         String lastName = ((EditText) findViewById(R.id.register_lastName)).getText().toString();
-        String zipCode = ((EditText) findViewById(R.id.register_zip)).getText().toString();
 
-        if (isEmpty(email) || isEmpty(password) || isEmpty(username) || isEmpty(firstName) || isEmpty(lastName)
-                || isEmpty(zipCode)) {
+        if (isEmpty(email) || isEmpty(password) || isEmpty(username) || isEmpty(firstName) || isEmpty(lastName)) {
             alert(R.string.all_fields_required);
         } else if (!validEmail(email)) {
             alert(R.string.invalid_email);
@@ -62,24 +61,28 @@ public class Register extends PhotoActivity {
             alert(R.string.new_passwords_not_strong);
         } else if (!password2.equals(password)) {
             alert(R.string.new_passwords_dont_match);
-        } else if (!validZipCode(zipCode)) {
-            alert(R.string.invalid_zip_code);
         } else {
             RequestGenerator rc = new RequestGenerator();
             User model = null;
+            dialog = ProgressDialog.show(Register.this, "",
+                "Creating User Account...", true, true);
+
             try {
-                model = new User(username, firstName, lastName, email, password, zipCode);
+                model = new User(username, firstName, lastName, email, password);
             } catch (JSONException e) {
                 Log.e("Register", "error in User JSON.");
                 e.printStackTrace();
                 alert(R.string.problem_creating_account);
+                dialog.dismiss();
             }
+            
             try {
                 rc.register(App.getAppInstance(), model, registrationResponseHandler);
             } catch (Exception e) {
                 Log.e("Register", "exception in rc.addUser");
                 e.printStackTrace();
                 alert(R.string.problem_creating_account);
+                dialog.dismiss();
             }
         }
     }
@@ -90,19 +93,25 @@ public class Register extends PhotoActivity {
     private final JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(JSONObject response) {
+            dialog.dismiss();
             if (responseIsSuccess(response)) {
-                // TODO, ??? what is the difference between passing in app
-                // context versus
-                // activity context?
                 loginManager.logIn(App.getAppInstance(), username, password, afterLoginSendProfilePictureAndFinish);
             } else {
                 Log.e("Register", response.toString());
                 alert(R.string.problem_creating_account);
             }
         }
+         
+        @Override
+        public void handleFailureMessage(Throwable e, String msg) {
+            dialog.dismiss();
+            alert(msg);
+            Log.e(App.LOG_TAG, msg, e);
+        }
 
         @Override
         public void onFailure(Throwable e, JSONObject response) {
+            dialog.dismiss();
             if (responseIsConflict(e, response)) {
                 alert(R.string.username_is_taken);
             } else {
@@ -181,6 +190,10 @@ public class Register extends PhotoActivity {
         String s = this.getString(msg);
         Toast.makeText(App.getAppInstance(), s, Toast.LENGTH_LONG).show();
     }
+    
+    private void alert(String msg) {
+        Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_LONG).show();
+    }
 
     /*
      * Form validation functions
@@ -190,16 +203,11 @@ public class Register extends PhotoActivity {
     }
 
     private static boolean validEmail(String email) {
-        // TODO do we need an email regex?
-        return true;
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private static boolean strongPassword(String password) {
         return password.length() >= 6;
-    }
-
-    private static boolean validZipCode(String zipcode) {
-        return true;
     }
 
     private static boolean responseIsSuccess(JSONObject response) {

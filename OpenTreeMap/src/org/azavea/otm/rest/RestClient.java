@@ -120,28 +120,10 @@ public class RestClient {
                 responseHandler);
     }
 
-    public void post(Context context, String url, int id, Model model,
-            AsyncHttpResponseHandler response)
-            throws UnsupportedEncodingException {
-        String completeUrl = getAbsoluteUrl(url) + id;
-        completeUrl = prepareUrl(completeUrl);
-        client.post(context, completeUrl, new StringEntity(model.getData()
-                .toString()), "application/json", response);
-    }
-
     public void post(Context context, String url, Model model,
             AsyncHttpResponseHandler response)
             throws UnsupportedEncodingException {
-        String completeUrl = getAbsoluteUrl(url);
-        completeUrl = prepareUrl(completeUrl);
-        client.post(context, completeUrl, new StringEntity(model.getData()
-                .toString()), "application/json", response);
-    }
-
-    public void post(String url, RequestParams params,
-            AsyncHttpResponseHandler responseHandler) {
-        RequestParams reqParams = prepareParams(params);
-        client.post(getAbsoluteUrl(url), reqParams, responseHandler);
+        post(url, null, model.getData().toString(), response);
     }
 
     private void put (String url, int id,

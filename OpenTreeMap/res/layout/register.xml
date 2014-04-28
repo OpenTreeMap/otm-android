@@ -61,14 +61,6 @@
 	        />	    
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/register_zip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10" 
-        android:hint="@string/zip_code"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -77,23 +69,27 @@
             android:id="@+id/register_profilePic"
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/mapbtn_left"
             android:layout_marginRight="@dimen/mapbtn_right"
             android:layout_marginTop="@dimen/mapbtn_top"
             android:contentDescription="@string/add_profile_picture"
-            android:src="@drawable/ic_addphoto" />
+            android:src="@drawable/ic_addphoto"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/register_addProfilePicture"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/mapbtn_right"
             android:layout_marginTop="@dimen/mapbtn_top"
             android:background="@drawable/btn"
             android:onClick="handleChangePhotoClick"
             android:padding="@dimen/small_btn"
             android:text="@string/add_profile_picture"
-            android:textColor="@color/text_dark" />
+            android:textColor="@color/text_dark"
+            android:visibility="gone" />
 
     </LinearLayout>
 

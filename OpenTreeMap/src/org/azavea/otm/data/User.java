@@ -13,8 +13,7 @@ public class User extends Model {
 				String firstName,
 				String lastName,
 				String email,
-				String password,
-				String zipcode) throws JSONException {
+				String password) throws JSONException {
 		this();
 		
 		setUserName(userName);
@@ -22,7 +21,6 @@ public class User extends Model {
 		setLastName(lastName);
 		setEmail(email);
 		setPassword(password);
-		setZipcode(zipcode);
 	}
 	
 	public int getId() throws JSONException {
