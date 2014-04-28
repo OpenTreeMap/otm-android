@@ -37,8 +37,9 @@
              android:layout_width="wrap_content"
              android:layout_height="match_parent"
              android:layout_alignParentLeft="true"
-             android:textColor="@color/text_light" 
-             android:layout_toLeftOf="@id/field_unit">
+             android:layout_toLeftOf="@id/field_unit"
+             android:textColor="@color/text_dark" >
+
          </EditText>
 
          </RelativeLayout>
