@@ -9,8 +9,4 @@
     <string name="secret_key">override in child app</string>
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
-    <string name="search_bbox_lower_left_lat">39.56970506644249</string>
-    <string name="search_bbox_lower_left_lon">-75.74523925781249</string>
-    <string name="search_bbox_upper_right_lat">40.43858586704328</string>
-    <string name="search_bbox_upper_right_lon">-74.6795654296875</string>
 </resources>

@@ -108,10 +108,6 @@ public class App extends Application {
               .putString("access_key", context.getString(R.string.access_key))
               .putString("secret_key", context.getString(R.string.secret_key))
               .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
-              .putString("search_bbox_lower_left_lat", context.getString(R.string.search_bbox_lower_left_lat))
-              .putString("search_bbox_lower_left_lon", context.getString(R.string.search_bbox_lower_left_lon))
-              .putString("search_bbox_upper_right_lat", context.getString(R.string.search_bbox_upper_right_lat))
-              .putString("search_bbox_upper_right_lon", context.getString(R.string.search_bbox_upper_right_lon))
               .putString("starting_zoom_level", context.getString(R.string.starting_zoom_level))
               .commit();
 
@@ -141,7 +137,7 @@ public class App extends Application {
         // available to the logged in user.
         final String instance = appInstance.getString(R.string.instance_code);
         loadingInstance = true;
-        RestHandler<InstanceInfo> handler = 
+        RestHandler<InstanceInfo> handler =
                 new RestHandler<InstanceInfo>(new InstanceInfo()) {
 
             private void handleRegisteredCallbacks(Message msg) {
@@ -157,15 +153,15 @@ public class App extends Application {
                 Message msg = new Message();
                 Bundle data = new Bundle(); data.putBoolean("success", success);
                 msg.setData(data);
-                
+
                 // Flag to track if instance request is pending
                 loadingInstance = false;
 
                 if (callback != null) {
                     callback.handleMessage(msg);
                 }
-                
-                // In addition to the direct caller, other callbacks may have been 
+
+                // In addition to the direct caller, other callbacks may have been
                 // registered to be notified of instance loaded status
                 handleRegisteredCallbacks(msg);
             }
@@ -228,7 +224,7 @@ public class App extends Application {
     public InstanceInfo getCurrentInstance() {
         return currentInstance;
     }
-    
+
     /***
      * Clear the current instance info and force a reload of the configured instance
      * @param callback to call when instance is loaded
@@ -269,7 +265,7 @@ public class App extends Application {
             Bundle data = new Bundle();
             data.putBoolean("success", true);
             msg.setData(data);
-            
+
             callback.handleMessage(msg);
         } else {
             // If an instance request is pending, register for a callback on completion,
@@ -279,7 +275,7 @@ public class App extends Application {
             } else {
                 reloadInstanceInfo(callback);
             }
-        } 
+        }
     }
 
 }

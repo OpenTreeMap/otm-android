@@ -17,6 +17,20 @@ public class InstanceInfo extends Model {
     private String name;
     private String urlName;
 
+    public class InstanceExtent {
+        public final double minLongitude;
+        public final double minLatitude;
+        public final double maxLongitude;
+        public final double maxLatitude;
+
+        public InstanceExtent(double minLng, double minLat, double maxLng, double maxLat) {
+            this.minLongitude = minLng;
+            this.minLatitude = minLat;
+            this.maxLongitude = maxLng;
+            this.maxLatitude = maxLat;
+        }
+    }
+
     // Default constructor required for RestHandler instantiation
     public InstanceInfo() {
     }
@@ -25,7 +39,6 @@ public class InstanceInfo extends Model {
         this.instanceId = instanceId;
         this.geoRevId = geoRevId;
         this.name = name;
-
     }
 
     @Override
@@ -105,14 +118,26 @@ public class InstanceInfo extends Model {
         return getCenter("lng");
     }
 
+    public InstanceExtent getExtent() {
+        try {
+            JSONObject json = data.getJSONObject("extent");
+
+            return new InstanceExtent(json.getDouble("min_lng"), json.getDouble("max_lat"), json.getDouble("max_lng"),
+                    json.getDouble("max_lat"));
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Invalid Instance extent Received", e);
+        }
+        return null;
+    }
+
     private double getCenter(String coordinatePart) {
         try {
             JSONObject center = (JSONObject)getField("center");
             return center.getDouble(coordinatePart);
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Can't get center-part for instance:" 
+            Log.e(App.LOG_TAG, "Can't get center-part for instance:"
                 + coordinatePart, e);
-            return 0; 
+            return 0;
         }
     }
 }
