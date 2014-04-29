@@ -17,16 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
+            android:adjustViewBounds="true"
             android:contentDescription="Tree image"
             android:maxHeight="80dp"
             android:maxWidth="80dp"
             android:minHeight="80dp"
             android:minWidth="80dp"
             android:onClick="handlePhotoDetailClick"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
         <TextView
