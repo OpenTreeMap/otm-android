@@ -213,7 +213,7 @@ public class RequestGenerator {
 	        throws JSONException, UnsupportedEncodingException {
 		Model password = new Password(newPassword);
 
-		client.putWithAuthentication("/user/" + loginManager.loggedInUser.getId() + "/password",
+		client.putWithAuthentication("/user/" + loginManager.loggedInUser.getId(),
 				loginManager.loggedInUser.getUserName(),
 				loginManager.loggedInUser.getPassword(),
 				password, handler);

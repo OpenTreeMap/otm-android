@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -133,7 +134,7 @@ public class RestClient {
 
         try {
             String reqUrl = safePathJoin(getAbsoluteUrl(url),
-                    id == -1 ? null : Integer.toString(id));
+                    id == -1 ? "" : Integer.toString(id));
             String reqUrlWithParams = prepareUrl(reqUrl);
             if (headers == null) {
                 headers = new ArrayList<Header>();
@@ -399,8 +400,10 @@ public class RestClient {
             cleanBase = base.substring(0, base.length() - 1);
         }
 
-        if (path.charAt(0) == '/') {
+        if (!TextUtils.isEmpty(path) && path.charAt(0) == '/') {
             cleanPath = path.substring(1);
+        } else if (TextUtils.isEmpty(path)) {
+            return cleanBase;
         }
         return cleanBase + "/" + cleanPath;
     }
