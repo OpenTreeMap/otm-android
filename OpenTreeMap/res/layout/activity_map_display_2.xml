@@ -40,7 +40,7 @@
             android:layout_weight="2"
             android:contentDescription="@string/search_field_button"
             android:onClick="handleLocationSearchClick"
-            android:src="@android:drawable/ic_menu_search" >
+            android:src="@drawable/ic_menu_search" >
         </ImageButton>
     </LinearLayout>
 
@@ -63,7 +63,7 @@
         android:layout_marginTop="3dp"
         android:contentDescription="@string/show_location"
         android:onClick="showMyLocation"
-        android:src="@android:drawable/ic_menu_mylocation" />
+        android:src="@drawable/ic_menu_locate" />
 
     <LinearLayout
         android:id="@+id/addTreeStep1"
