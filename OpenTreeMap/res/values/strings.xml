@@ -3,20 +3,20 @@
 
     <string name="app_name">Open Tree Map</string>
 
-    <string name="menu_filter">Filter</string>
-    <string name="menu_add">Add Tree</string>
-    <string name="menu_view">(Temp)View Tree</string>
-    <string name="menu_edit_plot">Edit Tree Info</string>
-    <string name="menu_save_edits">Save Edits</string>
-    <string name="menu_cancel_edits">Cancel</string>
-    
+    <string name="filter_button">Filter</string>
+    <string name="add_tree_button">Add Tree</string>
+    <string name="add_tree_next_button">Next</string>
+    <string name="add_tree_step_1">Step 1: Tap to add a tree marker</string>
+    <string name="add_tree_step_2">Step 2: Long press to move the tree into position, then click next.</string>
+    <string name="move_tree_text">Long press to move the tree into position, then click next.</string>
+
     <string name="test_auth">Get/Auth</string>
     <string name="title_activity_map_display">MapDisplay</string>
-    
+
     <string name="title_activity_login">Login</string>
     <string name="show_map">Map</string>
     <string name="show_location">My Location</string>
-    
+
     <string name="hint_email">Username</string>
     <string name="hint_password">Password</string>
     <string name="login">Login</string>
@@ -25,9 +25,8 @@
 
     <string name="filter_range_to">to</string>
     <string name="finish_filtering">Done</string>
-    <string name="cancel_filtering">Cancel</string>
     <string name="clear_filtering">Clear</string>
-    
+
     <string name="test_get">Get</string>
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
@@ -35,19 +34,19 @@
     <string name="profile_text">You have to login or register to see the profiles page</string>
     <string name="list_text">All the lists</string>
     <string name="filter_species_hint">Filter species...</string>
-    
+
     <string name="unspecified_field_value">Unspecified</string>
     <string name="filter_display_label">Filter:</string>
-    
+
     <item type="id" name="species_id"/>
     <item type="id" name="filter_key"/>
- 	<item type="id" name="choice_button_value_tag"/>
- 	    
+    <item type="id" name="choice_button_value_tag"/>
+
     <string name="no_address">No Address</string>
     <string name="species_missing">Species Missing</string>
     <string name="dbh_missing">Diameter Missing</string>
     <string name="address_missing">Address Missing</string>
-    
+
     <string name="toggle_nearby">Nearby</string>
     <string name="toggle_recent">Recent</string>
     <string name="toggle_pending">Pending</string>
@@ -58,7 +57,9 @@
     <string name="recent_edits_caption">My Recent Edits</string>
     <string name="unspecified_eco_value">0.0</string>
     <string name="unspecified_eco_field_money">$0.00</string>
-    
+
+    <string name="plot_edit_button">Edit</string>
+    <string name="save_plot_edit_button">Save</string>
     <string name="delete">Delete</string>
     <string name="delete_tree">Delete Tree</string>
     <string name="delete_plot">Delete Planting Site</string>
@@ -89,25 +90,31 @@
     <string name="add_profile_picture">Add Profile Picture</string>
     <string name="register">register</string>
     <string name="Register">Register</string>
-   	<string name="all_fields_required">All fields are required.</string>
+    <string name="all_fields_required">All fields are required.</string>
     <string name="invalid_email">Invalid email address</string>
     <string name="invalid_zip_code">That zip code was not valid.</string>
     <string name="done_registering">Registration successful</string>
     <string name="done_registering_msg">Registration successful.</string>
     <string name="problem_creating_account">There was a problem creating your account.</string>
     <string name="problem_setting_profile_picture">There was a problem setting your profile picture.</string>
-	<string name="username_is_taken">Sorry, that username is taken.</string>
-	<string name="circumference_label">Circumference</string>
-		
-	<!-- Internationalization options -->
-	<string name="date_time_format">MMMM dd, yyyy h:mmaa</string>
-	<string name="iso_locale_language">English</string>
-	<string name="iso_locale_country">US</string>
-	<string name="default_measure_units">in</string>
-	
-	<string name="search_field_hint">search location</string>
-	
-	<string name="eco_fieldgroup_header">Ecosystem Benefits</string>
-	<string name="eco_currencey_saved_text">saved</string>
-	<string name="diameter_missing">Diameter missing</string>
+    <string name="username_is_taken">Sorry, that username is taken.</string>
+    <string name="circumference_label">Circumference</string>
+
+    <!-- Internationalization options -->
+    <string name="date_time_format">MMMM dd, yyyy h:mmaa</string>
+    <string name="iso_locale_language">English</string>
+    <string name="iso_locale_country">US</string>
+    <string name="default_measure_units">in</string>
+
+    <string name="search_field_hint">search location</string>
+    <string name="search_field_button">Address</string>
+
+    <string name="eco_fieldgroup_header">Ecosystem Benefits</string>
+    <string name="eco_currencey_saved_text">saved</string>
+    <string name="diameter_missing">Diameter missing</string>
+    <string name="current_value">Current Value</string>
+    <string name="pending_edits">Pending Edits</string>
+    <string name="save">Save</string>
+    <string name="tree_image">Tree image</string>
+    <string name="user_profile_details">User Profile Details</string>
 </resources>

@@ -1,81 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="@color/mainBackgroundColor"
-	    >
-	
-	<ScrollView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/scroller"
-	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
-	    android:layout_above="@+id/footer"
-	    android:padding="20dp">
-	    
-	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	        android:id="@+id/filter_list"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:focusable="true"
-	    	android:focusableInTouchMode="true" >
-	    </LinearLayout>
-	    
-	</ScrollView>
-	<RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/footer"
-	    android:layout_width="fill_parent"
-	    android:layout_height="100dp"
-	    android:layout_alignParentBottom="true" 
-	    >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/main_background_color" >
 
-	    <Button
-	        android:id="@+id/cancel"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_centerVertical="true"
-	        android:layout_marginLeft="3dp"
-	        android:layout_marginRight="3dp"
-	        android:background="@drawable/btn_danger"
-	        android:onClick="onCancel"
-	        android:text="@string/cancel_filtering"
-	         />
+    <ScrollView
+        android:id="@+id/scroller"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:padding="20dp" >
 
-	    <Button
-	        android:id="@+id/finish"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@+id/cancel"
-	        android:layout_alignBottom="@+id/cancel"
-	        android:layout_marginLeft="3dp"
-	        android:layout_toRightOf="@+id/cancel"
-	        android:background="@drawable/btn_primary"
-	        android:onClick="onComplete"
-	        android:text="@string/finish_filtering"
-	        android:textColor="@color/white"
-	        android:width="75dp" />
+        <LinearLayout
+            android:id="@+id/filter_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
 
-	    <Button
-	        android:id="@+id/clear"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@+id/cancel"
-	        android:layout_alignBottom="@+id/cancel"
-	        android:layout_marginRight="3dp"
-	        android:layout_toLeftOf="@+id/cancel"
-	        android:background="@drawable/btn"
-	        android:onClick="onClear"
-	        android:text="@string/clear_filtering"
-	        android:textColor="@color/dgrey_end"
-	        android:width="75dp" />
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="64dp" >
 
-	</RelativeLayout>
+        <Button
+            android:id="@+id/clear"
+            style="@style/filter_button"
+            android:background="@color/secondary_button"
+            android:onClick="onClear"
+            android:text="@string/clear_filtering" />
 
-	
+        <Button
+            android:id="@+id/finish"
+            style="@style/filter_button"
+            android:layout_marginLeft="28dp"
+            android:onClick="onComplete"
+            android:text="@string/finish_filtering" />
 
+    </LinearLayout>
 
-	
-</RelativeLayout>	
+</RelativeLayout>

@@ -581,10 +581,6 @@ public class TreeEditDisplay extends TreeDisplay {
         save();
     }
 
-    public void cancelEdit(View view) {
-        cancel();
-    }
-
     /*
      * Photo Editing Functions
      */

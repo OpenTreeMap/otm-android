@@ -7,12 +7,11 @@ import java.util.Map.Entry;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
+import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
-//import org.azavea.otm.filters.ChoiceFilter;
-import org.azavea.otm.filters.SpeciesFilter;
-import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.RangeFilter;
+import org.azavea.otm.filters.SpeciesFilter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,11 +26,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+//import org.azavea.otm.filters.ChoiceFilter;
 
 public class FilterDisplay extends Activity {
 
@@ -39,6 +39,7 @@ public class FilterDisplay extends Activity {
     private View speciesFilter;
     private LinearLayout filter_list;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_activity);
@@ -57,11 +58,6 @@ public class FilterDisplay extends Activity {
             App.getFilterManager().updateFilterFromView(filterKey, filter_view);
         }
         setResult(RESULT_OK);
-        finish();
-    }
-
-    public void onCancel(View view) {
-        setResult(RESULT_CANCELED);
         finish();
     }
 

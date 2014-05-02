@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.joelapenna.foursquared.widget.SegmentedButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:foursquared="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    foursquared:btnPaddingBottom="3dp"
+    foursquared:btnPaddingTop="3dp"
+    foursquared:cornerRadius="0dp"
+    foursquared:gradientColorOffEnd="@color/main_background_color"
+    foursquared:gradientColorOffStart="@color/main_background_color"
+    foursquared:gradientColorOnEnd="@color/no_image_background"
+    foursquared:gradientColorOnStart="@color/no_image_background"
+    foursquared:gradientColorSelectedEnd="@color/no_image_background"
+    foursquared:gradientColorSelectedStart="@color/no_image_background"
+    foursquared:strokeColor="@color/line_medium"
+    foursquared:strokeWidth="1dip"
+    foursquared:textStyle="@style/SegmentedButtonTextAppearance" />

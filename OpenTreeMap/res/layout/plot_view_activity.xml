@@ -2,72 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/base"
+    android:background="@color/main_background_color"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
-        android:color="@color/text_dark" >
+        android:background="@color/main_background_color"
+        android:color="@color/text_dark"
+        android:padding="10dp" >
 
         <ImageView
             android:id="@+id/plot_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="7dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="Tree image"
-            android:maxHeight="80dp"
-            android:maxWidth="80dp"
-            android:minHeight="80dp"
-            android:minWidth="80dp"
-            android:onClick="handlePhotoDetailClick"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/plot_photo"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/plot_photo"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:text="@string/no_address"
-            android:textColor="@color/white" />
+            style="@style/plot_thumbnail"
+            android:layout_marginTop="0dp"
+            android:onClick="handlePhotoDetailClick" />
 
         <TextView
             android:id="@+id/species"
+            style="@style/large_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/address"
-            android:layout_below="@+id/address"
-            android:text="@string/species_missing"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white" />
+            android:layout_alignTop="@+id/plot_photo"
+            android:layout_toRightOf="@+id/plot_photo"
+            android:text="@string/species_missing" />
 
         <TextView
-            android:id="@+id/updated_on"
+            android:id="@+id/address"
+            style="@style/medium_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_alignLeft="@+id/species"
             android:layout_below="@+id/species"
-            android:layout_centerVertical="true"
-            android:textColor="@color/text_dark" />
-
-        <TextView
-            android:id="@+id/updated_by"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/updated_on"
-            android:layout_below="@+id/updated_on"
-            android:textColor="@color/text_dark" />
+            android:text="@string/no_address" />
     </RelativeLayout>
 
     <fragment
@@ -83,7 +52,7 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -95,14 +64,9 @@
             </LinearLayout>
 
             <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/btn_primary"
+                style="@style/plot_edit_button"
                 android:onClick="doEdit"
-                android:paddingTop="10dp"
-                android:text="Edit" >
+                android:text="@string/plot_edit_button" >
             </Button>
         </LinearLayout>
     </ScrollView>

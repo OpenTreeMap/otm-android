@@ -1,67 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    >
-	
+    android:orientation="vertical" >
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
-        
-     <TextView
-         android:id="@+id/field_label"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginBottom="5dp"
-         android:gravity="center_vertical"
-         android:paddingLeft="20dp"
-         android:textColor="@color/grey_end"
-         android:textSize="20dp"
-         android:textStyle="bold" />
+        android:orientation="horizontal" >
 
-       	<ImageButton android:id="@+id/info"
-	   	    android:layout_marginLeft="3dp"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingLeft="3dp"
-			android:src="@drawable/ic_about"
-			android:background="#00000000"
-			android:visibility="invisible"
-	     />
-     
-     </LinearLayout>
-    
-     <LinearLayout
-         android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+        <TextView
+            style="@style/plot_row"
+            android:id="@+id/field_label" />
 
-	     <TextView
-	         android:id="@+id/field_value"
-	         android:layout_width="0dp"
-	         android:layout_height="wrap_content"
-	         android:layout_marginBottom="5dp"
-	         android:layout_weight="9"
-	         android:gravity="center_vertical"
-	         android:paddingLeft="25dp"
-	         android:textColor="@color/text_dark"
-	         android:textSize="20dp" />
-	   
-	   	<ImageButton android:id="@+id/pending"
-	   	    android:layout_marginLeft="3dp"
-			android:layout_width="0dp"
-			android:layout_weight="1"
-			android:layout_height="30dp"
-			android:textSize="12dip"
-			android:textColor="#FFFFFF"
-			android:onClick="showPendingField"
-			android:padding="3dp"
-			android:src="@drawable/ic_pending"
-			android:background="#00000000"
-			android:visibility="invisible"
-	     />
-       </LinearLayout>
+        <!-- TODO: Extract style -->
+        <ImageButton
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:background="#00000000"
+            android:paddingLeft="3dp"
+            android:src="@drawable/ic_about"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            style="@style/plot_row_value"
+            android:id="@+id/field_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9" />
+
+        <!-- TODO: Extract style, add back android:onClick="showPendingField" -->
+        <ImageButton
+            android:id="@+id/pending"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:padding="3dp"
+            android:src="@drawable/ic_pending"
+            android:textColor="#FFFFFF"
+            android:textSize="12dip"
+            android:visibility="invisible" />
+    </LinearLayout>
+
 </LinearLayout>

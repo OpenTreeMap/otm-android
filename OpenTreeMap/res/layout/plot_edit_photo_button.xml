@@ -6,13 +6,11 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:paddingTop="40dip" >
-	    	
-			<Button
-			    android:id="@+id/edit_tree_picture"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:onClick="changeTreePhoto"
-			    android:text="@string/change_tree_picture"
-			    android:textColor="@color/white" />
-			
+
+    <Button
+        style="@style/full_width_button"
+        android:id="@+id/edit_tree_picture"
+        android:onClick="changeTreePhoto"
+        android:text="@string/change_tree_picture" />
+
 </LinearLayout>

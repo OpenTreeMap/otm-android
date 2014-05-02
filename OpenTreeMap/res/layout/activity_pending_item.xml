@@ -9,7 +9,7 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical" 
 	    android:padding="20dp"
-	    android:background="@color/mainBackgroundColor"
+	    android:background="@color/main_background_color"
 	>
 	    
 		
@@ -24,7 +24,7 @@
 		
 		    <TextView
 		        android:layout_marginTop="20dp"
-		        android:text="Current Value"
+		        android:text="@string/current_value"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		   		android:textColor="@color/text_dark"
@@ -45,7 +45,7 @@
 		   	</LinearLayout>
 		   	
 		    <TextView
-		        android:text="Pending Edits"
+		        android:text="@string/pending_edits"
 		        android:layout_width="wrap_content"
 		   		android:textColor="@color/text_dark"
 		        android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
 		            android:id="@+id/save_button"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:text="Save"
+		            android:text="@string/save"
 		            android:background="@drawable/btn_primary"
 		            android:onClick="handleSaveClick"
 		             />

@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="Registered" severity="ignore" />
+    <issue id="UnusedResources">
+        <ignore path="res/drawable-hdpi/app_icon.png" />
+        <ignore path="res/drawable/tab_about.xml" />
+        <ignore path="res/drawable/tab_list.xml" />
+        <ignore path="res/drawable/tab_profile.xml" />
+        <ignore path="res/drawable/tab_tree_map.xml" />
+    </issue>
 </lint>

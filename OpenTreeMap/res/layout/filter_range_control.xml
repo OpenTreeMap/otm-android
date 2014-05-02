@@ -20,12 +20,12 @@
             android:gravity="right" >
 
             <EditText
+                style="@style/textbox"
                 android:id="@+id/min"
                 android:layout_width="66dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="numberDecimal"
-                android:textColor="@color/black_end" >
+                android:inputType="numberDecimal" >
 
                 <requestFocus />
             </EditText>
@@ -39,13 +39,13 @@
                 android:text="@string/filter_range_to" />
 
             <EditText
+                style="@style/textbox"
                 android:id="@+id/max"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:paddingRight="10dp"
-                android:textColor="@color/black_end" />
+                android:paddingRight="10dp" />
 
         </LinearLayout>
 

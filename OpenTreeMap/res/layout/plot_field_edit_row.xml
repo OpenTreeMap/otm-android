@@ -5,48 +5,34 @@
     android:layout_marginLeft="10dip"
     android:layout_marginRight="10dip"
     android:orientation="vertical" >
-	
-     <TextView
-         android:id="@+id/field_label"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginBottom="5dp"
-         android:gravity="center_vertical"
-         android:textColor="@color/text_dark"
-         android:textSize="16sp"
-         android:textStyle="bold" />
-	
-     <RelativeLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:orientation="horizontal" >
 
-         <TextView
-             android:id="@+id/field_unit"
-             android:layout_width="25sp"
-             android:layout_height="match_parent"
-             android:layout_alignParentRight="true"
-             android:layout_marginLeft="1dp"
-             android:textSize="16sp"
-             android:gravity="center"
-             android:textColor="@color/text_dark"
-             android:textStyle="bold" />
+    <TextView
+        android:id="@+id/field_label"
+        style="@style/plot_row_label" />
 
-         <EditText
-             android:id="@+id/field_value"
-             android:layout_width="wrap_content"
-             android:layout_height="match_parent"
-             android:layout_alignParentLeft="true"
-             android:layout_toLeftOf="@id/field_unit"
-             android:textColor="@color/text_dark" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-         </EditText>
+        <TextView
+            android:id="@+id/field_unit"
+            style="@style/plot_edit_row"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
 
-         </RelativeLayout>
+        <EditText
+            android:id="@+id/field_value"
+            style="@style/plot_edit_row"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/field_unit" >
+        </EditText>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/choice_select"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
