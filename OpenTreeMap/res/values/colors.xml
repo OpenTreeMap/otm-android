@@ -1,6 +1,6 @@
 <resources>
-    <color name="primary_color">#0A73B7</color>
-    <color name="secondary_color">#F7992F</color>
+    <color name="primary_color">#8baa3d</color>
+    <color name="secondary_color">#56abb2</color>
 
     <color name="base">#E9F0EF</color>
     <color name="text_dark">#010101</color>
