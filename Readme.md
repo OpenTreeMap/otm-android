@@ -4,22 +4,15 @@ OpenTreeMap for Android
 Development Instructions
 ------------------------
 
-### Eclipse/ADT Setup
+### Android Studio Setup
 
-* Install libraries that eclipse needs to run:
-  ```bash
-  apt-get install ia32-libs
-  ```
+* download Android Studio
 
-* download the ADT bundle of eclipse
-
-* unzip it to become ~/adt
-
-* set your workspace to whatever you like, does not have to be where the code or the adt lives.
+* unzip it wherever you want
 
 * Using the SDK Manager, install necessary software:
   * From Extras, install `Google Play services`
-  * For all the SDK versions that you will use, (currently API 8, API 16, API <latest>), grab:
+  * For all the SDK versions that you will use, (currently API 11, API 16, API <latest>), grab:
     * `SDK Platform`
     * `Google APIs` (ARM if there's a choice)
     * `System Image` (if you are using an emulator)
@@ -36,20 +29,11 @@ http://developer.android.com/tools/device.html
 
 * Put the appropriate values into the templates in OpenTreeMapSkinned (for more information, see the [OpenTreeMapSkinned README](OpenTreeMapSkinned/README.md))
 
-* The google-play-services library should have been downloaded, include it in your workspace:
-  * Click `File > Import`, `Android > Existing Code`
-  * Navigate to `<adt_folder>/sdk/extras/google/google_play_services/libproject/google-play-services_lib`
-
-* Make sure that the reference to google-play-services_lib in project.properties is correct.
-  * (In Eclipse : Properties/Android/Reference)
-
 * Setup google maps API key. See [PDF](https://github.com/OpenTreeMap/OpenTreeMap-Android/blob/9b67bd669825ac0d87f7799d5ad79695f08c95a7/howto.pdf) for suggestions.
 
 ### Weird Bugs
 
-If you get version problems with ADT and the SDK, checkout [this thread](http://code.google.com/p/android/issues/detail?id=67325).
-
-If your debug.keystore is not generated, you probably won't be able to run the [keytool command](https://developers.google.com/maps/documentation/android/start#obtain_a_google_maps_api_key). You can create one by right-clicking the project, Android Tools, Export *signed* application and even if it fails it should make debug.keystore.
+If your debug.keystore is not generated, you probably won't be able to run the [keytool command](https://developers.google.com/maps/documentation/android/start#obtain_a_google_maps_api_key). When you first try to run the OpenTreeMapSkinned project, Android Studio should create a debug.keystore if you do not already have one.
 
 USDA Grant
 ---------------
