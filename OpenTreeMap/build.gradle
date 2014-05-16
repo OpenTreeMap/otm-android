@@ -2,10 +2,11 @@ apply plugin: 'android-library'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.google.android.gms:play-services:4.3.23'
 }
 
 android {
-    compileSdkVersion 10
+    compileSdkVersion 16
     buildToolsVersion "19.1.0"
 
     sourceSets {
