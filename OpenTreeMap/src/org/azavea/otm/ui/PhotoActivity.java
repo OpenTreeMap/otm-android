@@ -21,56 +21,21 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-public abstract class PhotoActivity extends Activity {
+public class PhotoActivity {
 	public static double PHOTO_HEIGHT = 768;
 	public static double PHOTO_WIDTH = 1024;
 
 	public static int PHOTO_USING_CAMERA_RESPONSE = 7;
 	public static int PHOTO_USING_GALLERY_RESPONSE = 8;
-	
+
 	private static String LOG_TAG = "PHOTO_ACTIVITY";
 	private static String outputFilePath;
-	
-	/*
-	 * UI Event Handlers
-	 */
-	
-	// Bind your change photo button to this handler.
-	public void handleChangePhotoClick(View view) {
-	    // TODO TEMP
-	    App.getAppInstance().getCurrentInstance();
-	    
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	       			Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-	       			try {
-						File outputFile = createImageFile();
-						outputFilePath = outputFile.getAbsolutePath();
-						intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
-						startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
-						
-					} catch (IOException e) {
-						Log.e(App.LOG_TAG, "Unable to initiate camera", e);
-						Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
-					}  			
-	           }
-	       });
-		builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	        	   Intent intent = new Intent(Intent.ACTION_PICK, 
-	        			   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-	       			startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
-	           }
-	       });
-
-		AlertDialog alert = builder.create();
-		alert.show();
-	}	
 
 	/*
 	 * Helper functions
@@ -78,11 +43,11 @@ public abstract class PhotoActivity extends Activity {
 
 	public static File createImageFile() throws IOException {
 		if (!isExternalStorageWritable()) {
-			Toast.makeText(App.getAppInstance(), 
-					"Unable to write to filesystem.  If you are connected via USB, remove and try again", 
+			Toast.makeText(App.getAppInstance(),
+					"Unable to write to filesystem.  If you are connected via USB, remove and try again",
 					Toast.LENGTH_LONG).show();
 		}
-		
+
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = "otm_tmp_" + timeStamp + ".jpg";
 
@@ -92,15 +57,10 @@ public abstract class PhotoActivity extends Activity {
 				localImageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 			}
 		}
-		File image = new File(localImageDir.getAbsolutePath(), imageFileName);  
-		
+		File image = new File(localImageDir.getAbsolutePath(), imageFileName);
+
 	    return image;
 	}
-	
-	// This function is called at the end of the whole camera process. You might
-	// want to call your rc.submit method here, or store the bm in a class level
-	// variable.
-	abstract void submitBitmap(Bitmap bm);
 
 	public static Bitmap getCorrectedCameraBitmap(String filePath) {
 		// Add the original file to the device's gallery
@@ -111,32 +71,10 @@ public abstract class PhotoActivity extends Activity {
 		return rotateImage(App.getAppInstance(), bm, Uri.parse(filePath));
 	}
 	
-	protected void changePhotoUsingCamera(String filePath) {
-		submitBitmap(getCorrectedCameraBitmap(filePath));
-	}
-	
 	public static Bitmap getCorrectedGalleryBitmap(Intent data) {
 		Uri selectedImage = data.getData();
         Bitmap bm = retrieveBitmapFromGallery(selectedImage);
         return rotateImage(App.getAppInstance(), bm, selectedImage);
-	}
-	
-	protected void changePhotoUsingGallery(Intent data) {
-        submitBitmap(getCorrectedGalleryBitmap(data));
-	}
-
-	// Note: You may need to override this method if your activity
-	//       requires more activity results.  In that case, you
-	//       should be able to call super.onActivityResult first.
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == PHOTO_USING_CAMERA_RESPONSE) {
-				changePhotoUsingCamera(outputFilePath);
-			} else if (requestCode == PHOTO_USING_GALLERY_RESPONSE) {
-				changePhotoUsingGallery(data);					
-			}
-		}
 	}
 	
 	protected static Bitmap retrieveBitmapFromGallery(Uri selectedImage) {
@@ -191,7 +129,7 @@ public abstract class PhotoActivity extends Activity {
 		
 		return resizedBitmap;
 	}
-	
+
 	private static float rotationForImage(Context context, Uri uri) {
 		String scheme = uri.getScheme();
 		if (scheme != null && scheme.equals("content")) {
@@ -210,7 +148,7 @@ public abstract class PhotoActivity extends Activity {
 	            return rotation;
 	        } catch (IOException e) {
 	            Log.e(App.LOG_TAG, "Error checking exif", e);
-	            
+
 	        }
 	    }
 	        return 0f;
@@ -226,7 +164,7 @@ public abstract class PhotoActivity extends Activity {
 	    }
 	    return 0;
     }
-    
+
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();

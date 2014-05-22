@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -25,7 +26,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class Register extends PhotoActivity {
+public class Register extends FragmentActivity {
     private String username;
     private String password;
     private Bitmap profilePicture;
@@ -161,7 +162,6 @@ public class Register extends PhotoActivity {
     /*
      * Picture Activity overrides
      */
-    @Override
     protected void submitBitmap(Bitmap bm) {
         profilePicture = bm;
         Log.d("Register", String.format("Bitmap dimensions: %d x %d", bm.getWidth(), bm.getHeight()));

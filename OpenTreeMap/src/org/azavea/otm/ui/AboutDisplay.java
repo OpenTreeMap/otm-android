@@ -2,17 +2,22 @@ package org.azavea.otm.ui;
 
 import org.azavea.otm.R;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 
-public class AboutDisplay extends Activity{
+public class AboutDisplay extends Fragment {
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about_activity);
-        WebView wv = (WebView) findViewById(R.id.about_webview);
+        View view = inflater.inflate(R.layout.about_activity, container, false);
+        WebView wv = (WebView) view.findViewById(R.id.about_webview);
         wv.loadUrl("file:///android_asset/about_content.html");
-        
+
+        return view;
     }
 }
