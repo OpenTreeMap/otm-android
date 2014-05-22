@@ -29,8 +29,8 @@ public class ProfileDisplay extends Fragment {
     private static final int EDITS_TO_REQUEST = 5;
     private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer, EditEntry>();
     // The fields on User which are displayed on Profile Page
-    public static final String[][] userFields = {{"Username", "username"}, {"First Name", "first_name"},
-            {"Last Name", "last_name"}, {"Organization", "organization"}};
+    public static final String[][] userFields = {{"Username", "username"}, {"First Name", "firstname"},
+            {"Last Name", "lastname"}, {"Organization", "organization"}};
 
     private final RequestGenerator client = new RequestGenerator();
     private int editRequestCount = 0;
