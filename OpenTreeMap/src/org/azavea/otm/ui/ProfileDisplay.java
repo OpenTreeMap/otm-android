@@ -11,65 +11,62 @@ import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+public class ProfileDisplay extends Fragment {
 
-public class ProfileDisplay extends PhotoActivity {
+    private static final int SHOW_LOGIN = 0;
+    private static final int EDITS_TO_REQUEST = 5;
+    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer, EditEntry>();
+    // The fields on User which are displayed on Profile Page
+    public static final String[][] userFields = {{"Username", "username"}, {"First Name", "first_name"},
+            {"Last Name", "last_name"}, {"Organization", "organization"}};
 
     private final RequestGenerator client = new RequestGenerator();
-    private final int SHOW_LOGIN = 0;
-    private final int EDITS_TO_REQUEST = 5;
     private int editRequestCount = 0;
     private boolean loadingRecentEdits = false;
-    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer, EditEntry>();
-
-    public String[][] userFields;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.profile_activity, container, false);
+        registerHandlers(view);
 
-        // The fields on User which are displayed on Profile Page
-        userFields = new String[][] { { "Username", "username" }, { "First Name", "firstname" },
-                { "Last Name", "lastname" }, { "Organization", "organization" } };
-        loadProfile();
-
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         editRequestCount = 0;
-        loadProfile();
+        loadProfile(getView(), getActivity().getLayoutInflater());
     }
 
     public void addMoreEdits() {
         if (!loadingRecentEdits) {
             Toast.makeText(App.getAppInstance(), "Loading more edits...", Toast.LENGTH_SHORT).show();
-            renderRecentEdits(((Activity) this).getLayoutInflater());
+            renderRecentEdits(getActivity().getLayoutInflater());
         }
 
     }
 
-    private void loadProfile() {
+    private void loadProfile(View view, LayoutInflater inflater) {
         if (App.getLoginManager().isLoggedIn()) {
             User user = App.getLoginManager().loggedInUser;
-            setContentView(R.layout.profile_activity_loggedin);
-            renderUserFields(user, userFields);
+            renderUserFields(view, inflater, user, userFields);
 
+            view.findViewById(R.id.profile_activity_loggedin).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.profile_activity_anonymous).setVisibility(View.GONE);
             /*
              * Presently, OTM2 is not loading User Edits.
              * 
@@ -81,29 +78,59 @@ public class ProfileDisplay extends PhotoActivity {
              * @Override public void OnScrollToBottom() { addMoreEdits(); } });
              */
         } else {
-            setContentView(R.layout.profile_activity_anonymous);
+            view.findViewById(R.id.profile_activity_loggedin).setVisibility(View.GONE);
+            view.findViewById(R.id.profile_activity_anonymous).setVisibility(View.VISIBLE);
         }
     }
 
-    private void renderUserFields(User user, String[][] fieldNames) {
-        LinearLayout scroll = (LinearLayout) this.findViewById(R.id.user_fields);
-        LayoutInflater layout = ((Activity) this).getLayoutInflater();
-        renderRecentEdits(layout);
+    private void renderUserFields(View view, LayoutInflater inflater, User user, String[][] fieldNames) {
+        LinearLayout fieldContainer = (LinearLayout) view.findViewById(R.id.profile_field_container);
+        renderRecentEdits(inflater);
+
+        fieldContainer.removeAllViews();
         for (String[] fieldPair : fieldNames) {
             String label = fieldPair[0];
             String value = user.getField(fieldPair[1]).toString();
 
-            View row = layout.inflate(R.layout.plot_field_row, null);
+            View row = inflater.inflate(R.layout.plot_field_row, null);
             ((TextView) row.findViewById(R.id.field_label)).setText(label);
+            row.setTag(fieldPair[1]);
             ((TextView) row.findViewById(R.id.field_value)).setText(value);
 
-            scroll.addView(row);
+            fieldContainer.addView(row);
         }
     }
 
-    public void showLogin(View button) {
-        Intent login = new Intent(this, LoginActivity.class);
-        startActivityForResult(login, SHOW_LOGIN);
+    private void registerHandlers(final View view) {
+        view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                App.getLoginManager().logOut();
+                loadProfile(view, getActivity().getLayoutInflater());
+            }
+        });
+
+        view.findViewById(R.id.change_password).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ChangePassword.class));
+            }
+        });
+
+        view.findViewById(R.id.change_profile_picture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Refactor photo handling code in TreeEditDisplay for use here
+            }
+        });
+
+        view.findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent login = new Intent(getActivity(), LoginActivity.class);
+                startActivityForResult(login, SHOW_LOGIN);
+            }
+        });
     }
 
     public void renderRecentEdits(final LayoutInflater layout) {
@@ -123,7 +150,7 @@ public class ProfileDisplay extends PhotoActivity {
 
         loadingRecentEdits = true;
         try {
-            client.getUserEdits(this, App.getLoginManager().loggedInUser, this.editRequestCount, this.EDITS_TO_REQUEST,
+            client.getUserEdits(getActivity(), App.getLoginManager().loggedInUser, this.editRequestCount, this.EDITS_TO_REQUEST,
                     new ContainerRestHandler<EditEntryContainer>(new EditEntryContainer()) {
 
                         @Override
@@ -147,7 +174,7 @@ public class ProfileDisplay extends PhotoActivity {
                                     .getAll();
                             loadedEdits.putAll(edits);
 
-                            LinearLayout scroll = (LinearLayout) findViewById(R.id.user_edits);
+                            LinearLayout scroll = (LinearLayout) getActivity().findViewById(R.id.user_edits);
                             for (EditEntry edit : edits.values()) {
                                 // Create a view for this edit entry, and add a
                                 // click handler to it
@@ -172,32 +199,29 @@ public class ProfileDisplay extends PhotoActivity {
                         }
 
                         private void setPlotClickHandler(View row) {
+                            row.findViewById(R.id.edit_row).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        // TODO: Login user check/prompt
 
-                            ((RelativeLayout) row.findViewById(R.id.edit_row))
-                                    .setOnClickListener(new View.OnClickListener() {
+                                        EditEntry edit = loadedEdits.get(v.getTag());
+                                        if (edit.getPlot() != null) {
+                                            final Intent viewPlot = new Intent(v.getContext(),
+                                                    TreeInfoDisplay.class);
+                                            viewPlot.putExtra("plot", edit.getPlot().getData().toString());
+                                            viewPlot.putExtra("user", App.getLoginManager().loggedInUser
+                                                    .getData().toString());
+                                            startActivity(viewPlot);
 
-                                        @Override
-                                        public void onClick(View v) {
-                                            try {
-                                                // TODO: Login user check/prompt
-
-                                                EditEntry edit = loadedEdits.get(v.getTag());
-                                                if (edit.getPlot() != null) {
-                                                    final Intent viewPlot = new Intent(v.getContext(),
-                                                            TreeInfoDisplay.class);
-                                                    viewPlot.putExtra("plot", edit.getPlot().getData().toString());
-                                                    viewPlot.putExtra("user", App.getLoginManager().loggedInUser
-                                                            .getData().toString());
-                                                    startActivity(viewPlot);
-
-                                                }
-                                            } catch (Exception e) {
-                                                String msg = "Unable to display tree/plot info";
-                                                Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
-                                                Log.e(App.LOG_TAG, msg, e);
-                                            }
                                         }
-                                    });
+                                    } catch (Exception e) {
+                                        String msg = "Unable to display tree/plot info";
+                                        Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                                        Log.e(App.LOG_TAG, msg, e);
+                                    }
+                                }
+                            });
                         }
 
                         @Override
@@ -207,17 +231,13 @@ public class ProfileDisplay extends PhotoActivity {
                             Toast.makeText(App.getAppInstance(), "Could not retrieve user edits", Toast.LENGTH_SHORT)
                                     .show();
                         }
-                    });
+                    }
+            );
 
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Failed to fetch user edits", e);
-            Toast.makeText(this, "Could not retrieve user edits", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Could not retrieve user edits", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void logoutUser(View button) {
-        App.getLoginManager().logOut();
-        loadProfile();
     }
 
     private String capitalize(String phrase) {
@@ -230,56 +250,4 @@ public class ProfileDisplay extends PhotoActivity {
         }
         return capitalized;
     }
-
-    public void changePassword(View view) {
-        startActivity(new Intent(this, ChangePassword.class));
-    }
-
-    @Override
-    protected void submitBitmap(Bitmap bm) {
-        RequestGenerator rc = new RequestGenerator();
-        try {
-            rc.addProfilePhoto(bm, profilePictureResponseHandler);
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error profile tree photo.", e);
-        }
-    }
-
-    protected JsonHttpResponseHandler profilePictureResponseHandler = new JsonHttpResponseHandler() {
-        @Override
-        public void onSuccess(JSONObject response) {
-            Log.d("AddProfilePhoto", "addTreePhotoHandler.onSuccess");
-            Log.d("AddProfilePhoto", response.toString());
-            try {
-                if (response.get("status").equals("success")) {
-                    Toast.makeText(App.getAppInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(App.getAppInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();
-                    Log.d("AddProfilePhoto", "photo response no success");
-                }
-            } catch (JSONException e) {
-                Toast.makeText(App.getAppInstance(), "Unable to add profile photo", Toast.LENGTH_LONG).show();
-            }
-        };
-
-        @Override
-        public void onFailure(Throwable e, JSONObject errorResponse) {
-            Log.e("AddProfilePhoto", "addTreePhotoHandler.onFailure");
-            Log.e("AddProfilePhoto", errorResponse.toString());
-            Log.e("AddProfilePhoto", e.getMessage());
-            Toast.makeText(App.getAppInstance(), "Unable to add profile photo.", Toast.LENGTH_LONG).show();
-        };
-
-        @Override
-        protected void handleFailureMessage(Throwable e, String responseBody) {
-            Log.e("addProfilePhoto", "addTreePhotoHandler.handleFailureMessage");
-            Log.e("addProfilePhoto", "e.toString " + e.toString());
-            Log.e("addProfilePhoto", "responseBody: " + responseBody);
-            Log.e("addProfilePhoto", "e.getMessage: " + e.getMessage());
-            Log.e("addProfilePhoto", "e.getCause: " + e.getCause());
-            e.printStackTrace();
-            Toast.makeText(App.getAppInstance(), "The profile photo was added.", Toast.LENGTH_LONG).show();
-        };
-    };
-
 }

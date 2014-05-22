@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="EditTextholo_custom" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/holo_custom_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="AutoCompleteTextViewholo_custom" parent="android:Widget.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/holo_custom_list_selector_holo_light</item>
+	  <item name="android:background">@drawable/holo_custom_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="CheckBoxholo_custom" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/holo_custom_btn_check_holo_light</item>
+  </style>
+
+  <style name="RadioButtonholo_custom" parent="android:Widget.CompoundButton.RadioButton">
+      <item name="android:button">@drawable/holo_custom_btn_radio_holo_light</item>
+  </style>
+
+  <style name="ProgressBarholo_custom" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/holo_custom_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/holo_custom_progress_indeterminate_horizontal_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="Toggleholo_custom" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/holo_custom_btn_toggle_holo_light</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+</resources>

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class TreeDisplay extends MapActivity {
+public class TreeDisplay extends FragmentActivity {
     protected LatLng plotLocation;
     protected Plot plot;
     public static int RESULT_PLOT_DELETED = Activity.RESULT_FIRST_USER + 1;
@@ -43,6 +44,12 @@ public class TreeDisplay extends MapActivity {
             Toast.makeText(this, "Could not retrieve Tree information", Toast.LENGTH_SHORT).show();
             Log.e(App.LOG_TAG, "Failed to create tree view", e);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MapHelper.checkGooglePlay(this);
     }
 
     protected LatLng getPlotLocation(Plot plot) {

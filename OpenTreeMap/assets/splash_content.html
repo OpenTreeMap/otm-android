@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Launch Screen</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            background-image: url('Launch-screen_background.png');
+            background-size: cover;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+        }
+        .logo {
+            position: absolute;
+            width: 60%;
+            left: 50%;
+            margin-left: -30%;
+            top: 50%;
+            margin-top: -15%;
+        }
+        .logo > img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="logo">
+            <img src="Launch-screen_logo@2x.png" />
+        </div>
+    </div>
+</body>
+</html>

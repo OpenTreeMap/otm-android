@@ -1,6 +1,19 @@
 package org.azavea.otm.ui;
 
-import java.util.ArrayList;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.joelapenna.foursquared.widget.SegmentedButton;
+import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
 
 import org.azavea.lists.InfoList;
 import org.azavea.lists.ListObserver;
@@ -12,32 +25,21 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import java.util.ArrayList;
 
-import com.joelapenna.foursquared.widget.SegmentedButton;
-import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
-
-public class ListDisplay extends Activity implements ListObserver {
+public class ListDisplay extends Fragment implements ListObserver {
     private ListView listView;
     private InfoList infoList;
     private ProgressDialog dialog;
     private ArrayAdapter<DisplayableModel> adapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_activity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.list_activity, container, false);
 
         // Create the segmented buttons
-        SegmentedButton buttons = (SegmentedButton) findViewById(R.id.segmented);
+        SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.segmented);
         buttons.clearButtons();
 
         ArrayList<String> buttonNames = new ArrayList<String>();
@@ -57,9 +59,18 @@ public class ListDisplay extends Activity implements ListObserver {
             }
         });
 
+        return view;
     }
 
     @Override 
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden && infoList != null) {
+            infoList.removeLocationUpdating();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         infoList.removeLocationUpdating();
@@ -69,13 +80,13 @@ public class ListDisplay extends Activity implements ListObserver {
     public void onResume() {
         super.onResume();
         
-        listView = (ListView) findViewById(R.id.listItems);
+        listView = (ListView) getActivity().findViewById(R.id.listItems);
 
-        dialog = ProgressDialog.show(ListDisplay.this, "", "Loading. Please wait...", true);
+        dialog = ProgressDialog.show(getActivity(), "", "Loading. Please wait...", true);
 
-        infoList = App.getNearbyList(this);
+        infoList = App.getNearbyList(getActivity());
         infoList.addObserver(this);
-        infoList.setupLocationUpdating(getApplicationContext());
+        infoList.setupLocationUpdating(getActivity().getApplicationContext());
         listView.setOnItemClickListener(getOnClickListener());
 
         processRadioButtonSelection(0);
@@ -107,7 +118,7 @@ public class ListDisplay extends Activity implements ListObserver {
         return new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int i, long l) {
-                Intent viewPlot = new Intent(ListDisplay.this, TreeInfoDisplay.class);
+                Intent viewPlot = new Intent(getActivity(), TreeInfoDisplay.class);
 
                 Plot selectedPlot = ((DisplayablePlot) a.getItemAtPosition(i)).getPlot();
                 viewPlot.putExtra("plot", selectedPlot.getData().toString());
@@ -127,14 +138,16 @@ public class ListDisplay extends Activity implements ListObserver {
 
     @Override
     public void update() {
-        adapter = new ArrayAdapter<DisplayableModel>(this, R.layout.simple_list_item, android.R.id.text1,
-                infoList.getDisplayValues());
+        if (getActivity() != null) {
+            adapter = new ArrayAdapter<DisplayableModel>(getActivity(), R.layout.simple_list_item, android.R.id.text1,
+                    infoList.getDisplayValues());
 
-        listView.setAdapter(adapter);
+            listView.setAdapter(adapter);
 
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
 
-        Log.d(App.LOG_TAG, "Hide dialog");
-        dialog.hide();
+            Log.d(App.LOG_TAG, "Hide dialog");
+            dialog.hide();
+        }
     }
 }

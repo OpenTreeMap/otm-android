@@ -40,7 +40,7 @@ public class TreeInfoDisplay extends TreeDisplay {
         try {
             LinearLayout fieldList = (LinearLayout) findViewById(R.id.field_list);
             fieldList.removeAllViewsInLayout();
-            LayoutInflater layout = ((Activity) this).getLayoutInflater();
+            LayoutInflater layout = getLayoutInflater();
 
             setHeaderValues(plot);
             showPositionOnMap();
@@ -198,6 +198,6 @@ public class TreeInfoDisplay extends TreeDisplay {
     }
 
     public void handlePhotoDetailClick(View view) {
-        plot.getTreePhoto(this.getPhotoDetailHandler());
+        plot.getTreePhoto(MapHelper.getPhotoDetailHandler(this));
     }
 }
