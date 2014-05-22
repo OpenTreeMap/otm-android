@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="holo_custom" parent="@style/_holo_custom"/>
+
+  <style name="_holo_custom" parent="@style/Theme.Actionbar_custom">
+
+    <item name="android:editTextStyle">@style/EditTextholo_custom</item>
+
+    <item name="android:textColorHighlight">@color/primary_color</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewholo_custom</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxholo_custom</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonholo_custom</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarholo_custom</item>
+
+    <item name="android:buttonStyleToggle">@style/Toggleholo_custom</item>
+
+  </style>
+
+</resources>
