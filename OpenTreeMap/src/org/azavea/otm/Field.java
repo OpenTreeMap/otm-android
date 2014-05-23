@@ -32,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -226,6 +227,11 @@ public class Field {
         label.setText("Scientific Name");
         fieldValue.setText(formatUnit(model.getScienticName()));
 
+        // TODO: It would be much better if this LinearLayout was defined in XML
+        LinearLayout doubleRow = new LinearLayout(context);
+        doubleRow.setOrientation(LinearLayout.VERTICAL);
+        doubleRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
         View containerCommon = layout.inflate(R.layout.plot_field_row, null);
         TextView labelCommon = (TextView) containerCommon.findViewById(R.id.field_label);
         TextView fieldValueCommon = (TextView) containerCommon.findViewById(R.id.field_value);
@@ -233,11 +239,9 @@ public class Field {
         labelCommon.setText("Common Name");
         fieldValueCommon.setText(formatUnit(model.getCommonName()));
 
-        LinearLayout doubleRow = new LinearLayout(context);
         doubleRow.addView(container);
         doubleRow.addView(containerCommon);
 
-        doubleRow.setOrientation(LinearLayout.VERTICAL);
         return doubleRow;
     }
 
