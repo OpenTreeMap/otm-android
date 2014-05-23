@@ -165,7 +165,6 @@
     <!--  Other -->
     <style name="plot_row">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -173,6 +172,7 @@
     <style name="plot_row_value" parent="@style/plot_row">
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
     <style name="plot_row_label" parent="@style/plot_row">
         <item name="android:textColor">@color/text_light</item>
