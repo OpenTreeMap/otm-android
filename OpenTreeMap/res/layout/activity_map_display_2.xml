@@ -47,6 +47,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/location_bar"
+        android:background="@color/main_background_color"
         android:visibility="gone" />
 
     <ImageButton
