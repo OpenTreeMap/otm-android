@@ -11,8 +11,11 @@ Development Instructions
 * unzip it wherever you want
 
 * Using the SDK Manager, install necessary software:
-  * From Extras, install `Google Play services`
-  * For all the SDK versions that you will use, (currently API 11, API 16, API <latest>), grab:
+  * From Extras, install:
+    * `Google Play services`
+    * `Google Repository`
+    * `Android Support Repository`
+  * For all the SDK versions that you will use, (currently API 11, API 16, API [latest]), grab:
     * `SDK Platform`
     * `Google APIs` (ARM if there's a choice)
     * `System Image` (if you are using an emulator)
