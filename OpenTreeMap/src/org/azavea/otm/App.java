@@ -214,11 +214,6 @@ public class App extends Application {
         return nearbyList;
     }
 
-    public static LatLng getStartPos() {
-        InstanceInfo instance = getAppInstance().getCurrentInstance();
-        double lat = instance.getLat();
-        double lon = instance.getLon();
-        return new LatLng(lat, lon);
     }
 
     public InstanceInfo getCurrentInstance() {
@@ -237,7 +232,7 @@ public class App extends Application {
     /***
      * Given the provided instance, create fields and filters
      */
-    public static void setCurrentInstance(InstanceInfo currentInstance) {
+    private static void setCurrentInstance(InstanceInfo currentInstance) {
         App.currentInstance = currentInstance;
         try {
             fieldManager = new FieldManager(currentInstance);
@@ -261,7 +256,7 @@ public class App extends Application {
      */
     public void ensureInstanceLoaded(final Callback callback) {
         if (currentInstance != null) {
-            Message msg = new Message();
+            Message msg = Message.obtain();
             Bundle data = new Bundle();
             data.putBoolean("success", true);
             msg.setData(data);

@@ -84,11 +84,11 @@
         <item name="android:padding">5dp</item>
         <item name="android:gravity">center</item>
     </style>
-    <style name="profile_login_button" parent="@style/full_width_button">
+    <style name="profile_button_anonymous" parent="@style/full_width_button">
         <item name="android:layout_marginBottom">17dp</item>
         <item name="android:padding">12dp</item>
     </style>
-    <style name="profile_button" parent="@style/full_width_button">
+    <style name="profile_button_loggedin" parent="@style/full_width_button">
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
