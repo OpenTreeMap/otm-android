@@ -189,7 +189,7 @@ public class MainMapActivity extends Fragment {
             public boolean handleMessage(Message result) {
                 try {
                     if (result.getData().getBoolean("success")) {
-                        START_POS = App.getStartPos();
+                        START_POS = App.getCurrentInstance().getStartPos();
                         bindActionToLocationSearchBar(view);
                         filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
                         setUpMapIfNeeded();

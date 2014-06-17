@@ -35,8 +35,8 @@ public class NearbyList implements InfoList {
     private final Context context;
 
     public NearbyList(Context context) {
-        lat = App.getStartPos().latitude;
-        lon = App.getStartPos().longitude;
+        lat = App.getCurrentInstance().getStartPos().latitude;
+        lon = App.getCurrentInstance().getStartPos().longitude;
         filterRecent = false;
         filterPending = false;
         this.context = context;

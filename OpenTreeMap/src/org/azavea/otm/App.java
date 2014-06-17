@@ -214,11 +214,6 @@ public class App extends Application {
         return nearbyList;
     }
 
-    public static LatLng getStartPos() {
-        InstanceInfo instance = getAppInstance().getCurrentInstance();
-        double lat = instance.getLat();
-        double lon = instance.getLon();
-        return new LatLng(lat, lon);
     }
 
     public InstanceInfo getCurrentInstance() {

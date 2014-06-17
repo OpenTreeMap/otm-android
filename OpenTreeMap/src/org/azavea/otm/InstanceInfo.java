@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class InstanceInfo extends Model {
 
     // Commonly accessed fields are loaded into class
@@ -140,4 +142,7 @@ public class InstanceInfo extends Model {
             return 0;
         }
     }
+
+    public LatLng getStartPos() { return new LatLng(getLat(), getLon()); }
+
 }
