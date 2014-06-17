@@ -122,4 +122,6 @@
     <string name="save">Save</string>
     <string name="tree_image">Tree image</string>
     <string name="user_profile_details">User Profile Details</string>
+    <!-- <string name="title_instance_switcher_activity">Instance Switcher</string> -->
+
 </resources>

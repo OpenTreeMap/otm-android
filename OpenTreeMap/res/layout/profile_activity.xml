@@ -24,12 +24,17 @@
             android:layout_above="@+id/loginMessage"
             android:layout_centerHorizontal="true"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp" >
+            android:paddingRight="20dp"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/login"
-                style="@style/profile_login_button"
+                style="@style/profile_button_anonymous"
                 android:text="@string/loginButtonText" />
+            <Button
+                android:id="@+id/change_instance_anonymous"
+                style="@style/profile_button_anonymous"
+                android:text="Switch Instance" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -86,18 +91,23 @@
 
                     <Button
                         android:id="@+id/logout"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:layout_marginTop="20dp"
                         android:text="@string/logoutButton" />
 
                     <Button
+                        android:id="@+id/change_instance_loggedin"
+                        style="@style/profile_button_loggedin"
+                        android:text="Switch Instance" />
+
+                    <Button
                         android:id="@+id/change_password"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:text="@string/change_password" />
 
                     <Button
                         android:id="@+id/change_profile_picture"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:onClick="handleChangePhotoClick"
                         android:visibility="gone" />
                 </LinearLayout>

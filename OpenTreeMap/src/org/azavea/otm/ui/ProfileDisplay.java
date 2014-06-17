@@ -102,10 +102,19 @@ public class ProfileDisplay extends Fragment {
     }
 
     private void registerHandlers(final View view) {
+        View.OnClickListener switchInstanceListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), InstanceSwitcherActivity.class));
+                }
+            };
+        view.findViewById(R.id.change_instance_anonymous).setOnClickListener(switchInstanceListener);
+        view.findViewById(R.id.change_instance_loggedin).setOnClickListener(switchInstanceListener);
+
         view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                App.getLoginManager().logOut();
+                App.getLoginManager().logOut(getActivity());
                 loadProfile(view, getActivity().getLayoutInflater());
             }
         });

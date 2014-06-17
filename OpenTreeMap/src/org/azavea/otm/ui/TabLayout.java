@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
@@ -56,6 +57,11 @@ public class TabLayout extends ActionBarActivity {
         if (savedInstanceState != null) {
             actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB));
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.setTitle(App.getInstanceName());
     }
 
     @Override

@@ -84,11 +84,11 @@
         <item name="android:padding">5dp</item>
         <item name="android:gravity">center</item>
     </style>
-    <style name="profile_login_button" parent="@style/full_width_button">
+    <style name="profile_button_anonymous" parent="@style/full_width_button">
         <item name="android:layout_marginBottom">17dp</item>
         <item name="android:padding">12dp</item>
     </style>
-    <style name="profile_button" parent="@style/full_width_button">
+    <style name="profile_button_loggedin" parent="@style/full_width_button">
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
@@ -163,12 +163,21 @@
     </style>
 
     <!--  Other -->
-    <style name="plot_row">
+    <style name="general_list_row">
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="instance_switcher_element_row" parent="@style/general_list_row">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="plot_row" parent="@style/general_list_row" />
+
     <style name="plot_row_value" parent="@style/plot_row">
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textSize">20sp</item>

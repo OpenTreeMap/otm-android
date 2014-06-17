@@ -59,35 +59,13 @@ public class RequestGenerator {
         client.getImage(imageUrl, binaryHttpResponseHandler);
     }
 
-	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,  
-	        ContainerRestHandler<PlotContainer> handler) {
-		String url = getInstanceNameUri(String.format("locations/%s,%s/plots", geoY, geoX));
-
-		try {
-			if (loginManager.isLoggedIn()) {
-				client.getWithAuthentication(url,
-						loginManager.loggedInUser.getUserName(),
-						loginManager.loggedInUser.getPassword(),
-						rp, handler);
-			} else {
-				client.get(url, rp, handler);
-			}
-		} catch (JSONException e) {
-			// If user json error, request with no auth
-			client.get(url, null, handler);
-		}
-	}
-
-	/**
-	 * Request information on a specific OTM instance
-	 * @param urlName Short URL slug name of instance
-	 */
-	public void getInstanceInfo(String urlName,
-	        JsonHttpResponseHandler handler) {
-
-	    // Note: Public instances do not require auth, but private do.
-	    // This will need to be modified when we support private maps
-	    String url = "/instance/" + urlName;
+    /*
+      Helper method used to access a endpoint whose return value
+      varies by whether the user is logged in.  Try to make the
+      request with the user logged in, fall back on non-logged in if
+      failure.
+     */
+    private void userOptionalGet (String url, RequestParams rp, JsonHttpResponseHandler handler) {
 	    User user = loginManager.loggedInUser;
 
 	    try {
@@ -95,24 +73,21 @@ public class RequestGenerator {
                 client.getWithAuthentication(url,
                         user.getUserName(),
                         user.getPassword(),
-                        null, handler);
+                        rp, handler);
             } else {
-                client.get(url, null, handler);
+                client.get(url, rp, handler);
             }
 	    } catch (JSONException e) {
-                client.get(url, null, handler);
+                client.get(url, rp, handler);
 	    }
-	}
+    }
 
-	private String getInstanceNameUri(String path) {
-		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
-		if (path.charAt(0) == '/') {
-		    path = path.substring(1);
-		}
-		if (instance != null) {
-			return "/instance/" + instance.getUrlName() + "/" + path;
-		}
-		return "";
+	public void getPlotsNearLocation(double geoY, double geoX, RequestParams rp,
+	        ContainerRestHandler<PlotContainer> handler) {
+
+		String url = getInstanceNameUri(String.format("locations/%s,%s/plots", geoY, geoX));
+        userOptionalGet(url, rp, handler);
+
 	}
 
 	public void getPlotsNearLocation(double geoY, double geoX, boolean recent, boolean pending,
@@ -126,6 +101,36 @@ public class RequestGenerator {
 		params.put("filter_pending", Boolean.toString(pending));
 		
 		getPlotsNearLocation(geoY, geoX, params, handler);
+	}
+
+	public void getInstancesNearLocation(double geoY, double geoX,
+			JsonHttpResponseHandler handler) {
+		SharedPreferences sharedPrefs = App.getSharedPreferences();
+
+		String url = String.format("locations/%s,%s/instances", geoY, geoX);
+        userOptionalGet(url, null, handler);
+	}
+
+
+	/**
+	 * Request information on a specific OTM instance
+	 * @param urlName Short URL slug name of instance
+	 */
+	public void getInstanceInfo(String urlName,
+	        JsonHttpResponseHandler handler) {
+
+        userOptionalGet("/instance/" + urlName, null, handler);
+	}
+
+	private String getInstanceNameUri(String path) {
+		InstanceInfo instance = App.getAppInstance().getCurrentInstance();
+		if (path.charAt(0) == '/') {
+		    path = path.substring(1);
+		}
+		if (instance != null) {
+			return "/instance/" + instance.getUrlName() + "/" + path;
+		}
+		return "";
 	}
 
 	public void updatePlot(int id, Plot plot,

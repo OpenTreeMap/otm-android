@@ -9,12 +9,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
+import org.azavea.otm.ui.InstanceSwitcherActivity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -130,62 +132,6 @@ public class App extends Application {
         }
     }
 
-    private void checkAndSetDefaultMapInstance(final Callback callback) {
-        // If an instance was set with the compiled configuration,
-        // this version of the app will always use that instance
-        // code.  Otherwise, the instance is selected from those
-        // available to the logged in user.
-        final String instance = appInstance.getString(R.string.instance_code);
-        loadingInstance = true;
-        RestHandler<InstanceInfo> handler =
-                new RestHandler<InstanceInfo>(new InstanceInfo()) {
-
-            private void handleRegisteredCallbacks(Message msg) {
-                if (registeredInstanceCallbacks.size() > 0) {
-                    for (Callback registeredCallback : registeredInstanceCallbacks) {
-                        registeredCallback.handleMessage(msg);
-                    }
-                    registeredInstanceCallbacks.clear();
-                }
-            }
-
-            private void handleCallback(boolean success) {
-                Message msg = new Message();
-                Bundle data = new Bundle(); data.putBoolean("success", success);
-                msg.setData(data);
-
-                // Flag to track if instance request is pending
-                loadingInstance = false;
-
-                if (callback != null) {
-                    callback.handleMessage(msg);
-                }
-
-                // In addition to the direct caller, other callbacks may have been
-                // registered to be notified of instance loaded status
-                handleRegisteredCallbacks(msg);
-            }
-
-            @Override
-            public void onFailure(Throwable e, String message){
-                Log.e(App.LOG_TAG, "Unable to Load Instance: " + instance, e);
-                Toast.makeText(appInstance, "Cannot load configured instance.",
-                        Toast.LENGTH_LONG).show();
-                handleCallback(false);
-            }
-
-            @Override
-            public void dataReceived(InstanceInfo response) {
-                setCurrentInstance(response);
-                handleCallback(true);
-            }
-        };
-
-        if (!TextUtils.isEmpty(instance)) {
-            RequestGenerator rg = new RequestGenerator();
-            rg.getInstanceInfo(instance, handler);
-        }
-    }
 
     @Override
     public void onCreate() {
@@ -214,15 +160,93 @@ public class App extends Application {
         return nearbyList;
     }
 
-    public static LatLng getStartPos() {
-        InstanceInfo instance = getAppInstance().getCurrentInstance();
-        double lat = instance.getLat();
-        double lon = instance.getLon();
-        return new LatLng(lat, lon);
+    /**
+     * INSTANCE API
+     *
+     * TODO: Move to another class.
+     *
+     */
+
+    
+
+    public static String getInstanceName() {
+        App appInstance = getAppInstance();
+        InstanceInfo currentInstance = appInstance.getCurrentInstance();
+        return currentInstance == null ?
+            appInstance.getString(R.string.app_name) : currentInstance.getName();
     }
 
-    public InstanceInfo getCurrentInstance() {
+
+    public boolean hasInstanceCode() {
+        return getSharedPreferences().contains("instance_code");
+    }
+
+
+    public static class InstanceRefreshHandler extends RestHandler<InstanceInfo> {
+        private Callback callback;
+        private InstanceInfo responseInstanceInfo;
+
+        public InstanceRefreshHandler(Callback callback) {
+            this(new InstanceInfo(), callback);
+        }
+
+        public InstanceRefreshHandler() {
+            this(new InstanceInfo(), null);
+        }
+
+        public InstanceRefreshHandler(InstanceInfo instanceInfo, Callback callback) {
+            super(instanceInfo);
+            this.responseInstanceInfo = instanceInfo;
+            this.callback = callback;
+        }
+
+        private void handleRegisteredCallbacks(Message msg) {
+            if (registeredInstanceCallbacks.size() > 0) {
+                for (Callback registeredCallback : registeredInstanceCallbacks) {
+                    registeredCallback.handleMessage(msg);
+                }
+                registeredInstanceCallbacks.clear();
+            }
+        }
+
+        private void handleCallback(boolean success) {
+            Message msg = new Message();
+            Bundle data = new Bundle(); data.putBoolean("success", success);
+            msg.setData(data);
+
+            // Flag to track if instance request is pending
+            loadingInstance = false;
+
+            if (callback != null) {
+                callback.handleMessage(msg);
+            }
+
+            // In addition to the direct caller, other callbacks may have been
+            // registered to be notified of instance loaded status
+            handleRegisteredCallbacks(msg);
+        }
+
+        @Override
+        public void onFailure(Throwable e, String message){
+            Log.e(App.LOG_TAG, "Unable to Load Instance: " + responseInstanceInfo.getName(), e);
+            Toast.makeText(appInstance, "Cannot load configured instance.",
+                    Toast.LENGTH_LONG).show();
+            handleCallback(false);
+        }
+
+        @Override
+        public void dataReceived(InstanceInfo instanceInfo) {
+            setCurrentInstance(instanceInfo);
+            handleCallback(true);
+        }
+    }
+
+    public static InstanceInfo getCurrentInstance() {
         return currentInstance;
+    }
+
+    public static void setInstanceCode(String instanceCode) {
+        getSharedPreferences().edit().putString("instance_code", instanceCode).commit();
     }
 
     /***
@@ -231,26 +255,11 @@ public class App extends Application {
      */
     public static void reloadInstanceInfo(Callback callback) {
         currentInstance = null;
-        getAppInstance().checkAndSetDefaultMapInstance(callback);
-    }
-
-    /***
-     * Given the provided instance, create fields and filters
-     */
-    public static void setCurrentInstance(InstanceInfo currentInstance) {
-        App.currentInstance = currentInstance;
-        try {
-            fieldManager = new FieldManager(currentInstance);
-
-            filterManager = new FilterManager(currentInstance.getSearchDefinitions());
-
-            // TODO:  colors, etc
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Unable to create field manager from instance", e);
-            Toast.makeText(appInstance, "Error setting up OpenTreeMap",
-                    Toast.LENGTH_LONG).show();
-        }
+        loadingInstance = true;
+        RequestGenerator rg = new RequestGenerator();
+        InstanceRefreshHandler handler = new InstanceRefreshHandler(callback);
+        String instanceCode = getSharedPreferences().getString("instance_code", "");
+        rg.getInstanceInfo(instanceCode, handler);
     }
 
     /**
@@ -261,7 +270,7 @@ public class App extends Application {
      */
     public void ensureInstanceLoaded(final Callback callback) {
         if (currentInstance != null) {
-            Message msg = new Message();
+            Message msg = Message.obtain();
             Bundle data = new Bundle();
             data.putBoolean("success", true);
             msg.setData(data);
@@ -277,5 +286,26 @@ public class App extends Application {
             }
         }
     }
+
+
+    /***
+     * Given the provided instance, create fields and filters
+     */
+    private static void setCurrentInstance(InstanceInfo currentInstance) {
+        App.currentInstance = currentInstance;
+        try {
+            fieldManager = new FieldManager(currentInstance);
+
+            filterManager = new FilterManager(currentInstance.getSearchDefinitions());
+
+            // TODO:  colors, etc
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Unable to create field manager from instance", e);
+            Toast.makeText(appInstance, "Error setting up OpenTreeMap",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 }
