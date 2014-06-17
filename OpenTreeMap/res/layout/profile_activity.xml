@@ -28,7 +28,7 @@
 
             <Button
                 android:id="@+id/login"
-                style="@style/profile_login_button"
+                style="@style/profile_button_anonymous"
                 android:text="@string/loginButtonText" />
         </LinearLayout>
     </RelativeLayout>
@@ -86,18 +86,18 @@
 
                     <Button
                         android:id="@+id/logout"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:layout_marginTop="20dp"
                         android:text="@string/logoutButton" />
 
                     <Button
                         android:id="@+id/change_password"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:text="@string/change_password" />
 
                     <Button
                         android:id="@+id/change_profile_picture"
-                        style="@style/profile_button"
+                        style="@style/profile_button_loggedin"
                         android:onClick="handleChangePhotoClick"
                         android:visibility="gone" />
                 </LinearLayout>
