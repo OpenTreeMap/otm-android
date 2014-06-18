@@ -56,7 +56,6 @@ public class App extends Application {
         if (loginManager == null) {
             checkAppInstance();
             loginManager = new LoginManager(appInstance);
-            loginManager.autoLogin();
         }
         return loginManager;
     }
@@ -164,8 +163,7 @@ public class App extends Application {
      * TODO: Move to another class.
      */
     public static String getInstanceName() {
-        App appInstance = getAppInstance();
-        InstanceInfo currentInstance = appInstance.getCurrentInstance();
+        InstanceInfo currentInstance = App.getCurrentInstance();
         return currentInstance == null ?
                 appInstance.getString(R.string.app_name) : currentInstance.getName();
     }
@@ -201,7 +199,7 @@ public class App extends Application {
         private void handleCallback(boolean success) {
             Message msg = new Message();
             Bundle data = new Bundle();
-            data.putBoolean("success", success);
+            data.putBoolean(SUCCESS_KEY, success);
             msg.setData(data);
 
             // Flag to track if instance request is pending
@@ -246,7 +244,6 @@ public class App extends Application {
     public static void removeCurrentInstance() {
         currentInstance = null;
         getSharedPreferences().edit().remove(INSTANCE_CODE).commit();
-        reloadInstanceInfo(null);
     }
 
     /**
@@ -272,8 +269,7 @@ public class App extends Application {
             String neverUsed = "";
             instanceCode = getSharedPreferences().getString(INSTANCE_CODE, neverUsed);
         } else {
-            // TODO: reprompt the instance switcher
-            Log.e(LOG_TAG, "NOT IMPLEMENTED YET");
+            Log.e(LOG_TAG, "Incorrect state, attempted to reload an instance without an instance code");
             return;
         }
         reloadInstanceInfo(instanceCode, callback);

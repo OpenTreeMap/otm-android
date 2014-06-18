@@ -18,8 +18,10 @@ import android.os.Message;
 import android.util.Log;
 
 public class LoginManager {
-    private final String userKey = "user";
-    private final String passKey = "pass";
+    private static final String MESSAGE_KEY = "message";
+    private static final String USER_KEY = "user";
+    private static final String PASS_KEY = "pass";
+
     private final Context context;
     private final SharedPreferences prefs;
 
@@ -34,7 +36,7 @@ public class LoginManager {
      * Store new password in user preferences
      */
     public void storePassword(String newpass) {
-        prefs.edit().putString(passKey, newpass).commit();
+        prefs.edit().putString(PASS_KEY, newpass).commit();
     }
 
     public boolean isLoggedIn() {
@@ -63,32 +65,29 @@ public class LoginManager {
                             return true;
                         }
                     });
-
                 }
 
                 @Override
                 public void onFailure(Throwable e, String message) {
                     if (e instanceof ConnectException) {
                         Log.e(App.LOG_TAG, "timeout");
-                        data.putBoolean("success", false);
-                        data.putString("message", "Could not connect to server");
+                        data.putBoolean(SUCCESS_KEY, false);
+                        data.putString(MESSAGE_KEY, "Could not connect to server");
                         handleCallback(data);
-                    } else {
-
                     }
                     rg.cancelRequests(activityContext);
                 }
 
                 @Override
                 public void handleFailureMessage(Throwable e, String responseBody) {
-                    data.putBoolean("success", false);
-                    data.putString("message", "Error logging in, please check your username and password.");
+                    data.putBoolean(SUCCESS_KEY, false);
+                    data.putString(MESSAGE_KEY, "Error logging in, please check your username and password.");
                     handleCallback(data);
                 }
 
                 @Override
                 public void dataReceived(User response) {
-                    prefs.edit().putString(userKey, username).commit();
+                    prefs.edit().putString(USER_KEY, username).commit();
                     storePassword(password);
 
                     loggedInUser = response;
@@ -99,7 +98,7 @@ public class LoginManager {
                         e.printStackTrace();
                     }
 
-                    data.putBoolean("success", true);
+                    data.putBoolean(SUCCESS_KEY, true);
                     handleCallback(data);
                 }
             });
@@ -121,36 +120,40 @@ public class LoginManager {
         App.removeCurrentInstance();
 
         loggedInUser = null;
-        prefs.edit().remove(userKey).commit();
-        prefs.edit().remove(passKey).commit();
-
+        prefs.edit().remove(USER_KEY).commit();
+        prefs.edit().remove(PASS_KEY).commit();
     }
 
     /**
      * Automatically and silently authenticate if credentials have been saved
      */
-    public void autoLogin() {
-        String user = prefs.getString(userKey, null);
-        String pass = prefs.getString(passKey, null);
+    public void autoLogin(final Callback callback) {
+        String user = prefs.getString(USER_KEY, null);
+        String pass = prefs.getString(PASS_KEY, null);
         if (user != null && pass != null) {
             logIn(context, user, pass, new Callback() {
                 @Override
                 public boolean handleMessage(Message msg) {
                     Bundle data = msg.getData();
-                    if (data != null && data.getBoolean("failure")) {
+                    if (data == null || !data.getBoolean(RestHandler.SUCCESS_KEY)) {
                         logOut();
                     }
-                    return true;
+                    return callback.handleMessage(msg);
                 }
             });
-        } else {
+        } else if (App.hasInstanceCode()) {
             // If there is no user to auto login, the app still needs to
             // make an instance request, which is otherwise associated and
-            // instigated
-            // after a login attempt
-            if (App.hasInstanceCode()) {
-                App.reloadInstanceInfo(null);
-            }
+            // instigated after a login attempt
+            App.reloadInstanceInfo(callback);
+        }
+        else {
+            Message msg = Message.obtain();
+            Bundle args = new Bundle();
+            args.putBoolean(RestHandler.SUCCESS_KEY, false);
+            msg.setData(args);
+
+            callback.handleMessage(msg);
         }
     }
 

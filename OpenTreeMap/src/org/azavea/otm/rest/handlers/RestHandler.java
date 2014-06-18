@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class RestHandler<T extends Model> extends JsonHttpResponseHandler {
+    public static final String SUCCESS_KEY = "success";
+
     private T resultObject;
 
     public RestHandler(T resultObject) {
