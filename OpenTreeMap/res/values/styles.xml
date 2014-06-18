@@ -202,12 +202,12 @@
     </style>
 
     <style name="instance_switcher_row_text" parent="@style/general_list_row_inner_text">
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="instance_switcher_element_row_subtext" parent="@style/general_list_row_inner_text">
-        <item name="android:textSize">12dip</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="species_row_inner_text" parent="@style/general_list_row_inner_text">

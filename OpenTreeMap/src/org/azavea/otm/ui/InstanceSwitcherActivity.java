@@ -120,8 +120,8 @@ public class InstanceSwitcherActivity extends Activity {
             if (bestProvider != null) {
                 Collections.sort(providers, new Comparator<String>() {
                     public int compare(String s1, String s2) {
-                        return s1 == bestProvider ? 1 :
-                                s2 == bestProvider ? -1 : 0;
+                        return s1.equals(bestProvider) ? 1 :
+                                s2.equals(bestProvider) ? -1 : 0;
                     }
                 });
             }
