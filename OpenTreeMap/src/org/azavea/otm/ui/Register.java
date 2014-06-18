@@ -54,7 +54,7 @@ public class Register extends FragmentActivity {
         String firstName = ((EditText) findViewById(R.id.register_firstName)).getText().toString();
         String lastName = ((EditText) findViewById(R.id.register_lastName)).getText().toString();
 
-        if (isEmpty(email) || isEmpty(password) || isEmpty(username) || isEmpty(firstName) || isEmpty(lastName)) {
+        if (isEmpty(email) || isEmpty(password) || isEmpty(username)) {
             alert(R.string.all_fields_required);
         } else if (!validEmail(email)) {
             alert(R.string.invalid_email);
