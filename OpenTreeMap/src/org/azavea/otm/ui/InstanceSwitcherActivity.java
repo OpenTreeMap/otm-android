@@ -38,7 +38,6 @@ import java.util.List;
 
 public class InstanceSwitcherActivity extends Activity {
 
-    private LocationManager locationManager;
     private Location userLocation;
 
     private ProgressDialog loadingInstances;
