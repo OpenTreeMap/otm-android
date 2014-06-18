@@ -138,8 +138,8 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         // setup instance lists
         Criteria criteria = new Criteria();
