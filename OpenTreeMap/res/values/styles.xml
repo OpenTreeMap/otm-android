@@ -137,6 +137,12 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
+    <style name="instance_switcher_label" parent="@style/large_label">
+        <item name="android:padding">@dimen/padding_12</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="add_tree_label">
         <item name="android:background">@color/main_background_color</item>
         <item name="android:gravity">center</item>
