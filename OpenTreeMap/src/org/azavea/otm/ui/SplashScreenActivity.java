@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.webkit.WebView;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 public class SplashScreenActivity extends Activity {
@@ -27,7 +28,11 @@ public class SplashScreenActivity extends Activity {
             public void handleMessage(Message msg) {
                 App app = App.getAppInstance();
 
-                Intent intent = new Intent(app, TabLayout.class);
+                Intent intent = new Intent(app,
+                        app.hasInstanceCode() ?
+                                TabLayout.class :
+                                InstanceSwitcherActivity.class
+                );
 
                 startActivity(intent);
                 finish();
