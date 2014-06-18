@@ -39,6 +39,6 @@ public class SplashScreenActivity extends Activity {
             }
         };
         splashDestroyer.sendMessageDelayed(Message.obtain(),
-                                           SPLASH_TIME_MILLIS);
+                SPLASH_TIME_MILLIS);
     }
 }  

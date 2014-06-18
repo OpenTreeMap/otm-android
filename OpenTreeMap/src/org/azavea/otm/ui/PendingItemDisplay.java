@@ -257,12 +257,12 @@ public class PendingItemDisplay extends Activity {
 			intent.putExtra("plot", plotData.toString());
 			setResult(RESULT_OK, intent);
 			finish();
-		};
+		}
 		@Override
         protected void handleFailureMessage(Throwable arg0, String arg1) {
 			arg0.printStackTrace();
 			Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
-		};
+		}
 	};
 
 	public void handleCancelClick(View view) {

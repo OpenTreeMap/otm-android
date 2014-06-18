@@ -42,7 +42,7 @@ public class LoginManager {
     }
 
     public void logIn(final Context activityContext, final String username, final String password,
-            final Callback callback) {
+                      final Callback callback) {
 
         final RequestGenerator rg = new RequestGenerator();
 
