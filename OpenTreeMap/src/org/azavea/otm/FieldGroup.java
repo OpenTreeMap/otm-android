@@ -21,7 +21,7 @@ public class FieldGroup {
 	
 	private String title;
 	private Map<String,Field> fields = new LinkedHashMap<String, Field>();
-	private enum DisplayMode { VIEW, EDIT};
+	private enum DisplayMode { VIEW, EDIT}
 	
 	public FieldGroup(String title) {
 		this.title = title;

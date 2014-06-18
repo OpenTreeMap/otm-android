@@ -40,19 +40,19 @@ public class ChangePassword extends Activity {
                 Log.e(App.LOG_TAG, "Error changing password", e);
                 alert(R.string.password_change_error);
             }
-        };
+        }
 
         @Override
         public void onFailure(Throwable e, JSONObject errorResponse) {
             Log.e(App.LOG_TAG, "Error changing password", e);
             alert(R.string.password_change_error);
-        };
+        }
 
         @Override
         protected void handleFailureMessage(Throwable e, String responseBody) {
             Log.e(App.LOG_TAG, "Error changing password", e);
             alert(R.string.password_change_error);
-        };
+        }
 
     };
 

@@ -24,7 +24,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 
 /**
@@ -102,15 +101,15 @@ public class App extends Application {
         Editor editor = prefs.edit();
         Context context = appInstance.getApplicationContext();
         editor.putString("base_url", context.getString(R.string.base_url))
-              .putString("api_url", context.getString(R.string.api_url))
-              .putString("tiler_url", context.getString(R.string.tiler_url))
-              .putString("plot_feature", context.getString(R.string.plot_feature))
-              .putString("boundary_feature", context.getString(R.string.boundary_feature))
-              .putString("access_key", context.getString(R.string.access_key))
-              .putString("secret_key", context.getString(R.string.secret_key))
-              .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
-              .putString("starting_zoom_level", context.getString(R.string.starting_zoom_level))
-              .commit();
+                .putString("api_url", context.getString(R.string.api_url))
+                .putString("tiler_url", context.getString(R.string.tiler_url))
+                .putString("plot_feature", context.getString(R.string.plot_feature))
+                .putString("boundary_feature", context.getString(R.string.boundary_feature))
+                .putString("access_key", context.getString(R.string.access_key))
+                .putString("secret_key", context.getString(R.string.secret_key))
+                .putString("max_nearby_plots", context.getString(R.string.max_nearby_plots))
+                .putString("starting_zoom_level", context.getString(R.string.starting_zoom_level))
+                .commit();
 
     }
 
@@ -153,7 +152,7 @@ public class App extends Application {
 
     public static NearbyList getNearbyList(Context context) {
         if (nearbyList == null) {
-            nearbyList = new NearbyList(context );
+            nearbyList = new NearbyList(context);
         }
 
         return nearbyList;

@@ -157,7 +157,7 @@ public class ProfileDisplay extends Fragment {
         }
 
         // Don't load additional edits if there are edits currently loading
-        if (loadingRecentEdits == true) {
+        if (loadingRecentEdits) {
             return;
         }
 
