@@ -6,20 +6,20 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class RestHandler<T extends Model> extends JsonHttpResponseHandler {
-	private T resultObject;
-	
-	public RestHandler(T resultObject) {
-		this.resultObject = resultObject;
-	}
-	
-	@Override
-	public void onSuccess(JSONObject response) {
-		resultObject.setData(response);
-		dataReceived(resultObject);
-	}
+    private T resultObject;
 
-	// Overridden by consuming class
-	public void dataReceived(T responseObject) {
-		
-	}
+    public RestHandler(T resultObject) {
+        this.resultObject = resultObject;
+    }
+
+    @Override
+    public void onSuccess(JSONObject response) {
+        resultObject.setData(response);
+        dataReceived(resultObject);
+    }
+
+    // Overridden by consuming class
+    public void dataReceived(T responseObject) {
+
+    }
 }
