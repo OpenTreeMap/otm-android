@@ -4,7 +4,7 @@
     <string name="api_url">override in child app</string>
     <string name="base_url">override in child app</string>
     <string name="tiler_url">override in child app</string>
-    <string name="instance_code">override in child app</string>
+    <string name="instance_code"></string>
     <string name="access_key">override in child app</string>
     <string name="secret_key">override in child app</string>
     <string name="max_nearby_plots">10</string>

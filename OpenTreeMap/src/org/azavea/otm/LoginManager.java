@@ -5,9 +5,12 @@ import java.net.ConnectException;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
+import org.azavea.otm.ui.InstanceSwitcherActivity;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler.Callback;
@@ -39,7 +42,7 @@ public class LoginManager {
     }
 
     public void logIn(final Context activityContext, final String username, final String password,
-            final Callback callback) {
+                      final Callback callback) {
 
         final RequestGenerator rg = new RequestGenerator();
 
@@ -105,13 +108,22 @@ public class LoginManager {
         }
     }
 
-    public void logOut() {
+    public void logOut(Activity activity) {
+        logOut();
+        Intent intent = new Intent(activity, InstanceSwitcherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.finish();
+    }
+
+    private void logOut() {
+        // Previous instance info is now invalid
+        App.removeCurrentInstance();
+
         loggedInUser = null;
         prefs.edit().remove(userKey).commit();
         prefs.edit().remove(passKey).commit();
 
-        // Previous instance info is now invalid
-        App.reloadInstanceInfo(null);
     }
 
     /**
@@ -136,7 +148,9 @@ public class LoginManager {
             // make an instance request, which is otherwise associated and
             // instigated
             // after a login attempt
-            App.reloadInstanceInfo(null);
+            if (App.hasInstanceCode()) {
+                App.reloadInstanceInfo(null);
+            }
         }
     }
 

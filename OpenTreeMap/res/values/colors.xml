@@ -23,4 +23,7 @@
 
     <!-- Background color of all content panes -->
     <color name="main_background_color">#F1F2F2</color>
+
+    <color name="light_gray_header_background_color">#BBBBBB</color>
+    <color name="dark_gray_border_color">#888888</color>
 </resources>
