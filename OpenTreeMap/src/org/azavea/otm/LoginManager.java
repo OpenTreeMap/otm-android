@@ -57,14 +57,17 @@ public class LoginManager {
                 private void handleCallback(Bundle resp) {
                     resultMessage.setData(data);
 
-                    App.reloadInstanceInfo(new Callback() {
-
-                        @Override
-                        public boolean handleMessage(Message msg) {
-                            callback.handleMessage(resultMessage);
-                            return true;
-                        }
-                    });
+                    if (App.hasInstanceCode()) {
+                        App.reloadInstanceInfo(new Callback() {
+                            @Override
+                            public boolean handleMessage(Message msg) {
+                                callback.handleMessage(resultMessage);
+                                return true;
+                            }
+                        });
+                    } else {
+                        callback.handleMessage(resultMessage);
+                    }
                 }
 
                 @Override

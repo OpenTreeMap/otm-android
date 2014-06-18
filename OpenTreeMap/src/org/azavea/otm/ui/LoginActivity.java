@@ -3,6 +3,7 @@ package org.azavea.otm.ui;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
+import org.azavea.otm.rest.handlers.RestHandler;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -51,7 +52,7 @@ public class LoginActivity extends Activity {
             public boolean handleMessage(Message msg) {
                 dialog.cancel();
                 Bundle data = msg.getData();
-                if (data.getBoolean("success")) {
+                if (data.getBoolean(RestHandler.SUCCESS_KEY)) {
                     setResult(RESULT_OK);
                     finish();
                     return true;
