@@ -214,9 +214,9 @@ public class App extends Application {
         return nearbyList;
     }
 
-    }
 
-    public InstanceInfo getCurrentInstance() {
+
+    public static InstanceInfo getCurrentInstance() {
         return currentInstance;
     }
 

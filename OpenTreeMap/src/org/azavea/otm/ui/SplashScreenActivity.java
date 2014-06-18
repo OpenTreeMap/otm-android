@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.webkit.WebView;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 public class SplashScreenActivity extends Activity {
