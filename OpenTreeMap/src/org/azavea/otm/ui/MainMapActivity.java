@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -472,7 +473,7 @@ public class MainMapActivity extends Fragment {
 
         try {
             String addr = plot.getAddressStreet();
-            if (addr != null && addr.length() != 0) {
+            if (!TextUtils.isEmpty(addr)) {
                 plotAddressView.setText(addr);
             }
             String speciesName = plot.getTitle();

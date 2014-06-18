@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,7 +98,11 @@ public class TreeInfoDisplay extends TreeDisplay {
 
     private void setHeaderValues(Plot plot) {
         try {
-            setText(R.id.address, plot.getAddressStreet());
+
+            String streetAddress = plot.getAddressStreet();
+            if (!TextUtils.isEmpty(streetAddress)) {
+                setText(R.id.address, streetAddress);
+            }
 
             Tree tree = plot.getTree();
             String defaultText = getResources().getString(R.string.species_missing);
