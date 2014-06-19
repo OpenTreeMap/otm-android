@@ -95,7 +95,7 @@
     <string name="add_profile_picture">Add Profile Picture</string>
     <string name="register">register</string>
     <string name="Register">Register</string>
-    <string name="all_fields_required">All fields are required.</string>
+    <string name="all_fields_required">Email address, username, and password are required.</string>
     <string name="invalid_email">Invalid email address</string>
     <string name="invalid_zip_code">That zip code was not valid.</string>
     <string name="done_registering">Registration successful</string>
