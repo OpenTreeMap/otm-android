@@ -91,12 +91,14 @@ public class MainMapActivity extends Fragment {
     private GoogleMap mMap;
     private TextView filterDisplay;
 
+    private Location currentLocation;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
     FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
-
-    private Location currentLocation;
 
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
@@ -166,6 +168,16 @@ public class MainMapActivity extends Fragment {
         setTreeAddMode(CANCEL);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            disableLocationUpdating();
+        } else {
+            setupLocationUpdating(getActivity());
+        }
+    }
+
     /*******************************************************
      * Overrides for the Fragment base class
      *******************************************************/
@@ -222,6 +234,7 @@ public class MainMapActivity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setupLocationUpdating(getActivity());
         MapHelper.checkGooglePlay(getActivity());
         mapView.onResume();
         if (App.getAppInstance().getCurrentInstance() != null) {
@@ -300,6 +313,7 @@ public class MainMapActivity extends Fragment {
         if (mapView != null) {
             mapView.onPause();
         }
+        disableLocationUpdating();
     }
 
     @Override
@@ -761,9 +775,9 @@ public class MainMapActivity extends Fragment {
     }
 
     private void setupLocationUpdating(Context applicationContext) {
-        LocationManager locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = location;
@@ -788,6 +802,12 @@ public class MainMapActivity extends Fragment {
         if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);
+        }
+    }
+
+    private void disableLocationUpdating() {
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
         }
     }
 
