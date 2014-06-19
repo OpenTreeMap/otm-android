@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/profile_activity_anonymous"
@@ -23,13 +23,19 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/loginMessage"
             android:layout_centerHorizontal="true"
+            android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp" >
+            android:paddingRight="20dp">
 
             <Button
                 android:id="@+id/login"
                 style="@style/profile_button_anonymous"
                 android:text="@string/loginButtonText" />
+
+            <Button
+                android:id="@+id/change_instance_anonymous"
+                style="@style/profile_button_anonymous"
+                android:text="@string/profile_activity_switch_instance" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -41,9 +47,9 @@
 
         <org.azavea.views.NotifyingScrollView
             android:id="@+id/userFieldsScroll"
+            onScrollToBotton="addMoreEdits"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            onScrollToBotton="addMoreEdits" >
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -52,7 +58,7 @@
                 android:focusableInTouchMode="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:weightSum="1.0" >
+                android:weightSum="1.0">
 
                 <TextView
                     android:id="@+id/profile_header"
@@ -63,10 +69,10 @@
                     android:text="@string/user_profile_details" />
 
                 <LinearLayout
+                    android:id="@+id/profile_field_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/profile_field_container" />
+                    android:orientation="vertical" />
 
                 <LinearLayout
                     android:id="@+id/user_fields"
@@ -82,13 +88,18 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/logout"
                         style="@style/profile_button_loggedin"
                         android:layout_marginTop="20dp"
                         android:text="@string/logoutButton" />
+
+                    <Button
+                        android:id="@+id/change_instance_loggedin"
+                        style="@style/profile_button_loggedin"
+                        android:text="@string/profile_activity_switch_instance" />
 
                     <Button
                         android:id="@+id/change_password"
@@ -110,8 +121,7 @@
                     android:focusableInTouchMode="true"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:weightSum="1.0" >
-                </LinearLayout>
+                    android:weightSum="1.0"></LinearLayout>
             </LinearLayout>
         </org.azavea.views.NotifyingScrollView>
 

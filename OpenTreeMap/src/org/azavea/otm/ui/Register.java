@@ -184,7 +184,7 @@ public class Register extends FragmentActivity {
                         startActivity(new Intent(App.getAppInstance(), TabLayout.class));
                     }
                 }).show();
-    };
+    }
 
     private void alert(int msg) {
         String s = this.getString(msg);

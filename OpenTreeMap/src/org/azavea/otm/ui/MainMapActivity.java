@@ -717,11 +717,11 @@ public class MainMapActivity extends Fragment {
             } else {
                 moveMapAndFinishGeocode(pos);
             }
-        };
+        }
         @Override
         protected void handleFailureMessage(Throwable arg0, String arg1) {
             alertGeocodeError();
-        };
+        }
     };
 
     /* Read the location search field, geocode it, and zoom to the location. */

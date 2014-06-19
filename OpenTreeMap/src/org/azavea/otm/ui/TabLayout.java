@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
@@ -59,6 +60,12 @@ public class TabLayout extends ActionBarActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        this.setTitle(App.getInstanceName());
+    }
+
+    @Override
     public void onBackPressed() {
         // A bit of an annoyance, the TabLayout Activity gets the backpress events
         // and must delegate them back down to the MainMapActivity Fragment
@@ -67,7 +74,7 @@ public class TabLayout extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar.getSelectedTab().getTag() == MAIN_MAP) {
             final FragmentManager manager = TabLayout.this.getSupportFragmentManager();
-            MainMapActivity mainMap = (MainMapActivity)manager.findFragmentByTag(MAIN_MAP);
+            MainMapActivity mainMap = (MainMapActivity) manager.findFragmentByTag(MAIN_MAP);
             mainMap.onBackPressed();
         } else {
             super.onBackPressed();
@@ -86,8 +93,10 @@ public class TabLayout extends ActionBarActivity {
         private final String tag;
         private final Class<T> tabClass;
 
-        /** Constructor used each time a new tab is created.
-         * @param host  The host Activity, used to instantiate the fragment
+        /**
+         * Constructor used each time a new tab is created.
+         *
+         * @param host The host Activity, used to instantiate the fragment
          * @param tag  The identifier tag for the fragment
          * @param clz  The fragment's Class, used to instantiate the fragment
          */

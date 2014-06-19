@@ -102,7 +102,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 deleteDialog.dismiss();
                 Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
             }
-        };
+        }
     };
 
     private Bitmap newTreePhoto;
@@ -466,13 +466,13 @@ public class TreeEditDisplay extends TreeDisplay {
                         } catch (JSONException e) {
                             Toast.makeText(App.getAppInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
                         }
-                    };
+                    }
 
                     @Override
                     public void onFailure(Throwable e, JSONObject errorResponse) {
                         Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
                         savePhotoDialog.dismiss();
-                    };
+                    }
 
                     @Override
                     protected void handleFailureMessage(Throwable e, String responseBody) {
@@ -480,7 +480,7 @@ public class TreeEditDisplay extends TreeDisplay {
                         Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG)
                                 .show();
                         savePhotoDialog.dismiss();
-                    };
+                    }
                 });
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Unable to upload photo", e);

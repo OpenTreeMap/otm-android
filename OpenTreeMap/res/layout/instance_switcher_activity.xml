@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:label="@string/instance_switcher_activity_title"
+    android:layout_height="match_parent"
+    android:background="@color/main_background_color"
+    android:padding="5dp"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/instance_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/padding_12"
+        android:divider="@color/base" />
+
+    <TextView
+        android:id="@+id/instance_list_empty"
+        style="@style/instance_switcher_label"
+        android:text="@string/instance_switcher_no_instances_found"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/have_account_text"
+        style="@style/instance_switcher_label"
+        android:text="@string/instance_switcher_account_question"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/login_button"
+        style="@style/instance_switcher_button"
+        android:text="@string/instance_switcher_login"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/username_text"
+        style="@style/instance_switcher_label"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/logout_button"
+        style="@style/instance_switcher_button"
+        android:text="@string/instance_switcher_switch_accounts" />
+
+</LinearLayout>

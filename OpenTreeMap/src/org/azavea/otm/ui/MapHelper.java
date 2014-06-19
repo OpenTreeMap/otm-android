@@ -6,7 +6,6 @@ import org.azavea.otm.data.Plot;
 
 import android.app.Dialog;
 import android.graphics.BitmapFactory;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;

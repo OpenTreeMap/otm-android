@@ -91,6 +91,10 @@
             android:name="org.azavea.otm.ui.PendingItemDisplay"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="org.azavea.otm.ui.InstanceSwitcherActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
