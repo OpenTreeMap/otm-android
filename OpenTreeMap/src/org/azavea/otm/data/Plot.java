@@ -132,11 +132,7 @@ public class Plot extends Model {
     }
 
     public String getAddress() throws JSONException {
-        if (data.get("address").equals(null)) {
-            return null;
-        }
-        // getString will perform a toString and give you "null"
-        return data.getString("address");
+        return safeGetString("address");
     }
 
     public void setAddress(String address) throws JSONException {
@@ -144,7 +140,7 @@ public class Plot extends Model {
     }
 
     public String getAddressStreet() throws JSONException {
-        return plotDetails.getString("address_street");
+        return safeGetString("address_street");
     }
 
     public void setAddressStreet(String addressStreet) throws JSONException {

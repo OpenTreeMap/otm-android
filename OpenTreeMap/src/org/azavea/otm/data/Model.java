@@ -6,6 +6,14 @@ import org.json.JSONObject;
 public abstract class Model {
     protected JSONObject data;
 
+    protected String safeGetString(String key) {
+        try {
+            return data.get(key).equals(null) ? null : data.getString(key);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
     protected long getLongOrDefault(String key, Long defaultValue) throws JSONException {
         if (data.isNull(key)) {
             return defaultValue;
