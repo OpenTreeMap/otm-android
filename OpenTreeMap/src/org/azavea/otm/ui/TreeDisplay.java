@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class TreeDisplay extends FragmentActivity {
+public class TreeDisplay extends UpEnabledActionBarActivity {
     protected LatLng plotLocation;
     protected Plot plot;
     public static int RESULT_PLOT_DELETED = Activity.RESULT_FIRST_USER + 1;

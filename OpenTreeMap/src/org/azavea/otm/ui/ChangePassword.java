@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class ChangePassword extends Activity {
+public class ChangePassword extends UpEnabledActionBarActivity {
     private String newPassword;
     LoginManager loginManager = App.getLoginManager();
 
