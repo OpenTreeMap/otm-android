@@ -22,18 +22,19 @@ public class InstanceInfoArrayAdapter extends TwoArrayAdapter<InstanceInfo> {
                                     Activity context,
                                     Location userLocation) {
 
-        super(context, personal, nearby);
+        super(context, personal, nearby, "My Tree Maps", "Nearby Tree Maps");
         this.inflator = context.getLayoutInflater();
         this.userLocation = userLocation;
     }
 
     @Override
-    public View getSeparatorView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflator.inflate(R.layout.instance_switcher_separator_row, null, true);
-        }
-        ((TextView) convertView.findViewById(R.id.text)).setText(position == 0 ? "My Tree Maps" : "Nearby Tree Maps");
-        return convertView;
+    protected View getInflatedSeparatorView() {
+        return inflator.inflate(R.layout.instance_switcher_separator_row, null, true);
+    }
+
+    @Override
+    protected TextView getSeparatorInnerTextView(View separatorView) {
+        return (TextView)separatorView.findViewById(R.id.text);
     }
 
     @Override

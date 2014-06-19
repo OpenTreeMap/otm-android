@@ -21,6 +21,8 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
     private String secondSeparatorText;
     private Context context;
 
+    private boolean firstArrayIsEmpty;
+
     public TwoArrayAdapter(Context context, List<T> array1, List<T> array2) {
         this(context, array1, array2, "Section 1", "Section 2");
     }
@@ -33,17 +35,19 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
         this.secondSeparatorText = secondSeparatorText;
         this.data = new ArrayList<T>();
 
-        // make the data positionally match the way it'll look
-        List<List<T>> arrays = new ArrayList<List<T>>();
-        arrays.add(array1);
-        arrays.add(array2);
+        if (array1.isEmpty()) {
+            firstArrayIsEmpty = true;
+        } else {
+            // add a separator for this array section
+            firstArrayIsEmpty = false;
+            this.data.add(null);
+            this.data.addAll(array1);
+        }
 
-        for (List<T> array : arrays) {
-            if (!array.isEmpty()) {
-                // add a separator for this array section
-                this.data.add(null);
-                this.data.addAll(array);
-            }
+        if (!array2.isEmpty()) {
+            // add a separator for this array section
+            this.data.add(null);
+            this.data.addAll(array2);
         }
     }
 
@@ -91,12 +95,22 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
         return convertView;
     }
 
+    protected View getInflatedSeparatorView() {
+        return new TextView(context);
+    }
+
+    protected TextView getSeparatorInnerTextView(View separatorView) {
+        return (TextView)separatorView;
+    }
+
     public View getSeparatorView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = new TextView(context);
+            convertView = getInflatedSeparatorView();
         }
-        String sepText = position == 0 ? firstSeparatorText : secondSeparatorText;
-        ((TextView) convertView).setText(sepText);
+
+        String sepText = firstArrayIsEmpty || position != 0 ? secondSeparatorText : firstSeparatorText;
+
+        getSeparatorInnerTextView(convertView).setText(sepText);
         return convertView;
     }
 
