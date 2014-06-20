@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EditEntry extends Model {
-	public EditEntry() throws JSONException {
+	public EditEntry() {
 		data = new JSONObject();
 	}
 

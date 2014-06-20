@@ -219,7 +219,7 @@ public class Field {
     }
 
     private View renderSpeciesFields(LayoutInflater layout, Plot model, Context context, View container,
-            TextView label, TextView fieldValue) throws JSONException {
+            TextView label, TextView fieldValue) {
 
         // tree.species gets exploded to a double row with sci name and common
         // name
@@ -247,7 +247,7 @@ public class Field {
     /*
      * Render a view to display the given model field in edit mode
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) throws JSONException {
+    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
 
         View container = null;
 

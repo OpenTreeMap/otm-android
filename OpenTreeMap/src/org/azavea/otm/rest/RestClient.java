@@ -122,8 +122,7 @@ public class RestClient {
     }
 
     public void post(Context context, String url, Model model,
-            AsyncHttpResponseHandler response)
-            throws UnsupportedEncodingException {
+            AsyncHttpResponseHandler response) {
         post(url, null, model.getData().toString(), response);
     }
 
@@ -166,8 +165,7 @@ public class RestClient {
      */
     public void putWithAuthentication(String url,
             String username, String password, int id, Model model,
-            AsyncHttpResponseHandler response)
-            throws UnsupportedEncodingException {
+            AsyncHttpResponseHandler response) {
 
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
@@ -178,8 +176,7 @@ public class RestClient {
 
     public void putWithAuthentication(String url,
             String username, String password, Model model,
-            AsyncHttpResponseHandler response)
-            throws UnsupportedEncodingException {
+            AsyncHttpResponseHandler response) {
 
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
@@ -218,8 +215,7 @@ public class RestClient {
      * request.
      */
     public void postWithAuthentication(String url, String username, String password,
-            Model model, AsyncHttpResponseHandler responseHandler)
-            throws UnsupportedEncodingException {
+            Model model, AsyncHttpResponseHandler responseHandler) {
 
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = null;
@@ -232,8 +228,7 @@ public class RestClient {
     }
 
     public void postWithAuthentication(String url, String username, String password,
-            AsyncHttpResponseHandler responseHandler)
-            throws UnsupportedEncodingException {
+            AsyncHttpResponseHandler responseHandler) {
 
         postWithAuthentication(url, username, password, null, responseHandler);
     }

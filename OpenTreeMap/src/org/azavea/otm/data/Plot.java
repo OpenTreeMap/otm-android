@@ -130,7 +130,7 @@ public class Plot extends Model {
         data.put("sidewalk_damage", sidewalkDamage);
     }
 
-    public String getAddress() throws JSONException {
+    public String getAddress() {
         return safeGetString("address");
     }
 
@@ -138,7 +138,7 @@ public class Plot extends Model {
         plotDetails.put("address_street", address);
     }
 
-    public String getAddressStreet() throws JSONException {
+    public String getAddressStreet() {
         return safeGetString("address_street");
     }
 
@@ -214,19 +214,19 @@ public class Plot extends Model {
         plotDetails.put("geom", geom.getData());
     }
 
-    public boolean canEditPlot() throws JSONException {
+    public boolean canEditPlot() {
         return getPermission("plot", "can_edit");
     }
 
-    public boolean canEditTree() throws JSONException {
+    public boolean canEditTree() {
         return getPermission("tree", "can_edit");
     }
 
-    public boolean canDeletePlot() throws JSONException {
+    public boolean canDeletePlot() {
         return getPermission("plot", "can_delete");
     }
 
-    public boolean canDeleteTree() throws JSONException {
+    public boolean canDeleteTree() {
         return getPermission("tree", "can_delete");
     }
 

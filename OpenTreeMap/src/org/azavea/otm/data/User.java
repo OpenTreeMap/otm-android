@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class User extends Model {
 	
-	public User() throws JSONException {
+	public User() {
 		data = new JSONObject();
 	}
 	

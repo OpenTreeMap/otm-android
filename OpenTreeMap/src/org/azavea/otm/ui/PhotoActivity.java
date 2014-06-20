@@ -29,7 +29,7 @@ public class PhotoActivity {
 	 * Helper functions
 	 */
 
-	public static File createImageFile() throws IOException {
+	public static File createImageFile() {
 		if (!isExternalStorageWritable()) {
 			Toast.makeText(App.getAppInstance(),
 					"Unable to write to filesystem.  If you are connected via USB, remove and try again",

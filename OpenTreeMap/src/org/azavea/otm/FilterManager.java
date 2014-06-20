@@ -35,7 +35,7 @@ public class FilterManager {
     // List of all species received from the API
     private LinkedHashMap<Integer, Species> species = new LinkedHashMap<>();
 
-    public FilterManager(JSONObject filterDefinitions) throws Exception {
+    public FilterManager(JSONObject filterDefinitions) {
         Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
         loadSpeciesList();
         loadFilterDefinitions(filterDefinitions);

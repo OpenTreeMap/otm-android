@@ -503,7 +503,7 @@ public class MainMapActivity extends Fragment {
         plotImageView = (ImageView) view.findViewById(R.id.plotImage);
     }
 
-    private void showImageOnPlotPopup(Plot plot) throws JSONException {
+    private void showImageOnPlotPopup(Plot plot) {
         plot.getTreeThumbnail(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
             public void onSuccess(byte[] imageData) {
@@ -616,7 +616,7 @@ public class MainMapActivity extends Fragment {
         }
     }
 
-    private Plot getPlotForNewTree() throws JSONException, IOException {
+    private Plot getPlotForNewTree() throws JSONException {
             Plot newPlot = new Plot();
             Geometry newGeometry = new Geometry();
             double lat = plotMarker.getPosition().latitude;

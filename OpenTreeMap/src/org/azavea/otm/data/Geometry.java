@@ -41,7 +41,7 @@ public class Geometry extends Model {
 		data.put("x", x);
 	}
 	
-	public RequestParams toParams() throws JSONException {
+	public RequestParams toParams() {
 		return new RequestParams();
 	}
 	
