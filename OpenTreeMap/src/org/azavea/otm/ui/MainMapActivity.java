@@ -644,7 +644,7 @@ public class MainMapActivity extends Fragment {
                 if (addressData.getMaxAddressLineIndex() != 0) {
                     streetAddress = addressData.getAddressLine(0);
                 }
-                if (streetAddress == null || streetAddress == "") {
+                if (streetAddress == null || streetAddress.equals("")) {
                     streetAddress = "No Address";
                 }
                 city = addressData.getLocality();

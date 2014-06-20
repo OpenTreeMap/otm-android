@@ -49,7 +49,7 @@ public class PendingItemDisplay extends Activity {
             + next/cancel buttons
         */
         String label = getIntent().getStringExtra("label");
-        if (label != null && label != "") {
+        if (label != null && !label.equals("")) {
         	renderTitle(label);
         }
 
@@ -57,7 +57,7 @@ public class PendingItemDisplay extends Activity {
  		renderCurrentValue(current);
 
  		String pending = getIntent().getStringExtra("pending");
- 		if (pending != null && pending != "") {
+ 		if (pending != null && !pending.equals("")) {
  			try {
 				renderPendingValues(new JSONArray(getIntent().getStringExtra("pending")));
 			} catch (JSONException e) {
