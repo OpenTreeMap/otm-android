@@ -69,7 +69,7 @@ public class FieldGroup {
 
 		View container = layout.inflate(R.layout.plot_field_group, null);
 		LinearLayout group = (LinearLayout)container.findViewById(R.id.field_group); 
-		View fieldView = null;
+		View fieldView;
 		int renderedFieldCount = 0;
 
 		

@@ -105,8 +105,6 @@ public class RequestGenerator {
 
     public void getInstancesNearLocation(double geoY, double geoX,
                                          JsonHttpResponseHandler handler) {
-        SharedPreferences sharedPrefs = App.getSharedPreferences();
-
         String url = String.format("locations/%s,%s/instances", geoY, geoX);
         userOptionalGet(url, null, handler);
     }

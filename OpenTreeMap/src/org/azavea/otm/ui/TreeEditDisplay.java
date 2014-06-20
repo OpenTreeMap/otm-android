@@ -214,8 +214,8 @@ public class TreeEditDisplay extends TreeDisplay {
                 return;
             }
 
-            String display = "";
-            double calculatedVal = 0;
+            String display;
+            double calculatedVal;
 
             // Handle cases where the first input is a decimal point
             if (editingText.equals(".")) {

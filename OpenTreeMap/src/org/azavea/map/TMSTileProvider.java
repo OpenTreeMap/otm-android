@@ -62,7 +62,7 @@ public class TMSTileProvider implements TileProvider {
         urlBuilder.appendQueryParameter("show", displayList);
         urlBuilder.appendQueryParameter("instance_id", Integer.toString(instance.getInstanceId()));
 
-        URL url = null;
+        URL url;
         try {
             url = new URL(urlBuilder.build().toString());
         } catch (MalformedURLException e) {

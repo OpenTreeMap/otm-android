@@ -36,7 +36,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        SpeciesHolder holder = null;
+        SpeciesHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -58,7 +58,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         // so data[position] will get the position from the unfiltered list.
         Species species = getItem(position);
 
-        boolean needsSection = false;
+        boolean needsSection;
         char section = species.getCommonName().toUpperCase().charAt(0);
         if (isNonAlpha(section)) {
             section = 'A';

@@ -104,9 +104,9 @@ public class NearbyList implements InfoList {
     @Override
     public DisplayablePlot[] getDisplayValues() {
         ArrayList<DisplayablePlot> listValues = new ArrayList<>();
-        String mainInfo = "";
-        String supplementaryInfo = "";
-        String distance = "";
+        String mainInfo;
+        String supplementaryInfo;
+        String distance;
 
         try {
             if (nearbyPlots != null) {
@@ -231,7 +231,7 @@ public class NearbyList implements InfoList {
 
     @Override
     public Object[] getListValues() {
-        Object[] plots = null;
+        Object[] plots;
         try {
             Map<Integer, Plot> plotMap = nearbyPlots.getAll();
             plots = plotMap.values().toArray();

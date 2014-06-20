@@ -639,8 +639,8 @@ public class MainMapActivity extends Fragment {
             if ((addresses != null) && (addresses.size() != 0)) {
                 Address addressData = addresses.get(0);
                 String streetAddress = null;
-                String city = null;
-                String zip = null;
+                String city;
+                String zip;
                 if (addressData.getMaxAddressLineIndex() != 0) {
                     streetAddress = addressData.getAddressLine(0);
                 }
@@ -698,8 +698,7 @@ public class MainMapActivity extends Fragment {
             return;
         }
 
-        App app = App.getAppInstance();
-        FallbackGeocoder geocoder = new FallbackGeocoder(getActivity(), app.getCurrentInstance().getExtent());
+        FallbackGeocoder geocoder = new FallbackGeocoder(getActivity(), App.getCurrentInstance().getExtent());
 
         LatLng pos = geocoder.androidGeocode(address);
 

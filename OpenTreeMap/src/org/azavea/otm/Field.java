@@ -180,7 +180,7 @@ public class Field {
         // value, value of simple pending edit, or value of pending edit where
         // we have
         // an owner field.
-        String value = null;
+        String value;
         if (!pending || this.owner == null) {
             value = formatUnit(getValueForKey(this.key, model));
         } else {
