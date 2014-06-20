@@ -58,9 +58,8 @@ public class Tree extends Model {
     /**
      * Get the current or pending value for species name
      *
-     * @param getCurrentOnly
-     *            , if True return the actual saved value, otherwise return
-     *            pending value if it exists
+     * @param getCurrentOnly , if True return the actual saved value, otherwise return
+     *                       pending value if it exists
      * @return
      * @throws JSONException
      */

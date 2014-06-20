@@ -67,22 +67,22 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         // Check the cached section status for the cell in the current position
         // It is redrawn after the cell is removed from the screen
         switch (sectionStates[position]) {
-        case SECTIONED_CELL:
-            needsSection = true;
-            break;
-        case VALUE_CELL:
-            needsSection = false;
-            break;
-        default:
-            // The section status is unknown, so determine
-            // if the first character of the name is already
-            // a created section
-            needsSection = !sections.get(section);
+            case SECTIONED_CELL:
+                needsSection = true;
+                break;
+            case VALUE_CELL:
+                needsSection = false;
+                break;
+            default:
+                // The section status is unknown, so determine
+                // if the first character of the name is already
+                // a created section
+                needsSection = !sections.get(section);
 
-            // Cache this state for later renderings
-            sectionStates[position] = needsSection ? SECTIONED_CELL
-                    : VALUE_CELL;
-            break;
+                // Cache this state for later renderings
+                sectionStates[position] = needsSection ? SECTIONED_CELL
+                        : VALUE_CELL;
+                break;
         }
 
         // Check if the first letter of name has already been sectioned
@@ -112,7 +112,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     }
 
     private Map<Character, Boolean> createSections() {
-        Map<Character, Boolean> sections = 
+        Map<Character, Boolean> sections =
                 new LinkedHashMap<>(26);
         for (int i = 65; i <= 90; i++) {
             sections.put((char) i, false);

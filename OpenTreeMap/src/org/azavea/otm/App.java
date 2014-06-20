@@ -159,7 +159,7 @@ public class App extends Application {
 
     /**
      * INSTANCE API
-     * <p/>
+     * <p>
      * TODO: Move to another class.
      */
     public static String getInstanceName() {

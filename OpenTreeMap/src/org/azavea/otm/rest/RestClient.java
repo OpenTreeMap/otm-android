@@ -78,7 +78,7 @@ public class RestClient {
     }
 
     private void get(String url, RequestParams params,
-            ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
+                     ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
         if (headers == null) {
             headers = new ArrayList<>();
         }
@@ -103,7 +103,7 @@ public class RestClient {
      * Signed GET request with no authentication
      */
     public void get(String url, RequestParams params,
-            AsyncHttpResponseHandler responseHandler) {
+                    AsyncHttpResponseHandler responseHandler) {
 
         this.get(url, params, null, responseHandler);
     }
@@ -112,24 +112,24 @@ public class RestClient {
      * Signed GET request with basic authentication headers
      */
     public void getWithAuthentication(String url, String username,
-            String password, RequestParams params,
-            AsyncHttpResponseHandler responseHandler) {
+                                      String password, RequestParams params,
+                                      AsyncHttpResponseHandler responseHandler) {
 
         Header[] authHeader =
-            { createBasicAuthenticationHeader(username, password) };
+                {createBasicAuthenticationHeader(username, password)};
         this.get(url, params, new ArrayList<>(Arrays.asList(authHeader)),
                 responseHandler);
     }
 
     public void post(Context context, String url, Model model,
-            AsyncHttpResponseHandler response) {
+                     AsyncHttpResponseHandler response) {
         post(url, null, model.getData().toString(), response);
     }
 
-    private void put (String url, int id,
-            ArrayList<Header> headers,
-            String body,
-            AsyncHttpResponseHandler responseHandler){
+    private void put(String url, int id,
+                     ArrayList<Header> headers,
+                     String body,
+                     AsyncHttpResponseHandler responseHandler) {
 
         try {
             String reqUrl = safePathJoin(getAbsoluteUrl(url),
@@ -154,7 +154,7 @@ public class RestClient {
     }
 
     public void put(String url, int id, Model model,
-            AsyncHttpResponseHandler response) {
+                    AsyncHttpResponseHandler response) {
 
         put(url, id, null, model.getData().toString(), response);
     }
@@ -164,10 +164,10 @@ public class RestClient {
      * request.
      */
     public void putWithAuthentication(String url,
-            String username, String password, int id, Model model,
-            AsyncHttpResponseHandler response) {
+                                      String username, String password, int id, Model model,
+                                      AsyncHttpResponseHandler response) {
 
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
+        Header[] headers = {createBasicAuthenticationHeader(username, password)};
         String body = model.getData().toString();
 
         put(url, id, new ArrayList<>(Arrays.asList(headers)),
@@ -175,10 +175,10 @@ public class RestClient {
     }
 
     public void putWithAuthentication(String url,
-            String username, String password, Model model,
-            AsyncHttpResponseHandler response) {
+                                      String username, String password, Model model,
+                                      AsyncHttpResponseHandler response) {
 
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
+        Header[] headers = {createBasicAuthenticationHeader(username, password)};
         String body = model.getData().toString();
 
         put(url, -1, new ArrayList<>(Arrays.asList(headers)),
@@ -186,8 +186,8 @@ public class RestClient {
     }
 
 
-    private void post (String url, ArrayList<Header> headers, String body,
-            AsyncHttpResponseHandler responseHandler){
+    private void post(String url, ArrayList<Header> headers, String body,
+                      AsyncHttpResponseHandler responseHandler) {
 
         try {
             String reqUrl = getAbsoluteUrl(url);
@@ -215,9 +215,9 @@ public class RestClient {
      * request.
      */
     public void postWithAuthentication(String url, String username, String password,
-            Model model, AsyncHttpResponseHandler responseHandler) {
+                                       Model model, AsyncHttpResponseHandler responseHandler) {
 
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
+        Header[] headers = {createBasicAuthenticationHeader(username, password)};
         String body = null;
         if (model != null) {
             body = model.getData().toString();
@@ -228,7 +228,7 @@ public class RestClient {
     }
 
     public void postWithAuthentication(String url, String username, String password,
-            AsyncHttpResponseHandler responseHandler) {
+                                       AsyncHttpResponseHandler responseHandler) {
 
         postWithAuthentication(url, username, password, null, responseHandler);
     }
@@ -236,8 +236,8 @@ public class RestClient {
     // This overloading of the postWithAuthentication method takes a bitmap, and
     // posts it as an PNG HTTP Entity.
     public void postWithAuthentication(String url, Bitmap bm,
-            String username, String password,
-            JsonHttpResponseHandler responseHandler, int timeout) {
+                                       String username, String password,
+                                       JsonHttpResponseHandler responseHandler, int timeout) {
 
         String completeUrl = getAbsoluteUrl(url);
         completeUrl = prepareUrl(completeUrl);
@@ -257,7 +257,7 @@ public class RestClient {
         // array, so creating a one-off client for this purpose
         AsyncHttpClient authenticatedClient = createAutheniticatedHttpClient(
                 username, password);
-       
+
         try {
             // Add the signature based on the base64 encoded representation of the bitmap
             Header sig = reqSigner.getSignatureHeader("POST", completeUrl, bitmapdata);
@@ -281,11 +281,11 @@ public class RestClient {
      * request.
      */
     public void deleteWithAuthentication(Context context, String url,
-            String username, String password,
-            AsyncHttpResponseHandler responseHandler) {
+                                         String username, String password,
+                                         AsyncHttpResponseHandler responseHandler) {
         String completeUrl = getAbsoluteUrl(url);
         completeUrl = prepareUrl(completeUrl);
-        Header[] headers = { createBasicAuthenticationHeader(username, password) };
+        Header[] headers = {createBasicAuthenticationHeader(username, password)};
         client.delete(context, completeUrl, headers, responseHandler);
     }
 
@@ -322,8 +322,7 @@ public class RestClient {
     /**
      * Ensure all required headers are present
      *
-     * @param additionalHeaders
-     *            List of headers specific to a single request
+     * @param additionalHeaders List of headers specific to a single request
      * @return Complete list of headers necessary for API request
      */
     private Header[] prepareHeaders(ArrayList<Header> additionalHeaders) {
@@ -336,11 +335,11 @@ public class RestClient {
 
             return headers.toArray(new Header[headers.size()]);
         } else {
-            return new Header[] { defaultHeader };
+            return new Header[]{defaultHeader};
         }
     }
 
-    /***
+    /**
      * Current timestamp string in UTC format for API request verification
      *
      * @return Query string format of "timestamp={UTC Timestamp}"
@@ -349,10 +348,9 @@ public class RestClient {
         return "timestamp=" + getTimestamp();
     }
 
-    /***
-     *
+    /**
      * @return Current timestamp string in UTC format for API request
-     *         verification
+     * verification
      */
     private String getTimestamp() {
         SimpleDateFormat dateFormatUtc = new SimpleDateFormat(
@@ -361,7 +359,7 @@ public class RestClient {
         return dateFormatUtc.format(new Date());
     }
 
-    /***
+    /**
      * Configured Access Key for API request verification
      *
      * @return Query string format of "access_key={ACCESSKEY}"
@@ -404,7 +402,7 @@ public class RestClient {
     }
 
     private Header createBasicAuthenticationHeader(String username,
-            String password) {
+                                                   String password) {
         String credentials = String.format("%s:%s", username, password);
         String encoded = Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
@@ -419,7 +417,7 @@ public class RestClient {
     }
 
     private AsyncHttpClient createAutheniticatedHttpClient(String username,
-            String password) {
+                                                           String password) {
         AsyncHttpClient client = createHttpClient();
         Header header = createBasicAuthenticationHeader(username, password);
         client.addHeader(header.getName(), header.getValue());

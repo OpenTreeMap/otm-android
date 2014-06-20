@@ -168,7 +168,8 @@ public class TreeEditDisplay extends TreeDisplay {
 
         dbh.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -176,12 +177,14 @@ public class TreeEditDisplay extends TreeDisplay {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
         });
 
         cir.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -189,7 +192,8 @@ public class TreeEditDisplay extends TreeDisplay {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
         });
 
         dbh.setText(dbh.getText());
@@ -288,13 +292,13 @@ public class TreeEditDisplay extends TreeDisplay {
 
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.confirm_delete)
                 .setMessage(messageResource).setPositiveButton(R.string.delete, (dialog, which) -> {
-                    deleteDialog = ProgressDialog.show(thisActivity, "", "Deleting...", true);
-                    Message resultMessage = new Message();
-                    Bundle data = new Bundle();
-                    data.putBoolean("confirm", true);
-                    resultMessage.setData(data);
-                    callback.handleMessage(resultMessage);
-                }).setNegativeButton(R.string.cancel, null).show();
+            deleteDialog = ProgressDialog.show(thisActivity, "", "Deleting...", true);
+            Message resultMessage = new Message();
+            Bundle data = new Bundle();
+            data.putBoolean("confirm", true);
+            resultMessage.setData(data);
+            callback.handleMessage(resultMessage);
+        }).setNegativeButton(R.string.cancel, null).show();
 
     }
 
@@ -367,9 +371,8 @@ public class TreeEditDisplay extends TreeDisplay {
     /**
      * Cancel the editing and return to the view profile, unchanged.
      *
-     * @param doFinish
-     *            - if the back button was pushed, finished will be called for
-     *            you
+     * @param doFinish - if the back button was pushed, finished will be called for
+     *                 you
      */
     public void cancel(boolean doFinish) {
         setResult(RESULT_CANCELED);
@@ -483,7 +486,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
     /**
      * Is the intent in add tree mode?
-     * */
+     */
     private boolean addMode() {
         return (getIntent().getStringExtra("new_tree") != null) && getIntent().getStringExtra("new_tree").equals("1");
     }
@@ -509,47 +512,47 @@ public class TreeEditDisplay extends TreeDisplay {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-        case SPECIES_SELECTOR:
-            if (resultCode == Activity.RESULT_OK) {
-                CharSequence speciesJSON = data.getCharSequenceExtra("species");
-                if (speciesJSON != null && !speciesJSON.equals(null)) {
-                    Species species = new Species();
-                    try {
+            case SPECIES_SELECTOR:
+                if (resultCode == Activity.RESULT_OK) {
+                    CharSequence speciesJSON = data.getCharSequenceExtra("species");
+                    if (speciesJSON != null && !speciesJSON.equals(null)) {
+                        Species species = new Species();
+                        try {
 
-                        species.setData(new JSONObject(speciesJSON.toString()));
-                        speciesField.setValue(species);
+                            species.setData(new JSONObject(speciesJSON.toString()));
+                            speciesField.setValue(species);
 
-                    } catch (JSONException e) {
-                        String msg = "Unable to retrieve selected species";
-                        Log.e(App.LOG_TAG, msg, e);
-                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            String msg = "Unable to retrieve selected species";
+                            Log.e(App.LOG_TAG, msg, e);
+                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
-            break;
-        case TREE_MOVE:
-            if (resultCode == Activity.RESULT_OK) {
-                try {
-                    plot.setData(new JSONObject(data.getStringExtra("plot")));
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                break;
+            case TREE_MOVE:
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        plot.setData(new JSONObject(data.getStringExtra("plot")));
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    plotLocation = getPlotLocation(plot);
+                    showPositionOnMap();
                 }
-                plotLocation = getPlotLocation(plot);
-                showPositionOnMap();
-            }
-            break;
+                break;
 
-        case PHOTO_USING_CAMERA_RESPONSE:
-            if (resultCode == RESULT_OK) {
-                changePhotoUsingCamera(outputFilePath);
-            }
-            break;
-        case PHOTO_USING_GALLERY_RESPONSE:
-            if (resultCode == RESULT_OK) {
-                changePhotoUsingGallery(data);
-            }
-            break;
+            case PHOTO_USING_CAMERA_RESPONSE:
+                if (resultCode == RESULT_OK) {
+                    changePhotoUsingCamera(outputFilePath);
+                }
+                break;
+            case PHOTO_USING_GALLERY_RESPONSE:
+                if (resultCode == RESULT_OK) {
+                    changePhotoUsingGallery(data);
+                }
+                break;
         }
 
     }

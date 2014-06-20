@@ -96,7 +96,7 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
     }
 
     protected TextView getSeparatorInnerTextView(View separatorView) {
-        return (TextView)separatorView;
+        return (TextView) separatorView;
     }
 
     public View getSeparatorView(int position, View convertView, ViewGroup parent) {

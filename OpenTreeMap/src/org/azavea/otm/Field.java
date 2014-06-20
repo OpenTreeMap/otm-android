@@ -98,7 +98,7 @@ public class Field {
     public boolean editViewOnly = false;
 
     protected Field(String key, String label, boolean canEdit, String format, JSONArray choices, String owner,
-            String infoUrl, boolean editViewOnly, String units, int digits) {
+                    String infoUrl, boolean editViewOnly, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
@@ -219,7 +219,7 @@ public class Field {
     }
 
     private View renderSpeciesFields(LayoutInflater layout, Plot model, Context context, View container,
-            TextView label, TextView fieldValue) {
+                                     TextView label, TextView fieldValue) {
 
         // tree.species gets exploded to a double row with sci name and common
         // name
@@ -620,7 +620,7 @@ public class Field {
      * when key is DBH, we want the numeric value.)
      */
     private void bindPendingEditClickHandler(View b, final String key, final String relatedField, final Plot model,
-            final Context context) {
+                                             final Context context) {
         b.setOnClickListener(v -> {
             // initialize the intent, and load it with some initial values
             Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
@@ -694,7 +694,7 @@ public class Field {
     // ??REFACTOR: the signature suggests that this belongs on the Plot object.
 
     private static String getValueForLatestPendingEditByRelatedField(String relatedFieldKey, String pendingKey,
-            Plot plot) {
+                                                                     Plot plot) {
         // get the pending edit description object for this plot
         PendingEditDescription ped;
         try {

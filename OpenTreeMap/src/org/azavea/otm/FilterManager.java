@@ -88,7 +88,7 @@ public class FilterManager {
     }
 
     private BaseFilter makeMapFilter(String key, String identifier,
-            String label, String type, JSONArray choices) throws Exception {
+                                     String label, String type, JSONArray choices) throws Exception {
 
         if (type.equals("BOOL")) {
             return new BooleanFilter(key, identifier, label);
@@ -173,11 +173,9 @@ public class FilterManager {
 
     /**
      * Update the values of a given filter from a filter view control
-     * 
-     * @param key
-     *            - The filter key
-     * @param view
-     *            - The view which contains value for the filter
+     *
+     * @param key  - The filter key
+     * @param view - The view which contains value for the filter
      */
     public void updateFilterFromView(String key, View view) {
         allFilters.get(key).updateFromView(view);
@@ -185,7 +183,6 @@ public class FilterManager {
 
     /**
      * Returns a comma separated string of active filter names
-     * 
      */
     public String getActiveFilterDisplay() {
         String display = "", sep = "";

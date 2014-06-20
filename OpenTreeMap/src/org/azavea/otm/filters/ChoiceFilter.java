@@ -18,7 +18,7 @@ public class ChoiceFilter extends BaseFilter {
     private int selectedIndex = DEFAULT;
 
     public ChoiceFilter(String key, String identifier, String label,
-            JSONArray choices) {
+                        JSONArray choices) {
         this.key = key;
         this.identifier = identifier;
         this.label = label;
@@ -96,7 +96,6 @@ public class ChoiceFilter extends BaseFilter {
 
     /**
      * Get an array of the text of each choice value
-     *
      */
     public CharSequence[] getChoicesText() {
         String[] texts = new String[this.choices.length];

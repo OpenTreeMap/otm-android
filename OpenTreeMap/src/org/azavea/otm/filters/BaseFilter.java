@@ -25,24 +25,24 @@ public abstract class BaseFilter {
     public String label;
 
     /**
-     *  Checks if this filter currently has an active value
+     * Checks if this filter currently has an active value
      */
     public abstract boolean isActive();
 
     /**
-     *  Update the value of the filter, and its active status
-     *  from a view of the corresponding type
+     * Update the value of the filter, and its active status
+     * from a view of the corresponding type
      */
     public abstract void updateFromView(View view);
 
     /**
-     *  Reset the filter to the default state
+     * Reset the filter to the default state
      */
     public abstract void clear();
 
     /**
-     *  Called when the filter is active...
-     *  Gets the filter object representation of this filter
+     * Called when the filter is active...
+     * Gets the filter object representation of this filter
      */
     public abstract JSONObject getFilterObject();
 

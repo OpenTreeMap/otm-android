@@ -60,8 +60,8 @@ public class SplashScreenActivity extends Activity {
         App app = App.getAppInstance();
         Intent intent = new Intent(app,
                 skipInstanceSwitcher
-                    ? TabLayout.class
-                    : InstanceSwitcherActivity.class
+                        ? TabLayout.class
+                        : InstanceSwitcherActivity.class
         );
 
         startActivity(intent);

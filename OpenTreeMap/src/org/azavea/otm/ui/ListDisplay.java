@@ -55,7 +55,7 @@ public class ListDisplay extends Fragment implements ListObserver {
         return view;
     }
 
-    @Override 
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden && infoList != null) {
@@ -68,11 +68,11 @@ public class ListDisplay extends Fragment implements ListObserver {
         super.onPause();
         infoList.removeLocationUpdating();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        
+
         listView = (ListView) getActivity().findViewById(R.id.listItems);
 
         dialog = ProgressDialog.show(getActivity(), "", "Loading. Please wait...", true);
@@ -91,18 +91,18 @@ public class ListDisplay extends Fragment implements ListObserver {
         dialog.show();
         NearbyList nearbyList = (NearbyList) infoList;
         switch (index) {
-        case 0:
-            nearbyList.setFilterRecent(false);
-            nearbyList.setFilterPending(false);
-            break;
-        case 1:
-            nearbyList.setFilterRecent(true);
-            nearbyList.setFilterPending(false);
-            break;
-        case 2:
-            nearbyList.setFilterRecent(false);
-            nearbyList.setFilterPending(true);
-            break;
+            case 0:
+                nearbyList.setFilterRecent(false);
+                nearbyList.setFilterPending(false);
+                break;
+            case 1:
+                nearbyList.setFilterRecent(true);
+                nearbyList.setFilterPending(false);
+                break;
+            case 2:
+                nearbyList.setFilterRecent(false);
+                nearbyList.setFilterPending(true);
+                break;
         }
         nearbyList.update();
     }

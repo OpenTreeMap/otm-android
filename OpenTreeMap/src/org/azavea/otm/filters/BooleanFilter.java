@@ -26,7 +26,7 @@ public class BooleanFilter extends BaseFilter {
 
     @Override
     public void updateFromView(View view) {
-        this.active = ((ToggleButton)view.findViewById(R.id.active)).isChecked();
+        this.active = ((ToggleButton) view.findViewById(R.id.active)).isChecked();
     }
 
     @Override

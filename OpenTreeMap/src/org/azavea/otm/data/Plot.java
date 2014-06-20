@@ -27,8 +27,8 @@ public class Plot extends Model {
     /**
      * When Requesting a plot tree photo, these are the valid image types
      */
-    public static String[] IMAGE_TYPES = new String[] {
-        "image/jpeg", "image/png", "image/gif"
+    public static String[] IMAGE_TYPES = new String[]{
+            "image/jpeg", "image/png", "image/gif"
     };
 
     public Plot() {
@@ -230,7 +230,7 @@ public class Plot extends Model {
         return getPermission("tree", "can_delete");
     }
 
-    /***
+    /**
      * Does this plot have current pending edits?
      *
      * @throws JSONException
@@ -256,10 +256,9 @@ public class Plot extends Model {
     /**
      * Get a pending edit description for a given field key for a plot or tree
      *
-     * @param key
-     *            name of field key
+     * @param key name of field key
      * @return An object representing a pending edit description for the field,
-     *         or null if there are no pending edits
+     * or null if there are no pending edits
      * @throws JSONException
      */
     public PendingEditDescription getPendingEditForKey(String key) throws JSONException {
@@ -275,10 +274,8 @@ public class Plot extends Model {
     /**
      * Get a plot or tree permission from a plot json
      *
-     * @param name
-     *            "tree" or "plot"
-     * @param editType
-     *            "can_edit" or "can_delete"
+     * @param name     "tree" or "plot"
+     * @param editType "can_edit" or "can_delete"
      * @return
      */
     private boolean getPermission(String name, String editType) {
@@ -325,9 +322,8 @@ public class Plot extends Model {
      * Get the most recent tree thumbnail for this plot, by way of an
      * asynchronous response handler.
      *
-     * @param binary
-     *            image handler which will receive callback from async http
-     *            request
+     * @param binary image handler which will receive callback from async http
+     *               request
      * @throws JSONException
      */
     public void getTreeThumbnail(BinaryHttpResponseHandler handler) {

@@ -108,35 +108,36 @@ public class MainMapActivity extends Fragment {
         RequestParams activeFilters = null;
 
         rg.getPlotsNearLocation(
-            point.latitude,
-            point.longitude,
-            activeFilters,
-            new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+                point.latitude,
+                point.longitude,
+                activeFilters,
+                new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
 
-                @Override
-                public void onFailure(Throwable e, String message) {
-                    dialog.hide();
-                    Log.e("TREE_CLICK",
-                            "Error retrieving plots on map touch event: ", e);
-                }
-
-                @Override
-                public void dataReceived(PlotContainer response) {
-                    try {
-                        Plot plot = response.getFirst();
-                        if (plot != null) {
-                            showPopup(plot);
-                        } else {
-                            hidePopup();
-                        }
-                    } catch (JSONException e) {
-                        Log.e("TREE_CLICK",
-                                "Error retrieving plot info on map touch event: ", e);
-                    } finally {
+                    @Override
+                    public void onFailure(Throwable e, String message) {
                         dialog.hide();
+                        Log.e("TREE_CLICK",
+                                "Error retrieving plots on map touch event: ", e);
+                    }
+
+                    @Override
+                    public void dataReceived(PlotContainer response) {
+                        try {
+                            Plot plot = response.getFirst();
+                            if (plot != null) {
+                                showPopup(plot);
+                            } else {
+                                hidePopup();
+                            }
+                        } catch (JSONException e) {
+                            Log.e("TREE_CLICK",
+                                    "Error retrieving plot info on map touch event: ", e);
+                        } finally {
+                            dialog.hide();
+                        }
                     }
                 }
-            });
+        );
     };
 
     // Map click listener that allows us to add a tree
@@ -145,10 +146,10 @@ public class MainMapActivity extends Fragment {
         public void onMapClick(LatLng point) {
             Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
 
-            plotMarker =  mMap.addMarker(new MarkerOptions()
-               .position(point)
-               .title("New Tree")
-               .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker))
+            plotMarker = mMap.addMarker(new MarkerOptions()
+                            .position(point)
+                            .title("New Tree")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker))
             );
             plotMarker.setDraggable(true);
             setTreeAddMode(STEP2);
@@ -171,9 +172,11 @@ public class MainMapActivity extends Fragment {
         }
     }
 
-    /*******************************************************
+    /**
+     * ****************************************************
      * Overrides for the Fragment base class
-     *******************************************************/
+     * *****************************************************
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setupLocationUpdating(getActivity());
@@ -241,7 +244,7 @@ public class MainMapActivity extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case FILTER_INTENT:
                 if (resultCode == Activity.RESULT_OK) {
                     Collection<JSONObject> activeFilters = App.getFilterManager().getActiveFilters();
@@ -401,7 +404,7 @@ public class MainMapActivity extends Fragment {
 
         view.findViewById(R.id.addTreeButton).setOnClickListener(v -> {
             getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-            if(App.getLoginManager().isLoggedIn()) {
+            if (App.getLoginManager().isLoggedIn()) {
                 setTreeAddMode(CANCEL);
                 setTreeAddMode(STEP1);
             } else {
@@ -431,7 +434,7 @@ public class MainMapActivity extends Fragment {
                 Location cachedLocation = getCachedLocation();
                 if (cachedLocation != null) {
                     zoomMapToLocation(cachedLocation);
-                    success =true;
+                    success = true;
                 }
             }
 
@@ -463,9 +466,9 @@ public class MainMapActivity extends Fragment {
 
             removePlotMarker();
             plotMarker = mMap.addMarker(new MarkerOptions()
-                .position(position)
-                .title("")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+                    .position(position)
+                    .title("")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Could not show tree popup", e);
         }
@@ -479,7 +482,7 @@ public class MainMapActivity extends Fragment {
         if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
             mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
         } else {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,STREET_ZOOM_LEVEL));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, STREET_ZOOM_LEVEL));
         }
         return position;
     }
@@ -519,24 +522,24 @@ public class MainMapActivity extends Fragment {
         });
     }
 
-     private void setFilterDisplay(String activeFilterDisplay) {
-         if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
-             filterDisplay.setVisibility(View.GONE);
-         } else {
-             filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
-             filterDisplay.setVisibility(View.VISIBLE);
-         }
+    private void setFilterDisplay(String activeFilterDisplay) {
+        if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
+            filterDisplay.setVisibility(View.GONE);
+        } else {
+            filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
+            filterDisplay.setVisibility(View.VISIBLE);
+        }
     }
 
-     private void zoomMapToLocation(Location l) {
-         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+    private void zoomMapToLocation(Location l) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 l.getLatitude(),
                 l.getLongitude()
         ), STREET_ZOOM_LEVEL));
 
-     }
+    }
 
-     private Location getCachedLocation() {
+    private Location getCachedLocation() {
         Context context = getActivity();
         Criteria crit = new Criteria();
         crit.setAccuracy(Criteria.ACCURACY_FINE);
@@ -555,14 +558,14 @@ public class MainMapActivity extends Fragment {
         }
         return null;
 
-     }
+    }
 
-     /* tree add modes:
-      *     CANCEL : not adding a tree
-      *  STEP1  : "Tap to add a tree"
-      *  STEP2  : "Long press to move the tree into position, then click next"
-      *  FINISH : Create tree and redirect to tree detail page.
-      */
+    /* tree add modes:
+     *     CANCEL : not adding a tree
+     *  STEP1  : "Tap to add a tree"
+     *  STEP2  : "Long press to move the tree into position, then click next"
+     *  FINISH : Create tree and redirect to tree detail page.
+     */
     public void setTreeAddMode(int step) {
         if (mMap == null) {
             return;
@@ -599,12 +602,12 @@ public class MainMapActivity extends Fragment {
                 }
                 break;
             case FINISH:
-                Intent editPlotIntent = new Intent (getActivity(), TreeEditDisplay.class);
+                Intent editPlotIntent = new Intent(getActivity(), TreeEditDisplay.class);
                 Plot newPlot;
                 try {
                     newPlot = getPlotForNewTree();
                     String plotString = newPlot.getData().toString();
-                    editPlotIntent.putExtra("plot", plotString );
+                    editPlotIntent.putExtra("plot", plotString);
                     editPlotIntent.putExtra("new_tree", "1");
                     startActivityForResult(editPlotIntent, ADD_INTENT);
 
@@ -617,59 +620,59 @@ public class MainMapActivity extends Fragment {
     }
 
     private Plot getPlotForNewTree() throws JSONException {
-            Plot newPlot = new Plot();
-            Geometry newGeometry = new Geometry();
-            double lat = plotMarker.getPosition().latitude;
-            double lon = plotMarker.getPosition().longitude;
-            newGeometry.setY(lat);
-            newGeometry.setX(lon);
+        Plot newPlot = new Plot();
+        Geometry newGeometry = new Geometry();
+        double lat = plotMarker.getPosition().latitude;
+        double lon = plotMarker.getPosition().longitude;
+        newGeometry.setY(lat);
+        newGeometry.setX(lon);
 
-            // We always get coordinates in lat/lon
-            newGeometry.setSrid(4326);
-            newPlot.setGeometry(newGeometry);
+        // We always get coordinates in lat/lon
+        newGeometry.setSrid(4326);
+        newPlot.setGeometry(newGeometry);
 
-            List<Address> addresses = null;
-            try {
-                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                addresses = geocoder.getFromLocation(lat, lon, 1);
-            } catch (Exception e) {
-                e.printStackTrace();
+        List<Address> addresses = null;
+        try {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if ((addresses != null) && (addresses.size() != 0)) {
+            Address addressData = addresses.get(0);
+            String streetAddress = null;
+            String city;
+            String zip;
+            if (addressData.getMaxAddressLineIndex() != 0) {
+                streetAddress = addressData.getAddressLine(0);
             }
-
-            if ((addresses != null) && (addresses.size() != 0)) {
-                Address addressData = addresses.get(0);
-                String streetAddress = null;
-                String city;
-                String zip;
-                if (addressData.getMaxAddressLineIndex() != 0) {
-                    streetAddress = addressData.getAddressLine(0);
-                }
-                if (streetAddress == null || streetAddress.equals("")) {
-                    streetAddress = "No Address";
-                }
-                city = addressData.getLocality();
-                zip = addressData.getPostalCode();
-
-                newPlot.setAddressCity(city);
-                newPlot.setAddressZip(zip);
-                newPlot.setAddress(streetAddress);
-            } else {
-                newPlot.setAddress("No Address");
+            if (streetAddress == null || streetAddress.equals("")) {
+                streetAddress = "No Address";
             }
+            city = addressData.getLocality();
+            zip = addressData.getPostalCode();
 
-            newPlot.setTree(new Tree());
-            return newPlot;
-     }
+            newPlot.setAddressCity(city);
+            newPlot.setAddressZip(zip);
+            newPlot.setAddress(streetAddress);
+        } else {
+            newPlot.setAddress("No Address");
+        }
+
+        newPlot.setTree(new Tree());
+        return newPlot;
+    }
 
     private void moveMapAndFinishGeocode(LatLng pos) {
-        EditText et = (EditText)getActivity().findViewById(R.id.locationSearchField);
+        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
-        InputMethodManager im = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         im.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
     private void alertGeocodeError() {
-           Toast.makeText(getActivity(), "Location search error.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Location search error.", Toast.LENGTH_SHORT).show();
     }
 
     JsonHttpResponseHandler handleGoogleGeocodeResponse = new JsonHttpResponseHandler() {
@@ -682,6 +685,7 @@ public class MainMapActivity extends Fragment {
                 moveMapAndFinishGeocode(pos);
             }
         }
+
         @Override
         protected void handleFailureMessage(Throwable arg0, String arg1) {
             alertGeocodeError();
@@ -690,7 +694,7 @@ public class MainMapActivity extends Fragment {
 
     /* Read the location search field, geocode it, and zoom to the location. */
     public void doLocationSearch() {
-        EditText et = (EditText)getActivity().findViewById(R.id.locationSearchField);
+        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
         String address = et.getText().toString();
 
         if (address.equals("")) {
@@ -706,12 +710,12 @@ public class MainMapActivity extends Fragment {
             geocoder.httpGeocode(address, handleGoogleGeocodeResponse);
         } else {
             moveMapAndFinishGeocode(pos);
-         }
+        }
     }
 
     public void setUpBasemapControls() {
         // Create the segmented buttons
-        SegmentedButton buttons = (SegmentedButton)getActivity().findViewById(R.id.basemap_controls);
+        SegmentedButton buttons = (SegmentedButton) getActivity().findViewById(R.id.basemap_controls);
         buttons.clearButtons();
 
         ArrayList<String> buttonNames = new ArrayList<>();
@@ -722,15 +726,15 @@ public class MainMapActivity extends Fragment {
 
         buttons.setOnClickListener((int index) -> {
             switch (index) {
-            case 0:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                break;
-            case 1:
-                   mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                break;
-            case 2:
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                break;
+                case 0:
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    break;
+                case 1:
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    break;
+                case 2:
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    break;
             }
         });
     }
@@ -758,7 +762,8 @@ public class MainMapActivity extends Fragment {
 
             @Override
             public void onStatusChanged(String provider, int status,
-                    Bundle extras) {    }
+                                        Bundle extras) {
+            }
         };
         if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);

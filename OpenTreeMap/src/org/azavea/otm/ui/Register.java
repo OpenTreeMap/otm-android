@@ -31,7 +31,8 @@ public class Register extends FragmentActivity {
     private Bitmap profilePicture;
     private final LoginManager loginManager = App.getLoginManager();
 
-    private ProgressDialog dialog; 
+    private ProgressDialog dialog;
+
     /*
      * Activity overrides
      */
@@ -65,7 +66,7 @@ public class Register extends FragmentActivity {
             RequestGenerator rc = new RequestGenerator();
             User model = null;
             dialog = ProgressDialog.show(Register.this, "",
-                "Creating User Account...", true, true);
+                    "Creating User Account...", true, true);
 
             try {
                 model = new User(username, firstName, lastName, email, password);
@@ -75,7 +76,7 @@ public class Register extends FragmentActivity {
                 alert(R.string.problem_creating_account);
                 dialog.dismiss();
             }
-            
+
             try {
                 rc.register(App.getAppInstance(), model, registrationResponseHandler);
             } catch (Exception e) {
@@ -101,7 +102,7 @@ public class Register extends FragmentActivity {
                 alert(R.string.problem_creating_account);
             }
         }
-         
+
         @Override
         public void handleFailureMessage(Throwable e, String msg) {
             dialog.dismiss();
@@ -184,7 +185,7 @@ public class Register extends FragmentActivity {
         String s = this.getString(msg);
         Toast.makeText(App.getAppInstance(), s, Toast.LENGTH_LONG).show();
     }
-    
+
     private void alert(String msg) {
         Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_LONG).show();
     }
