@@ -60,12 +60,7 @@ public class ChangePassword extends UpEnabledActionBarActivity {
         final Activity thisActivity = this;
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.password_changed)
                 .setMessage(R.string.password_changed)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        thisActivity.finish();
-                    }
-                }).show();
+                .setPositiveButton(R.string.OK, (dialog, which) -> thisActivity.finish()).show();
 
     }
 

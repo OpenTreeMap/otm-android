@@ -52,12 +52,7 @@ public class ListDisplay extends Fragment implements ListObserver {
 
         buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
 
-        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
-            @Override
-            public void onClick(int index) {
-                processRadioButtonSelection(index);
-            }
-        });
+        buttons.setOnClickListener(this::processRadioButtonSelection);
 
         return view;
     }
@@ -115,24 +110,21 @@ public class ListDisplay extends Fragment implements ListObserver {
     }
 
     public ListView.OnItemClickListener getOnClickListener() {
-        return new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int i, long l) {
-                Intent viewPlot = new Intent(getActivity(), TreeInfoDisplay.class);
+        return (a, v, i, l) -> {
+            Intent viewPlot = new Intent(getActivity(), TreeInfoDisplay.class);
 
-                Plot selectedPlot = ((DisplayablePlot) a.getItemAtPosition(i)).getPlot();
-                viewPlot.putExtra("plot", selectedPlot.getData().toString());
+            Plot selectedPlot = ((DisplayablePlot) a.getItemAtPosition(i)).getPlot();
+            viewPlot.putExtra("plot", selectedPlot.getData().toString());
 
-                User user = App.getLoginManager().loggedInUser;
-                if (user != null) {
-                    viewPlot.putExtra("user", user.getData().toString());
-                } else {
-                    // extra "user" will be null, which is handled in the
-                    // activity.
-                }
-
-                ListDisplay.this.startActivity(viewPlot);
+            User user = App.getLoginManager().loggedInUser;
+            if (user != null) {
+                viewPlot.putExtra("user", user.getData().toString());
+            } else {
+                // extra "user" will be null, which is handled in the
+                // activity.
             }
+
+            ListDisplay.this.startActivity(viewPlot);
         };
     }
 

@@ -32,20 +32,16 @@ public class SpeciesListDisplay extends ListActivity {
 		if (search.getSpecies().size() > 0) {
 			renderSpeciesList();
 		} else {
-			search.loadSpeciesList(new Callback() {
-
-				@Override
-				public boolean handleMessage(Message msg) {
-					if (msg.getData().getBoolean("success")) {
-						renderSpeciesList();
-					} else
-						  {
-						Toast.makeText(App.getAppInstance(), "Could not get species list", 
-								Toast.LENGTH_SHORT).show();
-					}
-					return true;
-				}
-			});
+			search.loadSpeciesList(msg -> {
+                if (msg.getData().getBoolean("success")) {
+                    renderSpeciesList();
+                } else
+                      {
+                    Toast.makeText(App.getAppInstance(), "Could not get species list",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            });
 		}
 	}
 	
@@ -107,17 +103,13 @@ public class SpeciesListDisplay extends ListActivity {
 	 */
 	private void setKeyboardChangeEvents(final SpeciesAdapter adapter,
 			EditText filterEditText) {
-		filterEditText.setOnKeyListener(new View.OnKeyListener()
-	    {
-	        public boolean onKey(View v, int keyCode, KeyEvent event)
-	        {
-	            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-	            {
-	                adapter.notifyDataSetChanged();
-	            }
-	            return false;
-	        }
-	    });
+		filterEditText.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+            {
+                adapter.notifyDataSetChanged();
+            }
+            return false;
+        });
 	}
 	
 	@Override

@@ -50,21 +50,18 @@ public class TreeMove extends TreeDisplay{
         buttonNames.add("hybrid");
         buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
         
-        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
-            @Override
-            public void onClick(int index) {
-            	switch (index) {
-            	case 0:
-            		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); 
-            		break;
-            	case 1:
-            	   	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-            		break;
-            	case 2:
-            		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);           		
-            		break;
-            	}
+        buttons.setOnClickListener((int index) -> {
+            switch (index) {
+            case 0:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case 1:
+                   mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case 2:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
             }
-        });	
+        });
     }
 }

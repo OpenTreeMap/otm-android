@@ -151,14 +151,10 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
         } else {
             resetSpecies(filter);
         }
-        button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent speciesSelector = new Intent(App.getAppInstance(),
-                        SpeciesListDisplay.class);
-                startActivityForResult(speciesSelector, SPECIES_SELECTOR);
-            }
+        button.setOnClickListener(v -> {
+            Intent speciesSelector = new Intent(App.getAppInstance(),
+                    SpeciesListDisplay.class);
+            startActivityForResult(speciesSelector, SPECIES_SELECTOR);
         });
         return speciesFilter;
     }
@@ -176,43 +172,31 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
         // Tag will hold the default label for clear events
         choiceButton.setTag(filter.label);
 
-        choiceButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                AlertDialog dialog = new AlertDialog.Builder(choiceButton
-                        .getContext())
-                        .setTitle(filter.label)
-                        .setSingleChoiceItems(filter.getChoicesText(),
-                                filter.getSelectedIndex(),
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                            int which) {
-                                        filter.setSelectedIndex(which);
-                                        choiceButton.setText(filter
-                                                .getSelectedLabelText());
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Clear",
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                filter.setSelectedIndex(-1);
+        choiceButton.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(choiceButton
+                    .getContext())
+                    .setTitle(filter.label)
+                    .setSingleChoiceItems(filter.getChoicesText(),
+                            filter.getSelectedIndex(),
+                            (dialog1, which) -> {
+                                filter.setSelectedIndex(which);
                                 choiceButton.setText(filter
                                         .getSelectedLabelText());
-
+                                dialog1.dismiss();
                             }
-                        });
+                    ).create();
 
-                dialog.show();
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Clear",
+                    (dialog1, which) -> {
+                        filter.setSelectedIndex(-1);
+                        choiceButton.setText(filter
+                                .getSelectedLabelText());
 
-            }
+                    }
+            );
+
+            dialog.show();
+
         });
 
         return choiceLayout;

@@ -114,13 +114,10 @@ public class TreeEditDisplay extends TreeDisplay {
         setContentView(R.layout.plot_edit_activity);
         setUpMapIfNeeded();
         initializeEditPage();
-        mMap.setOnMapClickListener(new OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng point) {
-                Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
-                treeMoveIntent.putExtra("plot", plot.getData().toString());
-                startActivityForResult(treeMoveIntent, TREE_MOVE);
-            }
+        mMap.setOnMapClickListener(point -> {
+            Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
+            treeMoveIntent.putExtra("plot", plot.getData().toString());
+            startActivityForResult(treeMoveIntent, TREE_MOVE);
         });
     }
 
@@ -293,58 +290,45 @@ public class TreeEditDisplay extends TreeDisplay {
         final Activity thisActivity = this;
 
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.confirm_delete)
-                .setMessage(messageResource).setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteDialog = ProgressDialog.show(thisActivity, "", "Deleting...", true);
-                        Message resultMessage = new Message();
-                        Bundle data = new Bundle();
-                        data.putBoolean("confirm", true);
-                        resultMessage.setData(data);
-                        callback.handleMessage(resultMessage);
-                    }
-
+                .setMessage(messageResource).setPositiveButton(R.string.delete, (dialog, which) -> {
+                    deleteDialog = ProgressDialog.show(thisActivity, "", "Deleting...", true);
+                    Message resultMessage = new Message();
+                    Bundle data = new Bundle();
+                    data.putBoolean("confirm", true);
+                    resultMessage.setData(data);
+                    callback.handleMessage(resultMessage);
                 }).setNegativeButton(R.string.cancel, null).show();
 
     }
 
     public void deleteTree(View view) {
-        Callback confirm = new Callback() {
+        Callback confirm = msg -> {
+            if (msg.getData().getBoolean("confirm")) {
 
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.getData().getBoolean("confirm")) {
-
-                    RequestGenerator rc = new RequestGenerator();
-                    try {
-                        rc.deleteCurrentTreeOnPlot(App.getAppInstance(), plot.getId(), deleteTreeHandler);
-                    } catch (JSONException e) {
-                        Log.e(App.LOG_TAG, "Error deleting tree", e);
-                    }
+                RequestGenerator rc = new RequestGenerator();
+                try {
+                    rc.deleteCurrentTreeOnPlot(App.getAppInstance(), plot.getId(), deleteTreeHandler);
+                } catch (JSONException e) {
+                    Log.e(App.LOG_TAG, "Error deleting tree", e);
                 }
-                return true;
             }
+            return true;
         };
 
         confirmDelete(R.string.confirm_delete_tree_msg, confirm);
     }
 
     public void deletePlot(View view) {
-        Callback confirm = new Callback() {
-
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.getData().getBoolean("confirm")) {
-                    RequestGenerator rc = new RequestGenerator();
-                    try {
-                        rc.deletePlot(App.getAppInstance(), plot.getId(), deletePlotHandler);
-                    } catch (JSONException e) {
-                        Log.e(App.LOG_TAG, "Error deleting tree plot", e);
-                    }
+        Callback confirm = msg -> {
+            if (msg.getData().getBoolean("confirm")) {
+                RequestGenerator rc = new RequestGenerator();
+                try {
+                    rc.deletePlot(App.getAppInstance(), plot.getId(), deletePlotHandler);
+                } catch (JSONException e) {
+                    Log.e(App.LOG_TAG, "Error deleting tree plot", e);
                 }
-                return true;
             }
+            return true;
         };
 
         confirmDelete(R.string.confirm_delete_plot_msg, confirm);
@@ -359,13 +343,9 @@ public class TreeEditDisplay extends TreeDisplay {
      */
     private void setupSpeciesSelector() {
 
-        OnClickListener speciesClickListener = new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent speciesSelector = new Intent(App.getAppInstance(), SpeciesListDisplay.class);
-                startActivityForResult(speciesSelector, SPECIES_SELECTOR);
-            }
+        OnClickListener speciesClickListener = v -> {
+            Intent speciesSelector = new Intent(App.getAppInstance(), SpeciesListDisplay.class);
+            startActivityForResult(speciesSelector, SPECIES_SELECTOR);
         };
 
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
@@ -589,29 +569,23 @@ public class TreeEditDisplay extends TreeDisplay {
         Log.d("PHOTO", "changePhoto");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setNegativeButton(R.string.use_camera, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                try {
-                    File outputFile = PhotoActivity.createImageFile();
-                    outputFilePath = outputFile.getAbsolutePath();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
-                    startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
+        builder.setNegativeButton(R.string.use_camera, (dialog, id) -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                File outputFile = PhotoActivity.createImageFile();
+                outputFilePath = outputFile.getAbsolutePath();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
 
-                } catch (IOException e) {
-                    Log.e(App.LOG_TAG, "Unable to initiate camera", e);
-                    Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
-                }
+            } catch (IOException e) {
+                Log.e(App.LOG_TAG, "Unable to initiate camera", e);
+                Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setPositiveButton(R.string.use_gallery, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
-            }
+        builder.setPositiveButton(R.string.use_gallery, (dialog, id) -> {
+            Intent intent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PHOTO_USING_GALLERY_RESPONSE);
         });
 
         AlertDialog alert = builder.create();

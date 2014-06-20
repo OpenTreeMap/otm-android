@@ -106,43 +106,24 @@ public class ProfileDisplay extends Fragment {
     }
 
     private void registerHandlers(final View view) {
-        View.OnClickListener switchInstanceListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), InstanceSwitcherActivity.class));
-            }
-        };
+        View.OnClickListener switchInstanceListener = v -> startActivity(new Intent(getActivity(), InstanceSwitcherActivity.class));
         view.findViewById(R.id.change_instance_anonymous).setOnClickListener(switchInstanceListener);
         view.findViewById(R.id.change_instance_loggedin).setOnClickListener(switchInstanceListener);
 
-        view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                App.getLoginManager().logOut(getActivity());
-                loadProfile(view, getActivity().getLayoutInflater());
-            }
+        view.findViewById(R.id.logout).setOnClickListener(v -> {
+            App.getLoginManager().logOut(getActivity());
+            loadProfile(view, getActivity().getLayoutInflater());
         });
 
-        view.findViewById(R.id.change_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ChangePassword.class));
-            }
+        view.findViewById(R.id.change_password).setOnClickListener(v -> startActivity(new Intent(getActivity(), ChangePassword.class)));
+
+        view.findViewById(R.id.change_profile_picture).setOnClickListener(v -> {
+            // TODO: Refactor photo handling code in TreeEditDisplay for use here
         });
 
-        view.findViewById(R.id.change_profile_picture).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Refactor photo handling code in TreeEditDisplay for use here
-            }
-        });
-
-        view.findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent login = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(login, SHOW_LOGIN);
-            }
+        view.findViewById(R.id.login).setOnClickListener(v -> {
+            Intent login = new Intent(getActivity(), LoginActivity.class);
+            startActivityForResult(login, SHOW_LOGIN);
         });
     }
 
@@ -212,27 +193,24 @@ public class ProfileDisplay extends Fragment {
                         }
 
                         private void setPlotClickHandler(View row) {
-                            row.findViewById(R.id.edit_row).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    try {
-                                        // TODO: Login user check/prompt
+                            row.findViewById(R.id.edit_row).setOnClickListener(v -> {
+                                try {
+                                    // TODO: Login user check/prompt
 
-                                        EditEntry edit = loadedEdits.get(v.getTag());
-                                        if (edit.getPlot() != null) {
-                                            final Intent viewPlot = new Intent(v.getContext(),
-                                                    TreeInfoDisplay.class);
-                                            viewPlot.putExtra("plot", edit.getPlot().getData().toString());
-                                            viewPlot.putExtra("user", App.getLoginManager().loggedInUser
-                                                    .getData().toString());
-                                            startActivity(viewPlot);
+                                    EditEntry edit = loadedEdits.get(v.getTag());
+                                    if (edit.getPlot() != null) {
+                                        final Intent viewPlot = new Intent(v.getContext(),
+                                                TreeInfoDisplay.class);
+                                        viewPlot.putExtra("plot", edit.getPlot().getData().toString());
+                                        viewPlot.putExtra("user", App.getLoginManager().loggedInUser
+                                                .getData().toString());
+                                        startActivity(viewPlot);
 
-                                        }
-                                    } catch (Exception e) {
-                                        String msg = "Unable to display tree/plot info";
-                                        Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
-                                        Log.e(App.LOG_TAG, msg, e);
                                     }
+                                } catch (Exception e) {
+                                    String msg = "Unable to display tree/plot info";
+                                    Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                                    Log.e(App.LOG_TAG, msg, e);
                                 }
                             });
                         }
