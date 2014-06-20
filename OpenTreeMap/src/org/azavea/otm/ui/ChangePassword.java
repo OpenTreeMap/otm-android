@@ -78,11 +78,7 @@ public class ChangePassword extends UpEnabledActionBarActivity {
 
     private boolean newPasswordMeetsStandard() {
         Editable p1 = ((EditText) findViewById(R.id.newPassword1)).getText();
-        if (p1.length() < 6) {
-            return false;
-        } else {
-            return true;
-        }
+        return p1.length() >= 6;
     }
 
     private boolean oldPasswordIsBlank() {

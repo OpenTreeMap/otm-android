@@ -340,11 +340,7 @@ public class Field {
     }
 
     public boolean hasChoices() {
-        if (this.choiceMap == null || this.choiceMap.size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.choiceMap == null || this.choiceMap.size() == 0);
     }
 
     private void setupChoiceDisplay(final Button choiceButton, Object value) {
@@ -449,11 +445,7 @@ public class Field {
 
     public static boolean isKeyPending(String key, Plot plot) throws JSONException {
         PendingEditDescription pending = plot.getPendingEditForKey(key);
-        if (pending == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return pending != null;
     }
 
     /**

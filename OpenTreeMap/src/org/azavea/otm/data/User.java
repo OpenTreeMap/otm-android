@@ -106,11 +106,7 @@ public class User extends Model {
 		UserType ut;
 		try {
 			ut = getUserType();
-			if (ut.getLevel() >= UserType.ADMINISTRATOR_LEVEL) {
-				return true;
-			} else {
-				return false;
-			}
+            return ut.getLevel() >= UserType.ADMINISTRATOR_LEVEL;
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
