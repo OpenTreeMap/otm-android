@@ -39,13 +39,15 @@ public class SplashScreenActivity extends Activity {
 
         // The 2nd and 3rd type parameters are required but unused
         // (They would be the arguments for promise.reject and promise.progress)
-        final Deferred<Bundle, Throwable, Integer> deferred = new DeferredObject<Bundle, Throwable, Integer>();
-        final Promise<Bundle, Throwable, Integer> promise = deferred.promise();
+        final Deferred<Bundle, Throwable, Integer> autoLoginDeferred =
+                new DeferredObject<Bundle, Throwable, Integer>();
+
+        final Promise<Bundle, Throwable, Integer> autoLogin = autoLoginDeferred.promise();
 
         App.getLoginManager().autoLogin(new Callback() {
             @Override
             public boolean handleMessage(final Message msg) {
-                deferred.resolve(msg.getData());
+                autoLoginDeferred.resolve(msg.getData());
                 return true;
             }
         });
@@ -53,7 +55,7 @@ public class SplashScreenActivity extends Activity {
         Handler splashHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                promise.done(new DoneCallback<Bundle>() {
+                autoLogin.done(new DoneCallback<Bundle>() {
                     @Override
                     public void onDone(Bundle args) {
                         // Only skip the instance switcher for a skinned app
