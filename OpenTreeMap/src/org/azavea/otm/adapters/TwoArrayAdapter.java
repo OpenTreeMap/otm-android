@@ -23,10 +23,6 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
 
     private boolean firstArrayIsEmpty;
 
-    public TwoArrayAdapter(Context context, List<T> array1, List<T> array2) {
-        this(context, array1, array2, "Section 1", "Section 2");
-    }
-
     public TwoArrayAdapter(Context context, List<T> array1, List<T> array2, String firstSeparatorText, String secondSeparatorText) {
         super();
 

@@ -25,12 +25,6 @@ public class PhotoActivity {
 	public static double PHOTO_HEIGHT = 768;
 	public static double PHOTO_WIDTH = 1024;
 
-	public static int PHOTO_USING_CAMERA_RESPONSE = 7;
-	public static int PHOTO_USING_GALLERY_RESPONSE = 8;
-
-	private static String LOG_TAG = "PHOTO_ACTIVITY";
-	private static String outputFilePath;
-
 	/*
 	 * Helper functions
 	 */
