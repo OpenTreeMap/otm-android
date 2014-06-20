@@ -85,8 +85,7 @@ public class TreeInfoDisplay extends TreeDisplay {
         }
         
         // Render eco fields based on instance eco field key order
-        for (int i = 0; i < ecoKeys.length; i++) {
-            String key = ecoKeys[i];
+        for (String key : ecoKeys) {
             JSONObject ecoField = eco.optJSONObject(key);
             if (ecoField != null) {
                 ecoGroup.addField(new EcoField(ecoField));

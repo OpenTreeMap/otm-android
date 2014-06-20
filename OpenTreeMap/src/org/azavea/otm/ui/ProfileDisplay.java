@@ -235,9 +235,9 @@ public class ProfileDisplay extends Fragment {
         String[] tokens = phrase.split("\\s");
         String capitalized = "";
 
-        for (int i = 0; i < tokens.length; i++) {
-            char capLetter = Character.toUpperCase(tokens[i].charAt(0));
-            capitalized += " " + capLetter + tokens[i].substring(1, tokens[i].length());
+        for (String token : tokens) {
+            char capLetter = Character.toUpperCase(token.charAt(0));
+            capitalized += " " + capLetter + token.substring(1, token.length());
         }
         return capitalized;
     }
