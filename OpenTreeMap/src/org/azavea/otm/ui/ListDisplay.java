@@ -42,7 +42,7 @@ public class ListDisplay extends Fragment implements ListObserver {
         SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.segmented);
         buttons.clearButtons();
 
-        ArrayList<String> buttonNames = new ArrayList<String>();
+        ArrayList<String> buttonNames = new ArrayList<>();
         buttonNames.add(getString(R.string.toggle_nearby));
         buttonNames.add(getString(R.string.toggle_recent));
 
@@ -131,7 +131,7 @@ public class ListDisplay extends Fragment implements ListObserver {
     @Override
     public void update() {
         if (getActivity() != null) {
-            adapter = new ArrayAdapter<DisplayableModel>(getActivity(), R.layout.simple_list_item, android.R.id.text1,
+            adapter = new ArrayAdapter<>(getActivity(), R.layout.simple_list_item, android.R.id.text1,
                     infoList.getDisplayValues());
 
             listView.setAdapter(adapter);

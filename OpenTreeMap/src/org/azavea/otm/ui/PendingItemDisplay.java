@@ -35,7 +35,7 @@ public class PendingItemDisplay extends Activity {
 	// through the CheckBox objects that we instantiate for them.
 	CheckBox selectedValue;
 	CheckBox currentValue;
-	Vector<CheckBox> allPending = new Vector<CheckBox>();
+	Vector<CheckBox> allPending = new Vector<>();
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {

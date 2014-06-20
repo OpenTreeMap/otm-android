@@ -36,7 +36,7 @@ public class TMSTileProvider implements TileProvider {
     private final String baseUrl; // http://example.com/tile/
     private final String featureName;
     private final int opacity;
-    protected Set<String> displayList = new HashSet<String>();
+    protected Set<String> displayList = new HashSet<>();
 
     public TMSTileProvider(String baseUrl, String featureName)
             throws MalformedURLException {
@@ -120,6 +120,6 @@ public class TMSTileProvider implements TileProvider {
      * @param models: the models to show on the map
      */
     public void setDisplayParameters(Collection<String> models) {
-        this.displayList = new HashSet<String>(models);
+        this.displayList = new HashSet<>(models);
     }
 }

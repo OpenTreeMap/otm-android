@@ -10,7 +10,7 @@ public class PlotContainer extends ModelContainer<Plot> {
 	@Override
 	public Map<Integer, Plot> getAll() throws JSONException{
 		LinkedHashMap<Integer,Plot> plotList = 
-				new LinkedHashMap<Integer,Plot>(data.length());
+				new LinkedHashMap<>(data.length());
 		for (int i = 0; i < data.length(); i++) {
 			Plot plot = new Plot(data.getJSONObject(i));
 			plotList.put(plot.getId(), plot);

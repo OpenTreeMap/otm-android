@@ -309,7 +309,7 @@ public class Plot extends Model {
     public JSONObject getMostRecentPhoto() {
         JSONArray photos = data.optJSONArray("photos");
         if (photos != null && photos.length() > 0 && this.hasTree()) {
-            List<JSONObject> photoObjects = new ArrayList<JSONObject>(photos.length());
+            List<JSONObject> photoObjects = new ArrayList<>(photos.length());
             for (int i = 0; i < photos.length(); i++) {
                 JSONObject photo = photos.optJSONObject(i);
                 // If we start supporting multiple trees, we'll need to check the tree id here

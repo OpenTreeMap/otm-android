@@ -33,7 +33,7 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
         this.context = context;
         this.firstSeparatorText = firstSeparatorText;
         this.secondSeparatorText = secondSeparatorText;
-        this.data = new ArrayList<T>();
+        this.data = new ArrayList<>();
 
         if (array1.isEmpty()) {
             firstArrayIsEmpty = true;

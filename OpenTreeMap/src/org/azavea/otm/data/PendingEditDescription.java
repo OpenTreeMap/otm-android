@@ -42,7 +42,7 @@ public class PendingEditDescription {
 	 */
 	public List<PendingEdit> getPendingEdits() throws JSONException {
 		JSONArray rawEdits = data.getJSONArray("pending_edits");
-		List<PendingEdit> edits = new ArrayList<PendingEdit>(rawEdits.length());
+		List<PendingEdit> edits = new ArrayList<>(rawEdits.length());
 		for (int i=0; i < rawEdits.length(); i++) {
 			edits.add(new PendingEdit(rawEdits.getJSONObject(i)));
 		}

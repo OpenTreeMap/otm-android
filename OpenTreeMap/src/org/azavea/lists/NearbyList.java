@@ -27,7 +27,7 @@ public class NearbyList implements InfoList {
     private PlotContainer nearbyPlots;
     private double lat;
     private double lon;
-    private final ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
+    private final ArrayList<ListObserver> observers = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener locationListener;
     private boolean filterRecent;
@@ -103,7 +103,7 @@ public class NearbyList implements InfoList {
 
     @Override
     public DisplayablePlot[] getDisplayValues() {
-        ArrayList<DisplayablePlot> listValues = new ArrayList<DisplayablePlot>();
+        ArrayList<DisplayablePlot> listValues = new ArrayList<>();
         String mainInfo = "";
         String supplementaryInfo = "";
         String distance = "";

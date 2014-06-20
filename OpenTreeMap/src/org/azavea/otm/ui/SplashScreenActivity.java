@@ -40,7 +40,7 @@ public class SplashScreenActivity extends Activity {
         // The 2nd and 3rd type parameters are required but unused
         // (They would be the arguments for promise.reject and promise.progress)
         final Deferred<Bundle, Throwable, Integer> autoLoginDeferred =
-                new DeferredObject<Bundle, Throwable, Integer>();
+                new DeferredObject<>();
 
         final Promise<Bundle, Throwable, Integer> autoLogin = autoLoginDeferred.promise();
 

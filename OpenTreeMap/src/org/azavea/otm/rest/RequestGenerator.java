@@ -152,7 +152,7 @@ public class RequestGenerator {
     public void getUserEdits(Context context, User user, int offset, int count, AsyncHttpResponseHandler handler)
             throws JSONException {
         if (user != null) {
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, String> params = new HashMap<>();
             params.put("offset", Integer.toString(offset));
             params.put("length", Integer.toString(count));
 

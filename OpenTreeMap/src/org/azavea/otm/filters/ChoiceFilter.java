@@ -27,7 +27,7 @@ public class ChoiceFilter extends BaseFilter {
 
     private Choice[] loadChoices(JSONArray choiceDefs) {
 
-        ArrayList<Choice> choices = new ArrayList<Choice>();
+        ArrayList<Choice> choices = new ArrayList<>();
         for (int i = 0; i < choiceDefs.length(); i++) {
             try {
                 JSONObject c = choiceDefs.getJSONObject(i);

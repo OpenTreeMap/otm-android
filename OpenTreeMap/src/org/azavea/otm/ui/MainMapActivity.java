@@ -720,7 +720,7 @@ public class MainMapActivity extends Fragment {
         SegmentedButton buttons = (SegmentedButton)getActivity().findViewById(R.id.basemap_controls);
         buttons.clearButtons();
 
-        ArrayList<String> buttonNames = new ArrayList<String>();
+        ArrayList<String> buttonNames = new ArrayList<>();
         buttonNames.add("map");
         buttonNames.add("satellite");
         buttonNames.add("hybrid");

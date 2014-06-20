@@ -10,7 +10,7 @@ public class EditEntryContainer extends ModelContainer<EditEntry> {
 	@Override
 	public Map<Integer, EditEntry> getAll() throws JSONException{
 		LinkedHashMap<Integer,EditEntry> entryList = 
-				new LinkedHashMap<Integer,EditEntry>(data.length());
+				new LinkedHashMap<>(data.length());
 		for (int i = 0; i < data.length(); i++) {
 			EditEntry entry = new EditEntry();
 			entry.setData(data.getJSONObject(i));

@@ -40,7 +40,7 @@ public class SegmentedButton extends LinearLayout {
     private StateListDrawable mBgCenterOff;
     private int mSelectedButtonIndex = 0;
     
-    private List<String> mButtonTitles = new ArrayList<String>();
+    private List<String> mButtonTitles = new ArrayList<>();
     private int mColorOnStart;
     private int mColorOnEnd;
     private int mColorOffStart;
@@ -217,7 +217,7 @@ public class SegmentedButton extends LinearLayout {
     }
 
     private List<int[]> buildOnStates() {
-        List<int[]> res = new ArrayList<int[]>();
+        List<int[]> res = new ArrayList<>();
         res.add(new int[] { 
             android.R.attr.state_focused, android.R.attr.state_enabled});
         res.add(new int[] { 
@@ -228,7 +228,7 @@ public class SegmentedButton extends LinearLayout {
     }
     
     private List<int[]> buildOffStates() {
-        List<int[]> res = new ArrayList<int[]>();
+        List<int[]> res = new ArrayList<>();
         res.add(new int[] { 
             android.R.attr.state_enabled});
         res.add(new int[] { 

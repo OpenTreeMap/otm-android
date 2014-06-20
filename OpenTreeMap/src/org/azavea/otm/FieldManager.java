@@ -14,11 +14,11 @@ import android.util.Log;
 public class FieldManager {
 
     // All fields loaded from configuration file
-    private ArrayList<FieldGroup> allDisplayFields = new ArrayList<FieldGroup>();
+    private ArrayList<FieldGroup> allDisplayFields = new ArrayList<>();
 
     // All field definitions from the api server, these may not be meant for
     // viewing for this application
-    private Map<String, JSONObject> baseFields = new HashMap<String, JSONObject>();
+    private Map<String, JSONObject> baseFields = new HashMap<>();
    
     // Ordered list of display keys for plot eco benefits
     private String[] ecoKeys;

@@ -80,7 +80,7 @@ public class RestClient {
     private void get(String url, RequestParams params,
             ArrayList<Header> headers, AsyncHttpResponseHandler responseHandler) {
         if (headers == null) {
-            headers = new ArrayList<Header>();
+            headers = new ArrayList<>();
         }
 
         try {
@@ -117,7 +117,7 @@ public class RestClient {
 
         Header[] authHeader =
             { createBasicAuthenticationHeader(username, password) };
-        this.get(url, params, new ArrayList<Header>(Arrays.asList(authHeader)),
+        this.get(url, params, new ArrayList<>(Arrays.asList(authHeader)),
                 responseHandler);
     }
 
@@ -137,7 +137,7 @@ public class RestClient {
                     id == -1 ? "" : Integer.toString(id));
             String reqUrlWithParams = prepareUrl(reqUrl);
             if (headers == null) {
-                headers = new ArrayList<Header>();
+                headers = new ArrayList<>();
             }
             headers.add(reqSigner.getSignatureHeader("PUT", reqUrlWithParams, body));
 
@@ -172,7 +172,7 @@ public class RestClient {
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
 
-        put(url, id, new ArrayList<Header>(Arrays.asList(headers)),
+        put(url, id, new ArrayList<>(Arrays.asList(headers)),
                 body, response);
     }
 
@@ -184,7 +184,7 @@ public class RestClient {
         Header[] headers = { createBasicAuthenticationHeader(username, password) };
         String body = model.getData().toString();
 
-        put(url, -1, new ArrayList<Header>(Arrays.asList(headers)),
+        put(url, -1, new ArrayList<>(Arrays.asList(headers)),
                 body, response);
     }
 
@@ -196,7 +196,7 @@ public class RestClient {
             String reqUrl = getAbsoluteUrl(url);
             String reqUrlWithParams = prepareUrl(reqUrl);
             if (headers == null) {
-                headers = new ArrayList<Header>();
+                headers = new ArrayList<>();
             }
             headers.add(reqSigner.getSignatureHeader("POST", reqUrlWithParams, body));
 
@@ -227,7 +227,7 @@ public class RestClient {
             body = model.getData().toString();
         }
 
-        post(url, new ArrayList<Header>(Arrays.asList(headers)),
+        post(url, new ArrayList<>(Arrays.asList(headers)),
                 body, responseHandler);
     }
 

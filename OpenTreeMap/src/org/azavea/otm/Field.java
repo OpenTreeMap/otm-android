@@ -42,12 +42,12 @@ public class Field {
 
     // Any choices associated with this field, keyed by value with order
     // preserved
-    private final Map<String, Choice> choiceMap = new LinkedHashMap<String, Choice>();
+    private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
 
     // The order of values loaded into selection panel. Used to map index to
     // keys in ChoiceMap
-    private final ArrayList<String> choiceSelectionIndex = new ArrayList<String>();
-    private final ArrayList<String> choiceDisplayValues = new ArrayList<String>();
+    private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
+    private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
 
     // This is the view control, either button or EditText, which has the user
     // value

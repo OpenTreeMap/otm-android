@@ -30,10 +30,10 @@ public class FilterManager {
     private RequestGenerator request = new RequestGenerator();
 
     // All filters loaded from configuration file, set with the latest state
-    private LinkedHashMap<String, BaseFilter> allFilters = new LinkedHashMap<String, BaseFilter>();
+    private LinkedHashMap<String, BaseFilter> allFilters = new LinkedHashMap<>();
 
     // List of all species received from the API
-    private LinkedHashMap<Integer, Species> species = new LinkedHashMap<Integer, Species>();
+    private LinkedHashMap<Integer, Species> species = new LinkedHashMap<>();
 
     public FilterManager(JSONObject filterDefinitions) throws Exception {
         Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
@@ -203,7 +203,7 @@ public class FilterManager {
      * Returns a RequestParams object loaded with the filter values.
      */
     public Collection<JSONObject> getActiveFilters() {
-        List<JSONObject> filterObjects = new ArrayList<JSONObject>();
+        List<JSONObject> filterObjects = new ArrayList<>();
         for (BaseFilter filter : allFilters.values()) {
             if (filter.isActive()) {
                 filterObjects.add(filter.getFilterObject());

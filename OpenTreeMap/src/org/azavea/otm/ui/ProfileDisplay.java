@@ -27,7 +27,7 @@ public class ProfileDisplay extends Fragment {
 
     private static final int SHOW_LOGIN = 0;
     private static final int EDITS_TO_REQUEST = 5;
-    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer, EditEntry>();
+    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<>();
     // The fields on User which are displayed on Profile Page
     public static final String[][] userFields = {{"Username", "username"}, {"First Name", "firstname"},
             {"Last Name", "lastname"}, {"Organization", "organization"}};

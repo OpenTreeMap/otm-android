@@ -33,25 +33,25 @@ public class TabLayout extends ActionBarActivity {
                 actionBar.newTab()
                         .setText(R.string.tab_map)
                         .setTag(MAIN_MAP)
-                        .setTabListener(new TabListener<MainMapActivity>(this, MAIN_MAP, MainMapActivity.class))
+                        .setTabListener(new TabListener<>(this, MAIN_MAP, MainMapActivity.class))
         );
 
         actionBar.addTab(
                 actionBar.newTab()
                         .setText(R.string.tab_profile)
-                        .setTabListener(new TabListener<ProfileDisplay>(this, PROFILE, ProfileDisplay.class))
+                        .setTabListener(new TabListener<>(this, PROFILE, ProfileDisplay.class))
         );
 
         actionBar.addTab(
                 actionBar.newTab()
                         .setText(R.string.tab_lists)
-                        .setTabListener(new TabListener<ListDisplay>(this, LISTS, ListDisplay.class))
+                        .setTabListener(new TabListener<>(this, LISTS, ListDisplay.class))
         );
 
         actionBar.addTab(
                 actionBar.newTab()
                         .setText(R.string.tab_about)
-                        .setTabListener(new TabListener<AboutDisplay>(this, ABOUT, AboutDisplay.class))
+                        .setTabListener(new TabListener<>(this, ABOUT, AboutDisplay.class))
         );
 
         if (savedInstanceState != null) {

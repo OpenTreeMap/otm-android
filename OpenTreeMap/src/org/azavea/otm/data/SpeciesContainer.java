@@ -10,7 +10,7 @@ public class SpeciesContainer extends ModelContainer<Species> {
 	@Override
 	public Map<Integer, Species> getAll() throws JSONException {
 		LinkedHashMap<Integer,Species> speciesList = 
-				new LinkedHashMap<Integer,Species>(data.length());
+				new LinkedHashMap<>(data.length());
 		for (int i = 0; i < data.length(); i++) {
 			Species species = new Species();
 			species.setData(data.getJSONObject(i));

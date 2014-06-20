@@ -189,7 +189,7 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     public ArrayList<InstanceInfo> inflateForKey(JSONObject data, String key) {
-        ArrayList<InstanceInfo> instanceInfos = new ArrayList<InstanceInfo>();
+        ArrayList<InstanceInfo> instanceInfos = new ArrayList<>();
 
         JSONArray instances = data.optJSONArray(key);
         if (instances != null) {
