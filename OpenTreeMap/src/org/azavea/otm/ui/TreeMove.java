@@ -7,7 +7,7 @@ import org.json.JSONException;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.joelapenna.foursquared.widget.SegmentedButton;
-import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

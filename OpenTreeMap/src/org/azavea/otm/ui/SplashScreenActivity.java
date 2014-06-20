@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.webkit.WebView;
 
@@ -12,17 +11,8 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.jdeferred.Deferred;
-import org.jdeferred.DeferredFutureTask;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.DeferredRunnable;
-import org.jdeferred.DoneCallback;
 import org.jdeferred.Promise;
-import org.jdeferred.android.AndroidDeferredManager;
-import org.jdeferred.android.AndroidDeferredObject;
 import org.jdeferred.impl.DeferredObject;
-import org.jdeferred.impl.DeferredPromise;
-
-import java.util.concurrent.Callable;
 
 public class SplashScreenActivity extends Activity {
 

@@ -6,11 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.azavea.otm.App;
-import org.azavea.otm.R;
-import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,10 +18,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 public class PhotoActivity {
