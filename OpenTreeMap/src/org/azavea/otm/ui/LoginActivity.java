@@ -46,20 +46,16 @@ public class LoginActivity extends Activity {
 
     private void requestLogin(String username, String password) {
         final ProgressDialog dialog = ProgressDialog.show(this, "", "Logging in...", true, true);
-        loginManager.logIn(this, username, password, new Callback() {
-
-            @Override
-            public boolean handleMessage(Message msg) {
-                dialog.cancel();
-                Bundle data = msg.getData();
-                if (data.getBoolean(RestHandler.SUCCESS_KEY)) {
-                    setResult(RESULT_OK);
-                    finish();
-                    return true;
-                } else {
-                    Toast.makeText(App.getAppInstance(), data.getString("message"), Toast.LENGTH_LONG).show();
-                    return false;
-                }
+        loginManager.logIn(this, username, password, msg -> {
+            dialog.cancel();
+            Bundle data = msg.getData();
+            if (data.getBoolean(RestHandler.SUCCESS_KEY)) {
+                setResult(RESULT_OK);
+                finish();
+                return true;
+            } else {
+                Toast.makeText(App.getAppInstance(), data.getString("message"), Toast.LENGTH_LONG).show();
+                return false;
             }
         });
     }

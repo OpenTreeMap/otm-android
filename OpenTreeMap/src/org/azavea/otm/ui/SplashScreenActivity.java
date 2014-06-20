@@ -44,27 +44,21 @@ public class SplashScreenActivity extends Activity {
 
         final Promise<Bundle, Throwable, Integer> autoLogin = autoLoginDeferred.promise();
 
-        App.getLoginManager().autoLogin(new Callback() {
-            @Override
-            public boolean handleMessage(final Message msg) {
-                autoLoginDeferred.resolve(msg.getData());
-                return true;
-            }
+        App.getLoginManager().autoLogin(msg -> {
+            autoLoginDeferred.resolve(msg.getData());
+            return true;
         });
 
         Handler splashHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                autoLogin.done(new DoneCallback<Bundle>() {
-                    @Override
-                    public void onDone(Bundle args) {
-                        // Only skip the instance switcher for a skinned app
-                        // or if the login succeeded on a non-skinned app
-                        if (args != null && args.getBoolean(RestHandler.SUCCESS_KEY)) {
-                            redirect(App.hasInstanceCode());
-                        } else {
-                            redirect(App.hasSkinCode());
-                        }
+                autoLogin.done(args -> {
+                    // Only skip the instance switcher for a skinned app
+                    // or if the login succeeded on a non-skinned app
+                    if (args != null && args.getBoolean(RestHandler.SUCCESS_KEY)) {
+                        redirect(App.hasInstanceCode());
+                    } else {
+                        redirect(App.hasSkinCode());
                     }
                 });
             }

@@ -178,12 +178,7 @@ public class Register extends FragmentActivity {
     private void notifyUserThatAcctCreatedAndReturnToProfile() {
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.done_registering)
                 .setMessage(R.string.done_registering_msg)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(App.getAppInstance(), TabLayout.class));
-                    }
-                }).show();
+                .setPositiveButton(R.string.OK, (dialog1, which) -> startActivity(new Intent(App.getAppInstance(), TabLayout.class))).show();
     }
 
     private void alert(int msg) {

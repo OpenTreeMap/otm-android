@@ -82,12 +82,10 @@ public class InstanceSwitcherActivity extends Activity {
                 loadingInstances.dismiss();
             }
 
-            instancesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
-                    String instanceCode = ((InstanceInfo) instancesView.getItemAtPosition(position)).getUrlName();
-                    App.reloadInstanceInfo(instanceCode, new RedirectCallback());
-                }
+            instancesView.setOnItemClickListener((parent, v, position, id) -> {
+                loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
+                String instanceCode = ((InstanceInfo) instancesView.getItemAtPosition(position)).getUrlName();
+                App.reloadInstanceInfo(instanceCode, new RedirectCallback());
             });
         }
     }
@@ -118,12 +116,8 @@ public class InstanceSwitcherActivity extends Activity {
             List<String> providers = locationManager.getProviders(accuracyCrit, true);
 
             if (bestProvider != null) {
-                Collections.sort(providers, new Comparator<String>() {
-                    public int compare(String s1, String s2) {
-                        return s1.equals(bestProvider) ? 1 :
-                                s2.equals(bestProvider) ? -1 : 0;
-                    }
-                });
+                Collections.sort(providers, (s1, s2) -> s1.equals(bestProvider) ? 1 :
+                        s2.equals(bestProvider) ? -1 : 0);
             }
 
             for (String provider : providers) {
@@ -154,19 +148,13 @@ public class InstanceSwitcherActivity extends Activity {
 
         updateAccountElements();
 
-        findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
-            }
-        });
-        findViewById(R.id.logout_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                App.getLoginManager().logOut(InstanceSwitcherActivity.this);
-                // TODO: this might not be right anymore.
-                // remove after configuring login manager to force instance switcher
-                startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
+        findViewById(R.id.login_button).setOnClickListener(v -> startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class)));
+        findViewById(R.id.logout_button).setOnClickListener(v -> {
+            App.getLoginManager().logOut(InstanceSwitcherActivity.this);
+            // TODO: this might not be right anymore.
+            // remove after configuring login manager to force instance switcher
+            startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
 
-            }
         });
     }
 

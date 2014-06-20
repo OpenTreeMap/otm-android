@@ -317,12 +317,7 @@ public class Plot extends Model {
                     photoObjects.add(photo);
                 }
             }
-            return Collections.max(photoObjects, new Comparator<JSONObject>() {
-                @Override
-                public int compare(JSONObject a, JSONObject b) {
-                    return a.optInt("id") - b.optInt("id");
-                }
-            });
+            return Collections.max(photoObjects, (a, b) -> a.optInt("id") - b.optInt("id"));
         }
         return null;
     }

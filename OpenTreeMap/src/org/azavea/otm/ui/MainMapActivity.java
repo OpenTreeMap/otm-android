@@ -102,49 +102,46 @@ public class MainMapActivity extends Fragment {
     TileOverlay boundaryTileOverlay;
 
     // Map click listener for normal view mode
-    private final OnMapClickListener showPopupMapClickListener = new GoogleMap.OnMapClickListener() {
-        @Override
-        public void onMapClick(LatLng point) {
-            Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+    private final OnMapClickListener showPopupMapClickListener = point -> {
+        Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
 
-            final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                    "Loading. Please wait...", true);
-            dialog.show();
+        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                "Loading. Please wait...", true);
+        dialog.show();
 
-            final RequestGenerator rg = new RequestGenerator();
-            RequestParams activeFilters = null;
+        final RequestGenerator rg = new RequestGenerator();
+        RequestParams activeFilters = null;
 
-            rg.getPlotsNearLocation(
-                point.latitude,
-                point.longitude,
-                activeFilters,
-                new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+        rg.getPlotsNearLocation(
+            point.latitude,
+            point.longitude,
+            activeFilters,
+            new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
 
-                    @Override
-                    public void onFailure(Throwable e, String message) {
-                        dialog.hide();
-                        Log.e("TREE_CLICK",
-                                "Error retrieving plots on map touch event: ", e);
-                    }
+                @Override
+                public void onFailure(Throwable e, String message) {
+                    dialog.hide();
+                    Log.e("TREE_CLICK",
+                            "Error retrieving plots on map touch event: ", e);
+                }
 
-                    @Override
-                    public void dataReceived(PlotContainer response) {
-                        try {
-                            Plot plot = response.getFirst();
-                            if (plot != null) {
-                                showPopup(plot);
-                            } else {
-                                hidePopup();
-                            }
-                        } catch (JSONException e) {
-                            Log.e("TREE_CLICK",
-                                    "Error retrieving plot info on map touch event: ", e);
-                        } finally {
-                            dialog.hide();
+                @Override
+                public void dataReceived(PlotContainer response) {
+                    try {
+                        Plot plot = response.getFirst();
+                        if (plot != null) {
+                            showPopup(plot);
+                        } else {
+                            hidePopup();
                         }
+                    } catch (JSONException e) {
+                        Log.e("TREE_CLICK",
+                                "Error retrieving plot info on map touch event: ", e);
+                    } finally {
+                        dialog.hide();
                     }
-                });
-        }
+                }
+            });
     };
 
     // Map click listener that allows us to add a tree
@@ -197,33 +194,30 @@ public class MainMapActivity extends Fragment {
         final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
                 "Loading Map Info...", true);
 
-        Callback instanceLoaded = new Callback() {
-            @Override
-            public boolean handleMessage(Message result) {
-                try {
-                    if (result.getData().getBoolean("success")) {
-                        START_POS = App.getCurrentInstance().getStartPos();
-                        bindActionToLocationSearchBar(view);
-                        filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
-                        setUpMapIfNeeded();
-                        plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
-                        setPopupViews(view);
-                        clearTileCache();
-                        if (plotPopup.getVisibility() == View.VISIBLE) {
-                            view.findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                        }
-                        setupViewHandlers(view);
+        Callback instanceLoaded = result -> {
+            try {
+                if (result.getData().getBoolean("success")) {
+                    START_POS = App.getCurrentInstance().getStartPos();
+                    bindActionToLocationSearchBar(view);
+                    filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
+                    setUpMapIfNeeded();
+                    plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
+                    setPopupViews(view);
+                    clearTileCache();
+                    if (plotPopup.getVisibility() == View.VISIBLE) {
+                        view.findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
                     }
-                    return true;
-
-                } catch (Exception e) {
-                    Log.e(App.LOG_TAG, "Unable to setup map", e);
-                    Toast.makeText(App.getAppInstance(), "Unable to setup map", Toast.LENGTH_LONG).show();
-                    return false;
-
-                } finally {
-                    dialog.dismiss();
+                    setupViewHandlers(view);
                 }
+                return true;
+
+            } catch (Exception e) {
+                Log.e(App.LOG_TAG, "Unable to setup map", e);
+                Toast.makeText(App.getAppInstance(), "Unable to setup map", Toast.LENGTH_LONG).show();
+                return false;
+
+            } finally {
+                dialog.dismiss();
             }
         };
         // Check for an instance before loading the map
@@ -397,82 +391,57 @@ public class MainMapActivity extends Fragment {
     }
 
     private void setupViewHandlers(View view) {
-        view.findViewById(R.id.plotImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainMapActivity.this.currentPlot != null) {
-                    currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity()));
+        view.findViewById(R.id.plotImage).setOnClickListener(v -> {
+            if (MainMapActivity.this.currentPlot != null) {
+                currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity()));
+            }
+        });
+
+        view.findViewById(R.id.locationSearchButton).setOnClickListener(v -> doLocationSearch());
+
+        view.findViewById(R.id.filterButton).setOnClickListener(v -> {
+            Intent filter = new Intent(getActivity(), FilterDisplay.class);
+            startActivityForResult(filter, FILTER_INTENT);
+        });
+
+        view.findViewById(R.id.addTreeButton).setOnClickListener(v -> {
+            getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+            if(App.getLoginManager().isLoggedIn()) {
+                setTreeAddMode(CANCEL);
+                setTreeAddMode(STEP1);
+            } else {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+        });
+
+        view.findViewById(R.id.treeAddNext).setOnClickListener(v -> setTreeAddMode(FINISH));
+
+        view.findViewById(R.id.plotPopup).setOnClickListener(v -> {
+            // Show TreeInfoDisplay with current plot
+            Intent viewPlot = new Intent(getActivity(), TreeInfoDisplay.class);
+            viewPlot.putExtra("plot", currentPlot.getData().toString());
+
+            if (App.getLoginManager().isLoggedIn()) {
+                viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
+            }
+            startActivityForResult(viewPlot, INFO_INTENT);
+        });
+
+        view.findViewById(R.id.mylocationbutton).setOnClickListener(v -> {
+            boolean success = false;
+            if (currentLocation != null) {
+                zoomMapToLocation(currentLocation);
+                success = true;
+            } else {
+                Location cachedLocation = getCachedLocation();
+                if (cachedLocation != null) {
+                    zoomMapToLocation(cachedLocation);
+                    success =true;
                 }
             }
-        });
 
-        view.findViewById(R.id.locationSearchButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doLocationSearch();
-            }
-        });
-
-        view.findViewById(R.id.filterButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent filter = new Intent(getActivity(), FilterDisplay.class);
-                startActivityForResult(filter, FILTER_INTENT);
-            }
-        });
-
-        view.findViewById(R.id.addTreeButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                if(App.getLoginManager().isLoggedIn()) {
-                    setTreeAddMode(CANCEL);
-                    setTreeAddMode(STEP1);
-                } else {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                }
-            }
-        });
-
-        view.findViewById(R.id.treeAddNext).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTreeAddMode(FINISH);
-            }
-        });
-
-        view.findViewById(R.id.plotPopup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show TreeInfoDisplay with current plot
-                Intent viewPlot = new Intent(getActivity(), TreeInfoDisplay.class);
-                viewPlot.putExtra("plot", currentPlot.getData().toString());
-
-                if (App.getLoginManager().isLoggedIn()) {
-                    viewPlot.putExtra("user", App.getLoginManager().loggedInUser.getData().toString());
-                }
-                startActivityForResult(viewPlot, INFO_INTENT);
-            }
-        });
-
-        view.findViewById(R.id.mylocationbutton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean success = false;
-                if (currentLocation != null) {
-                    zoomMapToLocation(currentLocation);
-                    success = true;
-                } else {
-                    Location cachedLocation = getCachedLocation();
-                    if (cachedLocation != null) {
-                        zoomMapToLocation(cachedLocation);
-                        success =true;
-                    }
-                }
-
-                if (success == false) {
-                    Toast.makeText(getActivity(), "Could not determine current location.", Toast.LENGTH_LONG).show();
-                }
+            if (success == false) {
+                Toast.makeText(getActivity(), "Could not determine current location.", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -757,20 +726,17 @@ public class MainMapActivity extends Fragment {
         buttonNames.add("hybrid");
         buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
 
-        buttons.setOnClickListener(new OnClickListenerSegmentedButton() {
-            @Override
-            public void onClick(int index) {
-                switch (index) {
-                case 0:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    break;
-                case 1:
-                       mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    break;
-                case 2:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                    break;
-                }
+        buttons.setOnClickListener((int index) -> {
+            switch (index) {
+            case 0:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case 1:
+                   mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case 2:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
             }
         });
     }
@@ -824,15 +790,12 @@ public class MainMapActivity extends Fragment {
 
     private void bindActionToLocationSearchBar(final View view) {
         EditText et = (EditText) view.findViewById(R.id.locationSearchField);
-        et.setOnEditorActionListener(new OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    doLocationSearch();
-                    return true;
-                } else {
-                    return false;
-                }
+        et.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                doLocationSearch();
+                return true;
+            } else {
+                return false;
             }
         });
     }

@@ -366,37 +366,30 @@ public class Field {
     }
 
     private void handleChoiceDisplay(final Button choiceButton, final Field editedField) {
-        choiceButton.setOnClickListener(new View.OnClickListener() {
+        choiceButton.setOnClickListener(view -> {
+            // Determine which item should be selected by default
+            Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
+            int checkedChoiceIndex = -1;
 
-            @Override
-            public void onClick(View view) {
-                // Determine which item should be selected by default
-                Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
-                int checkedChoiceIndex = -1;
-
-                if (currentValue != null && !currentValue.equals(null)) {
-                    checkedChoiceIndex = editedField.choiceSelectionIndex.indexOf(currentValue);
-                }
-
-                new AlertDialog.Builder(choiceButton.getContext())
-                        .setTitle(editedField.label)
-                        .setSingleChoiceItems(editedField.choiceDisplayValues.toArray(new String[0]),
-                                checkedChoiceIndex, new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String displayText = editedField.choiceDisplayValues.get(which);
-                                        if (TextUtils.isEmpty(displayText)) {
-                                            choiceButton.setText(R.string.unspecified_field_value);
-                                        } else {
-                                            choiceButton.setText(displayText);
-                                        }
-                                        choiceButton.setTag(R.id.choice_button_value_tag,
-                                                editedField.choiceSelectionIndex.get(which));
-                                        dialog.dismiss();
-                                    }
-                                }).create().show();
+            if (currentValue != null && !currentValue.equals(null)) {
+                checkedChoiceIndex = editedField.choiceSelectionIndex.indexOf(currentValue);
             }
+
+            new AlertDialog.Builder(choiceButton.getContext())
+                    .setTitle(editedField.label)
+                    .setSingleChoiceItems(editedField.choiceDisplayValues.toArray(new String[0]),
+                            checkedChoiceIndex, (dialog, which) -> {
+                                String displayText = editedField.choiceDisplayValues.get(which);
+                                if (TextUtils.isEmpty(displayText)) {
+                                    choiceButton.setText(R.string.unspecified_field_value);
+                                } else {
+                                    choiceButton.setText(displayText);
+                                }
+                                choiceButton.setTag(R.id.choice_button_value_tag,
+                                        editedField.choiceSelectionIndex.get(which));
+                                dialog.dismiss();
+                            }
+                    ).create().show();
         });
     }
 
@@ -637,73 +630,67 @@ public class Field {
      */
     private void bindPendingEditClickHandler(View b, final String key, final String relatedField, final Plot model,
             final Context context) {
-        b.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // initialize the intent, and load it with some initial values
-                Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
-                pendingItemDisplay.putExtra("label", label);
-                pendingItemDisplay.putExtra("currentValue", formatUnit(getValueForKey(key, model.getData())));
-                pendingItemDisplay.putExtra("key", key);
+        b.setOnClickListener(v -> {
+            // initialize the intent, and load it with some initial values
+            Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
+            pendingItemDisplay.putExtra("label", label);
+            pendingItemDisplay.putExtra("currentValue", formatUnit(getValueForKey(key, model.getData())));
+            pendingItemDisplay.putExtra("key", key);
 
-                // Now create an array of pending values, [{id: X, value: "42",
-                // username: "sam"}, ...]
-                PendingEditDescription pendingEditDescription;
-                try {
-                    pendingEditDescription = model.getPendingEditForKey(key);
-                    List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
-                    JSONArray serializedPendingEdits = new JSONArray();
-                    for (PendingEdit pendingEdit : pendingEdits) {
-                        // The value is the plain pending edit's value, or the
-                        // value of the PE's
-                        // related field. (IE retrieve Species Name instead of a
-                        // species ID.)
-                        String value;
-                        if (relatedField == null) {
-                            value = formatUnit(pendingEdit.getValue());
-                        } else {
-                            value = pendingEdit.getValue(relatedField);
-                        }
-
-                        // Continue on loading all of the pending edit data into
-                        // the serializedPendingEdit
-                        // object
-                        JSONObject serializedPendingEdit = new JSONObject();
-                        serializedPendingEdit.put("id", pendingEdit.getId());
-                        serializedPendingEdit.put("value", value);
-                        serializedPendingEdit.put("username", pendingEdit.getUsername());
-                        try {
-                            serializedPendingEdit.put("date", pendingEdit.getSubmittedTime().toLocaleString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            serializedPendingEdit.put("date", "");
-                        }
-
-                        // and then append this edit onto the rest of them.
-                        serializedPendingEdits.put(serializedPendingEdit);
-
+            // Now create an array of pending values, [{id: X, value: "42",
+            // username: "sam"}, ...]
+            PendingEditDescription pendingEditDescription;
+            try {
+                pendingEditDescription = model.getPendingEditForKey(key);
+                List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
+                JSONArray serializedPendingEdits = new JSONArray();
+                for (PendingEdit pendingEdit : pendingEdits) {
+                    // The value is the plain pending edit's value, or the
+                    // value of the PE's
+                    // related field. (IE retrieve Species Name instead of a
+                    // species ID.)
+                    String value;
+                    if (relatedField == null) {
+                        value = formatUnit(pendingEdit.getValue());
+                    } else {
+                        value = pendingEdit.getValue(relatedField);
                     }
-                    pendingItemDisplay.putExtra("pending", serializedPendingEdits.toString());
 
-                    // And start the target activity
-                    Activity a = (Activity) context;
-                    a.startActivityForResult(pendingItemDisplay, TreeInfoDisplay.EDIT_REQUEST);
-                } catch (JSONException e1) {
-                    Toast.makeText(context, "Sorry, pending edits not available.", Toast.LENGTH_SHORT).show();
-                    e1.printStackTrace();
+                    // Continue on loading all of the pending edit data into
+                    // the serializedPendingEdit
+                    // object
+                    JSONObject serializedPendingEdit = new JSONObject();
+                    serializedPendingEdit.put("id", pendingEdit.getId());
+                    serializedPendingEdit.put("value", value);
+                    serializedPendingEdit.put("username", pendingEdit.getUsername());
+                    try {
+                        serializedPendingEdit.put("date", pendingEdit.getSubmittedTime().toLocaleString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        serializedPendingEdit.put("date", "");
+                    }
+
+                    // and then append this edit onto the rest of them.
+                    serializedPendingEdits.put(serializedPendingEdit);
+
                 }
+                pendingItemDisplay.putExtra("pending", serializedPendingEdits.toString());
+
+                // And start the target activity
+                Activity a = (Activity) context;
+                a.startActivityForResult(pendingItemDisplay, TreeInfoDisplay.EDIT_REQUEST);
+            } catch (JSONException e1) {
+                Toast.makeText(context, "Sorry, pending edits not available.", Toast.LENGTH_SHORT).show();
+                e1.printStackTrace();
             }
         });
     }
 
     private void bindInfoButtonClickHandler(View infoButton, final String url, final Context context) {
-        infoButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                Activity a = (Activity) context;
-                a.startActivity(browserIntent);
-            }
+        infoButton.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Activity a = (Activity) context;
+            a.startActivity(browserIntent);
         });
     }
 
