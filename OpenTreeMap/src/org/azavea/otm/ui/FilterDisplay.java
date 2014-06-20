@@ -99,7 +99,7 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
     private void createFilterUI(LinkedHashMap<String, BaseFilter> filters,
             LinearLayout parent) {
 
-        LayoutInflater layout = ((Activity) this).getLayoutInflater();
+        LayoutInflater layout = this.getLayoutInflater();
         for (Map.Entry<String, BaseFilter> entry : filters.entrySet()) {
             BaseFilter filter = entry.getValue();
             View view = null;

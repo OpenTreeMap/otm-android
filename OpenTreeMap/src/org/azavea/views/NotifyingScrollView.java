@@ -26,7 +26,7 @@ public class NotifyingScrollView extends ScrollView {
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) 
 	{
 	        // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
-	        View view = (View) getChildAt(getChildCount()-1);
+	        View view = getChildAt(getChildCount()-1);
 	        
 	        // Calculate the scrolldiff
 	        int diff = (view.getBottom()-(getHeight()+getScrollY()));
