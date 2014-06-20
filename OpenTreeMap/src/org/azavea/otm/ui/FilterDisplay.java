@@ -33,7 +33,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 //import org.azavea.otm.filters.ChoiceFilter;
 
-public class FilterDisplay extends Activity {
+public class FilterDisplay extends UpEnabledActionBarActivity {
 
     final private int SPECIES_SELECTOR = 1;
     private View speciesFilter;
