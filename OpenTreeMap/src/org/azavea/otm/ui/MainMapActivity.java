@@ -435,7 +435,7 @@ public class MainMapActivity extends Fragment {
                 }
             }
 
-            if (success == false) {
+            if (!success) {
                 Toast.makeText(getActivity(), "Could not determine current location.", Toast.LENGTH_LONG).show();
             }
         });

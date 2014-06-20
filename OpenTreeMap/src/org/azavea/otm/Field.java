@@ -499,7 +499,7 @@ public class Field {
         // We care to distinguish between a null value and a missing key.
         if (json.has(keys[index])) {
             return new NestedJsonAndKey(json, keys[index]);
-        } else if (createNodeIfEmpty == true) {
+        } else if (createNodeIfEmpty) {
             // Create an empty node for this key
             return new NestedJsonAndKey(json.put(keys[index], ""), keys[index]);
         } else {
