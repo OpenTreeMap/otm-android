@@ -84,7 +84,7 @@ public class InstanceSwitcherActivity extends Activity {
 
             instancesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, "Please Wait", "Loading Instance...");
+                    loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
                     String instanceCode = ((InstanceInfo) instancesView.getItemAtPosition(position)).getUrlName();
                     App.reloadInstanceInfo(instanceCode, new RedirectCallback());
                 }
@@ -147,7 +147,7 @@ public class InstanceSwitcherActivity extends Activity {
         userLocation = getBestLocation(criteria);
         RequestGenerator rg = new RequestGenerator();
 
-        loadingInstances = ProgressDialog.show(this, "Please Wait", "Loading Instances...");
+        loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instances));
         rg.getInstancesNearLocation(userLocation.getLatitude(),
                 userLocation.getLongitude(),
                 new InstanceListHandler());
