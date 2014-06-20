@@ -38,7 +38,6 @@ public class ChoiceFilter extends BaseFilter {
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Improperly configured choices for filter: "
                         + this.identifier, e);
-                continue;
             }
         }
         // The Android UI doesn't need to display and empty value

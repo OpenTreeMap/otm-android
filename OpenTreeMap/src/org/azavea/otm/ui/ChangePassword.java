@@ -140,6 +140,5 @@ public class ChangePassword extends UpEnabledActionBarActivity {
                 alert(R.string.password_change_error);
             }
         }
-        return;
     }
 }
