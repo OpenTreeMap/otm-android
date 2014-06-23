@@ -149,8 +149,7 @@ public class LoginManager {
             // make an instance request, which is otherwise associated and
             // instigated after a login attempt
             App.reloadInstanceInfo(callback);
-        }
-        else {
+        } else {
             Message msg = Message.obtain();
             Bundle args = new Bundle();
             args.putBoolean(RestHandler.SUCCESS_KEY, false);

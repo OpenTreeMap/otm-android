@@ -14,7 +14,6 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ import org.azavea.otm.adapters.InstanceInfoArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -189,7 +187,7 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     public ArrayList<InstanceInfo> inflateForKey(JSONObject data, String key) {
-        ArrayList<InstanceInfo> instanceInfos = new ArrayList<InstanceInfo>();
+        ArrayList<InstanceInfo> instanceInfos = new ArrayList<>();
 
         JSONArray instances = data.optJSONArray(key);
         if (instances != null) {

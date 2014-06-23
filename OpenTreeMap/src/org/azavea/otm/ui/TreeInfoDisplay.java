@@ -26,6 +26,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 public class TreeInfoDisplay extends TreeDisplay {
     public final static int EDIT_REQUEST = 1;
     ImageView plotImage;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mapFragmentId = R.id.vignette_map_view_mode;
@@ -72,21 +73,20 @@ public class TreeInfoDisplay extends TreeDisplay {
 
         FieldGroup ecoGroup = new FieldGroup(getString(R.string.eco_fieldgroup_header));
         JSONObject benefits = (JSONObject) plot.getField("benefits");
-        if (benefits == null) { 
+        if (benefits == null) {
             return null;
         }
         JSONObject eco = benefits.optJSONObject("plot");
         if (eco == null) {
             return null;
         }
-        String [] ecoKeys = App.getFieldManager().getEcoKeys();
+        String[] ecoKeys = App.getFieldManager().getEcoKeys();
         if (ecoKeys == null) {
             return null;
         }
-        
+
         // Render eco fields based on instance eco field key order
-        for (int i = 0; i < ecoKeys.length; i++) {
-            String key = ecoKeys[i];
+        for (String key : ecoKeys) {
             JSONObject ecoField = eco.optJSONObject(key);
             if (ecoField != null) {
                 ecoGroup.addField(new EcoField(ecoField));
@@ -118,7 +118,7 @@ public class TreeInfoDisplay extends TreeDisplay {
 
     }
 
-    private void showImage(Plot plot) throws JSONException {
+    private void showImage(Plot plot) {
         // Default if there is no image returned
         plotImage.setImageResource(R.drawable.missing_tree_photo);
 
@@ -140,41 +140,41 @@ public class TreeInfoDisplay extends TreeDisplay {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-        case EDIT_REQUEST:
+            case EDIT_REQUEST:
 
-            if (resultCode == Activity.RESULT_OK) {
-                // The tree/plot has been updated, or the tree has been deleted
-                String plotJSON = data.getStringExtra("plot");
-                if (plotJSON != null) {
+                if (resultCode == Activity.RESULT_OK) {
+                    // The tree/plot has been updated, or the tree has been deleted
+                    String plotJSON = data.getStringExtra("plot");
+                    if (plotJSON != null) {
 
-                    try {
-                        // The plot has been edited, reload the info page
-                        plot = new Plot(new JSONObject(plotJSON));
-                        loadPlotInfo();
+                        try {
+                            // The plot has been edited, reload the info page
+                            plot = new Plot(new JSONObject(plotJSON));
+                            loadPlotInfo();
 
-                        plotLocation = getPlotLocation(plot);
-                        showPositionOnMap();
+                            plotLocation = getPlotLocation(plot);
+                            showPositionOnMap();
 
-                        // Pass along the updated plot
-                        Intent updatedPlot = new Intent();
-                        updatedPlot.putExtra("plot", plotJSON);
-                        setResult(TreeDisplay.RESULT_PLOT_EDITED, updatedPlot);
+                            // Pass along the updated plot
+                            Intent updatedPlot = new Intent();
+                            updatedPlot.putExtra("plot", plotJSON);
+                            setResult(TreeDisplay.RESULT_PLOT_EDITED, updatedPlot);
 
-                    } catch (JSONException e) {
-                        Log.e(App.LOG_TAG, "Unable to load edited plot");
-                        finish();
+                        } catch (JSONException e) {
+                            Log.e(App.LOG_TAG, "Unable to load edited plot");
+                            finish();
+                        }
                     }
+
+                } else if (resultCode == RESULT_PLOT_DELETED) {
+                    // If the plot is deleted, finish back to the caller
+                    setResult(RESULT_PLOT_DELETED);
+                    finish();
+
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Do nothing?
                 }
-
-            } else if (resultCode == RESULT_PLOT_DELETED) {
-                // If the plot is deleted, finish back to the caller
-                setResult(RESULT_PLOT_DELETED);
-                finish();
-
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Do nothing?
-            }
-            break;
+                break;
 
         }
     }

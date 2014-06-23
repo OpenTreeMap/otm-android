@@ -27,7 +27,7 @@ public class NearbyList implements InfoList {
     private PlotContainer nearbyPlots;
     private double lat;
     private double lon;
-    private final ArrayList<ListObserver> observers = new ArrayList<ListObserver>();
+    private final ArrayList<ListObserver> observers = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener locationListener;
     private boolean filterRecent;
@@ -81,13 +81,13 @@ public class NearbyList implements InfoList {
             }
         };
         if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     MIN_TIME_DELAY, 0, locationListener);
             setInitialLocation();
         }
 
     }
-    
+
     @Override
     public void removeLocationUpdating() {
         locationManager.removeUpdates(locationListener);
@@ -103,10 +103,10 @@ public class NearbyList implements InfoList {
 
     @Override
     public DisplayablePlot[] getDisplayValues() {
-        ArrayList<DisplayablePlot> listValues = new ArrayList<DisplayablePlot>();
-        String mainInfo = "";
-        String supplementaryInfo = "";
-        String distance = "";
+        ArrayList<DisplayablePlot> listValues = new ArrayList<>();
+        String mainInfo;
+        String supplementaryInfo;
+        String distance;
 
         try {
             if (nearbyPlots != null) {
@@ -231,7 +231,7 @@ public class NearbyList implements InfoList {
 
     @Override
     public Object[] getListValues() {
-        Object[] plots = null;
+        Object[] plots;
         try {
             Map<Integer, Plot> plotMap = nearbyPlots.getAll();
             plots = plotMap.values().toArray();

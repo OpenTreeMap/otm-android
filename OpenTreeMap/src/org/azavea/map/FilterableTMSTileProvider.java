@@ -12,7 +12,7 @@ import android.net.Uri;
 public class FilterableTMSTileProvider extends TMSTileProvider {
     private JSONArray parameters = null;
 
-    public FilterableTMSTileProvider(String baseUrl, String featureName) 
+    public FilterableTMSTileProvider(String baseUrl, String featureName)
             throws MalformedURLException {
         super(baseUrl, featureName);
     }
@@ -53,7 +53,7 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
         }
     }
 
-    /***
+    /**
      * Remove any query string parameters from the tile requests
      */
     public void clearParameters() {

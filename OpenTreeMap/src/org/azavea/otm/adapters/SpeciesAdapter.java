@@ -36,7 +36,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        SpeciesHolder holder = null;
+        SpeciesHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -58,7 +58,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         // so data[position] will get the position from the unfiltered list.
         Species species = getItem(position);
 
-        boolean needsSection = false;
+        boolean needsSection;
         char section = species.getCommonName().toUpperCase().charAt(0);
         if (isNonAlpha(section)) {
             section = 'A';
@@ -67,22 +67,22 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         // Check the cached section status for the cell in the current position
         // It is redrawn after the cell is removed from the screen
         switch (sectionStates[position]) {
-        case SECTIONED_CELL:
-            needsSection = true;
-            break;
-        case VALUE_CELL:
-            needsSection = false;
-            break;
-        default:
-            // The section status is unknown, so determine
-            // if the first character of the name is already
-            // a created section
-            needsSection = !sections.get(section);
+            case SECTIONED_CELL:
+                needsSection = true;
+                break;
+            case VALUE_CELL:
+                needsSection = false;
+                break;
+            default:
+                // The section status is unknown, so determine
+                // if the first character of the name is already
+                // a created section
+                needsSection = !sections.get(section);
 
-            // Cache this state for later renderings
-            sectionStates[position] = needsSection ? SECTIONED_CELL
-                    : VALUE_CELL;
-            break;
+                // Cache this state for later renderings
+                sectionStates[position] = needsSection ? SECTIONED_CELL
+                        : VALUE_CELL;
+                break;
         }
 
         // Check if the first letter of name has already been sectioned
@@ -112,8 +112,8 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     }
 
     private Map<Character, Boolean> createSections() {
-        Map<Character, Boolean> sections = 
-                new LinkedHashMap<Character, Boolean>(26);
+        Map<Character, Boolean> sections =
+                new LinkedHashMap<>(26);
         for (int i = 65; i <= 90; i++) {
             sections.put((char) i, false);
         }

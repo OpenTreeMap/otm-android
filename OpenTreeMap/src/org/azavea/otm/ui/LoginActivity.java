@@ -9,8 +9,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;

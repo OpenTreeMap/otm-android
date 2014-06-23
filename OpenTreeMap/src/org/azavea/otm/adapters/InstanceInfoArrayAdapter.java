@@ -34,7 +34,7 @@ public class InstanceInfoArrayAdapter extends TwoArrayAdapter<InstanceInfo> {
 
     @Override
     protected TextView getSeparatorInnerTextView(View separatorView) {
-        return (TextView)separatorView.findViewById(R.id.text);
+        return (TextView) separatorView.findViewById(R.id.text);
     }
 
     @Override

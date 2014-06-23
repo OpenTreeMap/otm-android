@@ -30,7 +30,7 @@ public class RequestSignature {
      * All api calls are required to be signed using HMAC based on the request
      * string: {Http Verb}\n{host}\n{path}\n{k=v...}{body} where the query
      * parameters are byte ordered
-     *
+     * <p>
      * This assumes that the URL has been constructed with the access key and
      * the timestamp already appended.
      */
@@ -46,10 +46,9 @@ public class RequestSignature {
      * All api calls are required to be signed using HMAC based on the request
      * string: {Http Verb}\n{host}\n{path}\n{k=v...}{body} where the query
      * parameters are byte ordered
-     *
+     * <p>
      * This assumes that the URL has been constructed with the access key and
      * the timestamp already appended.
-     *
      */
     public String getSignature(String verb, String url, byte[] body) throws Exception {
 
@@ -58,7 +57,7 @@ public class RequestSignature {
         String path = uri.getPath();
 
         // Signature is generated against query arguments sorted by key
-        String[] query = uri.getQuery() != null ? uri.getQuery().split("&") : new String[] {};
+        String[] query = uri.getQuery() != null ? uri.getQuery().split("&") : new String[]{};
         Arrays.sort(query);
 
         // The value of each query param must be URLEncoded, which isn't
@@ -89,7 +88,7 @@ public class RequestSignature {
     public Header getSignatureHeader(String verb, String url, String body) throws Exception {
         return getSignatureHeader(verb, url, body.getBytes("UTF-8"));
     }
-    
+
     public Header getSignatureHeader(String verb, String url, byte[] body) throws Exception {
         String sig = getSignature(verb, url, body);
         return new BasicHeader("X-Signature", sig);
@@ -104,10 +103,8 @@ public class RequestSignature {
     /**
      * Computes RFC 2104-compliant HMAC signature.
      *
-     * @param data
-     *            The data to be signed.
-     * @param key
-     *            The signing key.
+     * @param data The data to be signed.
+     * @param key  The signing key.
      * @return The Base64-encoded RFC 2104-compliant HMAC signature.
      * @throws SignatureException
      */

@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,9 +66,9 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
         resetSpecies();
     }
 
-    /***
+    /**
      * Notify all filter that they should clear there state to off
-     * 
+     *
      * @param filters
      */
     private void resetFilters(LinkedHashMap<String, BaseFilter> filters) {
@@ -98,9 +97,9 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
     }
 
     private void createFilterUI(LinkedHashMap<String, BaseFilter> filters,
-            LinearLayout parent) {
+                                LinearLayout parent) {
 
-        LayoutInflater layout = ((Activity) this).getLayoutInflater();
+        LayoutInflater layout = this.getLayoutInflater();
         for (Map.Entry<String, BaseFilter> entry : filters.entrySet()) {
             BaseFilter filter = entry.getValue();
             View view = null;
@@ -160,7 +159,7 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
     }
 
     private View makeChoiceFilter(final ChoiceFilter filter,
-            LayoutInflater layout) {
+                                  LayoutInflater layout) {
 
         View choiceLayout = layout
                 .inflate(R.layout.filter_choice_control, null);
@@ -233,25 +232,25 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-        case (SPECIES_SELECTOR): {
-            if (resultCode == Activity.RESULT_OK) {
-                CharSequence speciesJSON = data.getCharSequenceExtra("species");
-                if (speciesJSON != null && !speciesJSON.equals(null)) {
-                    Species species = new Species();
-                    try {
+            case (SPECIES_SELECTOR): {
+                if (resultCode == Activity.RESULT_OK) {
+                    CharSequence speciesJSON = data.getCharSequenceExtra("species");
+                    if (speciesJSON != null && !speciesJSON.equals(null)) {
+                        Species species = new Species();
+                        try {
 
-                        species.setData(new JSONObject(speciesJSON.toString()));
-                        updateSpecies(species);
+                            species.setData(new JSONObject(speciesJSON.toString()));
+                            updateSpecies(species);
 
-                    } catch (JSONException e) {
-                        String msg = "Unable to retrieve selected species";
-                        Log.e(App.LOG_TAG, msg, e);
-                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            String msg = "Unable to retrieve selected species";
+                            Log.e(App.LOG_TAG, msg, e);
+                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
+                break;
             }
-            break;
-        }
         }
     }
 }

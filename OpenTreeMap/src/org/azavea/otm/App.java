@@ -45,7 +45,7 @@ public class App extends Application {
     private static boolean loadingInstance = false;
 
     private static AsyncHttpClient asyncHttpClient;
-    private static ArrayList<Callback> registeredInstanceCallbacks = new ArrayList<Callback>();
+    private static ArrayList<Callback> registeredInstanceCallbacks = new ArrayList<>();
 
     public static App getAppInstance() {
         checkAppInstance();
@@ -159,7 +159,7 @@ public class App extends Application {
 
     /**
      * INSTANCE API
-     * <p/>
+     * <p>
      * TODO: Move to another class.
      */
     public static String getInstanceName() {

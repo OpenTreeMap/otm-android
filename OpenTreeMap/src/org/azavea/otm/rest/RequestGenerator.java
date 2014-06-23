@@ -105,8 +105,6 @@ public class RequestGenerator {
 
     public void getInstancesNearLocation(double geoY, double geoX,
                                          JsonHttpResponseHandler handler) {
-        SharedPreferences sharedPrefs = App.getSharedPreferences();
-
         String url = String.format("locations/%s,%s/instances", geoY, geoX);
         userOptionalGet(url, null, handler);
     }
@@ -135,7 +133,7 @@ public class RequestGenerator {
     }
 
     public void updatePlot(int id, Plot plot,
-                           AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
+                           AsyncHttpResponseHandler handler) {
         if (loginManager.isLoggedIn()) {
             try {
                 client.putWithAuthentication(getInstanceNameUri("plots/"),
@@ -152,7 +150,7 @@ public class RequestGenerator {
     public void getUserEdits(Context context, User user, int offset, int count, AsyncHttpResponseHandler handler)
             throws JSONException {
         if (user != null) {
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, String> params = new HashMap<>();
             params.put("offset", Integer.toString(offset));
             params.put("length", Integer.toString(count));
 
@@ -164,7 +162,7 @@ public class RequestGenerator {
     }
 
     public void addUser(User user, AsyncHttpResponseHandler handler)
-            throws JSONException, UnsupportedEncodingException {
+            throws JSONException {
         client.postWithAuthentication("/user/",
                 loginManager.loggedInUser.getUserName(),
                 loginManager.loggedInUser.getPassword(), user, handler);
@@ -216,7 +214,7 @@ public class RequestGenerator {
     }
 
     public void changePassword(Context context, String newPassword, JsonHttpResponseHandler handler)
-            throws JSONException, UnsupportedEncodingException {
+            throws JSONException {
         Model password = new Password(newPassword);
 
         client.putWithAuthentication("/user/" + loginManager.loggedInUser.getId(),
@@ -234,12 +232,12 @@ public class RequestGenerator {
 
     }
 
-    public void register(Context context, User user, JsonHttpResponseHandler handler) throws UnsupportedEncodingException {
+    public void register(Context context, User user, JsonHttpResponseHandler handler) {
         client.post(context, "/user", user, handler);
     }
 
     public void addTree(Plot plot, AsyncHttpResponseHandler handler)
-            throws JSONException, UnsupportedEncodingException {
+            throws JSONException {
 
         client.postWithAuthentication(getInstanceNameUri("plots"),
                 loginManager.loggedInUser.getUserName(),

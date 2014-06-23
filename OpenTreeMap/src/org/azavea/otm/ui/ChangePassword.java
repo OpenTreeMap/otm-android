@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -79,11 +78,7 @@ public class ChangePassword extends UpEnabledActionBarActivity {
 
     private boolean newPasswordMeetsStandard() {
         Editable p1 = ((EditText) findViewById(R.id.newPassword1)).getText();
-        if (p1.length() < 6) {
-            return false;
-        } else {
-            return true;
-        }
+        return p1.length() >= 6;
     }
 
     private boolean oldPasswordIsBlank() {
@@ -145,6 +140,5 @@ public class ChangePassword extends UpEnabledActionBarActivity {
                 alert(R.string.password_change_error);
             }
         }
-        return;
     }
 }

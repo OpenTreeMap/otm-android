@@ -30,12 +30,12 @@ public class FilterManager {
     private RequestGenerator request = new RequestGenerator();
 
     // All filters loaded from configuration file, set with the latest state
-    private LinkedHashMap<String, BaseFilter> allFilters = new LinkedHashMap<String, BaseFilter>();
+    private LinkedHashMap<String, BaseFilter> allFilters = new LinkedHashMap<>();
 
     // List of all species received from the API
-    private LinkedHashMap<Integer, Species> species = new LinkedHashMap<Integer, Species>();
+    private LinkedHashMap<Integer, Species> species = new LinkedHashMap<>();
 
-    public FilterManager(JSONObject filterDefinitions) throws Exception {
+    public FilterManager(JSONObject filterDefinitions) {
         Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
         loadSpeciesList();
         loadFilterDefinitions(filterDefinitions);
@@ -88,7 +88,7 @@ public class FilterManager {
     }
 
     private BaseFilter makeMapFilter(String key, String identifier,
-            String label, String type, JSONArray choices) throws Exception {
+                                     String label, String type, JSONArray choices) throws Exception {
 
         if (type.equals("BOOL")) {
             return new BooleanFilter(key, identifier, label);
@@ -173,11 +173,9 @@ public class FilterManager {
 
     /**
      * Update the values of a given filter from a filter view control
-     * 
-     * @param key
-     *            - The filter key
-     * @param view
-     *            - The view which contains value for the filter
+     *
+     * @param key  - The filter key
+     * @param view - The view which contains value for the filter
      */
     public void updateFilterFromView(String key, View view) {
         allFilters.get(key).updateFromView(view);
@@ -185,7 +183,6 @@ public class FilterManager {
 
     /**
      * Returns a comma separated string of active filter names
-     * 
      */
     public String getActiveFilterDisplay() {
         String display = "", sep = "";
@@ -203,7 +200,7 @@ public class FilterManager {
      * Returns a RequestParams object loaded with the filter values.
      */
     public Collection<JSONObject> getActiveFilters() {
-        List<JSONObject> filterObjects = new ArrayList<JSONObject>();
+        List<JSONObject> filterObjects = new ArrayList<>();
         for (BaseFilter filter : allFilters.values()) {
             if (filter.isActive()) {
                 filterObjects.add(filter.getFilterObject());

@@ -12,7 +12,7 @@ public class MissingFilter extends BooleanFilter {
     }
 
     public MissingFilter(String key, String identifier, String label,
-            boolean active) {
+                         boolean active) {
         super(key, identifier, label, active);
     }
 

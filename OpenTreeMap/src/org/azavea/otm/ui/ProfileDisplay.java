@@ -27,7 +27,7 @@ public class ProfileDisplay extends Fragment {
 
     private static final int SHOW_LOGIN = 0;
     private static final int EDITS_TO_REQUEST = 5;
-    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<Integer, EditEntry>();
+    private static LinkedHashMap<Integer, EditEntry> loadedEdits = new LinkedHashMap<>();
     // The fields on User which are displayed on Profile Page
     public static final String[][] userFields = {{"Username", "username"}, {"First Name", "firstname"},
             {"Last Name", "lastname"}, {"Organization", "organization"}};
@@ -235,9 +235,9 @@ public class ProfileDisplay extends Fragment {
         String[] tokens = phrase.split("\\s");
         String capitalized = "";
 
-        for (int i = 0; i < tokens.length; i++) {
-            char capLetter = Character.toUpperCase(tokens[i].charAt(0));
-            capitalized += " " + capLetter + tokens[i].substring(1, tokens[i].length());
+        for (String token : tokens) {
+            char capLetter = Character.toUpperCase(token.charAt(0));
+            capitalized += " " + capLetter + token.substring(1, token.length());
         }
         return capitalized;
     }

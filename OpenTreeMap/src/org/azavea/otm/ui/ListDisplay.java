@@ -8,12 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.joelapenna.foursquared.widget.SegmentedButton;
-import com.joelapenna.foursquared.widget.SegmentedButton.OnClickListenerSegmentedButton;
 
 import org.azavea.lists.InfoList;
 import org.azavea.lists.ListObserver;
@@ -42,7 +40,7 @@ public class ListDisplay extends Fragment implements ListObserver {
         SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.segmented);
         buttons.clearButtons();
 
-        ArrayList<String> buttonNames = new ArrayList<String>();
+        ArrayList<String> buttonNames = new ArrayList<>();
         buttonNames.add(getString(R.string.toggle_nearby));
         buttonNames.add(getString(R.string.toggle_recent));
 
@@ -57,7 +55,7 @@ public class ListDisplay extends Fragment implements ListObserver {
         return view;
     }
 
-    @Override 
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden && infoList != null) {
@@ -70,11 +68,11 @@ public class ListDisplay extends Fragment implements ListObserver {
         super.onPause();
         infoList.removeLocationUpdating();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        
+
         listView = (ListView) getActivity().findViewById(R.id.listItems);
 
         dialog = ProgressDialog.show(getActivity(), "", "Loading. Please wait...", true);
@@ -93,18 +91,18 @@ public class ListDisplay extends Fragment implements ListObserver {
         dialog.show();
         NearbyList nearbyList = (NearbyList) infoList;
         switch (index) {
-        case 0:
-            nearbyList.setFilterRecent(false);
-            nearbyList.setFilterPending(false);
-            break;
-        case 1:
-            nearbyList.setFilterRecent(true);
-            nearbyList.setFilterPending(false);
-            break;
-        case 2:
-            nearbyList.setFilterRecent(false);
-            nearbyList.setFilterPending(true);
-            break;
+            case 0:
+                nearbyList.setFilterRecent(false);
+                nearbyList.setFilterPending(false);
+                break;
+            case 1:
+                nearbyList.setFilterRecent(true);
+                nearbyList.setFilterPending(false);
+                break;
+            case 2:
+                nearbyList.setFilterRecent(false);
+                nearbyList.setFilterPending(true);
+                break;
         }
         nearbyList.update();
     }
@@ -131,7 +129,7 @@ public class ListDisplay extends Fragment implements ListObserver {
     @Override
     public void update() {
         if (getActivity() != null) {
-            adapter = new ArrayAdapter<DisplayableModel>(getActivity(), R.layout.simple_list_item, android.R.id.text1,
+            adapter = new ArrayAdapter<>(getActivity(), R.layout.simple_list_item, android.R.id.text1,
                     infoList.getDisplayValues());
 
             listView.setAdapter(adapter);

@@ -58,9 +58,8 @@ public class Tree extends Model {
     /**
      * Get the current or pending value for species name
      *
-     * @param getCurrentOnly
-     *            , if True return the actual saved value, otherwise return
-     *            pending value if it exists
+     * @param getCurrentOnly , if True return the actual saved value, otherwise return
+     *                       pending value if it exists
      * @return
      * @throws JSONException
      */
@@ -111,7 +110,7 @@ public class Tree extends Model {
         data.put("condition", condition);
     }
 
-    public boolean isReadOnly() throws JSONException {
+    public boolean isReadOnly() {
         // "readonly" can be null in which case getBoolean will barf.
         // I think the right thing to do for the case where it is null
         // (or unreadable bc of some other error) is to return false.

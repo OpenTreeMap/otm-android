@@ -36,7 +36,7 @@ public class TMSTileProvider implements TileProvider {
     private final String baseUrl; // http://example.com/tile/
     private final String featureName;
     private final int opacity;
-    protected Set<String> displayList = new HashSet<String>();
+    protected Set<String> displayList = new HashSet<>();
 
     public TMSTileProvider(String baseUrl, String featureName)
             throws MalformedURLException {
@@ -62,7 +62,7 @@ public class TMSTileProvider implements TileProvider {
         urlBuilder.appendQueryParameter("show", displayList);
         urlBuilder.appendQueryParameter("instance_id", Integer.toString(instance.getInstanceId()));
 
-        URL url = null;
+        URL url;
         try {
             url = new URL(urlBuilder.build().toString());
         } catch (MalformedURLException e) {
@@ -85,7 +85,8 @@ public class TMSTileProvider implements TileProvider {
             if (imageStream != null) {
                 try {
                     imageStream.close();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
             }
         }
         if (inputImage == null) {
@@ -109,17 +110,18 @@ public class TMSTileProvider implements TileProvider {
 
         // Note: compress is a misnomer, since PNG is lossless.
         // Really, this is just a byte copy that retains header information, unlike copyPixelsToBuffer
-        if(bmp.compress(CompressFormat.PNG, 100, buffer)){
+        if (bmp.compress(CompressFormat.PNG, 100, buffer)) {
             return new Tile(TILE_WIDTH, TILE_HEIGHT, buffer.toByteArray());
         }
         return TileProvider.NO_TILE;
     }
 
-    /***
+    /**
      * Sets the display filters
+     *
      * @param models: the models to show on the map
      */
     public void setDisplayParameters(Collection<String> models) {
-        this.displayList = new HashSet<String>(models);
+        this.displayList = new HashSet<>(models);
     }
 }

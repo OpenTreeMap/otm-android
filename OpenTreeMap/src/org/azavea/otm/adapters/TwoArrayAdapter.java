@@ -23,17 +23,13 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
 
     private boolean firstArrayIsEmpty;
 
-    public TwoArrayAdapter(Context context, List<T> array1, List<T> array2) {
-        this(context, array1, array2, "Section 1", "Section 2");
-    }
-
     public TwoArrayAdapter(Context context, List<T> array1, List<T> array2, String firstSeparatorText, String secondSeparatorText) {
         super();
 
         this.context = context;
         this.firstSeparatorText = firstSeparatorText;
         this.secondSeparatorText = secondSeparatorText;
-        this.data = new ArrayList<T>();
+        this.data = new ArrayList<>();
 
         if (array1.isEmpty()) {
             firstArrayIsEmpty = true;
@@ -100,7 +96,7 @@ public class TwoArrayAdapter<T extends Model> extends BaseAdapter {
     }
 
     protected TextView getSeparatorInnerTextView(View separatorView) {
-        return (TextView)separatorView;
+        return (TextView) separatorView;
     }
 
     public View getSeparatorView(int position, View convertView, ViewGroup parent) {

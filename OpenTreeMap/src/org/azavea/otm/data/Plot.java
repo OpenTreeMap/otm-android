@@ -2,7 +2,6 @@ package org.azavea.otm.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.azavea.otm.App;
@@ -28,8 +27,8 @@ public class Plot extends Model {
     /**
      * When Requesting a plot tree photo, these are the valid image types
      */
-    public static String[] IMAGE_TYPES = new String[] {
-        "image/jpeg", "image/png", "image/gif"
+    public static String[] IMAGE_TYPES = new String[]{
+            "image/jpeg", "image/png", "image/gif"
     };
 
     public Plot() {
@@ -131,7 +130,7 @@ public class Plot extends Model {
         data.put("sidewalk_damage", sidewalkDamage);
     }
 
-    public String getAddress() throws JSONException {
+    public String getAddress() {
         return safeGetString("address");
     }
 
@@ -139,7 +138,7 @@ public class Plot extends Model {
         plotDetails.put("address_street", address);
     }
 
-    public String getAddressStreet() throws JSONException {
+    public String getAddressStreet() {
         return safeGetString("address_street");
     }
 
@@ -215,23 +214,23 @@ public class Plot extends Model {
         plotDetails.put("geom", geom.getData());
     }
 
-    public boolean canEditPlot() throws JSONException {
+    public boolean canEditPlot() {
         return getPermission("plot", "can_edit");
     }
 
-    public boolean canEditTree() throws JSONException {
+    public boolean canEditTree() {
         return getPermission("tree", "can_edit");
     }
 
-    public boolean canDeletePlot() throws JSONException {
+    public boolean canDeletePlot() {
         return getPermission("plot", "can_delete");
     }
 
-    public boolean canDeleteTree() throws JSONException {
+    public boolean canDeleteTree() {
         return getPermission("tree", "can_delete");
     }
 
-    /***
+    /**
      * Does this plot have current pending edits?
      *
      * @throws JSONException
@@ -257,10 +256,9 @@ public class Plot extends Model {
     /**
      * Get a pending edit description for a given field key for a plot or tree
      *
-     * @param key
-     *            name of field key
+     * @param key name of field key
      * @return An object representing a pending edit description for the field,
-     *         or null if there are no pending edits
+     * or null if there are no pending edits
      * @throws JSONException
      */
     public PendingEditDescription getPendingEditForKey(String key) throws JSONException {
@@ -276,10 +274,8 @@ public class Plot extends Model {
     /**
      * Get a plot or tree permission from a plot json
      *
-     * @param name
-     *            "tree" or "plot"
-     * @param editType
-     *            "can_edit" or "can_delete"
+     * @param name     "tree" or "plot"
+     * @param editType "can_edit" or "can_delete"
      * @return
      */
     private boolean getPermission(String name, String editType) {
@@ -309,7 +305,7 @@ public class Plot extends Model {
     public JSONObject getMostRecentPhoto() {
         JSONArray photos = data.optJSONArray("photos");
         if (photos != null && photos.length() > 0 && this.hasTree()) {
-            List<JSONObject> photoObjects = new ArrayList<JSONObject>(photos.length());
+            List<JSONObject> photoObjects = new ArrayList<>(photos.length());
             for (int i = 0; i < photos.length(); i++) {
                 JSONObject photo = photos.optJSONObject(i);
                 // If we start supporting multiple trees, we'll need to check the tree id here
@@ -326,9 +322,8 @@ public class Plot extends Model {
      * Get the most recent tree thumbnail for this plot, by way of an
      * asynchronous response handler.
      *
-     * @param binary
-     *            image handler which will receive callback from async http
-     *            request
+     * @param binary image handler which will receive callback from async http
+     *               request
      * @throws JSONException
      */
     public void getTreeThumbnail(BinaryHttpResponseHandler handler) {

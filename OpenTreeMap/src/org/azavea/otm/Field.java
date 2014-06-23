@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.InputType;
@@ -42,12 +41,12 @@ public class Field {
 
     // Any choices associated with this field, keyed by value with order
     // preserved
-    private final Map<String, Choice> choiceMap = new LinkedHashMap<String, Choice>();
+    private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
 
     // The order of values loaded into selection panel. Used to map index to
     // keys in ChoiceMap
-    private final ArrayList<String> choiceSelectionIndex = new ArrayList<String>();
-    private final ArrayList<String> choiceDisplayValues = new ArrayList<String>();
+    private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
+    private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
 
     // This is the view control, either button or EditText, which has the user
     // value
@@ -99,7 +98,7 @@ public class Field {
     public boolean editViewOnly = false;
 
     protected Field(String key, String label, boolean canEdit, String format, JSONArray choices, String owner,
-            String infoUrl, boolean editViewOnly, String units, int digits) {
+                    String infoUrl, boolean editViewOnly, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
@@ -181,7 +180,7 @@ public class Field {
         // value, value of simple pending edit, or value of pending edit where
         // we have
         // an owner field.
-        String value = null;
+        String value;
         if (!pending || this.owner == null) {
             value = formatUnit(getValueForKey(this.key, model));
         } else {
@@ -220,7 +219,7 @@ public class Field {
     }
 
     private View renderSpeciesFields(LayoutInflater layout, Plot model, Context context, View container,
-            TextView label, TextView fieldValue) throws JSONException {
+                                     TextView label, TextView fieldValue) {
 
         // tree.species gets exploded to a double row with sci name and common
         // name
@@ -248,7 +247,7 @@ public class Field {
     /*
      * Render a view to display the given model field in edit mode
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) throws JSONException {
+    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
 
         View container = null;
 
@@ -341,11 +340,7 @@ public class Field {
     }
 
     public boolean hasChoices() {
-        if (this.choiceMap == null || this.choiceMap.size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.choiceMap == null || this.choiceMap.size() == 0);
     }
 
     private void setupChoiceDisplay(final Button choiceButton, Object value) {
@@ -450,11 +445,7 @@ public class Field {
 
     public static boolean isKeyPending(String key, Plot plot) throws JSONException {
         PendingEditDescription pending = plot.getPendingEditForKey(key);
-        if (pending == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return pending != null;
     }
 
     /**
@@ -500,7 +491,7 @@ public class Field {
         // We care to distinguish between a null value and a missing key.
         if (json.has(keys[index])) {
             return new NestedJsonAndKey(json, keys[index]);
-        } else if (createNodeIfEmpty == true) {
+        } else if (createNodeIfEmpty) {
             // Create an empty node for this key
             return new NestedJsonAndKey(json.put(keys[index], ""), keys[index]);
         } else {
@@ -629,7 +620,7 @@ public class Field {
      * when key is DBH, we want the numeric value.)
      */
     private void bindPendingEditClickHandler(View b, final String key, final String relatedField, final Plot model,
-            final Context context) {
+                                             final Context context) {
         b.setOnClickListener(v -> {
             // initialize the intent, and load it with some initial values
             Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
@@ -703,7 +694,7 @@ public class Field {
     // ??REFACTOR: the signature suggests that this belongs on the Plot object.
 
     private static String getValueForLatestPendingEditByRelatedField(String relatedFieldKey, String pendingKey,
-            Plot plot) {
+                                                                     Plot plot) {
         // get the pending edit description object for this plot
         PendingEditDescription ped;
         try {
