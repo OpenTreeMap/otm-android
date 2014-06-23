@@ -514,7 +514,7 @@ public class TreeEditDisplay extends TreeDisplay {
         switch (requestCode) {
             case SPECIES_SELECTOR:
                 if (resultCode == Activity.RESULT_OK) {
-                    CharSequence speciesJSON = data.getCharSequenceExtra("species");
+                    CharSequence speciesJSON = data.getCharSequenceExtra(SpeciesListDisplay.MODEL_DATA);
                     if (speciesJSON != null && !speciesJSON.equals(null)) {
                         Species species = new Species();
                         try {
