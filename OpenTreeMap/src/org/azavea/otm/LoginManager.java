@@ -48,66 +48,62 @@ public class LoginManager {
 
         final RequestGenerator rg = new RequestGenerator();
 
-        try {
-            rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
+        rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
 
-                Message resultMessage = new Message();
-                Bundle data = new Bundle();
+            Message resultMessage = new Message();
+            Bundle data = new Bundle();
 
-                private void handleCallback(Bundle resp) {
-                    resultMessage.setData(data);
+            private void handleCallback(Bundle resp) {
+                resultMessage.setData(data);
 
-                    if (App.hasInstanceCode()) {
-                        App.reloadInstanceInfo(new Callback() {
-                            @Override
-                            public boolean handleMessage(Message msg) {
-                                callback.handleMessage(resultMessage);
-                                return true;
-                            }
-                        });
-                    } else {
-                        callback.handleMessage(resultMessage);
-                    }
+                if (App.hasInstanceCode()) {
+                    App.reloadInstanceInfo(new Callback() {
+                        @Override
+                        public boolean handleMessage(Message msg) {
+                            callback.handleMessage(resultMessage);
+                            return true;
+                        }
+                    });
+                } else {
+                    callback.handleMessage(resultMessage);
                 }
+            }
 
-                @Override
-                public void onFailure(Throwable e, String message) {
-                    if (e instanceof ConnectException) {
-                        Log.e(App.LOG_TAG, "timeout");
-                        data.putBoolean(SUCCESS_KEY, false);
-                        data.putString(MESSAGE_KEY, "Could not connect to server");
-                        handleCallback(data);
-                    }
-                    rg.cancelRequests(activityContext);
-                }
-
-                @Override
-                public void handleFailureMessage(Throwable e, String responseBody) {
+            @Override
+            public void onFailure(Throwable e, String message) {
+                if (e instanceof ConnectException) {
+                    Log.e(App.LOG_TAG, "timeout");
                     data.putBoolean(SUCCESS_KEY, false);
-                    data.putString(MESSAGE_KEY, "Error logging in, please check your username and password.");
+                    data.putString(MESSAGE_KEY, "Could not connect to server");
                     handleCallback(data);
                 }
+                rg.cancelRequests(activityContext);
+            }
 
-                @Override
-                public void dataReceived(User response) {
-                    prefs.edit().putString(USER_KEY, username).commit();
-                    storePassword(password);
+            @Override
+            public void handleFailureMessage(Throwable e, String responseBody) {
+                data.putBoolean(SUCCESS_KEY, false);
+                data.putString(MESSAGE_KEY, "Error logging in, please check your username and password.");
+                handleCallback(data);
+            }
 
-                    loggedInUser = response;
-                    try {
-                        loggedInUser.setPassword(password);
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+            @Override
+            public void dataReceived(User response) {
+                prefs.edit().putString(USER_KEY, username).commit();
+                storePassword(password);
 
-                    data.putBoolean(SUCCESS_KEY, true);
-                    handleCallback(data);
+                loggedInUser = response;
+                try {
+                    loggedInUser.setPassword(password);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+                data.putBoolean(SUCCESS_KEY, true);
+                handleCallback(data);
+            }
+        });
     }
 
     public void logOut(Activity activity) {

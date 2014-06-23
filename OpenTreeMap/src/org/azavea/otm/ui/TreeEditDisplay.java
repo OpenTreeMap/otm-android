@@ -571,16 +571,10 @@ public class TreeEditDisplay extends TreeDisplay {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.use_camera, (dialog, id) -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            try {
-                File outputFile = PhotoActivity.createImageFile();
-                outputFilePath = outputFile.getAbsolutePath();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
-                startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
-
-            } catch (IOException e) {
-                Log.e(App.LOG_TAG, "Unable to initiate camera", e);
-                Toast.makeText(getApplicationContext(), "Unable to use camera", Toast.LENGTH_SHORT).show();
-            }
+            File outputFile = PhotoActivity.createImageFile();
+            outputFilePath = outputFile.getAbsolutePath();
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+            startActivityForResult(intent, PHOTO_USING_CAMERA_RESPONSE);
         });
         builder.setPositiveButton(R.string.use_gallery, (dialog, id) -> {
             Intent intent = new Intent(Intent.ACTION_PICK,
