@@ -1,25 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
-import org.azavea.map.FilterableTMSTileProvider;
-import org.azavea.map.TMSTileProvider;
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.PlotContainer;
-import org.azavea.otm.data.Tree;
-import org.azavea.otm.map.FallbackGeocoder;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -64,6 +44,26 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.azavea.map.FilterableTMSTileProvider;
+import org.azavea.map.TMSTileProvider;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.data.Tree;
+import org.azavea.otm.map.FallbackGeocoder;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+
 public class MainMapActivity extends Fragment {
     private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
@@ -87,14 +87,31 @@ public class MainMapActivity extends Fragment {
     private GoogleMap mMap;
     private TextView filterDisplay;
 
-    private Location currentLocation;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-
     FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
+
+    private Location currentLocation;
+    private LocationManager locationManager = null;
+	private final LocationListener locationListener = new LocationListener() {
+		@Override
+		public void onLocationChanged(Location location) {
+			currentLocation = location;
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+	};
 
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = point -> {
@@ -740,31 +757,10 @@ public class MainMapActivity extends Fragment {
     }
 
     private void setupLocationUpdating(Context applicationContext) {
-        locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) {
+            locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+        }
 
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                currentLocation = location;
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status,
-                                        Bundle extras) {
-            }
-        };
         if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);
