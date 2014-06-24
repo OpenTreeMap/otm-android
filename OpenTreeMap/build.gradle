@@ -8,6 +8,12 @@ dependencies {
     compile 'org.jdeferred:jdeferred-android-aar:1.2.1'
 }
 
+retrolambda {
+    jdk System.getenv("JAVA8_HOME")
+    javaVersion JavaVersion.VERSION_1_6
+
+}
+
 android {
     compileSdkVersion 16
     buildToolsVersion "19.1.0"
