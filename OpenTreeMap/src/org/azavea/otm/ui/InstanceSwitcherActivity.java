@@ -24,7 +24,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
-import org.azavea.otm.data.Species;
+import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +38,10 @@ import java.util.List;
 
 
 public class InstanceSwitcherActivity extends Activity {
-    private static final int REQUEST_CODE = 1;
+    private static final int MINIMUM_DISTANCE_IN_METERS = 100;
+    private static final int INSTANCE_SELECT_REQUEST_CODE = 1;
 
+    private User user = null;
     private Location userLocation;
 
     private ProgressDialog loadingInstances;
@@ -73,6 +75,7 @@ public class InstanceSwitcherActivity extends Activity {
         @Override
         public void onSuccess(JSONObject data) {
             final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
+            // TODO: Extract strings
             instances.put("My Tree Maps", inflateForKey(data, "personal"));
             instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
 
@@ -145,28 +148,44 @@ public class InstanceSwitcherActivity extends Activity {
     public void onStart() {
         super.onStart();
 
-        // setup instance lists
+        // Only setup instance lists if the logged in user has changed or moved from their location
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        userLocation = getBestLocation(criteria);
-        RequestGenerator rg = new RequestGenerator();
+        Location newLocation = getBestLocation(criteria);
+        User newUser = App.getLoginManager().loggedInUser;
 
-        loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instances));
-        rg.getInstancesNearLocation(userLocation.getLatitude(),
-                userLocation.getLongitude(),
-                new InstanceListHandler());
+        if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
+            RequestGenerator rg = new RequestGenerator();
 
-        updateAccountElements();
+            loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
+                    getString(R.string.instance_switcher_loading_instances));
+            rg.getInstancesNearLocation(newLocation.getLatitude(),
+                    newLocation.getLongitude(),
+                    new InstanceListHandler());
+
+            updateAccountElements();
+        }
+
+        userLocation = newLocation;
+        user = newUser;
 
         findViewById(R.id.login_button).setOnClickListener(v -> startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class)));
         findViewById(R.id.logout_button).setOnClickListener(v -> {
             App.getLoginManager().logOut(InstanceSwitcherActivity.this);
-            // TODO: this might not be right anymore.
-            // remove after configuring login manager to force instance switcher
             startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
         });
         findViewById(R.id.public_instances_button).setOnClickListener(v ->
-                startActivityForResult(new Intent(this, PublicInstanceListDisplay.class), REQUEST_CODE));
+                startActivityForResult(
+                        new Intent(InstanceSwitcherActivity.this, PublicInstanceListDisplay.class),
+                        INSTANCE_SELECT_REQUEST_CODE));
+    }
+
+    /***
+     * Returns true if the two locations are far away enough to requery for nearby instances,
+     * or if one is an invalid location
+     */
+    private static boolean areLocationsDistant(Location a, Location b) {
+        return (a == null || b == null) || a.distanceTo(b) > MINIMUM_DISTANCE_IN_METERS;
     }
 
     private SpannableString makeUserNameString(String userName) {
@@ -208,7 +227,7 @@ public class InstanceSwitcherActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case (REQUEST_CODE): {
+            case (INSTANCE_SELECT_REQUEST_CODE): {
                 if (resultCode == Activity.RESULT_OK) {
                     CharSequence instanceJSON = data.getCharSequenceExtra(PublicInstanceListDisplay.MODEL_DATA);
                     if (instanceJSON != null) {

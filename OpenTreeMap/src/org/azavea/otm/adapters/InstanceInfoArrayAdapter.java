@@ -28,9 +28,9 @@ public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo>
     }
 
     @Override
-    public View getSeparatorView(int position, View separatorView, ViewGroup parent) {
+    public View getSeparatorView(int position, View convertView, ViewGroup parent) {
         CharSequence key = getItem(position).key;
-        return createViewFromResource(separatorView, parent, R.layout.instance_switcher_separator_row, R.id.text, key);
+        return createViewFromResource(convertView, parent, R.layout.instance_switcher_separator_row, R.id.text, key);
     }
 
     @Override
