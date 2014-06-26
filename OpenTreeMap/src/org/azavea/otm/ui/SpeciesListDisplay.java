@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.azavea.otm.data.Species;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.common.base.Function;
 
 public class SpeciesListDisplay extends FilterableListDisplay<Species> {
 
@@ -49,11 +52,12 @@ public class SpeciesListDisplay extends FilterableListDisplay<Species> {
 
         Species[] species = list.values().toArray(new Species[list.size()]);
 
-        // Sort by common name
-        Arrays.sort(species);
+        // Sectionize by first letter of common name
+        LinkedHashMap<CharSequence, List<Species>> speciesSections =
+                groupListByKeyFirstLetter(species, Species::getCommonName);
 
         // Bind the custom adapter to the view
-        SpeciesAdapter adapter = new SpeciesAdapter(this, R.layout.species_list_row, species);
+        SpeciesAdapter adapter = new SpeciesAdapter(this, speciesSections);
         Log.d(App.LOG_TAG, list.size() + " species loaded");
 
         renderList(adapter);

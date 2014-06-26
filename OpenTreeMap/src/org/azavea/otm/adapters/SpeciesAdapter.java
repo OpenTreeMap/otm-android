@@ -1,50 +1,57 @@
 package org.azavea.otm.adapters;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.azavea.otm.data.Species;
 import org.azavea.otm.R;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class SpeciesAdapter extends ArrayAdapter<Species> {
-    private static final int SECTIONED_CELL = 1;
-    private static final int VALUE_CELL = 2;
+public class SpeciesAdapter extends LinkedHashMapAdapter<Species> {
+    private final LayoutInflater inflater;
 
-    private Context context;
-    private int layoutResourceId;
-    private Species[] data = null;
-    private Map<Character, Boolean> sections;
-    private int[] sectionStates;
+    public SpeciesAdapter(Context context, LinkedHashMap<CharSequence, List<Species>> data) {
+        super(data);
+        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
+    }
 
-    public SpeciesAdapter(Context context, int layoutResourceId, Species[] data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
-        this.sections = createSections();
-        sectionStates = new int[data.length];
+    public View getSeparatorView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        SeparatorHolder holder;
+
+        if (row == null) {
+            row = inflater.inflate(R.layout.species_list_separator_row, parent, false);
+
+            holder = new SeparatorHolder();
+            holder.separator = (TextView) row.findViewById(R.id.separator);
+
+            row.setTag(holder);
+        } else {
+            holder = (SeparatorHolder) row.getTag();
+        }
+
+        CharSequence text = getItem(position).key;
+
+        holder.separator.setText(text);
+
+        return row;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getElementView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         SpeciesHolder holder;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            row = inflater.inflate(R.layout.species_list_row, parent, false);
 
             holder = new SpeciesHolder();
 
-            holder.separator = (TextView) row.findViewById(R.id.separator);
             holder.commonName = (TextView) row.findViewById(R.id.common_name);
             holder.scientificName = (TextView) row.findViewById(R.id.sci_name);
 
@@ -53,48 +60,7 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
             holder = (SpeciesHolder) row.getTag();
         }
 
-        // Use getItem as it's reference is always pointed to the data list
-        // which is active. When filtering is applied, data is not active,
-        // so data[position] will get the position from the unfiltered list.
-        Species species = getItem(position);
-
-        boolean needsSection;
-        char section = species.getCommonName().toUpperCase().charAt(0);
-        if (isNonAlpha(section)) {
-            section = 'A';
-        }
-
-        // Check the cached section status for the cell in the current position
-        // It is redrawn after the cell is removed from the screen
-        switch (sectionStates[position]) {
-            case SECTIONED_CELL:
-                needsSection = true;
-                break;
-            case VALUE_CELL:
-                needsSection = false;
-                break;
-            default:
-                // The section status is unknown, so determine
-                // if the first character of the name is already
-                // a created section
-                needsSection = !sections.get(section);
-
-                // Cache this state for later renderings
-                sectionStates[position] = needsSection ? SECTIONED_CELL
-                        : VALUE_CELL;
-                break;
-        }
-
-        // Check if the first letter of name has already been sectioned
-
-        if (needsSection) {
-            sections.put(section, true);
-            holder.separator.setVisibility(View.VISIBLE);
-            holder.separator.setText(Character.toString(section));
-
-        } else {
-            holder.separator.setVisibility(View.GONE);
-        }
+        Species species = getItem(position).value;
 
         holder.commonName.setText(species.getCommonName());
         holder.scientificName.setText(species.getScientificName());
@@ -102,41 +68,12 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
         return row;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        // When the data set changes (from a filter), the section placements
-        // need to be recalculated
-        this.sections = createSections();
-        this.sectionStates = new int[data.length];
-        super.notifyDataSetChanged();
-    }
-
-    private Map<Character, Boolean> createSections() {
-        Map<Character, Boolean> sections =
-                new LinkedHashMap<>(26);
-        for (char i = 'A'; i <= 'Z'; i++) {
-            sections.put(i, false);
-        }
-        return sections;
-    }
-
     static class SpeciesHolder {
-        TextView separator;
         TextView commonName;
         TextView scientificName;
     }
 
-    /*
-     * Check if the character is a letter
-     */
-    boolean isNonAlpha(char c) {
-        char tick = '\'';
-        char qt = '"';
-
-        return isDigit(c) || c == tick || c == qt;
-    }
-
-    boolean isDigit(char c) {
-        return (c >= '0' && c <= '9');
+    static class SeparatorHolder {
+        TextView separator;
     }
 }

@@ -31,6 +31,7 @@ import org.azavea.otm.adapters.InstanceInfoArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -68,11 +69,12 @@ public class InstanceSwitcherActivity extends Activity {
     private class InstanceListHandler extends JsonHttpResponseHandler {
         @Override
         public void onSuccess(JSONObject data) {
-            final ArrayList<InstanceInfo> nearbyInfos = inflateForKey(data, "nearby");
-            final ArrayList<InstanceInfo> personalInfos = inflateForKey(data, "personal");
+            final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
+            instances.put("My Tree Maps", inflateForKey(data, "personal"));
+            instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
 
             final ListView instancesView = (ListView) findViewById(R.id.instance_list);
-            InstanceInfoArrayAdapter adapter = new InstanceInfoArrayAdapter(personalInfos, nearbyInfos, InstanceSwitcherActivity.this, userLocation);
+            InstanceInfoArrayAdapter adapter = new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, userLocation);
             instancesView.setAdapter(adapter);
             instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
 
@@ -82,7 +84,7 @@ public class InstanceSwitcherActivity extends Activity {
 
             instancesView.setOnItemClickListener((parent, v, position, id) -> {
                 loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
-                String instanceCode = ((InstanceInfo) instancesView.getItemAtPosition(position)).getUrlName();
+                String instanceCode = adapter.getItem(position).value.getUrlName();
                 App.reloadInstanceInfo(instanceCode, new RedirectCallback());
             });
         }
