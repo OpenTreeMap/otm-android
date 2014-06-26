@@ -1,7 +1,6 @@
 package org.azavea.otm.ui;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Map.Entry;
 
@@ -479,7 +478,7 @@ public class TreeEditDisplay extends TreeDisplay {
         setResultOk(updatedPlot);
 
         // Updating may have changed the georev
-        App.getAppInstance().getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
+        App.getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
 
         finish();
     }

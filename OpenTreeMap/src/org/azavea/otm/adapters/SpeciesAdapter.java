@@ -114,8 +114,8 @@ public class SpeciesAdapter extends ArrayAdapter<Species> {
     private Map<Character, Boolean> createSections() {
         Map<Character, Boolean> sections =
                 new LinkedHashMap<>(26);
-        for (int i = 65; i <= 90; i++) {
-            sections.put((char) i, false);
+        for (char i = 'A'; i <= 'Z'; i++) {
+            sections.put(i, false);
         }
         return sections;
     }
