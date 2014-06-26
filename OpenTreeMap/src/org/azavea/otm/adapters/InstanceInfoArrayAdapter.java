@@ -22,23 +22,15 @@ public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo>
 
     public InstanceInfoArrayAdapter(LinkedHashMap<CharSequence, List<InstanceInfo>> instances,
                                     Context context, Location userLocation) {
-        super(instances);
+        super(context, instances);
         this.inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.userLocation = userLocation;
     }
 
     @Override
     public View getSeparatorView(int position, View separatorView, ViewGroup parent) {
-        if (separatorView == null) {
-            separatorView = inflator.inflate(R.layout.instance_switcher_separator_row, parent, false);
-        }
-
-        TextView textView = (TextView) separatorView.findViewById(R.id.text);
-
-        // populate subviews for the instance in scope
-        textView.setText(getItem(position).key);
-
-        return separatorView;
+        CharSequence key = getItem(position).key;
+        return createViewFromResource(separatorView, parent, R.layout.instance_switcher_separator_row, R.id.text, key);
     }
 
     @Override

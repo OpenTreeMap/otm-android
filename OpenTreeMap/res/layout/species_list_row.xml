@@ -7,14 +7,11 @@
 
     <TextView
         android:id="@+id/common_name"
-        style="@style/general_list_row_inner_text"
-        android:textSize="14dp"
-        android:textStyle="bold"
+        style="@style/species_row_text"
         />
 
     <TextView
         android:id="@+id/sci_name"
-        style="@style/general_list_row_inner_text"
-        android:textSize="12dip" />
+        style="@style/species_row_subtext" />
 
 </LinearLayout>

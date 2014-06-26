@@ -103,12 +103,15 @@ public class RequestGenerator {
         getPlotsNearLocation(geoY, geoX, params, handler);
     }
 
+    public void getPublicInstances(JsonHttpResponseHandler handler) {
+        client.get("instances", null, handler);
+    }
+
     public void getInstancesNearLocation(double geoY, double geoX,
                                          JsonHttpResponseHandler handler) {
         String url = String.format("locations/%s,%s/instances", geoY, geoX);
         userOptionalGet(url, null, handler);
     }
-
 
     /**
      * Request information on a specific OTM instance

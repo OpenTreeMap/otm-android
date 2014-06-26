@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -23,6 +24,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Species;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +38,7 @@ import java.util.List;
 
 
 public class InstanceSwitcherActivity extends Activity {
+    private static final int REQUEST_CODE = 1;
 
     private Location userLocation;
 
@@ -83,11 +86,18 @@ public class InstanceSwitcherActivity extends Activity {
             }
 
             instancesView.setOnItemClickListener((parent, v, position, id) -> {
-                loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
-                String instanceCode = adapter.getItem(position).value.getUrlName();
-                App.reloadInstanceInfo(instanceCode, new RedirectCallback());
+                InstanceInfo instance = adapter.getItem(position).value;
+                redirectToTabLayout(instance);
             });
         }
+    }
+
+    private void redirectToTabLayout(InstanceInfo instance) {
+        loadingInstance = ProgressDialog.show(this,
+                getString(R.string.instance_switcher_dialog_heading),
+                getString(R.string.instance_switcher_loading_instance));
+        String instanceCode = instance.getUrlName();
+        App.reloadInstanceInfo(instanceCode, new RedirectCallback());
     }
 
     private class RedirectCallback implements Callback {
@@ -154,8 +164,9 @@ public class InstanceSwitcherActivity extends Activity {
             // TODO: this might not be right anymore.
             // remove after configuring login manager to force instance switcher
             startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
-
         });
+        findViewById(R.id.public_instances_button).setOnClickListener(v ->
+                startActivityForResult(new Intent(this, PublicInstanceListDisplay.class), REQUEST_CODE));
     }
 
     private SpannableString makeUserNameString(String userName) {
@@ -189,19 +200,32 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     public ArrayList<InstanceInfo> inflateForKey(JSONObject data, String key) {
-        ArrayList<InstanceInfo> instanceInfos = new ArrayList<>();
-
         JSONArray instances = data.optJSONArray(key);
-        if (instances != null) {
-            for (int i = 0; i < instances.length(); i++) {
-                InstanceInfo instanceInfo = new InstanceInfo();
-                try {
-                    instanceInfo.setData(instances.getJSONObject(i));
-                    instanceInfos.add(instanceInfo);
-                } catch (JSONException e) {
+        return InstanceInfo.getInstanceInfosFromJSON(instances);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case (REQUEST_CODE): {
+                if (resultCode == Activity.RESULT_OK) {
+                    CharSequence instanceJSON = data.getCharSequenceExtra(PublicInstanceListDisplay.MODEL_DATA);
+                    if (instanceJSON != null) {
+                        try {
+                            InstanceInfo instance = new InstanceInfo();
+                            instance.setData(new JSONObject(instanceJSON.toString()));
+
+                            redirectToTabLayout(instance);
+                        } catch (JSONException e) {
+                            String msg = "Unable to retrieve selected Tree Map";
+                            Log.e(App.LOG_TAG, msg, e);
+                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
+                break;
             }
         }
-        return instanceInfos;
     }
 }

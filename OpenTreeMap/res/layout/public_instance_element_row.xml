@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/instance_switcher_element_row"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:background="@drawable/instance_switcher_element_border"
+    style="@style/general_list_row"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/text"
         style="@style/general_list_row_text" />
-
-    <TextView
-        android:id="@+id/subtext"
-        style="@style/general_list_row_subtext"
-        android:layout_below="@id/text" />
 
     <ImageView
         android:id="@+id/chevron"

@@ -1,10 +1,13 @@
 package org.azavea.otm.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
 
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
@@ -14,19 +17,38 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implements Filterable {
+public class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implements Filterable {
 
     private LinkedHashMap<CharSequence, List<T>> originalData = null;
     private List<Entry<T>> flattenedData;
 
-    private static final int ITEM_VIEW_TYPE_ELEMENT = 0;
-    private static final int ITEM_VIEW_TYPE_SEPARATOR = 1;
+    private LayoutInflater inflator;
+
+    private int separatorRowLayoutId;
+    private int separatorRowTextViewId;
+    private int elementRowLayoutId;
+    private int elementRowTextViewId;
 
     private Filter filter = null;
 
-    public LinkedHashMapAdapter(LinkedHashMap<CharSequence, List<T>> data) {
+    private static final int ITEM_VIEW_TYPE_ELEMENT = 0;
+    private static final int ITEM_VIEW_TYPE_SEPARATOR = 1;
+
+    public LinkedHashMapAdapter(Context context, LinkedHashMap<CharSequence, List<T>> data) {
+        this(context, data, 0, 0, 0, 0);
+    }
+    public LinkedHashMapAdapter(Context context, LinkedHashMap<CharSequence, List<T>> data,
+                                int separatorRowLayoutId, int separatorRowTextViewId,
+                                int elementRowLayoutId, int elementRowTextViewId) {
+        this.inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         this.originalData = data;
         this.flattenedData = getFlattenedList(data);
+
+        this.separatorRowLayoutId = separatorRowLayoutId;
+        this.separatorRowTextViewId = separatorRowTextViewId;
+        this.elementRowLayoutId = elementRowLayoutId;
+        this.elementRowTextViewId = elementRowTextViewId;
     }
 
     @Override
@@ -64,9 +86,29 @@ public abstract class LinkedHashMapAdapter<T extends Model> extends BaseAdapter 
         return getItemViewType(position) != ITEM_VIEW_TYPE_SEPARATOR;
     }
 
-    public abstract View getElementView(int position, View convertView, ViewGroup parent);
+    public View getElementView(int position, View convertView, ViewGroup parent) {
+        CharSequence text = getItem(position).value.toString();
+        return createViewFromResource(convertView, parent, elementRowLayoutId, elementRowTextViewId, text);
+    }
 
-    public abstract View getSeparatorView(int position, View convertView, ViewGroup parent);
+    public View getSeparatorView(int position, View convertView, ViewGroup parent) {
+        CharSequence text = getItem(position).key;
+        return createViewFromResource(convertView, parent, separatorRowLayoutId, separatorRowTextViewId, text);
+    }
+
+    protected View createViewFromResource(View convertView, ViewGroup parent,
+                                          int layoutId, int textViewId, CharSequence text) {
+        if (convertView == null) {
+            convertView = inflator.inflate(layoutId, parent, false);
+        }
+
+        TextView textView = (TextView) convertView.findViewById(textViewId);
+
+        // populate subviews for the instance in scope
+        textView.setText(text);
+
+        return convertView;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

@@ -42,4 +42,9 @@
         style="@style/instance_switcher_button"
         android:text="@string/instance_switcher_switch_accounts" />
 
+    <Button
+        android:id="@+id/public_instances_button"
+        style="@style/instance_switcher_button"
+        android:text="@string/instance_switcher_public_instances" />
+
 </LinearLayout>

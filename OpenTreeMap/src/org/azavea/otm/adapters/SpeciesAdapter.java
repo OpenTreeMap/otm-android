@@ -16,7 +16,7 @@ public class SpeciesAdapter extends LinkedHashMapAdapter<Species> {
     private final LayoutInflater inflater;
 
     public SpeciesAdapter(Context context, LinkedHashMap<CharSequence, List<Species>> data) {
-        super(data);
+        super(context, data);
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
     }
 
@@ -25,7 +25,7 @@ public class SpeciesAdapter extends LinkedHashMapAdapter<Species> {
         SeparatorHolder holder;
 
         if (row == null) {
-            row = inflater.inflate(R.layout.species_list_separator_row, parent, false);
+            row = inflater.inflate(R.layout.list_separator_row, parent, false);
 
             holder = new SeparatorHolder();
             holder.separator = (TextView) row.findViewById(R.id.separator);
