@@ -94,24 +94,24 @@ public class MainMapActivity extends Fragment {
 
     private Location currentLocation;
     private LocationManager locationManager = null;
-	private final LocationListener locationListener = new LocationListener() {
-		@Override
-		public void onLocationChanged(Location location) {
-			currentLocation = location;
-		}
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            currentLocation = location;
+        }
 
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
 
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
 
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-	};
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    };
 
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = point -> {

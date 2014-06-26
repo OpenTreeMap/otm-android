@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/general_list_row"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/text"

@@ -17,7 +17,7 @@ public class SpeciesAdapter extends LinkedHashMapAdapter<Species> {
 
     public SpeciesAdapter(Context context, LinkedHashMap<CharSequence, List<Species>> data) {
         super(context, data);
-        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public View getSeparatorView(int position, View convertView, ViewGroup parent) {

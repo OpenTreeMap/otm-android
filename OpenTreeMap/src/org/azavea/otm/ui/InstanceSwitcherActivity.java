@@ -180,7 +180,7 @@ public class InstanceSwitcherActivity extends Activity {
                         INSTANCE_SELECT_REQUEST_CODE));
     }
 
-    /***
+    /**
      * Returns true if the two locations are far away enough to requery for nearby instances,
      * or if one is an invalid location
      */

@@ -37,6 +37,7 @@ public class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implement
     public LinkedHashMapAdapter(Context context, LinkedHashMap<CharSequence, List<T>> data) {
         this(context, data, 0, 0, 0, 0);
     }
+
     public LinkedHashMapAdapter(Context context, LinkedHashMap<CharSequence, List<T>> data,
                                 int separatorRowLayoutId, int separatorRowTextViewId,
                                 int elementRowLayoutId, int elementRowTextViewId) {
