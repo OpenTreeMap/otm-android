@@ -99,14 +99,20 @@ public class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implement
 
     protected View createViewFromResource(View convertView, ViewGroup parent,
                                           int layoutId, int textViewId, CharSequence text) {
+        ViewHolder holder;
         if (convertView == null) {
             convertView = inflator.inflate(layoutId, parent, false);
+
+            holder = new ViewHolder();
+            holder.textView = (TextView) convertView.findViewById(textViewId);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        TextView textView = (TextView) convertView.findViewById(textViewId);
-
         // populate subviews for the instance in scope
-        textView.setText(text);
+        holder.textView.setText(text);
 
         return convertView;
     }
@@ -233,6 +239,10 @@ public class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implement
             this.key = key;
             this.value = value;
         }
+    }
+
+    private static class ViewHolder {
+        TextView textView;
     }
 }
 

@@ -36,15 +36,19 @@ public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo>
     @Override
     public View getElementView(int position, View convertView, ViewGroup parent) {
         InstanceInfo element = this.getItem(position).value;
+        InstanceHolder holder;
 
         if (convertView == null) {
             convertView = inflator.inflate(R.layout.instance_switcher_element_row, parent, false);
+
+            holder = new InstanceHolder();
+            holder.textView = (TextView) convertView.findViewById(R.id.text);
+            holder.subtextView = (TextView) convertView.findViewById(R.id.subtext);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (InstanceHolder) convertView.getTag();
         }
-
-        // make subviews for components of the listView row
-        TextView textView = (TextView) convertView.findViewById(R.id.text);
-        TextView subtextView = (TextView) convertView.findViewById(R.id.subtext);
-
         // gather data from instanceInfo in scope to use in subviews
         Location instanceLocation = new Location(userLocation);
         instanceLocation.setLatitude(element.getLat());
@@ -52,12 +56,16 @@ public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo>
         String distance = distanceToString(userLocation.distanceTo(instanceLocation), true) + " away";
 
         // populate subviews for the instance in scope
-        textView.setText(element.getName());
-        subtextView.setText(distance);
+        holder.textView.setText(element.getName());
+        holder.subtextView.setText(distance);
 
         return convertView;
     }
 
+    private static class InstanceHolder {
+        TextView textView;
+        TextView subtextView;
+    }
 
     // TODO: backport/refactor to helper lib
     private static String distanceToString(float distance) {
