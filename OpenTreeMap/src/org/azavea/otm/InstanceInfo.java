@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 public class InstanceInfo extends Model {
 
     // Commonly accessed fields are loaded into class
@@ -149,4 +151,23 @@ public class InstanceInfo extends Model {
         return new LatLng(getLat(), getLon());
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    public static ArrayList<InstanceInfo> getInstanceInfosFromJSON(JSONArray instances) {
+        ArrayList<InstanceInfo> instanceInfos = new ArrayList<>();
+        if (instances != null) {
+            for (int i = 0; i < instances.length(); i++) {
+                InstanceInfo instanceInfo = new InstanceInfo();
+                try {
+                    instanceInfo.setData(instances.getJSONObject(i));
+                    instanceInfos.add(instanceInfo);
+                } catch (JSONException e) {
+                }
+            }
+        }
+        return instanceInfos;
+    }
 }

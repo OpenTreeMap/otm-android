@@ -130,7 +130,10 @@
     <string name="instance_switcher_switch_accounts">Switch Accounts</string>
     <string name="profile_activity_switch_instance">Switch Instance</string>
     <string name="instance_switcher_dialog_heading">Please Wait</string>
-    <string name="instance_switcher_loading_instances">Loading Tree Maps...</string>
+    <string name="instance_switcher_loading_instances">Loading Tree Maps…</string>
     <string name="instance_switcher_loading_instance">Loading Tree Map</string>
+    <string name="filter_instances_hint">Filter tree maps…</string>
+    <string name="instances_failed">Could not get tree maps</string>
+    <string name="instance_switcher_public_instances">See all public Tree Maps</string>
 
 </resources>

@@ -6,12 +6,12 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.3.23'
     compile 'com.android.support:appcompat-v7:+'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.1'
+    compile 'com.google.guava:guava:17.0'
 }
 
 retrolambda {
     jdk System.getenv("JAVA8_HOME")
     javaVersion JavaVersion.VERSION_1_6
-
 }
 
 android {

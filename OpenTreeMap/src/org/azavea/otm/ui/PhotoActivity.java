@@ -25,9 +25,9 @@ public class PhotoActivity {
     public static double PHOTO_HEIGHT = 768;
     public static double PHOTO_WIDTH = 1024;
 
-	/*
+    /*
      * Helper functions
-	 */
+     */
 
     public static File createImageFile() {
         if (!isExternalStorageWritable()) {

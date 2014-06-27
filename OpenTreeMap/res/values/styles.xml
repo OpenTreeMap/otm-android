@@ -199,24 +199,25 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="general_list_row_inner_text">
+    <style name="general_list_row_subtext">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="instance_switcher_row_text" parent="@style/general_list_row_inner_text">
+    <style name="general_list_row_text" parent="@style/general_list_row_subtext">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="instance_switcher_element_row_subtext" parent="@style/general_list_row_inner_text">
-        <item name="android:textSize">12sp</item>
+    <style name="species_row_text" parent="@style/general_list_row_text">
+        <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="species_row_inner_text" parent="@style/general_list_row_inner_text">
+    <style name="species_row_subtext" parent="@style/general_list_row_subtext">
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -262,5 +263,13 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="general_list_row_chevron">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
 </resources>

@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/instance_switcher_row_text"
+        style="@style/general_list_row_text"
         android:gravity="center_vertical" />
 
 </LinearLayout>

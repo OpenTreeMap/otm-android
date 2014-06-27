@@ -4,11 +4,10 @@
     android:orientation="vertical" >
 
     <EditText
-        android:id="@+id/species_filter_text"
+        android:id="@+id/filter_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:hint="@string/filter_species_hint"
         android:inputType="text"
         android:maxLines="1" >
 
@@ -16,10 +15,9 @@
     </EditText>
 
     <!--
-             NOTE: This listview must have anroid id/list for the listactivity
-        	to find it.
+         NOTE: This listview must have @android:id/list for the listactivity
+         to find it.
     -->
-
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"

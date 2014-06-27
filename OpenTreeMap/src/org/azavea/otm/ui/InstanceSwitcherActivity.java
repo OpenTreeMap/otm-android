@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -23,6 +24,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
+import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +33,15 @@ import org.azavea.otm.adapters.InstanceInfoArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
 public class InstanceSwitcherActivity extends Activity {
+    private static final int MINIMUM_DISTANCE_IN_METERS = 100;
+    private static final int INSTANCE_SELECT_REQUEST_CODE = 1;
 
+    private User user = null;
     private Location userLocation;
 
     private ProgressDialog loadingInstances;
@@ -68,11 +74,13 @@ public class InstanceSwitcherActivity extends Activity {
     private class InstanceListHandler extends JsonHttpResponseHandler {
         @Override
         public void onSuccess(JSONObject data) {
-            final ArrayList<InstanceInfo> nearbyInfos = inflateForKey(data, "nearby");
-            final ArrayList<InstanceInfo> personalInfos = inflateForKey(data, "personal");
+            final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
+            // TODO: Extract strings
+            instances.put("My Tree Maps", inflateForKey(data, "personal"));
+            instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
 
             final ListView instancesView = (ListView) findViewById(R.id.instance_list);
-            InstanceInfoArrayAdapter adapter = new InstanceInfoArrayAdapter(personalInfos, nearbyInfos, InstanceSwitcherActivity.this, userLocation);
+            InstanceInfoArrayAdapter adapter = new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, userLocation);
             instancesView.setAdapter(adapter);
             instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
 
@@ -81,11 +89,18 @@ public class InstanceSwitcherActivity extends Activity {
             }
 
             instancesView.setOnItemClickListener((parent, v, position, id) -> {
-                loadingInstance = ProgressDialog.show(InstanceSwitcherActivity.this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instance));
-                String instanceCode = ((InstanceInfo) instancesView.getItemAtPosition(position)).getUrlName();
-                App.reloadInstanceInfo(instanceCode, new RedirectCallback());
+                InstanceInfo instance = adapter.getItem(position).value;
+                redirectToTabLayout(instance);
             });
         }
+    }
+
+    private void redirectToTabLayout(InstanceInfo instance) {
+        loadingInstance = ProgressDialog.show(this,
+                getString(R.string.instance_switcher_dialog_heading),
+                getString(R.string.instance_switcher_loading_instance));
+        String instanceCode = instance.getUrlName();
+        App.reloadInstanceInfo(instanceCode, new RedirectCallback());
     }
 
     private class RedirectCallback implements Callback {
@@ -133,27 +148,44 @@ public class InstanceSwitcherActivity extends Activity {
     public void onStart() {
         super.onStart();
 
-        // setup instance lists
+        // Only setup instance lists if the logged in user has changed or moved from their location
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        userLocation = getBestLocation(criteria);
-        RequestGenerator rg = new RequestGenerator();
+        Location newLocation = getBestLocation(criteria);
+        User newUser = App.getLoginManager().loggedInUser;
 
-        loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading), getString(R.string.instance_switcher_loading_instances));
-        rg.getInstancesNearLocation(userLocation.getLatitude(),
-                userLocation.getLongitude(),
-                new InstanceListHandler());
+        if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
+            RequestGenerator rg = new RequestGenerator();
 
-        updateAccountElements();
+            loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
+                    getString(R.string.instance_switcher_loading_instances));
+            rg.getInstancesNearLocation(newLocation.getLatitude(),
+                    newLocation.getLongitude(),
+                    new InstanceListHandler());
+
+            updateAccountElements();
+        }
+
+        userLocation = newLocation;
+        user = newUser;
 
         findViewById(R.id.login_button).setOnClickListener(v -> startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class)));
         findViewById(R.id.logout_button).setOnClickListener(v -> {
             App.getLoginManager().logOut(InstanceSwitcherActivity.this);
-            // TODO: this might not be right anymore.
-            // remove after configuring login manager to force instance switcher
             startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
-
         });
+        findViewById(R.id.public_instances_button).setOnClickListener(v ->
+                startActivityForResult(
+                        new Intent(InstanceSwitcherActivity.this, PublicInstanceListDisplay.class),
+                        INSTANCE_SELECT_REQUEST_CODE));
+    }
+
+    /**
+     * Returns true if the two locations are far away enough to requery for nearby instances,
+     * or if one is an invalid location
+     */
+    private static boolean areLocationsDistant(Location a, Location b) {
+        return (a == null || b == null) || a.distanceTo(b) > MINIMUM_DISTANCE_IN_METERS;
     }
 
     private SpannableString makeUserNameString(String userName) {
@@ -187,19 +219,32 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     public ArrayList<InstanceInfo> inflateForKey(JSONObject data, String key) {
-        ArrayList<InstanceInfo> instanceInfos = new ArrayList<>();
-
         JSONArray instances = data.optJSONArray(key);
-        if (instances != null) {
-            for (int i = 0; i < instances.length(); i++) {
-                InstanceInfo instanceInfo = new InstanceInfo();
-                try {
-                    instanceInfo.setData(instances.getJSONObject(i));
-                    instanceInfos.add(instanceInfo);
-                } catch (JSONException e) {
+        return InstanceInfo.getInstanceInfosFromJSON(instances);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case (INSTANCE_SELECT_REQUEST_CODE): {
+                if (resultCode == Activity.RESULT_OK) {
+                    CharSequence instanceJSON = data.getCharSequenceExtra(PublicInstanceListDisplay.MODEL_DATA);
+                    if (instanceJSON != null) {
+                        try {
+                            InstanceInfo instance = new InstanceInfo();
+                            instance.setData(new JSONObject(instanceJSON.toString()));
+
+                            redirectToTabLayout(instance);
+                        } catch (JSONException e) {
+                            String msg = "Unable to retrieve selected Tree Map";
+                            Log.e(App.LOG_TAG, msg, e);
+                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
+                break;
             }
         }
-        return instanceInfos;
     }
 }

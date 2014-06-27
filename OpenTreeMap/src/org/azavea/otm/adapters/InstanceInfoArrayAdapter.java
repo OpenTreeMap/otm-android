@@ -1,6 +1,6 @@
 package org.azavea.otm.adapters;
 
-import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,45 +10,43 @@ import android.widget.TextView;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.R;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
-public class InstanceInfoArrayAdapter extends TwoArrayAdapter<InstanceInfo> {
-    private Location userLocation;
-    private LayoutInflater inflator;
+public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo> {
+    private final Location userLocation;
+    private final LayoutInflater inflator;
 
-    public InstanceInfoArrayAdapter(ArrayList<InstanceInfo> personal,
-                                    ArrayList<InstanceInfo> nearby,
-                                    Activity context,
-                                    Location userLocation) {
-
-        super(context, personal, nearby, "My Tree Maps", "Nearby Tree Maps");
-        this.inflator = context.getLayoutInflater();
+    public InstanceInfoArrayAdapter(LinkedHashMap<CharSequence, List<InstanceInfo>> instances,
+                                    Context context, Location userLocation) {
+        super(context, instances);
+        this.inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.userLocation = userLocation;
     }
 
     @Override
-    protected View getInflatedSeparatorView() {
-        return inflator.inflate(R.layout.instance_switcher_separator_row, null, true);
-    }
-
-    @Override
-    protected TextView getSeparatorInnerTextView(View separatorView) {
-        return (TextView) separatorView.findViewById(R.id.text);
+    public View getSeparatorView(int position, View convertView, ViewGroup parent) {
+        CharSequence key = getItem(position).key;
+        return createViewFromResource(convertView, parent, R.layout.instance_switcher_separator_row, R.id.text, key);
     }
 
     @Override
     public View getElementView(int position, View convertView, ViewGroup parent) {
-        InstanceInfo element = this.getItem(position);
+        InstanceInfo element = this.getItem(position).value;
+        InstanceHolder holder;
 
         if (convertView == null) {
-            convertView = inflator.inflate(R.layout.instance_switcher_element_row, null, true);
+            convertView = inflator.inflate(R.layout.instance_switcher_element_row, parent, false);
+
+            holder = new InstanceHolder();
+            holder.textView = (TextView) convertView.findViewById(R.id.text);
+            holder.subtextView = (TextView) convertView.findViewById(R.id.subtext);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (InstanceHolder) convertView.getTag();
         }
-
-        // make subviews for components of the listView row
-        TextView textView = (TextView) convertView.findViewById(R.id.text);
-        TextView subtextView = (TextView) convertView.findViewById(R.id.subtext);
-
         // gather data from instanceInfo in scope to use in subviews
         Location instanceLocation = new Location(userLocation);
         instanceLocation.setLatitude(element.getLat());
@@ -56,12 +54,16 @@ public class InstanceInfoArrayAdapter extends TwoArrayAdapter<InstanceInfo> {
         String distance = distanceToString(userLocation.distanceTo(instanceLocation), true) + " away";
 
         // populate subviews for the instance in scope
-        textView.setText(element.getName());
-        subtextView.setText(distance);
+        holder.textView.setText(element.getName());
+        holder.subtextView.setText(distance);
 
         return convertView;
     }
 
+    private static class InstanceHolder {
+        TextView textView;
+        TextView subtextView;
+    }
 
     // TODO: backport/refactor to helper lib
     private static String distanceToString(float distance) {
@@ -93,6 +95,4 @@ public class InstanceInfoArrayAdapter extends TwoArrayAdapter<InstanceInfo> {
         }
         return text;
     }
-
-
 }

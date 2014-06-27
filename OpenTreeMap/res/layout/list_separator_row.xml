@@ -6,11 +6,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/common_name"
-        style="@style/species_row_text" />
-
-    <TextView
-        android:id="@+id/sci_name"
-        style="@style/species_row_subtext" />
+        android:id="@+id/separator"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_color" />
 
 </LinearLayout>
