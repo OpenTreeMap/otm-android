@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <com.joelapenna.foursquared.widget.SegmentedButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:foursquared="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     foursquared:btnPaddingBottom="3dp"
     foursquared:btnPaddingTop="3dp"
     foursquared:cornerRadius="0dp"

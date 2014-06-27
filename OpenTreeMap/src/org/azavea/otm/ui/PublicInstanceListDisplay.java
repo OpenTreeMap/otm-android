@@ -9,15 +9,11 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.azavea.otm.App;
-import org.azavea.otm.FilterManager;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.R;
 import org.azavea.otm.adapters.LinkedHashMapAdapter;
-import org.azavea.otm.adapters.SpeciesAdapter;
-import org.azavea.otm.data.Species;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;

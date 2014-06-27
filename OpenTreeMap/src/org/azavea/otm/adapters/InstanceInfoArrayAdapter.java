@@ -1,6 +1,5 @@
 package org.azavea.otm.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import org.azavea.otm.InstanceInfo;
 import org.azavea.otm.R;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;

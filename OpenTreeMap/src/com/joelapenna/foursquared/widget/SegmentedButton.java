@@ -30,6 +30,7 @@ import org.azavea.otm.R;
  * @date September 15, 2010
  * @author Mark Wyszomierski (markww@gmail.com)
  */
+@SuppressWarnings("ALL")
 public class SegmentedButton extends LinearLayout {
 
     private StateListDrawable mBgLeftOn;

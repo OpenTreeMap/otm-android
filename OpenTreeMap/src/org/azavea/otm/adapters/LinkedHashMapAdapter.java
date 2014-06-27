@@ -9,7 +9,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 
 import java.util.ArrayList;

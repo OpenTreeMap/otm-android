@@ -1,11 +1,8 @@
 package org.azavea.otm.ui;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -16,8 +13,6 @@ import org.azavea.otm.data.Species;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.google.common.base.Function;
 
 public class SpeciesListDisplay extends FilterableListDisplay<Species> {
 
