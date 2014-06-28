@@ -112,7 +112,7 @@ public abstract class FilterableListDisplay<T extends Model> extends ListActivit
         Arrays.sort(list, (a, b) -> getKey.apply(a).compareToIgnoreCase(getKey.apply(b)));
 
         LinkedHashMap<CharSequence, List<T>> itemSections = new LinkedHashMap<>(26);
-        for (char c = 'A'; c < 'Z'; c++) {
+        for (char c = 'A'; c <= 'Z'; c++) {
             itemSections.put(Character.toString(c), new ArrayList<>());
         }
         for (T item : list) {
