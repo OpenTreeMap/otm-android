@@ -134,6 +134,6 @@
     <string name="instance_switcher_loading_instance">Loading Tree Map</string>
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
-    <string name="instance_switcher_public_instances">See all public Tree Maps</string>
+    <string name="instance_switcher_public_instances">See All Public Tree Maps</string>
 
 </resources>
