@@ -215,7 +215,7 @@ public class MainMapActivity extends Fragment {
                     START_POS = App.getCurrentInstance().getStartPos();
                     bindActionToLocationSearchBar(view);
                     filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
-                    setUpMapIfNeeded();
+                    setUpMapIfNeeded(view);
                     plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
                     setPopupViews(view);
                     clearTileCache();
@@ -248,7 +248,7 @@ public class MainMapActivity extends Fragment {
         MapHelper.checkGooglePlay(getActivity());
         mapView.onResume();
         if (App.getAppInstance().getCurrentInstance() != null) {
-            setUpMapIfNeeded();
+            setUpMapIfNeeded(getView());
             setTreeAddMode(CANCEL);
             clearTileCache();
 
@@ -353,14 +353,14 @@ public class MainMapActivity extends Fragment {
      * paused), {@link #onCreate(Bundle)} may not be called again so we should call this method in
      * {@link #onResume()} to guarantee that it will be called.
      */
-    private void setUpMapIfNeeded() {
+    private void setUpMapIfNeeded(View view) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the MapView.
             mMap = mapView.getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+                setUpMap(view);
             } else {
                 Toast.makeText(getActivity(), "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
                 Log.e(App.LOG_TAG, "Map was null!");
@@ -368,7 +368,7 @@ public class MainMapActivity extends Fragment {
         }
     }
 
-    private void setUpMap() {
+    private void setUpMap(View view) {
         SharedPreferences prefs = App.getSharedPreferences();
         int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
         String baseTileUrl = prefs.getString("tiler_url", null);
@@ -397,11 +397,12 @@ public class MainMapActivity extends Fragment {
 
             // Set up the default click listener
             mMap.setOnMapClickListener(showPopupMapClickListener);
+            SegmentedButton buttons = (SegmentedButton)view.findViewById(R.id.basemap_controls);
 
-            setTreeAddMode(CANCEL);
-            setUpBasemapControls();
+            MapHelper.setUpBasemapControls(buttons, mMap);
         } catch (Exception e) {
-            // TODO: Toast
+            Log.e("BASEMAP_SETUP", "Error Setting Up Basemap: ", e);
+            Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -728,32 +729,6 @@ public class MainMapActivity extends Fragment {
         } else {
             moveMapAndFinishGeocode(pos);
         }
-    }
-
-    public void setUpBasemapControls() {
-        // Create the segmented buttons
-        SegmentedButton buttons = (SegmentedButton) getActivity().findViewById(R.id.basemap_controls);
-        buttons.clearButtons();
-
-        ArrayList<String> buttonNames = new ArrayList<>();
-        buttonNames.add("map");
-        buttonNames.add("satellite");
-        buttonNames.add("hybrid");
-        buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
-
-        buttons.setOnClickListener((int index) -> {
-            switch (index) {
-                case 0:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    break;
-                case 1:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    break;
-                case 2:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                    break;
-            }
-        });
     }
 
     private void setupLocationUpdating(Context applicationContext) {

@@ -1,22 +1,40 @@
 package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.GoogleMap;
+import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
 public class MapHelper {
+
+    public static void setUpBasemapControls(SegmentedButton buttons, GoogleMap mMap) {
+        final String[] mapLabels = {"map", "satellite", "hybrid"};
+        final int[] mapTypes = {GoogleMap.MAP_TYPE_NORMAL,
+                                GoogleMap.MAP_TYPE_SATELLITE,
+                                GoogleMap.MAP_TYPE_HYBRID};
+
+        // match the clicked index of mapLabels to the element of mapTypes
+        buttons.clearButtons();
+        buttons.addButtons(mapLabels);
+        buttons.setOnClickListener((int index) -> { mMap.setMapType(mapTypes[index]); });
+    }
 
     public static void checkGooglePlay(FragmentActivity activity) {
         int googlePlayStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);

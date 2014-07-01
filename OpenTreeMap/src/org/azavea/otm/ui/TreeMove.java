@@ -22,7 +22,8 @@ public class TreeMove extends TreeDisplay {
         setUpMapIfNeeded();
         showPositionOnMap();
         plotMarker.setDraggable(true);
-        setUpBasemapControls();
+        SegmentedButton buttons = (SegmentedButton)findViewById(R.id.basemap_controls);
+        MapHelper.setUpBasemapControls(buttons, mMap);
     }
 
     public void submitTreeMove(View view) {
@@ -39,31 +40,5 @@ public class TreeMove extends TreeDisplay {
         editPlot.putExtra("plot", plot.getData().toString());
         setResult(RESULT_OK, editPlot);
         finish();
-    }
-
-    public void setUpBasemapControls() {
-        // Create the segmented buttons
-        SegmentedButton buttons = (SegmentedButton) findViewById(R.id.basemap_controls);
-        buttons.clearButtons();
-
-        ArrayList<String> buttonNames = new ArrayList<>();
-        buttonNames.add("map");
-        buttonNames.add("satellite");
-        buttonNames.add("hybrid");
-        buttons.addButtons(buttonNames.toArray(new String[buttonNames.size()]));
-
-        buttons.setOnClickListener((int index) -> {
-            switch (index) {
-                case 0:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    break;
-                case 1:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    break;
-                case 2:
-                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                    break;
-            }
-        });
     }
 }
