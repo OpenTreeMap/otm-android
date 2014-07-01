@@ -42,6 +42,7 @@ OpenTreeMapTests/project.properties
 .idea/workspace.xml
 .idea/libraries/*
 .idea/copyright/*
+.idea/.name
 
 # Gradle
 .gradle/
