@@ -176,14 +176,23 @@ public class Register extends FragmentActivity {
      * Helper functions to display info to the user
      */
     private void notifyUserThatAcctCreatedAndReturnToProfile() {
-        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.done_registering)
-                .setMessage(R.string.done_registering_msg)
-                .setPositiveButton(R.string.OK, (dialog1, which) -> startActivity(new Intent(App.getAppInstance(), TabLayout.class))).show();
+        new AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(R.string.done_registering)
+            .setMessage(R.string.done_registering_msg)
+            .setPositiveButton(
+                R.string.OK,
+                (dialog1, which) -> {
+                    startActivity(new Intent(App.getAppInstance(),
+                                             App.hasInstanceCode() ?
+                                             TabLayout.class :
+                                             InstanceSwitcherActivity.class));
+                })
+            .show();
     }
 
     private void alert(int msg) {
-        String s = this.getString(msg);
-        Toast.makeText(App.getAppInstance(), s, Toast.LENGTH_LONG).show();
+        alert(this.getString(msg));
     }
 
     private void alert(String msg) {
