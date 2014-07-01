@@ -143,6 +143,12 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="instance_switcher_empty_list_view" parent="@style/instance_switcher_label">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
     <style name="add_tree_label">
         <item name="android:background">@color/main_background_color</item>
         <item name="android:gravity">center</item>
