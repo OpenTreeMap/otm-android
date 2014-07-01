@@ -135,5 +135,6 @@
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
     <string name="instance_switcher_public_instances">See All Public Tree Maps</string>
+    <string name="instance_switcher_location_off_text">Location services must be turned on in order to see any nearby tree maps.</string>
 
 </resources>

@@ -44,6 +44,8 @@ public class InstanceSwitcherActivity extends Activity {
     private User user = null;
     private Location userLocation;
 
+    LocationManager locationManager;
+
     private ProgressDialog loadingInstances;
     private ProgressDialog loadingInstance;
 
@@ -51,6 +53,18 @@ public class InstanceSwitcherActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.instance_switcher_activity);
+
+        findViewById(R.id.login_button).setOnClickListener(v -> startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class)));
+        findViewById(R.id.logout_button).setOnClickListener(v -> {
+            App.getLoginManager().logOut(InstanceSwitcherActivity.this);
+            startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
+        });
+        findViewById(R.id.public_instances_button).setOnClickListener(v ->
+                startActivityForResult(
+                        new Intent(InstanceSwitcherActivity.this, PublicInstanceListDisplay.class),
+                        INSTANCE_SELECT_REQUEST_CODE));
+
+        locationManager = (LocationManager) App.getAppInstance().getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -118,11 +132,8 @@ public class InstanceSwitcherActivity extends Activity {
     }
 
     // TODO: backport this algorithm, it's more fault tolerant
-    private static Location getBestLocation(Criteria accuracyCrit) {
+    private Location getBestLocation(Criteria accuracyCrit) {
         Location location = null;
-        Context context = App.getAppInstance();
-        LocationManager locationManager =
-                (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager != null) {
             final String bestProvider = locationManager.getBestProvider(accuracyCrit, true);
@@ -149,12 +160,15 @@ public class InstanceSwitcherActivity extends Activity {
         super.onStart();
 
         // Only setup instance lists if the logged in user has changed or moved from their location
-        Criteria criteria = new Criteria();
+        final Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        Location newLocation = getBestLocation(criteria);
-        User newUser = App.getLoginManager().loggedInUser;
+        final Location newLocation = getBestLocation(criteria);
+        final User newUser = App.getLoginManager().loggedInUser;
 
-        if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
+        if (newLocation == null) {
+            final ListView instancesView = (ListView) findViewById(R.id.instance_list);
+            instancesView.setEmptyView(findViewById(R.id.instance_list_location_off));
+        } else if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
             RequestGenerator rg = new RequestGenerator();
 
             loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
@@ -168,16 +182,6 @@ public class InstanceSwitcherActivity extends Activity {
 
         userLocation = newLocation;
         user = newUser;
-
-        findViewById(R.id.login_button).setOnClickListener(v -> startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class)));
-        findViewById(R.id.logout_button).setOnClickListener(v -> {
-            App.getLoginManager().logOut(InstanceSwitcherActivity.this);
-            startActivity(new Intent(InstanceSwitcherActivity.this, LoginActivity.class));
-        });
-        findViewById(R.id.public_instances_button).setOnClickListener(v ->
-                startActivityForResult(
-                        new Intent(InstanceSwitcherActivity.this, PublicInstanceListDisplay.class),
-                        INSTANCE_SELECT_REQUEST_CODE));
     }
 
     /**
