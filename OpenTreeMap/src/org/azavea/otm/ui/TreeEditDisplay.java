@@ -145,7 +145,13 @@ public class TreeEditDisplay extends TreeDisplay {
                 fieldList.addView(fieldGroup);
             }
         }
-        first.requestFocus();
+
+        // TODO: This whole Activity shouldn't have made it here if first == null
+        // it would mean that the user has no editable fields, and
+        // this produces an empty edit form.
+        if (first != null) {
+            first.requestFocus();
+        }
 
         setupCircumferenceField(layout);
         setupSpeciesSelector();
