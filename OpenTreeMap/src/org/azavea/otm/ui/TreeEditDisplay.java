@@ -407,7 +407,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
                 @Override
                 protected void handleFailureMessage(Throwable e, String responseBody) {
-                    Log.e("REST", responseBody);
+                    Log.e("REST", responseBody, e);
                     saveDialog.dismiss();
                     Toast.makeText(App.getAppInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
                     Log.e(App.LOG_TAG, "Could not save tree", e);
