@@ -60,7 +60,7 @@ public class RequestGenerator {
     }
 
     /*
-      Helper method used to access a endpoint whose return value
+      Helper method used to access an endpoint whose return value
       varies by whether the user is logged in.  Try to make the
       request with the user logged in, fall back on non-logged in if
       failure.
@@ -177,7 +177,7 @@ public class RequestGenerator {
     }
 
     public void getAllSpecies(JsonHttpResponseHandler handler) {
-        client.get(getInstanceNameUri("species"), null, handler);
+        userOptionalGet(getInstanceNameUri("species"), null, handler);
     }
 
     public void deleteCurrentTreeOnPlot(Context context, int plotId, JsonHttpResponseHandler handler)
