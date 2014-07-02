@@ -278,4 +278,9 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+
+    <style name="nearby_list_row" parent="@style/general_list_row_text">
+        <item name="android:padding">15dp</item>
+        <item name="android:background">@drawable/instance_switcher_element_border</item>
+    </style>
 </resources>
