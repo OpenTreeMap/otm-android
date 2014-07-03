@@ -120,12 +120,12 @@ public class InstanceSwitcherActivity extends Activity {
     private class RedirectCallback implements Callback {
         @Override
         public boolean handleMessage(Message msg) {
+            Intent intent = new Intent(InstanceSwitcherActivity.this, TabLayout.class);
+            InstanceSwitcherActivity.this.startActivity(intent);
+
             if (loadingInstance != null) {
                 loadingInstance.dismiss();
             }
-
-            Intent intent = new Intent(InstanceSwitcherActivity.this, TabLayout.class);
-            InstanceSwitcherActivity.this.startActivity(intent);
             InstanceSwitcherActivity.this.finish();
             return true;
         }
