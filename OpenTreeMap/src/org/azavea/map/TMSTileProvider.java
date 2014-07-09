@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.azavea.otm.App;
-import org.azavea.otm.InstanceInfo;
+import org.azavea.otm.data.InstanceInfo;
 import org.json.JSONArray;
 
 import android.graphics.Bitmap;

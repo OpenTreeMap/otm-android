@@ -4,7 +4,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
-import org.azavea.otm.InstanceInfo.InstanceExtent;
+import org.azavea.otm.data.InstanceInfo.InstanceExtent;
 import org.json.JSONObject;
 
 import android.content.Context;

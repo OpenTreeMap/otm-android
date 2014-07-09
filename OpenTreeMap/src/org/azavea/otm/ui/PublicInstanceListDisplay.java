@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.azavea.otm.App;
-import org.azavea.otm.InstanceInfo;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.R;
 import org.azavea.otm.adapters.LinkedHashMapAdapter;
 import org.azavea.otm.rest.RequestGenerator;

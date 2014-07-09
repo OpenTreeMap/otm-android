@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.azavea.otm.App;
-import org.azavea.otm.InstanceInfo;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Password;

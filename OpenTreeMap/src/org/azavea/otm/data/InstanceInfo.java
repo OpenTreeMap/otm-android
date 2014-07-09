@@ -1,6 +1,6 @@
-package org.azavea.otm;
+package org.azavea.otm.data;
 
-import org.azavea.otm.data.Model;
+import org.azavea.otm.App;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

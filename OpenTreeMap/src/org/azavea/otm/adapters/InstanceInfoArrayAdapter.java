@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.azavea.otm.InstanceInfo;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.R;
 
 import java.util.LinkedHashMap;
