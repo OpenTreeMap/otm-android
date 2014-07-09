@@ -3,7 +3,9 @@ package org.azavea.otm;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -40,7 +43,9 @@ import android.widget.Toast;
 
 public class Field {
     public static final String TREE_SPECIES = "tree.species";
-    public static final Object TREE_DIAMETER = "tree.diameter";
+    public static final String TREE_DIAMETER = "tree.diameter";
+
+    public static final String DATE_TYPE = "date";
 
     // Any choices associated with this field, keyed by value with order
     // preserved
@@ -242,12 +247,16 @@ public class Field {
                 this.valueView = choiceButton;
                 setupChoiceDisplay(choiceButton, value);
 
-            } else if (TREE_SPECIES.equals(key)) {
+            } else if (TREE_SPECIES.equals(key) || DATE_TYPE.equals(format)) {
                 edit.setVisibility(View.GONE);
                 unitLabel.setVisibility(View.GONE);
                 choiceButton.setVisibility(View.VISIBLE);
                 this.valueView = choiceButton;
-                setupSpeciesField(choiceButton, value, model);
+                if (TREE_SPECIES.equals(key)) {
+                    setupSpeciesField(choiceButton, value, model);
+                } else {
+                    setupDateField(choiceButton, value, context);
+                }
             } else {
                 String safeValue = (value != null && !value.equals(null)) ? value.toString() : "";
                 edit.setVisibility(View.VISIBLE);
@@ -307,6 +316,28 @@ public class Field {
         } else {
             choiceButton.setText(R.string.unspecified_field_value);
         }
+    }
+
+    private void setupDateField(final Button choiceButton, final Object value, final Context context) {
+        String timestamp = (String) value;
+        if (timestamp != null) {
+            final String formattedDate = formatTimestampForDisplay(timestamp);
+            choiceButton.setText(formattedDate);
+            choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
+        } else {
+            choiceButton.setText(R.string.unspecified_field_value);
+        }
+        choiceButton.setOnClickListener(v -> {
+            final String setTimestamp = (String) choiceButton.getTag(R.id.choice_button_value_tag);
+            final Calendar cal = getCalendarForTimestamp(context, setTimestamp);
+            new DatePickerDialog(context, (view, year, month, day) -> {
+                final String updatedTimestamp = getTimestamp(context, year, month, day);
+                final String displayDate = formatTimestampForDisplay(updatedTimestamp);
+
+                choiceButton.setText(displayDate);
+                choiceButton.setTag(R.id.choice_button_value_tag, updatedTimestamp);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
     }
 
     public boolean hasChoices() {
@@ -388,8 +419,8 @@ public class Field {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
-            } else if(format.equals("date")) {
-                return formatDateForDisplay((String) value);
+            } else if (format.equals(DATE_TYPE)) {
+                return formatTimestampForDisplay((String) value);
             }
         }
         return value + " " + this.unitText;
@@ -404,28 +435,44 @@ public class Field {
         }
     }
 
-    private String formatDateForDisplay(String timestamp) {
-        String displayPattern = App.getCurrentInstance().getShortDateFormat();
-        String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+    private Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
+        final Calendar cal = new GregorianCalendar();
+        final SimpleDateFormat timestampFormatter =
+                new SimpleDateFormat(context.getString(R.string.server_date_format));
 
-        return formatDate(timestamp, serverPattern, displayPattern);
+        if (setTimestamp != null) {
+
+            try {
+                cal.setTime(timestampFormatter.parse(setTimestamp));
+            } catch (ParseException e) {
+                Log.e(App.LOG_TAG, "Error parsing date stored on tag.", e);
+            }
+        }
+        return cal;
     }
 
-    private String formatDateForSerializing(String editedDate) {
-        String displayPattern = App.getCurrentInstance().getShortDateFormat();
-        String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+    private String getTimestamp(Context context, int year, int month, int day) {
+        final SimpleDateFormat timestampFormatter =
+                new SimpleDateFormat(context.getString(R.string.server_date_format));
+        final Calendar updatedCal = new GregorianCalendar();
+        updatedCal.set(Calendar.YEAR, year);
+        updatedCal.set(Calendar.MONTH, month);
+        updatedCal.set(Calendar.DAY_OF_MONTH, day);
 
-        return formatDate(editedDate, displayPattern, serverPattern);
+        return timestampFormatter.format(updatedCal.getTime());
     }
 
-    private String formatDate(String inputDate, String inputPattern, String outputPattern) {
-        SimpleDateFormat inputFormatter = new SimpleDateFormat(inputPattern);
-        SimpleDateFormat outputFormatter = new SimpleDateFormat(outputPattern);
+    private String formatTimestampForDisplay(String timestamp) {
+        final String displayPattern = App.getCurrentInstance().getShortDateFormat();
+        final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+
+        final SimpleDateFormat timestampFormatter = new SimpleDateFormat(serverPattern);
+        final SimpleDateFormat displayFormatter = new SimpleDateFormat(displayPattern);
         try {
-            Date date = inputFormatter.parse(inputDate);
-            return outputFormatter.format(date);
+            final Date date = timestampFormatter.parse(timestamp);
+            return displayFormatter.format(date);
         } catch (ParseException e) {
-            return "";
+            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
     }
 
