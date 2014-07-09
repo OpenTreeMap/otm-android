@@ -86,14 +86,6 @@ public class Tree extends Model {
         data.put("species_name", speciesName);
     }
 
-    public String getTreeOwner() throws JSONException {
-        return data.getString("tree_owner");
-    }
-
-    public void setTreeOwner(String treeOwner) throws JSONException {
-        data.put("tree_owner", treeOwner);
-    }
-
     public String getDatePlanted() throws JSONException {
         return data.getString("date_planted");
     }
