@@ -106,7 +106,7 @@
     <string name="circumference_label">Circumference</string>
 
     <!-- Internationalization options -->
-    <string name="date_time_format">MMMM dd, yyyy h:mmaa</string>
+    <string name="server_date_format">yyyy-MM-dd</string>
     <string name="iso_locale_language">English</string>
     <string name="iso_locale_country">US</string>
     <string name="default_measure_units">in</string>

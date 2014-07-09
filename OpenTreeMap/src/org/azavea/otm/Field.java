@@ -1,6 +1,9 @@
 package org.azavea.otm;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -385,6 +388,8 @@ public class Field {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
+            } else if(format.equals("date")) {
+                return formatDateForDisplay((String) value);
             }
         }
         return value + " " + this.unitText;
@@ -396,6 +401,31 @@ public class Field {
             return String.format("%." + digits + "f", d);
         } catch (ClassCastException e) {
             return value.toString();
+        }
+    }
+
+    private String formatDateForDisplay(String timestamp) {
+        String displayPattern = App.getCurrentInstance().getShortDateFormat();
+        String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+
+        return formatDate(timestamp, serverPattern, displayPattern);
+    }
+
+    private String formatDateForSerializing(String editedDate) {
+        String displayPattern = App.getCurrentInstance().getShortDateFormat();
+        String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+
+        return formatDate(editedDate, displayPattern, serverPattern);
+    }
+
+    private String formatDate(String inputDate, String inputPattern, String outputPattern) {
+        SimpleDateFormat inputFormatter = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormatter = new SimpleDateFormat(outputPattern);
+        try {
+            Date date = inputFormatter.parse(inputDate);
+            return outputFormatter.format(date);
+        } catch (ParseException e) {
+            return "";
         }
     }
 

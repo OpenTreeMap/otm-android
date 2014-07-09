@@ -79,6 +79,14 @@ public class InstanceInfo extends Model {
         return urlName;
     }
 
+    public String getShortDateFormat() {
+        return (String) getField("short_date_format");
+    }
+
+    public String getLongDateFormat() {
+        return (String) getField("date_format");
+    }
+
     public JSONArray getDisplayFieldKeys() {
         return (JSONArray) getField("field_key_groups");
     }
