@@ -57,7 +57,7 @@ public class Plot extends Model {
     private void setupPlotDetails(JSONObject data) {
         try {
             this.plotDetails = this.data.optJSONObject("plot");
-            if (!plotDetails.equals(null) && this.hasTree()) {
+            if (!JSONObject.NULL.equals(plotDetails) && this.hasTree()) {
                 Tree tree = this.getTree();
                 JSONObject speciesData = tree.getSpecies();
                 if (speciesData != null) {

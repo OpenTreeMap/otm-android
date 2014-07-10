@@ -33,7 +33,7 @@ public class MapHelper {
         // match the clicked index of mapLabels to the element of mapTypes
         buttons.clearButtons();
         buttons.addButtons(mapLabels);
-        buttons.setOnClickListener((int index) -> { mMap.setMapType(mapTypes[index]); });
+        buttons.setOnClickListener((int index) -> mMap.setMapType(mapTypes[index]));
     }
 
     public static void checkGooglePlay(FragmentActivity activity) {

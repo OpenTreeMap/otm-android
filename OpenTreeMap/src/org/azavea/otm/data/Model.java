@@ -8,7 +8,7 @@ public abstract class Model {
 
     protected String safeGetString(String key) {
         try {
-            return data.get(key).equals(null) ? null : data.getString(key);
+            return data.isNull(key) ? null : data.getString(key);
         } catch (JSONException e) {
             return null;
         }
@@ -39,10 +39,6 @@ public abstract class Model {
     }
 
     public Object getField(String key) {
-        try {
-            return data.get(key);
-        } catch (JSONException e) {
-            return null;
-        }
+        return data.isNull(key) ? null : data.opt(key);
     }
 }
