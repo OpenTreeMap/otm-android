@@ -85,30 +85,6 @@ public class InstanceSwitcherActivity extends Activity {
         }
     }
 
-    private class InstanceListHandler extends JsonHttpResponseHandler {
-        @Override
-        public void onSuccess(JSONObject data) {
-            final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
-            // TODO: Extract strings
-            instances.put("My Tree Maps", inflateForKey(data, "personal"));
-            instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
-
-            final ListView instancesView = (ListView) findViewById(R.id.instance_list);
-            InstanceInfoArrayAdapter adapter = new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, userLocation);
-            instancesView.setAdapter(adapter);
-            instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
-
-            if (loadingInstances != null) {
-                loadingInstances.dismiss();
-            }
-
-            instancesView.setOnItemClickListener((parent, v, position, id) -> {
-                InstanceInfo instance = adapter.getItem(position).value;
-                redirectToTabLayout(instance);
-            });
-        }
-    }
-
     private void redirectToTabLayout(InstanceInfo instance) {
         loadingInstance = ProgressDialog.show(this,
                 getString(R.string.instance_switcher_dialog_heading),
@@ -165,17 +141,50 @@ public class InstanceSwitcherActivity extends Activity {
         final Location newLocation = getBestLocation(criteria);
         final User newUser = App.getLoginManager().loggedInUser;
 
-        if (newLocation == null) {
-            final ListView instancesView = (ListView) findViewById(R.id.instance_list);
-            instancesView.setEmptyView(findViewById(R.id.instance_list_location_off));
-        } else if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
+        if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
             RequestGenerator rg = new RequestGenerator();
+
+            // TODO: Rather than using 0,0 when the GPS is off, we should hit a different endpoint to retrieve just "my tree maps"
+            double latitude = 0;
+            double longitude = 0;
+            if (newLocation != null) {
+                latitude = newLocation.getLatitude();
+                longitude = newLocation.getLongitude();
+            }
 
             loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
                     getString(R.string.instance_switcher_loading_instances));
-            rg.getInstancesNearLocation(newLocation.getLatitude(),
-                    newLocation.getLongitude(),
-                    new InstanceListHandler());
+            rg.getInstancesNearLocation(latitude, longitude,
+                    new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(JSONObject data) {
+                            final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
+                            // TODO: Extract strings
+                            instances.put("My Tree Maps", inflateForKey(data, "personal"));
+                            instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
+
+                            final ListView instancesView = (ListView) findViewById(R.id.instance_list);
+                            InstanceInfoArrayAdapter adapter =
+                                    new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, newLocation);
+
+                            instancesView.setAdapter(adapter);
+
+                            if (newLocation == null) {
+                                instancesView.setEmptyView(findViewById(R.id.instance_list_location_off));
+                            } else {
+                                instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
+                            }
+
+                            if (loadingInstances != null) {
+                                loadingInstances.dismiss();
+                            }
+
+                            instancesView.setOnItemClickListener((parent, v, position, id) -> {
+                                InstanceInfo instance = adapter.getItem(position).value;
+                                redirectToTabLayout(instance);
+                            });
+                        }
+                    });
 
             updateAccountElements();
         }
