@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.azavea.otm.data.InstanceInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.azavea.lists.NearbyList;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.w3c.dom.Document;

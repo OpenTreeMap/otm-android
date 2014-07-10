@@ -342,8 +342,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
     /**
      * Species selector has its own activity and workflow. If it's enabled for
-     * this implementation, it should have a field with an owner of
-     * tree.species. Since Activities with results can only be started from
+     * this implementation. Since Activities with results can only be started from
      * within other activities, this is created here, and applied to the view
      * contained by the field class
      */
@@ -355,12 +354,10 @@ public class TreeEditDisplay extends TreeDisplay {
         };
 
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-            for (Entry<String, Field> fieldEntry : group.getFields().entrySet()) {
-                Field field = fieldEntry.getValue();
-                if (field.owner != null && field.owner.equals("tree.species")) {
-                    speciesField = field;
-                    speciesField.attachClickListener(speciesClickListener);
-                }
+            if (group.getFields().containsKey(Field.TREE_SPECIES)) {
+                speciesField = group.getFields().get(Field.TREE_SPECIES);
+                speciesField.attachClickListener(speciesClickListener);
+                break;
             }
         }
 

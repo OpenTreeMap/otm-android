@@ -1,6 +1,11 @@
 package org.azavea.otm;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +24,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,8 +42,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Field {
-    private static final String TREE_SPECIES = "tree.species";
-    private static final Object TREE_DIAMETER = "tree.diameter";
+    public static final String TREE_SPECIES = "tree.species";
+    public static final String TREE_DIAMETER = "tree.diameter";
+
+    public static final String DATE_TYPE = "date";
 
     // Any choices associated with this field, keyed by value with order
     // preserved
@@ -48,8 +56,7 @@ public class Field {
     private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
     private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
 
-    // This is the view control, either button or EditText, which has the user
-    // value
+    // This is the view control, either button or EditText, which has the user value
     private View valueView = null;
 
     /**
@@ -87,23 +94,17 @@ public class Field {
      * List of key/val pairs of choice options for this field
      */
     public JSONArray choicesDef = null;
-    /**
-     * Refers to a key in the json which determines this field. Currently it is
-     * only setup to support species list picker
-     */
-    public String owner = null;
 
     public String infoUrl = null;
 
     public boolean editViewOnly = false;
 
-    protected Field(String key, String label, boolean canEdit, String format, JSONArray choices, String owner,
+    protected Field(String key, String label, boolean canEdit, String format, JSONArray choices,
                     String infoUrl, boolean editViewOnly, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
         this.format = format;
-        this.owner = owner;
         this.infoUrl = infoUrl;
         this.editViewOnly = editViewOnly;
         this.unitText = units;
@@ -139,17 +140,11 @@ public class Field {
         String units = fieldDef.optString("units");
         int digits = fieldDef.optInt("digits");
 
-        // tree.species gets special rendering rules
-        String owner = "";
-        if (key.equals(TREE_SPECIES)) {
-            owner = TREE_SPECIES;
-        }
-
         // NOTE: Not enabled for OTM2 yet
         String infoUrl = fieldDef.optString("info_url");
         boolean editViewOnly = false;
 
-        return new Field(key, label, canEdit, format, choices, owner, infoUrl, editViewOnly, units, digits);
+        return new Field(key, label, canEdit, format, choices, infoUrl, editViewOnly, units, digits);
     }
 
     /*
@@ -164,52 +159,37 @@ public class Field {
         View infoButton = container.findViewById(R.id.info);
         View pendingButton = container.findViewById(R.id.pending);
 
-        if (this.owner != null && this.owner.equals(TREE_SPECIES)) {
+        if (key.equals(TREE_SPECIES)) {
             return renderSpeciesFields(layout, model, context, container, label, fieldValue);
         }
 
         // set the label (simple)
         label.setText(this.label);
 
-        // is this field pending (based on its own notion of pending or its
-        // owners.)
-        Boolean pending = (this.owner == null) ? isKeyPending(this.key, model) : isKeyPending(this.owner, model);
+        // is this field pending (based on its own notion of pending.)
+        Boolean pending = isKeyPending(this.key, model);
 
-        // Determine the current value of the field and update the ui. (Based on
-        // current
-        // value, value of simple pending edit, or value of pending edit where
-        // we have
-        // an owner field.
+        // Determine the current value of the field and update the ui. (Based on current
+        // value or value of simple pending edit
         String value;
-        if (!pending || this.owner == null) {
+        if (!pending) {
             value = formatUnit(getValueForKey(this.key, model));
         } else {
-            value = getValueForLatestPendingEditByRelatedField(this.key, this.owner, model);
+            value = getValueForLatestPendingEditByRelatedField(this.key, model);
         }
         fieldValue.setText(value);
 
-        // If the key is pending, display the arrow UI, and set up its click
-        // handler
+        // If the key is pending, display the arrow UI, and set up its click handler
         //
-        // Note that the semantics of the bindPendingEditClickHandler function
-        // take
+        // Note that the semantics of the bindPendingEditClickHandler function take
         // a key into the pending edit array, and an optional related field.
-        //
-        // Where owner is defined, the owner is what we want to use to look up
-        // pending edits (and this.key
-        // becomes the related field.
         if (pending) {
-            if (this.owner != null) {
-                bindPendingEditClickHandler(pendingButton, this.owner, this.key, model, context);
-            } else {
-                bindPendingEditClickHandler(pendingButton, this.key, null, model, context);
-            }
+            bindPendingEditClickHandler(pendingButton, this.key, null, model, context);
             pendingButton.setVisibility(View.VISIBLE);
         }
 
         // If the field has a URL attached to it as an info description (IE for
-        // pests)
-        // display the link.
+        // pests) display the link.
         if (!TextUtils.isEmpty(this.infoUrl)) {
             infoButton.setVisibility(View.VISIBLE);
             bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
@@ -221,8 +201,7 @@ public class Field {
     private View renderSpeciesFields(LayoutInflater layout, Plot model, Context context, View container,
                                      TextView label, TextView fieldValue) {
 
-        // tree.species gets exploded to a double row with sci name and common
-        // name
+        // tree.species gets exploded to a double row with sci name and common name
         label.setText("Scientific Name");
         fieldValue.setText(formatUnit(model.getScienticName()));
 
@@ -268,12 +247,16 @@ public class Field {
                 this.valueView = choiceButton;
                 setupChoiceDisplay(choiceButton, value);
 
-            } else if (!TextUtils.isEmpty(this.owner)) {
+            } else if (TREE_SPECIES.equals(key) || DATE_TYPE.equals(format)) {
                 edit.setVisibility(View.GONE);
                 unitLabel.setVisibility(View.GONE);
                 choiceButton.setVisibility(View.VISIBLE);
                 this.valueView = choiceButton;
-                setupOwnedField(choiceButton, value, model);
+                if (TREE_SPECIES.equals(key)) {
+                    setupSpeciesField(choiceButton, value, model);
+                } else {
+                    setupDateField(choiceButton, value, context);
+                }
             } else {
                 String safeValue = (value != null && !value.equals(null)) ? value.toString() : "";
                 edit.setVisibility(View.VISIBLE);
@@ -318,25 +301,43 @@ public class Field {
         return dynamicDbh;
     }
 
-    private void setupOwnedField(Button choiceButton, Object value, Model model) {
-        if (this.owner.equals(TREE_SPECIES)) {
-            JSONObject json = model.getData();
-            Object species = getValueForKey(this.owner, json);
+    private void setupSpeciesField(Button choiceButton, Object value, Model model) {
+        JSONObject json = model.getData();
 
-            // species could either be truly null, or an actual but empty JSONObject {} 
-            if (species != null && !species.equals(null)) {
-                // Set the button text to the common and sci name
-                String sciName = (String) getValueForKey("tree.species.scientific_name", json);
-                String commonName = (String) getValueForKey("tree.species.common_name", json);
-                choiceButton.setText(commonName + "\n" + sciName);
-                Species speciesValue = new Species();
-                speciesValue.setData((JSONObject) species);
-                this.setValue(speciesValue);
-            } else {
-                choiceButton.setText(R.string.unspecified_field_value);
-            }
+        // species could either be truly null, or an actual but empty JSONObject {}
+        if (value != null && !value.equals(null)) {
+            // Set the button text to the common and sci name
+            String sciName = (String) getValueForKey("tree.species.scientific_name", json);
+            String commonName = (String) getValueForKey("tree.species.common_name", json);
+            choiceButton.setText(commonName + "\n" + sciName);
+            Species speciesValue = new Species();
+            speciesValue.setData((JSONObject) value);
+            this.setValue(speciesValue);
+        } else {
+            choiceButton.setText(R.string.unspecified_field_value);
         }
+    }
 
+    private void setupDateField(final Button choiceButton, final Object value, final Context context) {
+        String timestamp = (String) value;
+        if (timestamp != null) {
+            final String formattedDate = formatTimestampForDisplay(timestamp);
+            choiceButton.setText(formattedDate);
+            choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
+        } else {
+            choiceButton.setText(R.string.unspecified_field_value);
+        }
+        choiceButton.setOnClickListener(v -> {
+            final String setTimestamp = (String) choiceButton.getTag(R.id.choice_button_value_tag);
+            final Calendar cal = getCalendarForTimestamp(context, setTimestamp);
+            new DatePickerDialog(context, (view, year, month, day) -> {
+                final String updatedTimestamp = getTimestamp(context, year, month, day);
+                final String displayDate = formatTimestampForDisplay(updatedTimestamp);
+
+                choiceButton.setText(displayDate);
+                choiceButton.setTag(R.id.choice_button_value_tag, updatedTimestamp);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
     }
 
     public boolean hasChoices() {
@@ -393,8 +394,6 @@ public class Field {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         } else if (this.format.equalsIgnoreCase("int")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else if (this.format.equalsIgnoreCase("dateTime")) {
-            edit.setInputType(InputType.TYPE_CLASS_DATETIME);
         } else {
             edit.setInputType(InputType.TYPE_CLASS_TEXT);
         }
@@ -420,6 +419,8 @@ public class Field {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
+            } else if (format.equals(DATE_TYPE)) {
+                return formatTimestampForDisplay((String) value);
             }
         }
         return value + " " + this.unitText;
@@ -431,6 +432,47 @@ public class Field {
             return String.format("%." + digits + "f", d);
         } catch (ClassCastException e) {
             return value.toString();
+        }
+    }
+
+    private Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
+        final Calendar cal = new GregorianCalendar();
+        final SimpleDateFormat timestampFormatter =
+                new SimpleDateFormat(context.getString(R.string.server_date_format));
+
+        if (setTimestamp != null) {
+
+            try {
+                cal.setTime(timestampFormatter.parse(setTimestamp));
+            } catch (ParseException e) {
+                Log.e(App.LOG_TAG, "Error parsing date stored on tag.", e);
+            }
+        }
+        return cal;
+    }
+
+    private String getTimestamp(Context context, int year, int month, int day) {
+        final SimpleDateFormat timestampFormatter =
+                new SimpleDateFormat(context.getString(R.string.server_date_format));
+        final Calendar updatedCal = new GregorianCalendar();
+        updatedCal.set(Calendar.YEAR, year);
+        updatedCal.set(Calendar.MONTH, month);
+        updatedCal.set(Calendar.DAY_OF_MONTH, day);
+
+        return timestampFormatter.format(updatedCal.getTime());
+    }
+
+    private String formatTimestampForDisplay(String timestamp) {
+        final String displayPattern = App.getCurrentInstance().getShortDateFormat();
+        final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
+
+        final SimpleDateFormat timestampFormatter = new SimpleDateFormat(serverPattern);
+        final SimpleDateFormat displayFormatter = new SimpleDateFormat(displayPattern);
+        try {
+            final Date date = timestampFormatter.parse(timestamp);
+            return displayFormatter.format(date);
+        } catch (ParseException e) {
+            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
     }
 
@@ -521,20 +563,14 @@ public class Field {
         if (this.valueView != null) {
             Object currentValue = getEditedValue();
 
-            // If this field is owned by another field, save the current
-            // value to the owner, not to the displayed field
-            String updateKey = this.key;
-            if (!TextUtils.isEmpty(this.owner)) {
-                updateKey = this.owner;
-            }
             // If the model doesn't have they key, add it. This creates
             // a tree when tree values are added to a plot with no tree
             Plot p = (Plot) model;
-            if (updateKey.split("[.]")[0].equals("tree") && !p.hasTree() && currentValue != null) {
+            if (key.split("[.]")[0].equals("tree") && !p.hasTree() && currentValue != null) {
                 p.createTree();
             }
 
-            setValueForKey(updateKey, model.getData(), currentValue);
+            setValueForKey(key, model.getData(), currentValue);
         }
     }
 
@@ -594,7 +630,7 @@ public class Field {
      * selector from the calling activity.
      */
     public void setValue(Object value) {
-        if (this.owner != null && this.owner.equals(TREE_SPECIES)) {
+        if (key.equals(TREE_SPECIES)) {
             Species species = (Species) value;
 
             if (this.valueView != null) {
@@ -693,8 +729,7 @@ public class Field {
 
     // ??REFACTOR: the signature suggests that this belongs on the Plot object.
 
-    private static String getValueForLatestPendingEditByRelatedField(String relatedFieldKey, String pendingKey,
-                                                                     Plot plot) {
+    private static String getValueForLatestPendingEditByRelatedField(String pendingKey, Plot plot) {
         // get the pending edit description object for this plot
         PendingEditDescription ped;
         try {
@@ -723,8 +758,12 @@ public class Field {
             return "";
         }
 
-        // now give me the related field for that pending edit.
-        String value = mostRecentPendingEdit.getValue(relatedFieldKey);
+        String value;
+        try {
+            value = mostRecentPendingEdit.getValue();
+        } catch (JSONException e) {
+            value = null;
+        }
 
         return value;
 

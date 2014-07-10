@@ -1,6 +1,6 @@
-package org.azavea.otm;
+package org.azavea.otm.data;
 
-import org.azavea.otm.data.Model;
+import org.azavea.otm.App;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +77,14 @@ public class InstanceInfo extends Model {
 
     public String getUrlName() {
         return urlName;
+    }
+
+    public String getShortDateFormat() {
+        return (String) getField("short_date_format");
+    }
+
+    public String getLongDateFormat() {
+        return (String) getField("date_format");
     }
 
     public JSONArray getDisplayFieldKeys() {

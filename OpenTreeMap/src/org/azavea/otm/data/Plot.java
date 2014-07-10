@@ -162,14 +162,6 @@ public class Plot extends Model {
         plotDetails.put("address_zip", addressZip);
     }
 
-    public String getDataOwner() throws JSONException {
-        return data.getString("data_owner");
-    }
-
-    public void setDataOwner(String dataOwner) throws JSONException {
-        data.put("data_owner", dataOwner);
-    }
-
     public String getLastUpdated() throws JSONException {
         return data.getJSONObject("latest_update").getString("created");
     }
