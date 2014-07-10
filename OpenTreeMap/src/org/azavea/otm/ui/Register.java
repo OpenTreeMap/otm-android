@@ -182,12 +182,11 @@ public class Register extends FragmentActivity {
             .setMessage(R.string.done_registering_msg)
             .setPositiveButton(
                 R.string.OK,
-                (dialog1, which) -> {
-                    startActivity(new Intent(App.getAppInstance(),
-                                             App.hasInstanceCode() ?
-                                             TabLayout.class :
-                                             InstanceSwitcherActivity.class));
-                })
+                (dialog1, which) -> startActivity(new Intent(App.getAppInstance(),
+                                         App.hasInstanceCode() ?
+                                         TabLayout.class :
+                                         InstanceSwitcherActivity.class))
+            )
             .show();
     }
 
