@@ -320,7 +320,8 @@ public class Field {
 
     private void setupDateField(final Button choiceButton, final Object value, final Context context) {
         String timestamp = (String) value;
-        if (timestamp != null) {
+        // TODO: Handle this bizarre json null equality in a better way
+        if (timestamp != null && !timestamp.equals(null)) {
             final String formattedDate = formatTimestampForDisplay(timestamp);
             choiceButton.setText(formattedDate);
             choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
