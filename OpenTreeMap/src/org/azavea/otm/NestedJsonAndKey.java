@@ -18,7 +18,7 @@ public class NestedJsonAndKey {
     }
 
     public void set(Object newValue) throws JSONException {
-        if (newValue == null || newValue.equals(null)) {
+        if (JSONObject.NULL.equals(newValue)) {
             json.put(key, JSONObject.NULL);
 
         } else if (newValue instanceof Integer) {

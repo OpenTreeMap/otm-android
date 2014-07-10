@@ -258,7 +258,7 @@ public class Field {
                     setupDateField(choiceButton, value, context);
                 }
             } else {
-                String safeValue = (value != null && !value.equals(null)) ? value.toString() : "";
+                String safeValue = (!JSONObject.NULL.equals(value)) ? value.toString() : "";
                 edit.setVisibility(View.VISIBLE);
                 choiceButton.setVisibility(View.GONE);
                 edit.setText(safeValue);
@@ -305,7 +305,7 @@ public class Field {
         JSONObject json = model.getData();
 
         // species could either be truly null, or an actual but empty JSONObject {}
-        if (value != null && !value.equals(null)) {
+        if (!JSONObject.NULL.equals(value)) {
             // Set the button text to the common and sci name
             String sciName = (String) getValueForKey("tree.species.scientific_name", json);
             String commonName = (String) getValueForKey("tree.species.common_name", json);
@@ -320,8 +320,7 @@ public class Field {
 
     private void setupDateField(final Button choiceButton, final Object value, final Context context) {
         String timestamp = (String) value;
-        // TODO: Handle this bizarre json null equality in a better way
-        if (timestamp != null && !timestamp.equals(null)) {
+        if (!JSONObject.NULL.equals(value)) {
             final String formattedDate = formatTimestampForDisplay(timestamp);
             choiceButton.setText(formattedDate);
             choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
@@ -350,9 +349,9 @@ public class Field {
         choiceButton.setText(R.string.unspecified_field_value);
 
         // value could be a null json value, have to check both.
-        if (value != null && !value.equals(null)) {
+        if (!JSONObject.NULL.equals(value)) {
             Choice currentChoice = choiceMap.get(value);
-            if (!currentChoice.equals(null)) {
+            if (!JSONObject.NULL.equals(currentChoice)) {
                 choiceButton.setText(currentChoice.getText());
             }
         }
@@ -368,7 +367,7 @@ public class Field {
             Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
             int checkedChoiceIndex = -1;
 
-            if (currentValue != null && !currentValue.equals(null)) {
+            if (!JSONObject.NULL.equals(currentValue)) {
                 checkedChoiceIndex = editedField.choiceSelectionIndex.indexOf(currentValue);
             }
 
@@ -405,7 +404,7 @@ public class Field {
      */
     public String formatUnit(Object value) {
         // If there is no value, return an unspecified value
-        if (value == null || value.equals(null) || value.equals("")) {
+        if (JSONObject.NULL.equals(value) || value.equals("")) {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
         if (hasChoices()) {
@@ -520,7 +519,7 @@ public class Field {
             throws JSONException {
         if (index < keys.length - 1 && keys.length > 1) {
             JSONObject child;
-            if (json.get(keys[index]).equals(null) && createNodeIfEmpty) {
+            if (json.isNull(keys[index]) && createNodeIfEmpty) {
                 child = new JSONObject();
                 json.put(keys[index], child);
             } else {
@@ -605,7 +604,7 @@ public class Field {
             } else if (this.valueView instanceof Button) {
                 Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
 
-                if (choiceVal == null || choiceVal.equals(null) || TextUtils.isEmpty(choiceVal.toString())) {
+                if (JSONObject.NULL.equals(choiceVal) || TextUtils.isEmpty(choiceVal.toString())) {
                     return null;
                 }
 
