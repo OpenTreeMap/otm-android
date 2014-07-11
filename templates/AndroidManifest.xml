@@ -9,7 +9,7 @@
         android:protectionLevel="signature" />
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="10"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="%(packagename)s.permission.MAPS_RECEIVE" />
