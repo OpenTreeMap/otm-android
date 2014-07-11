@@ -48,10 +48,10 @@ public class InstanceInfoArrayAdapter extends LinkedHashMapAdapter<InstanceInfo>
             holder = (InstanceHolder) convertView.getTag();
         }
         // gather data from instanceInfo in scope to use in subviews
-        Location instanceLocation = new Location(userLocation);
+        Location instanceLocation = new Location("");
         instanceLocation.setLatitude(element.getLat());
         instanceLocation.setLongitude(element.getLon());
-        String distance = distanceToString(userLocation.distanceTo(instanceLocation), true) + " away";
+        String distance = userLocation == null ? "" : distanceToString(userLocation.distanceTo(instanceLocation), true) + " away";
 
         // populate subviews for the instance in scope
         holder.textView.setText(element.getName());
