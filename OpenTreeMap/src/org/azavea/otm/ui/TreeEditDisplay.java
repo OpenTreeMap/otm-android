@@ -9,6 +9,7 @@ import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
+import org.azavea.otm.fields.SpeciesField;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
@@ -44,7 +45,7 @@ public class TreeEditDisplay extends TreeDisplay {
     protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
     protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
-    private Field speciesField;
+    private SpeciesField speciesField;
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
     private final ProgressDialog savePhotoDialog = null;
@@ -354,7 +355,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
             if (group.getFields().containsKey(Field.TREE_SPECIES)) {
-                speciesField = group.getFields().get(Field.TREE_SPECIES);
+                speciesField = (SpeciesField) group.getFields().get(Field.TREE_SPECIES);
                 speciesField.attachClickListener(speciesClickListener);
                 break;
             }
