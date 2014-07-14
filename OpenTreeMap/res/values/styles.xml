@@ -281,4 +281,12 @@
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/instance_switcher_element_border</item>
     </style>
+
+    <style name="plot_edit_row_layout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
 </resources>

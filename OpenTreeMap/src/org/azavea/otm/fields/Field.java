@@ -2,16 +2,12 @@ package org.azavea.otm.fields;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.azavea.otm.App;
-import org.azavea.otm.Choice;
 import org.azavea.otm.NestedJsonAndKey;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
@@ -27,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -50,16 +45,10 @@ public class Field {
     public static final String TREE_DIAMETER = "tree.diameter";
 
     public static final String DATE_TYPE = "date";
-
-    // Any choices associated with this field, keyed by value with order preserved
-    private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
-
-    // The order of values loaded into selection panel. Used to map index to keys in ChoiceMap
-    private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
-    private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
+    public static final String CHOICE_TYPE = "choice";
 
     // This is the view control, either button or EditText, which has the user value
-    private View valueView = null;
+    protected View valueView = null;
 
     /**
      * The property name from Plot which will contain the data to display or
@@ -92,57 +81,32 @@ public class Field {
      */
     public String format;
 
-    /**
-     * List of key/val pairs of choice options for this field
-     */
-    public JSONArray choicesDef = null;
-
     public String infoUrl = null;
 
-    protected Field(String key, String label, boolean canEdit, String format, JSONArray choices,
-                    String infoUrl, String units, int digits) {
-        this.key = key;
-        this.label = label;
-        this.canEdit = canEdit;
-        this.format = format;
-        this.infoUrl = infoUrl;
-        this.unitText = units;
-        this.digits = digits;
+    protected Field(JSONObject fieldDef) {
+        key = fieldDef.optString("field_key");
+        label = fieldDef.optString("display_name");
+        canEdit = fieldDef.optBoolean("can_write");
+        format = fieldDef.optString("data_type");
 
-        if (choices != null) {
-            for (int i = 0; i < choices.length(); i++) {
-                JSONObject choiceDef = choices.optJSONObject(i);
-                Choice choice = new Choice(choiceDef.optString("display_value"), choiceDef.optString("value"));
+        unitText = fieldDef.optString("units");
+        digits = fieldDef.optInt("digits");
 
-                // Dialog choice lists take only an array of strings,
-                // and we must later get value by selection index
-                choiceMap.put(choice.getValue(), choice);
-                choiceSelectionIndex.add(choice.getValue());
-                choiceDisplayValues.add(choice.getText());
-            }
-        }
+        // NOTE: Not enabled for OTM2 yet
+        infoUrl = fieldDef.optString("info_url");
     }
 
     protected Field(String key, String label) {
         this.key = key;
         this.label = label;
-        this.canEdit = false;
     }
 
     public static Field makeField(JSONObject fieldDef) {
-
-        String key = fieldDef.optString("field_key");
-        String label = fieldDef.optString("display_name");
-        boolean canEdit = fieldDef.optBoolean("can_write");
         String format = fieldDef.optString("data_type");
-        JSONArray choices = fieldDef.optJSONArray("choices");
-        String units = fieldDef.optString("units");
-        int digits = fieldDef.optInt("digits");
-
-        // NOTE: Not enabled for OTM2 yet
-        String infoUrl = fieldDef.optString("info_url");
-
-        return new Field(key, label, canEdit, format, choices, infoUrl, units, digits);
+        if (CHOICE_TYPE.equals(format)) {
+            return new ChoiceField(fieldDef);
+        }
+        return new Field(fieldDef);
     }
 
     /*
@@ -236,15 +200,7 @@ public class Field {
             Button choiceButton = (Button) container.findViewById(R.id.choice_select);
             TextView unitLabel = ((TextView) container.findViewById(R.id.field_unit));
 
-            // Show the correct type of input for this field
-            if (this.choiceMap.size() > 0) {
-                edit.setVisibility(View.GONE);
-                unitLabel.setVisibility(View.GONE);
-                choiceButton.setVisibility(View.VISIBLE);
-                this.valueView = choiceButton;
-                setupChoiceDisplay(choiceButton, value);
-
-            } else if (TREE_SPECIES.equals(key) || DATE_TYPE.equals(format)) {
+            if (TREE_SPECIES.equals(key) || DATE_TYPE.equals(format)) {
                 edit.setVisibility(View.GONE);
                 unitLabel.setVisibility(View.GONE);
                 choiceButton.setVisibility(View.VISIBLE);
@@ -337,54 +293,6 @@ public class Field {
         });
     }
 
-    public boolean hasChoices() {
-        return !(this.choiceMap == null || this.choiceMap.size() == 0);
-    }
-
-    private void setupChoiceDisplay(final Button choiceButton, Object value) {
-
-        choiceButton.setText(R.string.unspecified_field_value);
-
-        if (!JSONObject.NULL.equals(value)) {
-            Choice currentChoice = choiceMap.get(value);
-            if (!JSONObject.NULL.equals(currentChoice)) {
-                choiceButton.setText(currentChoice.getText());
-            }
-        }
-
-        choiceButton.setTag(R.id.choice_button_value_tag, value);
-
-        handleChoiceDisplay(choiceButton, this);
-    }
-
-    private void handleChoiceDisplay(final Button choiceButton, final Field editedField) {
-        choiceButton.setOnClickListener(view -> {
-            // Determine which item should be selected by default
-            Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
-            int checkedChoiceIndex = -1;
-
-            if (!JSONObject.NULL.equals(currentValue)) {
-                checkedChoiceIndex = editedField.choiceSelectionIndex.indexOf(currentValue);
-            }
-
-            new AlertDialog.Builder(choiceButton.getContext())
-                    .setTitle(editedField.label)
-                    .setSingleChoiceItems(editedField.choiceDisplayValues.toArray(new String[0]),
-                            checkedChoiceIndex, (dialog, which) -> {
-                                String displayText = editedField.choiceDisplayValues.get(which);
-                                if (TextUtils.isEmpty(displayText)) {
-                                    choiceButton.setText(R.string.unspecified_field_value);
-                                } else {
-                                    choiceButton.setText(displayText);
-                                }
-                                choiceButton.setTag(R.id.choice_button_value_tag,
-                                        editedField.choiceSelectionIndex.get(which));
-                                dialog.dismiss();
-                            }
-                    ).create().show();
-        });
-    }
-
     private void setFieldKeyboard(EditText edit) {
         if (this.format.equals("float")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -402,14 +310,6 @@ public class Field {
         // If there is no value, return an unspecified value
         if (JSONObject.NULL.equals(value) || value.equals("")) {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
-        }
-        if (hasChoices()) {
-            // If there are choices for this field, display the choice
-            // text, not the value
-            Choice choice = this.choiceMap.get(value);
-            if (choice != null) {
-                return choice.getText();
-            }
         }
 
         if (format != null) {
@@ -568,7 +468,7 @@ public class Field {
         }
     }
 
-    private Object getEditedValue() throws Exception {
+    protected Object getEditedValue() throws Exception {
         if (this.valueView != null) {
             // For proper JSON encoding of types, we'll use the keyboard type
             // to cast the edited value to the desired Java type. Choice buttons
