@@ -119,12 +119,12 @@
     <string name="tree_image">Tree image</string>
     <string name="user_profile_details">User Profile Details</string>
 
-    <string name="instance_switcher_activity_title">Instance Switcher</string>
-    <string name="instance_switcher_no_instances_found">No instances found.</string>
+    <string name="instance_switcher_activity_title">Tree Map Switcher</string>
+    <string name="instance_switcher_no_instances_found">No tree maps found.</string>
     <string name="instance_switcher_account_question">Have an account?</string>
     <string name="instance_switcher_login">Login to OpenTreeMap</string>
     <string name="instance_switcher_switch_accounts">Switch Accounts</string>
-    <string name="profile_activity_switch_instance">Switch Instance</string>
+    <string name="profile_activity_switch_instance">Switch Tree Map</string>
     <string name="instance_switcher_dialog_heading">Please Wait</string>
     <string name="instance_switcher_loading_instances">Loading Tree Maps…</string>
     <string name="instance_switcher_loading_instance">Loading Tree Map</string>
