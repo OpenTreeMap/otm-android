@@ -173,7 +173,7 @@ public class Field {
         if (!pending) {
             value = formatUnit(getValueForKey(this.key, model));
         } else {
-            value = getValueForLatestPendingEditByRelatedField(this.key, model);
+            value = model.getValueForLatestPendingEdit(this.key);
         }
         fieldValue.setText(value);
 
@@ -710,53 +710,5 @@ public class Field {
             Activity a = (Activity) context;
             a.startActivity(browserIntent);
         });
-    }
-
-    /*
-     * pending key: the key to get pending edits for.. IE tree.species related
-     * field: the key determining the representation to return.. IE
-     * tree.species_name plot: the plot object.
-     */
-
-    // ??REFACTOR: the signature suggests that this belongs on the Plot object.
-
-    private static String getValueForLatestPendingEditByRelatedField(String pendingKey, Plot plot) {
-        // get the pending edit description object for this plot
-        PendingEditDescription ped;
-        try {
-            ped = plot.getPendingEditForKey(pendingKey);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return "";
-        }
-
-        // get a list of pending edits
-        List<PendingEdit> pendingEditList;
-        try {
-            pendingEditList = ped.getPendingEdits();
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return "";
-        }
-
-        // I assert that the most recent one is the first one. (argh.)
-        PendingEdit mostRecentPendingEdit;
-        if (pendingEditList.size() != 0) {
-            mostRecentPendingEdit = pendingEditList.get(0);
-        } else {
-            return "";
-        }
-
-        String value;
-        try {
-            value = mostRecentPendingEdit.getValue();
-        } catch (JSONException e) {
-            value = null;
-        }
-
-        return value;
-
     }
 }
