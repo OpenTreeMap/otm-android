@@ -119,7 +119,7 @@
     <string name="tree_image">Tree image</string>
     <string name="user_profile_details">User Profile Details</string>
 
-    <string name="instance_switcher_activity_title">Instance Switcher</string>
+    <string name="instance_switcher_activity_title">Tree Map Switcher</string>
     <string name="instance_switcher_no_instances_found">No tree maps found.</string>
     <string name="instance_switcher_account_question">Have an account?</string>
     <string name="instance_switcher_login">Login to OpenTreeMap</string>
