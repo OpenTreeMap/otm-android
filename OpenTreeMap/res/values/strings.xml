@@ -124,7 +124,7 @@
     <string name="instance_switcher_account_question">Have an account?</string>
     <string name="instance_switcher_login">Login to OpenTreeMap</string>
     <string name="instance_switcher_switch_accounts">Switch Accounts</string>
-    <string name="profile_activity_switch_instance">Switch Instance</string>
+    <string name="profile_activity_switch_instance">Switch Tree Map</string>
     <string name="instance_switcher_dialog_heading">Please Wait</string>
     <string name="instance_switcher_loading_instances">Loading Tree Maps…</string>
     <string name="instance_switcher_loading_instance">Loading Tree Map</string>
