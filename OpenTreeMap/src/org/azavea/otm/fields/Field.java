@@ -135,7 +135,7 @@ public class Field {
         // value or value of simple pending edit
         String value;
         if (!pending) {
-            value = formatUnit(getValueForKey(this.key, model));
+            value = formatUnitIfPresent(getValueForKey(this.key, model));
         } else {
             value = model.getValueForLatestPendingEdit(this.key);
         }
@@ -164,7 +164,7 @@ public class Field {
 
         // tree.species gets exploded to a double row with sci name and common name
         label.setText("Scientific Name");
-        fieldValue.setText(formatUnit(model.getScienticName()));
+        fieldValue.setText(formatUnitIfPresent(model.getScienticName()));
 
         // TODO: It would be much better if this LinearLayout was defined in XML
         LinearLayout doubleRow = new LinearLayout(context);
@@ -176,7 +176,7 @@ public class Field {
         TextView fieldValueCommon = (TextView) containerCommon.findViewById(R.id.field_value);
 
         labelCommon.setText("Common Name");
-        fieldValueCommon.setText(formatUnit(model.getCommonName()));
+        fieldValueCommon.setText(formatUnitIfPresent(model.getCommonName()));
 
         doubleRow.addView(container);
         doubleRow.addView(containerCommon);
@@ -303,15 +303,18 @@ public class Field {
         }
     }
 
-    /**
-     * Format the value with any units, if provided in the definition
-     */
-    public String formatUnit(Object value) {
+    private String formatUnitIfPresent(Object value) {
         // If there is no value, return an unspecified value
         if (JSONObject.NULL.equals(value) || value.equals("")) {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
+        return formatUnit(value);
+    }
 
+    /**
+     * Format the value with any units, if provided in the definition
+     */
+    protected String formatUnit(Object value) {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
@@ -555,7 +558,7 @@ public class Field {
             // initialize the intent, and load it with some initial values
             Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
             pendingItemDisplay.putExtra("label", label);
-            pendingItemDisplay.putExtra("currentValue", formatUnit(getValueForKey(key, model.getData())));
+            pendingItemDisplay.putExtra("currentValue", formatUnitIfPresent(getValueForKey(key, model.getData())));
             pendingItemDisplay.putExtra("key", key);
 
             // Now create an array of pending values, [{id: X, value: "42",
@@ -568,7 +571,7 @@ public class Field {
                 for (PendingEdit pendingEdit : pendingEdits) {
                     // The value is the plain pending edit's value, or the value of the PE's
                     // related field. (IE retrieve Species Name instead of a species ID.)
-                    String value = formatUnit(pendingEdit.getValue());
+                    String value = formatUnitIfPresent(pendingEdit.getValue());
 
                     // Continue on loading all of the pending edit data into
                     // the serializedPendingEdit object

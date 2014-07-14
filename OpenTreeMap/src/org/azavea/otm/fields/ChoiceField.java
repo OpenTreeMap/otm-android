@@ -51,11 +51,6 @@ public class ChoiceField extends Field {
      */
     @Override
     public String formatUnit(Object value) {
-        // If there is no value, return an unspecified value
-        if (JSONObject.NULL.equals(value) || value.equals("")) {
-            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
-        }
-
         // If there are choices for this field, display the choice text, not the value
         Choice choice = this.choiceMap.get(value);
         if (choice != null) {
