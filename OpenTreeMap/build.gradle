@@ -11,7 +11,7 @@ dependencies {
 
 retrolambda {
     jdk System.getenv("JAVA8_HOME")
-    javaVersion JavaVersion.VERSION_1_6
+    javaVersion JavaVersion.VERSION_1_7
 }
 
 android {
