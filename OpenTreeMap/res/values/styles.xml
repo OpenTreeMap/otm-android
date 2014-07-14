@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Copyright 2009 Joe LaPenna -->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Allows Holo.Light.NoActionBar on SDK 11 -->
-    <style name="HoloNoTitle" parent="android:Theme.Holo.Light">
-        <item name="android:windowActionBar">false</item>
+    <!-- Allows Holo.Light.NoActionBar on SDK 10 -->
+    <style name="HoloNoTitle" parent="@style/_holo_custom">
         <item name="android:windowNoTitle">true</item>
     </style>
 
