@@ -101,16 +101,13 @@ public class Field {
 
     public String infoUrl = null;
 
-    public boolean editViewOnly = false;
-
     protected Field(String key, String label, boolean canEdit, String format, JSONArray choices,
-                    String infoUrl, boolean editViewOnly, String units, int digits) {
+                    String infoUrl, String units, int digits) {
         this.key = key;
         this.label = label;
         this.canEdit = canEdit;
         this.format = format;
         this.infoUrl = infoUrl;
-        this.editViewOnly = editViewOnly;
         this.unitText = units;
         this.digits = digits;
 
@@ -146,9 +143,8 @@ public class Field {
 
         // NOTE: Not enabled for OTM2 yet
         String infoUrl = fieldDef.optString("info_url");
-        boolean editViewOnly = false;
 
-        return new Field(key, label, canEdit, format, choices, infoUrl, editViewOnly, units, digits);
+        return new Field(key, label, canEdit, format, choices, infoUrl, units, digits);
     }
 
     /*

@@ -83,9 +83,7 @@ public class FieldGroup {
                     fieldView = null;
                     switch (mode) {
                         case VIEW:
-                            if (!field.getValue().editViewOnly) {
-                                fieldView = field.getValue().renderForDisplay(layout, model, context);
-                            }
+                            fieldView = field.getValue().renderForDisplay(layout, model, context);
                             break;
                         case EDIT:
                             fieldView = field.getValue().renderForEdit(layout, model, user, context);
