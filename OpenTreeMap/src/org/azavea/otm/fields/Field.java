@@ -182,7 +182,7 @@ public class Field {
         // Note that the semantics of the bindPendingEditClickHandler function take
         // a key into the pending edit array, and an optional related field.
         if (pending) {
-            bindPendingEditClickHandler(pendingButton, this.key, null, model, context);
+            bindPendingEditClickHandler(pendingButton, this.key, model, context);
             pendingButton.setVisibility(View.VISIBLE);
         }
 
@@ -649,7 +649,7 @@ public class Field {
      * If related field is null, return the plain value for the field. (Example,
      * when key is DBH, we want the numeric value.)
      */
-    private void bindPendingEditClickHandler(View b, final String key, final String relatedField, final Plot model,
+    private void bindPendingEditClickHandler(View b, final String key, final Plot model,
                                              final Context context) {
         b.setOnClickListener(v -> {
             // initialize the intent, and load it with some initial values
@@ -668,12 +668,7 @@ public class Field {
                 for (PendingEdit pendingEdit : pendingEdits) {
                     // The value is the plain pending edit's value, or the value of the PE's
                     // related field. (IE retrieve Species Name instead of a species ID.)
-                    String value;
-                    if (relatedField == null) {
-                        value = formatUnit(pendingEdit.getValue());
-                    } else {
-                        value = pendingEdit.getValue(relatedField);
-                    }
+                    String value = formatUnit(pendingEdit.getValue());
 
                     // Continue on loading all of the pending edit data into
                     // the serializedPendingEdit object
