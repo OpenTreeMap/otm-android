@@ -1,7 +1,6 @@
 package org.azavea.otm.fields;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,10 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Species;
-import org.azavea.otm.data.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SpeciesField extends Field {
+public class SpeciesField extends ButtonField {
 
     SpeciesField(JSONObject fieldDef) {
         super(fieldDef);
@@ -54,43 +52,8 @@ public class SpeciesField extends Field {
         return doubleRow;
     }
 
-    /*
-     * Render a view to display the given model field in edit mode
-     */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
-        View container = null;
-
-        if (this.canEdit) {
-            container = layout.inflate(R.layout.plot_field_edit_button_row, null);
-            Object value = getValueForKey(this.key, model.getData());
-
-            ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
-            Button choiceButton = (Button) container.findViewById(R.id.choice_select);
-
-            this.valueView = choiceButton;
-
-            setupSpeciesField(choiceButton, value, model);
-        }
-
-        return container;
-    }
-
-    @Override
-    protected Object getEditedValue() throws Exception {
-        if (this.valueView != null) {
-            Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
-
-            if (JSONObject.NULL.equals(choiceVal) || TextUtils.isEmpty(choiceVal.toString())) {
-                return null;
-            }
-
-            return choiceVal;
-        }
-        return null;
-    }
-
-    private void setupSpeciesField(Button choiceButton, Object value, Model model) {
+    protected void setupButton(Button button, Object value, Model model) {
         JSONObject json = model.getData();
 
         // species could either be truly null, or an actual but empty JSONObject {}
@@ -98,12 +61,12 @@ public class SpeciesField extends Field {
             // Set the button text to the common and sci name
             String sciName = (String) getValueForKey("tree.species.scientific_name", json);
             String commonName = (String) getValueForKey("tree.species.common_name", json);
-            choiceButton.setText(commonName + "\n" + sciName);
+            button.setText(commonName + "\n" + sciName);
             Species speciesValue = new Species();
             speciesValue.setData((JSONObject) value);
             this.setValue(speciesValue);
         } else {
-            choiceButton.setText(R.string.unspecified_field_value);
+            button.setText(R.string.unspecified_field_value);
         }
     }
 

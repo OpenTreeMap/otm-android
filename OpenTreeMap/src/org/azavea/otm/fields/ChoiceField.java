@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.azavea.otm.App;
 import org.azavea.otm.Choice;
 import org.azavea.otm.R;
+import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
 import org.json.JSONArray;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ChoiceField extends Field {
+public class ChoiceField extends ButtonField {
     // Any choices associated with this field, keyed by value with order preserved
     private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
 
@@ -60,43 +61,7 @@ public class ChoiceField extends Field {
     }
 
     @Override
-    protected Object getEditedValue() throws Exception {
-        if (this.valueView != null) {
-            Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
-
-            if (JSONObject.NULL.equals(choiceVal) || TextUtils.isEmpty(choiceVal.toString())) {
-                return null;
-            }
-
-            return choiceVal;
-        }
-        return null;
-    }
-
-    /*
-     * Render a view to display the given model field in edit mode
-     */
-    @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
-
-        View container = null;
-
-        if (this.canEdit) {
-            container = layout.inflate(R.layout.plot_field_edit_button_row, null);
-            Object value = getValueForKey(this.key, model.getData());
-
-            ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
-            Button choiceButton = (Button) container.findViewById(R.id.choice_select);
-
-            this.valueView = choiceButton;
-            setupChoiceDisplay(choiceButton, value);
-        }
-
-        return container;
-    }
-
-    private void setupChoiceDisplay(final Button choiceButton, Object value) {
-
+    protected void setupButton(final Button choiceButton, Object value, Model model) {
         choiceButton.setText(R.string.unspecified_field_value);
 
         if (!JSONObject.NULL.equals(value)) {
