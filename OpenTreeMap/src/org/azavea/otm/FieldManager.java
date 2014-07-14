@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.fields.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

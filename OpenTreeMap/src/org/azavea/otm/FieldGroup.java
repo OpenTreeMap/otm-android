@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.User;
+import org.azavea.otm.fields.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

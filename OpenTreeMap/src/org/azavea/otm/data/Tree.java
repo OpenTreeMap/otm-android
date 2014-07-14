@@ -1,6 +1,6 @@
 package org.azavea.otm.data;
 
-import org.azavea.otm.Field;
+import org.azavea.otm.fields.Field;
 import org.json.JSONException;
 import org.json.JSONObject;
 

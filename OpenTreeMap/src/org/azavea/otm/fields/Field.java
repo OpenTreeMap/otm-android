@@ -1,4 +1,4 @@
-package org.azavea.otm;
+package org.azavea.otm.fields;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.azavea.otm.App;
+import org.azavea.otm.Choice;
+import org.azavea.otm.NestedJsonAndKey;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.PendingEdit;
 import org.azavea.otm.data.PendingEditDescription;

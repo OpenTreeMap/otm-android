@@ -2,10 +2,9 @@ package org.azavea.otm.ui;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.Map.Entry;
 
 import org.azavea.otm.App;
-import org.azavea.otm.Field;
+import org.azavea.otm.fields.Field;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;

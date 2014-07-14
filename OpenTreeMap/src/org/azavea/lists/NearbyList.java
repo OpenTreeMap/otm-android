@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
-import org.azavea.otm.Field;
+import org.azavea.otm.fields.Field;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
