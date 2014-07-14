@@ -51,12 +51,10 @@ public class Field {
 
     public static final String DATE_TYPE = "date";
 
-    // Any choices associated with this field, keyed by value with order
-    // preserved
+    // Any choices associated with this field, keyed by value with order preserved
     private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
 
-    // The order of values loaded into selection panel. Used to map index to
-    // keys in ChoiceMap
+    // The order of values loaded into selection panel. Used to map index to keys in ChoiceMap
     private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
     private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
 
@@ -188,8 +186,7 @@ public class Field {
             pendingButton.setVisibility(View.VISIBLE);
         }
 
-        // If the field has a URL attached to it as an info description (IE for
-        // pests) display the link.
+        // If the field has a URL attached to it as an info description (IE for pests) display the link.
         if (!TextUtils.isEmpty(this.infoUrl)) {
             infoButton.setVisibility(View.VISIBLE);
             bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
@@ -348,7 +345,6 @@ public class Field {
 
         choiceButton.setText(R.string.unspecified_field_value);
 
-        // value could be a null json value, have to check both.
         if (!JSONObject.NULL.equals(value)) {
             Choice currentChoice = choiceMap.get(value);
             if (!JSONObject.NULL.equals(currentChoice)) {
@@ -494,8 +490,6 @@ public class Field {
      * Return the value of a key name, which can be nested using . notation. If
      * the key does not exist or the value of the key, it will return a null
      * value
-     *
-     * @throws JSONException
      */
     public static Object getValueForKey(String key, JSONObject json) {
         try {
@@ -672,10 +666,8 @@ public class Field {
                 List<PendingEdit> pendingEdits = pendingEditDescription.getPendingEdits();
                 JSONArray serializedPendingEdits = new JSONArray();
                 for (PendingEdit pendingEdit : pendingEdits) {
-                    // The value is the plain pending edit's value, or the
-                    // value of the PE's
-                    // related field. (IE retrieve Species Name instead of a
-                    // species ID.)
+                    // The value is the plain pending edit's value, or the value of the PE's
+                    // related field. (IE retrieve Species Name instead of a species ID.)
                     String value;
                     if (relatedField == null) {
                         value = formatUnit(pendingEdit.getValue());
@@ -684,8 +676,7 @@ public class Field {
                     }
 
                     // Continue on loading all of the pending edit data into
-                    // the serializedPendingEdit
-                    // object
+                    // the serializedPendingEdit object
                     JSONObject serializedPendingEdit = new JSONObject();
                     serializedPendingEdit.put("id", pendingEdit.getId());
                     serializedPendingEdit.put("value", value);

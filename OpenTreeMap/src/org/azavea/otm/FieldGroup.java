@@ -69,14 +69,13 @@ public class FieldGroup {
 
     private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user, Context context) {
 
-
         View container = layout.inflate(R.layout.plot_field_group, null);
         LinearLayout group = (LinearLayout) container.findViewById(R.id.field_group);
         View fieldView;
         int renderedFieldCount = 0;
 
-
         ((TextView) group.findViewById(R.id.group_name)).setText(this.title);
+
         if (this.title != null) {
             for (Field field : fields.values()) {
                 try {
@@ -109,8 +108,6 @@ public class FieldGroup {
 
     /**
      * Render a field group and its child fields for viewing
-     *
-     * @throws JSONException
      */
     public View renderForDisplay(LayoutInflater layout, Plot model, Context context) {
         return render(layout, model, DisplayMode.VIEW, null, context);
@@ -118,8 +115,6 @@ public class FieldGroup {
 
     /**
      * Render a field group and its child fields for editing
-     *
-     * @throws JSONException
      */
     public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
         return render(layout, model, DisplayMode.EDIT, user, context);
