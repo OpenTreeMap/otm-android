@@ -160,7 +160,7 @@ public class Field {
     /*
      * Render a view to display the given model field in edit mode
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
+    public View renderForEdit(LayoutInflater layout, Plot model, Context context) {
 
         View container = null;
 

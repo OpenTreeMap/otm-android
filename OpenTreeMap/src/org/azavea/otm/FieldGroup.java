@@ -67,7 +67,7 @@ public class FieldGroup {
         return fields;
     }
 
-    private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user, Context context) {
+    private View render(LayoutInflater layout, Plot model, DisplayMode mode, Context context) {
 
         View container = layout.inflate(R.layout.plot_field_group, null);
         LinearLayout group = (LinearLayout) container.findViewById(R.id.field_group);
@@ -85,7 +85,7 @@ public class FieldGroup {
                             fieldView = field.renderForDisplay(layout, model, context);
                             break;
                         case EDIT:
-                            fieldView = field.renderForEdit(layout, model, user, context);
+                            fieldView = field.renderForEdit(layout, model, context);
                             break;
                     }
 
@@ -110,14 +110,14 @@ public class FieldGroup {
      * Render a field group and its child fields for viewing
      */
     public View renderForDisplay(LayoutInflater layout, Plot model, Context context) {
-        return render(layout, model, DisplayMode.VIEW, null, context);
+        return render(layout, model, DisplayMode.VIEW, context);
     }
 
     /**
      * Render a field group and its child fields for editing
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
-        return render(layout, model, DisplayMode.EDIT, user, context);
+    public View renderForEdit(LayoutInflater layout, Plot model, Context context) {
+        return render(layout, model, DisplayMode.EDIT, context);
     }
 
     public void update(Model model) throws Exception {
