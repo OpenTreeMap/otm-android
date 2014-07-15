@@ -26,7 +26,7 @@ public class DateField extends ButtonField {
      * Format the value with any units, if provided in the definition
      */
     @Override
-    protected String formatUnit(Object value) {
+    protected String formatValue(Object value) {
         String timestamp = (String) value;
         final String displayPattern = App.getCurrentInstance().getShortDateFormat();
         final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);

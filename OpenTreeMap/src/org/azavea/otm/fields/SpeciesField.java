@@ -32,7 +32,7 @@ public class SpeciesField extends ButtonField {
 
         // tree.species gets exploded to a double row with sci name and common name
         label.setText("Scientific Name");
-        fieldValue.setText(formatUnit(model.getScienticName()));
+        fieldValue.setText(formatValue(model.getScienticName()));
 
         // TODO: It would be much better if this LinearLayout was defined in XML
         LinearLayout doubleRow = new LinearLayout(context);
@@ -44,7 +44,7 @@ public class SpeciesField extends ButtonField {
         TextView fieldValueCommon = (TextView) containerCommon.findViewById(R.id.field_value);
 
         labelCommon.setText("Common Name");
-        fieldValueCommon.setText(formatUnit(model.getCommonName()));
+        fieldValueCommon.setText(formatValue(model.getCommonName()));
 
         doubleRow.addView(container);
         doubleRow.addView(containerCommon);

@@ -98,11 +98,6 @@ public abstract class Field {
     public abstract View renderForEdit(LayoutInflater layout, Plot model, Context context);
 
     /**
-     * Format the value with any units, if provided in the definition
-     */
-    protected abstract String formatUnit(Object value);
-
-    /**
      * Gets the edited value for use when updating
      *
      * @return The edited value - may be of any type
@@ -176,7 +171,14 @@ public abstract class Field {
         if (JSONObject.NULL.equals(value) || value.equals("")) {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
-        return formatUnit(value);
+        return formatValue(value);
+    }
+
+    /**
+     * Format the value with any units, if provided in the definition
+     */
+    protected String formatValue(Object value) {
+        return value.toString();
     }
 
     public static Object getValueForKey(String key, Plot plot) throws JSONException {

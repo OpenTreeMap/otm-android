@@ -45,7 +45,7 @@ public class ChoiceField extends ButtonField {
      * Format the value with any units, if provided in the definition
      */
     @Override
-    public String formatUnit(Object value) {
+    public String formatValue(Object value) {
         // If there are choices for this field, display the choice text, not the value
         Choice choice = this.choiceMap.get(value);
         if (choice != null) {

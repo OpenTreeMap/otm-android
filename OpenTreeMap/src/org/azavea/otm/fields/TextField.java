@@ -95,7 +95,7 @@ public class TextField extends Field {
      * Format the value with any units, if provided in the definition
      */
     @Override
-    protected String formatUnit(Object value) {
+    protected String formatValue(Object value) {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
