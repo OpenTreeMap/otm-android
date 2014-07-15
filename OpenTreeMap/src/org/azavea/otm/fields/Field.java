@@ -87,6 +87,8 @@ public abstract class Field {
             return new DateField(fieldDef);
         } else if (TREE_SPECIES.equals(key)) {
             return new SpeciesField(fieldDef);
+        } else if (TREE_DIAMETER.equals(key)) {
+            return new DiameterField(fieldDef);
         } else {
             return new TextField(fieldDef);
         }

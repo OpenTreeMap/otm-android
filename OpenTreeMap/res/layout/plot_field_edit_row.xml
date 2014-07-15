@@ -26,9 +26,4 @@
         </EditText>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/choice_select"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>

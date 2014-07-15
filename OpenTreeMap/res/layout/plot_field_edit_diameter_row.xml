@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent">
+
+    <include android:id="@+id/diameter_row"
+        layout="@layout/plot_field_edit_row" />
+
+    <include android:id="@+id/circumference_row"
+        layout="@layout/plot_field_edit_row" />
+
+</LinearLayout>

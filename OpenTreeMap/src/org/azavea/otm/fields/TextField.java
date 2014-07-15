@@ -5,9 +5,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.azavea.otm.R;
@@ -18,12 +16,12 @@ public class TextField extends Field {
     /**
      * The text to append to the value as a unit
      */
-    public String unitText;
+    public final String unitText;
 
     /**
      * Number of significant digits to round to
      */
-    public int digits;
+    public final int digits;
 
     protected TextField(JSONObject fieldDef) {
         super(fieldDef);
@@ -46,12 +44,9 @@ public class TextField extends Field {
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
             EditText edit = (EditText) container.findViewById(R.id.field_value);
-            Button choiceButton = (Button) container.findViewById(R.id.choice_select);
             TextView unitLabel = ((TextView) container.findViewById(R.id.field_unit));
 
             String safeValue = (!JSONObject.NULL.equals(value)) ? value.toString() : "";
-            edit.setVisibility(View.VISIBLE);
-            choiceButton.setVisibility(View.GONE);
             edit.setText(safeValue);
             this.valueView = edit;
             unitLabel.setText(this.unitText);
@@ -59,36 +54,9 @@ public class TextField extends Field {
             if (this.format != null) {
                 setFieldKeyboard(edit);
             }
-
-            // Special case for tree diameter. Make a synced circumference
-            // field
-            if (this.key.equals(TREE_DIAMETER)) {
-                return makeDynamicDbhFields(layout, context, container);
-            }
         }
 
         return container;
-    }
-
-    /**
-     * Explode tree.diameter to include a circumference field which can update
-     * each other
-     */
-    private View makeDynamicDbhFields(LayoutInflater layout, Context context, View container) {
-        container.setId(R.id.dynamic_dbh);
-        View circ = layout.inflate(R.layout.plot_field_edit_row, null);
-
-        circ.setId(R.id.dynamic_circumference);
-        circ.findViewById(R.id.choice_select).setVisibility(View.GONE);
-        ((TextView) circ.findViewById(R.id.field_label)).setText(R.string.circumference_label);
-        setFieldKeyboard((EditText) circ.findViewById(R.id.field_value));
-        ((TextView) container.findViewById(R.id.field_unit)).setText(this.unitText);
-
-        LinearLayout dynamicDbh = new LinearLayout(context);
-        dynamicDbh.setOrientation(LinearLayout.VERTICAL);
-        dynamicDbh.addView(container);
-        dynamicDbh.addView(circ);
-        return dynamicDbh;
     }
 
     /**
@@ -143,7 +111,7 @@ public class TextField extends Field {
         }
     }
 
-    private void setFieldKeyboard(EditText edit) {
+    protected void setFieldKeyboard(EditText edit) {
         if (this.format.equals("float")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         } else if (this.format.equalsIgnoreCase("int")) {

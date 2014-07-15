@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="dynamic_circumference" type="id"/>
-    <item name="dynamic_dbh" type="id"/>
     <item name="species_id" type="id" />
     <item name="filter_key" type="id" />
     <item name="choice_button_value_tag" type="id" />
