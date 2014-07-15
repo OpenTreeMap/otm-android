@@ -32,30 +32,24 @@ public class SpeciesField extends ButtonField {
      */
     @Override
     public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity) throws JSONException {
-        View container = layout.inflate(R.layout.plot_field_row, null);
-        TextView label = (TextView) container.findViewById(R.id.field_label);
-        TextView fieldValue = (TextView) container.findViewById(R.id.field_value);
+        View container = layout.inflate(R.layout.plot_field_species_row, null);
+
+        View sciNameRow = container.findViewById(R.id.scientific_name_row);
+        TextView sciNamelabel = (TextView) sciNameRow.findViewById(R.id.field_label);
+        TextView sciNameValue = (TextView) sciNameRow.findViewById(R.id.field_value);
 
         // tree.species gets exploded to a double row with sci name and common name
-        label.setText("Scientific Name");
-        fieldValue.setText(formatValue(model.getScienticName()));
+        sciNamelabel.setText(R.string.scientific_name);
+        sciNameValue.setText(formatValue(model.getScienticName()));
 
-        // TODO: It would be much better if this LinearLayout was defined in XML
-        LinearLayout doubleRow = new LinearLayout(activity);
-        doubleRow.setOrientation(LinearLayout.VERTICAL);
-        doubleRow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        View commonNameRow = container.findViewById(R.id.common_name_row);
+        TextView commonNameLabel = (TextView) commonNameRow.findViewById(R.id.field_label);
+        TextView commonNameValue = (TextView) commonNameRow.findViewById(R.id.field_value);
 
-        View containerCommon = layout.inflate(R.layout.plot_field_row, null);
-        TextView labelCommon = (TextView) containerCommon.findViewById(R.id.field_label);
-        TextView fieldValueCommon = (TextView) containerCommon.findViewById(R.id.field_value);
+        commonNameLabel.setText(R.string.common_name);
+        commonNameValue.setText(formatValue(model.getCommonName()));
 
-        labelCommon.setText("Common Name");
-        fieldValueCommon.setText(formatValue(model.getCommonName()));
-
-        doubleRow.addView(container);
-        doubleRow.addView(containerCommon);
-
-        return doubleRow;
+        return container;
     }
 
     @Override

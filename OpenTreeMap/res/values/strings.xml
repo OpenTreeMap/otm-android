@@ -100,6 +100,8 @@
     <string name="problem_setting_profile_picture">There was a problem setting your profile picture.</string>
     <string name="username_is_taken">Sorry, that username is taken.</string>
     <string name="circumference_label">Circumference</string>
+    <string name="scientific_name">Scientific Name</string>
+    <string name="common_name">Common Name</string>
 
     <!-- Internationalization options -->
     <string name="server_date_format">yyyy-MM-dd</string>
