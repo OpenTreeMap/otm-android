@@ -1,11 +1,15 @@
 package org.azavea.otm.fields;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.azavea.otm.App;
 import org.azavea.otm.NestedJsonAndKey;
@@ -14,30 +18,15 @@ import org.azavea.otm.data.Model;
 import org.azavea.otm.data.PendingEdit;
 import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
 import org.azavea.otm.ui.PendingItemDisplay;
 import org.azavea.otm.ui.TreeInfoDisplay;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.util.List;
 
-public class Field {
+public abstract class Field {
     public static final String TREE_SPECIES = "tree.species";
     public static final String TREE_DIAMETER = "tree.diameter";
 
@@ -64,16 +53,6 @@ public class Field {
     public boolean canEdit;
 
     /**
-     * The text to append to the value as a unit
-     */
-    public String unitText;
-
-    /**
-     * Number of significant digits to round to
-     */
-    public int digits;
-
-    /**
      * How to format units
      */
     public String format;
@@ -86,9 +65,6 @@ public class Field {
         canEdit = fieldDef.optBoolean("can_write");
         format = fieldDef.optString("data_type");
 
-        unitText = fieldDef.optString("units");
-        digits = fieldDef.optInt("digits");
-
         // NOTE: Not enabled for OTM2 yet
         infoUrl = fieldDef.optString("info_url");
     }
@@ -96,6 +72,9 @@ public class Field {
     protected Field(String key, String label) {
         this.key = key;
         this.label = label;
+        canEdit = false;
+        format = null;
+        infoUrl = null;
     }
 
     public static Field makeField(JSONObject fieldDef) {
@@ -104,12 +83,31 @@ public class Field {
 
         if (CHOICE_TYPE.equals(format)) {
             return new ChoiceField(fieldDef);
+        } else if (DATE_TYPE.equals(format)) {
+            return new DateField(fieldDef);
         } else if (TREE_SPECIES.equals(key)) {
             return new SpeciesField(fieldDef);
+        } else {
+            return new TextField(fieldDef);
         }
-
-        return new Field(fieldDef);
     }
+
+    /**
+     * Render a view to display the given model field in edit mode
+     */
+    public abstract View renderForEdit(LayoutInflater layout, Plot model, Context context);
+
+    /**
+     * Format the value with any units, if provided in the definition
+     */
+    protected abstract String formatUnit(Object value);
+
+    /**
+     * Gets the edited value for use when updating
+     *
+     * @return The edited value - may be of any type
+     */
+    protected abstract Object getEditedValue();
 
     /*
      * Render a view to display the given model field in view mode
@@ -157,71 +155,19 @@ public class Field {
         return container;
     }
 
-    /*
-     * Render a view to display the given model field in edit mode
-     */
-    public View renderForEdit(LayoutInflater layout, Plot model, Context context) {
+    public void update(Model model) throws Exception {
+        // If there is no valueView, this field was not rendered for edit
+        if (this.valueView != null) {
+            Object currentValue = getEditedValue();
 
-        View container = null;
-
-        if (this.canEdit) {
-            container = layout.inflate(R.layout.plot_field_edit_row, null);
-            Object value = getValueForKey(this.key, model.getData());
-
-            ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
-            EditText edit = (EditText) container.findViewById(R.id.field_value);
-            Button choiceButton = (Button) container.findViewById(R.id.choice_select);
-            TextView unitLabel = ((TextView) container.findViewById(R.id.field_unit));
-
-            String safeValue = (!JSONObject.NULL.equals(value)) ? value.toString() : "";
-            edit.setVisibility(View.VISIBLE);
-            choiceButton.setVisibility(View.GONE);
-            edit.setText(safeValue);
-            this.valueView = edit;
-            unitLabel.setText(this.unitText);
-
-            if (this.format != null) {
-                setFieldKeyboard(edit);
+            // If the model doesn't have they key, add it. This creates
+            // a tree when tree values are added to a plot with no tree
+            Plot p = (Plot) model;
+            if (key.split("[.]")[0].equals("tree") && !p.hasTree() && currentValue != null) {
+                p.createTree();
             }
 
-            // Special case for tree diameter. Make a synced circumference
-            // field
-            if (this.key.equals(TREE_DIAMETER)) {
-                return makeDynamicDbhFields(layout, context, container);
-            }
-        }
-
-        return container;
-    }
-
-    /**
-     * Explode tree.diameter to include a circumference field which can update
-     * each other
-     */
-    private View makeDynamicDbhFields(LayoutInflater layout, Context context, View container) {
-        container.setId(R.id.dynamic_dbh);
-        View circ = layout.inflate(R.layout.plot_field_edit_row, null);
-
-        circ.setId(R.id.dynamic_circumference);
-        circ.findViewById(R.id.choice_select).setVisibility(View.GONE);
-        ((TextView) circ.findViewById(R.id.field_label)).setText(R.string.circumference_label);
-        setFieldKeyboard((EditText) circ.findViewById(R.id.field_value));
-        ((TextView) container.findViewById(R.id.field_unit)).setText(this.unitText);
-
-        LinearLayout dynamicDbh = new LinearLayout(context);
-        dynamicDbh.setOrientation(LinearLayout.VERTICAL);
-        dynamicDbh.addView(container);
-        dynamicDbh.addView(circ);
-        return dynamicDbh;
-    }
-
-    private void setFieldKeyboard(EditText edit) {
-        if (this.format.equals("float")) {
-            edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        } else if (this.format.equalsIgnoreCase("int")) {
-            edit.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else {
-            edit.setInputType(InputType.TYPE_CLASS_TEXT);
+            setValueForKey(key, model.getData(), currentValue);
         }
     }
 
@@ -231,27 +177,6 @@ public class Field {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
         return formatUnit(value);
-    }
-
-    /**
-     * Format the value with any units, if provided in the definition
-     */
-    protected String formatUnit(Object value) {
-        if (format != null) {
-            if (format.equals("float")) {
-                return formatWithDigits(value, this.digits) + " " + this.unitText;
-            }
-        }
-        return value + " " + this.unitText;
-    }
-
-    public String formatWithDigits(Object value, int digits) {
-        try { // attempt to round 'value'
-            Double d = Double.parseDouble(value.toString());
-            return String.format("%." + digits + "f", d);
-        } catch (ClassCastException e) {
-            return value.toString();
-        }
     }
 
     public static Object getValueForKey(String key, Plot plot) throws JSONException {
@@ -332,56 +257,6 @@ public class Field {
             Log.w(App.LOG_TAG, "Could not set value key: " + key + " on plot/tree object");
             throw e;
         }
-    }
-
-    public void update(Model model) throws Exception {
-        // If there is no valueView, this field was not rendered for edit
-        if (this.valueView != null) {
-            Object currentValue = getEditedValue();
-
-            // If the model doesn't have they key, add it. This creates
-            // a tree when tree values are added to a plot with no tree
-            Plot p = (Plot) model;
-            if (key.split("[.]")[0].equals("tree") && !p.hasTree() && currentValue != null) {
-                p.createTree();
-            }
-
-            setValueForKey(key, model.getData(), currentValue);
-        }
-    }
-
-    protected Object getEditedValue() throws Exception {
-        if (this.valueView != null) {
-            // For proper JSON encoding of types, we'll use the keyboard type
-            // to cast the edited value to the desired Java type. Choice buttons
-            // are assumed to always be strings
-
-            if (this.valueView instanceof EditText) {
-                EditText text = (EditText) valueView;
-                if (TextUtils.isEmpty((text.getText().toString()))) {
-                    return null;
-                }
-
-                int inputType = text.getInputType();
-
-                if ((inputType & InputType.TYPE_CLASS_TEXT) == InputType.TYPE_CLASS_TEXT) {
-                    return text.getText().toString();
-
-                } else if ((inputType & InputType.TYPE_NUMBER_FLAG_DECIMAL) == InputType.TYPE_NUMBER_FLAG_DECIMAL) {
-                    return Double.parseDouble(text.getText().toString());
-
-                } else if ((inputType & InputType.TYPE_CLASS_NUMBER) == InputType.TYPE_CLASS_NUMBER) {
-                    return Integer.parseInt(text.getText().toString());
-
-                }
-
-                return text.getText().toString();
-            } else {
-                throw new Exception("Unknown ValueView type for field editing");
-            }
-        }
-        return null;
-
     }
 
     /*

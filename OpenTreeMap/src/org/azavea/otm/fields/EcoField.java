@@ -45,4 +45,16 @@ public class EcoField extends Field {
                         context.getString(R.string.eco_currencey_saved_text));
         return container;
     }
+
+    @Override
+    @Deprecated
+    public View renderForEdit(LayoutInflater layout, Plot model, Context context) {
+        return null;
+    }
+
+    @Override
+    @Deprecated
+    protected Object getEditedValue() {
+        return null;
+    }
 }
