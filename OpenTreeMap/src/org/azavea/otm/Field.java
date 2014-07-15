@@ -319,8 +319,8 @@ public class Field {
     }
 
     private void setupDateField(final Button choiceButton, final Object value, final Context context) {
-        String timestamp = (String) value;
         if (!JSONObject.NULL.equals(value)) {
+            String timestamp = (String) value;
             final String formattedDate = formatTimestampForDisplay(timestamp);
             choiceButton.setText(formattedDate);
             choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
