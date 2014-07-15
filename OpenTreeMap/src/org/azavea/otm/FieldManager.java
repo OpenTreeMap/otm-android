@@ -87,10 +87,8 @@ public class FieldManager {
 
     public Field getField(String name) {
         for (FieldGroup group : allDisplayFields) {
-            for (Map.Entry<String, Field> field : group.getFields().entrySet()) {
-                if (field.getKey().equals(name)) {
-                    return field.getValue();
-                }
+            if (group.getFields().containsKey(name)) {
+                return group.getFields().get(name);
             }
         }
         return null;

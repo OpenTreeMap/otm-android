@@ -78,15 +78,15 @@ public class FieldGroup {
 
         ((TextView) group.findViewById(R.id.group_name)).setText(this.title);
         if (this.title != null) {
-            for (Entry<String, Field> field : fields.entrySet()) {
+            for (Field field : fields.values()) {
                 try {
                     fieldView = null;
                     switch (mode) {
                         case VIEW:
-                            fieldView = field.getValue().renderForDisplay(layout, model, context);
+                            fieldView = field.renderForDisplay(layout, model, context);
                             break;
                         case EDIT:
-                            fieldView = field.getValue().renderForEdit(layout, model, user, context);
+                            fieldView = field.renderForEdit(layout, model, user, context);
                             break;
                     }
 
@@ -96,7 +96,7 @@ public class FieldGroup {
                     }
 
                 } catch (JSONException e) {
-                    Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
+                    Log.d(App.LOG_TAG, "Error rendering field '" + field.key + "' " + e.getMessage());
                 }
             }
         }
@@ -126,8 +126,8 @@ public class FieldGroup {
     }
 
     public void update(Model model) throws Exception {
-        for (Entry<String, Field> field : fields.entrySet()) {
-            field.getValue().update(model);
+        for (Field field : fields.values()) {
+            field.update(model);
         }
     }
 }
