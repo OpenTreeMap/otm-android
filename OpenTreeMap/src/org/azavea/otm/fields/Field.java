@@ -40,24 +40,24 @@ public abstract class Field {
      * The property name from Plot which will contain the data to display or
      * edit. Nested resources are separated by '.' notation
      */
-    public String key;
+    public final String key;
 
     /**
      * Label to identify the field on a view
      */
-    public String label;
+    public final String label;
 
     /**
      * Does the current user have permission to edit?
      */
-    public boolean canEdit;
+    public final boolean canEdit;
 
     /**
      * How to format units
      */
-    public String format;
+    public final String format;
 
-    public String infoUrl = null;
+    public final String infoUrl;
 
     protected Field(JSONObject fieldDef) {
         key = fieldDef.optString("field_key");
