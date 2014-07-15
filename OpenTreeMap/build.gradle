@@ -1,4 +1,4 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'retrolambda'
 
 dependencies {
@@ -10,7 +10,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 19
     buildToolsVersion "20.0.0"
 
     compileOptions {
