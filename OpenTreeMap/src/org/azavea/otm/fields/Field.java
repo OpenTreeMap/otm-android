@@ -173,29 +173,21 @@ public class Field {
             Button choiceButton = (Button) container.findViewById(R.id.choice_select);
             TextView unitLabel = ((TextView) container.findViewById(R.id.field_unit));
 
-            if (DATE_TYPE.equals(format)) {
-                edit.setVisibility(View.GONE);
-                unitLabel.setVisibility(View.GONE);
-                choiceButton.setVisibility(View.VISIBLE);
-                this.valueView = choiceButton;
-                setupDateField(choiceButton, value, context);
-            } else {
-                String safeValue = (!JSONObject.NULL.equals(value)) ? value.toString() : "";
-                edit.setVisibility(View.VISIBLE);
-                choiceButton.setVisibility(View.GONE);
-                edit.setText(safeValue);
-                this.valueView = edit;
-                unitLabel.setText(this.unitText);
+            String safeValue = (!JSONObject.NULL.equals(value)) ? value.toString() : "";
+            edit.setVisibility(View.VISIBLE);
+            choiceButton.setVisibility(View.GONE);
+            edit.setText(safeValue);
+            this.valueView = edit;
+            unitLabel.setText(this.unitText);
 
-                if (this.format != null) {
-                    setFieldKeyboard(edit);
-                }
+            if (this.format != null) {
+                setFieldKeyboard(edit);
+            }
 
-                // Special case for tree diameter. Make a synced circumference
-                // field
-                if (this.key.equals(TREE_DIAMETER)) {
-                    return makeDynamicDbhFields(layout, context, container);
-                }
+            // Special case for tree diameter. Make a synced circumference
+            // field
+            if (this.key.equals(TREE_DIAMETER)) {
+                return makeDynamicDbhFields(layout, context, container);
             }
         }
 
@@ -223,28 +215,6 @@ public class Field {
         return dynamicDbh;
     }
 
-    private void setupDateField(final Button choiceButton, final Object value, final Context context) {
-        if (!JSONObject.NULL.equals(value)) {
-            String timestamp = (String) value;
-            final String formattedDate = formatTimestampForDisplay(timestamp);
-            choiceButton.setText(formattedDate);
-            choiceButton.setTag(R.id.choice_button_value_tag, timestamp);
-        } else {
-            choiceButton.setText(R.string.unspecified_field_value);
-        }
-        choiceButton.setOnClickListener(v -> {
-            final String setTimestamp = (String) choiceButton.getTag(R.id.choice_button_value_tag);
-            final Calendar cal = getCalendarForTimestamp(context, setTimestamp);
-            new DatePickerDialog(context, (view, year, month, day) -> {
-                final String updatedTimestamp = getTimestamp(context, year, month, day);
-                final String displayDate = formatTimestampForDisplay(updatedTimestamp);
-
-                choiceButton.setText(displayDate);
-                choiceButton.setTag(R.id.choice_button_value_tag, updatedTimestamp);
-            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
-        });
-    }
-
     private void setFieldKeyboard(EditText edit) {
         if (this.format.equals("float")) {
             edit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -270,8 +240,6 @@ public class Field {
         if (format != null) {
             if (format.equals("float")) {
                 return formatWithDigits(value, this.digits) + " " + this.unitText;
-            } else if (format.equals(DATE_TYPE)) {
-                return formatTimestampForDisplay((String) value);
             }
         }
         return value + " " + this.unitText;
@@ -283,47 +251,6 @@ public class Field {
             return String.format("%." + digits + "f", d);
         } catch (ClassCastException e) {
             return value.toString();
-        }
-    }
-
-    private Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
-        final Calendar cal = new GregorianCalendar();
-        final SimpleDateFormat timestampFormatter =
-                new SimpleDateFormat(context.getString(R.string.server_date_format));
-
-        if (setTimestamp != null) {
-
-            try {
-                cal.setTime(timestampFormatter.parse(setTimestamp));
-            } catch (ParseException e) {
-                Log.e(App.LOG_TAG, "Error parsing date stored on tag.", e);
-            }
-        }
-        return cal;
-    }
-
-    private String getTimestamp(Context context, int year, int month, int day) {
-        final SimpleDateFormat timestampFormatter =
-                new SimpleDateFormat(context.getString(R.string.server_date_format));
-        final Calendar updatedCal = new GregorianCalendar();
-        updatedCal.set(Calendar.YEAR, year);
-        updatedCal.set(Calendar.MONTH, month);
-        updatedCal.set(Calendar.DAY_OF_MONTH, day);
-
-        return timestampFormatter.format(updatedCal.getTime());
-    }
-
-    private String formatTimestampForDisplay(String timestamp) {
-        final String displayPattern = App.getCurrentInstance().getShortDateFormat();
-        final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
-
-        final SimpleDateFormat timestampFormatter = new SimpleDateFormat(serverPattern);
-        final SimpleDateFormat displayFormatter = new SimpleDateFormat(displayPattern);
-        try {
-            final Date date = timestampFormatter.parse(timestamp);
-            return displayFormatter.format(date);
-        } catch (ParseException e) {
-            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
     }
 
@@ -449,16 +376,6 @@ public class Field {
                 }
 
                 return text.getText().toString();
-
-            } else if (this.valueView instanceof Button) {
-                Object choiceVal = this.valueView.getTag(R.id.choice_button_value_tag);
-
-                if (JSONObject.NULL.equals(choiceVal) || TextUtils.isEmpty(choiceVal.toString())) {
-                    return null;
-                }
-
-                return choiceVal;
-
             } else {
                 throw new Exception("Unknown ValueView type for field editing");
             }

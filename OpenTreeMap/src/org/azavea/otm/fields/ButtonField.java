@@ -10,7 +10,6 @@ import android.widget.TextView;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
 import org.json.JSONObject;
 
 
@@ -49,11 +48,11 @@ public abstract class ButtonField extends Field {
 
             this.valueView = choiceButton;
 
-            setupButton(choiceButton, value, model);
+            setupButton(choiceButton, value, model, context);
         }
 
         return container;
     }
 
-    protected abstract void setupButton(Button button, Object value, Model model);
+    protected abstract void setupButton(Button button, Object value, Model model, Context context);
 }

@@ -53,7 +53,7 @@ public class SpeciesField extends ButtonField {
     }
 
     @Override
-    protected void setupButton(Button button, Object value, Model model) {
+    protected void setupButton(Button button, Object value, Model model, Context context) {
         JSONObject json = model.getData();
 
         // species could either be truly null, or an actual but empty JSONObject {}

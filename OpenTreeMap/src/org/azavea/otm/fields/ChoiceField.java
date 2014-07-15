@@ -3,17 +3,11 @@ package org.azavea.otm.fields;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import org.azavea.otm.App;
 import org.azavea.otm.Choice;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -61,7 +55,7 @@ public class ChoiceField extends ButtonField {
     }
 
     @Override
-    protected void setupButton(final Button choiceButton, Object value, Model model) {
+    protected void setupButton(final Button choiceButton, Object value, Model model, Context context) {
         choiceButton.setText(R.string.unspecified_field_value);
 
         if (!JSONObject.NULL.equals(value)) {
