@@ -1,7 +1,7 @@
 package org.azavea.otm.fields;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Button;
 
@@ -55,7 +55,7 @@ public class ChoiceField extends ButtonField {
     }
 
     @Override
-    protected void setupButton(final Button choiceButton, Object value, Model model, Context context) {
+    protected void setupButton(final Button choiceButton, Object value, Model model, Activity activity) {
         choiceButton.setText(R.string.unspecified_field_value);
 
         if (!JSONObject.NULL.equals(value)) {

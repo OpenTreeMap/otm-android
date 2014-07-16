@@ -97,7 +97,7 @@ public abstract class Field {
     /**
      * Render a view to display the given model field in edit mode
      */
-    public abstract View renderForEdit(LayoutInflater layout, Plot model, Context context);
+    public abstract View renderForEdit(LayoutInflater layout, Plot model, Activity activity);
 
     /**
      * Gets the edited value for use when updating
@@ -109,7 +109,7 @@ public abstract class Field {
     /*
      * Render a view to display the given model field in view mode
      */
-    public View renderForDisplay(LayoutInflater layout, Plot model, Context context) throws JSONException {
+    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity) throws JSONException {
 
         // our ui elements
         View container = layout.inflate(R.layout.plot_field_row, null);
@@ -139,14 +139,14 @@ public abstract class Field {
         // Note that the semantics of the bindPendingEditClickHandler function take
         // a key into the pending edit array, and an optional related field.
         if (pending) {
-            bindPendingEditClickHandler(pendingButton, this.key, model, context);
+            bindPendingEditClickHandler(pendingButton, this.key, model, activity);
             pendingButton.setVisibility(View.VISIBLE);
         }
 
         // If the field has a URL attached to it as an info description (IE for pests) display the link.
         if (!TextUtils.isEmpty(this.infoUrl)) {
             infoButton.setVisibility(View.VISIBLE);
-            bindInfoButtonClickHandler(infoButton, this.infoUrl, context);
+            bindInfoButtonClickHandler(infoButton, this.infoUrl, activity);
         }
 
         return container;
@@ -166,6 +166,10 @@ public abstract class Field {
 
             setValueForKey(key, model.getData(), currentValue);
         }
+    }
+
+    public void receiveActivityResult(int resultCode, Intent data) {
+        Log.w(App.LOG_TAG, "Received intent data for a field which doesn't start an activity.  Ignoring the intent result.");
     }
 
     private String formatUnitIfPresent(Object value) {

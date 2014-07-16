@@ -1,15 +1,11 @@
 package org.azavea.otm.fields;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.Editable;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.azavea.otm.R;
@@ -28,7 +24,7 @@ public class DiameterField extends TextField {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater inflater, Plot model, Context context) {
+    public View renderForEdit(LayoutInflater inflater, Plot model, Activity activity) {
         if (this.canEdit) {
             Object value = getValueForKey(this.key, model.getData());
             View container = inflater.inflate(R.layout.plot_field_edit_diameter_row, null);

@@ -1,6 +1,6 @@
 package org.azavea.otm.fields;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,7 @@ public abstract class ButtonField extends Field {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, Context context) {
+    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
         View container = null;
 
         if (this.canEdit) {
@@ -48,11 +48,11 @@ public abstract class ButtonField extends Field {
 
             this.valueView = choiceButton;
 
-            setupButton(choiceButton, value, model, context);
+            setupButton(choiceButton, value, model, activity);
         }
 
         return container;
     }
 
-    protected abstract void setupButton(Button button, Object value, Model model, Context context);
+    protected abstract void setupButton(Button button, Object value, Model model, Activity activity);
 }

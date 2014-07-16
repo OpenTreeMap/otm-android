@@ -1,5 +1,6 @@
 package org.azavea.otm.fields;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.util.Log;
@@ -42,7 +43,7 @@ public class DateField extends ButtonField {
     }
 
     @Override
-    protected void setupButton(final Button choiceButton, Object value, Model model, Context context) {
+    protected void setupButton(final Button choiceButton, Object value, Model model, Activity activity) {
         if (!JSONObject.NULL.equals(value)) {
             final String timestamp = (String) value;
             final String formattedDate = formatTimestampForDisplay(timestamp);
@@ -53,9 +54,9 @@ public class DateField extends ButtonField {
         }
         choiceButton.setOnClickListener(v -> {
             final String setTimestamp = (String) choiceButton.getTag(R.id.choice_button_value_tag);
-            final Calendar cal = getCalendarForTimestamp(context, setTimestamp);
-            new DatePickerDialog(context, (view, year, month, day) -> {
-                final String updatedTimestamp = getTimestamp(context, year, month, day);
+            final Calendar cal = getCalendarForTimestamp(activity, setTimestamp);
+            new DatePickerDialog(activity, (view, year, month, day) -> {
+                final String updatedTimestamp = getTimestamp(activity, year, month, day);
                 final String displayDate = formatTimestampForDisplay(updatedTimestamp);
 
                 choiceButton.setText(displayDate);

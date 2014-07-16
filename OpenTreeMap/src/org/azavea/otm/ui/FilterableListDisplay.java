@@ -25,9 +25,15 @@ import static org.azavea.otm.adapters.LinkedHashMapAdapter.Entry;
 
 public abstract class FilterableListDisplay<T extends Model> extends ListActivity {
 
-    public static final String MODEL_DATA = "model";
-
+    /***
+     * @return The Resource id of the hint text to show in the filter textbox
+     */
     protected abstract int getFilterHintTextId();
+
+    /***
+     * @return The key used to store the model data in the intent result
+     */
+    protected abstract String getIntentDataKey();
 
     @Override
     public void onCreate(Bundle data) {
@@ -97,7 +103,7 @@ public abstract class FilterableListDisplay<T extends Model> extends ListActivit
         Model selection = ((Entry<Model>) l.getItemAtPosition(position)).value;
         Intent result = new Intent();
 
-        result.putExtra(MODEL_DATA, selection.getData().toString());
+        result.putExtra(getIntentDataKey(), selection.getData().toString());
 
         setResult(RESULT_OK, result);
         finish();
