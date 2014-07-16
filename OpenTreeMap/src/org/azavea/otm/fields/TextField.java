@@ -40,7 +40,7 @@ public class TextField extends Field {
 
         if (this.canEdit) {
             container = layout.inflate(R.layout.plot_field_edit_row, null);
-            Object value = getValueForKey(this.key, plot.getData());
+            Object value = plot.getValueForKey(this.key);
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
             EditText edit = (EditText) container.findViewById(R.id.field_value);

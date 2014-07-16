@@ -54,13 +54,11 @@ public class SpeciesField extends ButtonField {
 
     @Override
     protected void setupButton(Button button, Object value, Model model, Activity activity) {
-        JSONObject json = model.getData();
-
         // species could either be truly null, or an actual but empty JSONObject {}
         if (!JSONObject.NULL.equals(value)) {
             // Set the button text to the common and sci name
-            String sciName = (String) getValueForKey("tree.species.scientific_name", json);
-            String commonName = (String) getValueForKey("tree.species.common_name", json);
+            String sciName = (String) model.getValueForKey("tree.species.scientific_name");
+            String commonName = (String) model.getValueForKey("tree.species.common_name");
             button.setText(commonName + "\n" + sciName);
             Species speciesValue = new Species();
             speciesValue.setData((JSONObject) value);

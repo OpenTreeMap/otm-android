@@ -41,7 +41,7 @@ public abstract class ButtonField extends Field {
 
         if (this.canEdit) {
             container = layout.inflate(R.layout.plot_field_edit_button_row, null);
-            Object value = getValueForKey(this.key, plot.getData());
+            Object value = plot.getValueForKey(this.key);
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
             Button choiceButton = (Button) container.findViewById(R.id.choice_select);

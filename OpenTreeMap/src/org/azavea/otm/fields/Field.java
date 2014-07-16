@@ -164,7 +164,7 @@ public abstract class Field {
                 p.createTree();
             }
 
-            setValueForKey(key, model.getData(), currentValue);
+            model.setValueForKey(key, currentValue);
         }
     }
 
@@ -187,84 +187,18 @@ public abstract class Field {
         return value.toString();
     }
 
-    public static Object getValueForKey(String key, Plot plot) throws JSONException {
+    private static Object getValueForKey(String key, Plot plot) throws JSONException {
         PendingEditDescription pending = plot.getPendingEditForKey(key);
         if (pending != null) {
             return plot.getPendingEditForKey(key).getLatestValue();
         } else {
-            return getValueForKey(key, plot.getData());
+            return plot. getValueForKey(key);
         }
     }
 
-    public static boolean isKeyPending(String key, Plot plot) throws JSONException {
+    private static boolean isKeyPending(String key, Plot plot) throws JSONException {
         PendingEditDescription pending = plot.getPendingEditForKey(key);
         return pending != null;
-    }
-
-    /**
-     * Return the value of a key name, which can be nested using . notation. If
-     * the key does not exist or the value of the key, it will return a null
-     * value
-     */
-    public static Object getValueForKey(String key, JSONObject json) {
-        try {
-            String[] keys = key.split("\\.");
-            NestedJsonAndKey found = getValueForKey(keys, 0, json, false);
-            if (found != null) {
-                return found.get();
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            Log.w(App.LOG_TAG, "Could not find key: " + key + " on plot/tree object");
-            return null;
-        }
-    }
-
-    /**
-     * Return value for keys, which could be nested as an array
-     */
-    private static NestedJsonAndKey getValueForKey(String[] keys, int index, JSONObject json, boolean createNodeIfEmpty)
-            throws JSONException {
-        if (index < keys.length - 1 && keys.length > 1) {
-            JSONObject child;
-            if (json.isNull(keys[index]) && createNodeIfEmpty) {
-                child = new JSONObject();
-                json.put(keys[index], child);
-            } else {
-                child = json.getJSONObject(keys[index]);
-            }
-
-            index++;
-            return getValueForKey(keys, index, child, createNodeIfEmpty);
-        }
-
-        // We care to distinguish between a null value and a missing key.
-        if (json.has(keys[index])) {
-            return new NestedJsonAndKey(json, keys[index]);
-        } else if (createNodeIfEmpty) {
-            // Create an empty node for this key
-            return new NestedJsonAndKey(json.put(keys[index], ""), keys[index]);
-        } else {
-            return null;
-        }
-
-    }
-
-    private void setValueForKey(String key, JSONObject json, Object value) throws Exception {
-        try {
-            String[] keys = key.split("\\.");
-            NestedJsonAndKey found = getValueForKey(keys, 0, json, true);
-            if (found != null) {
-                found.set(value);
-            } else {
-                Log.w(App.LOG_TAG, "Specified key does not exist, cannot set value: " + key);
-            }
-
-        } catch (Exception e) {
-            Log.w(App.LOG_TAG, "Could not set value key: " + key + " on plot/tree object");
-            throw e;
-        }
     }
 
     /*
@@ -281,7 +215,7 @@ public abstract class Field {
             // initialize the intent, and load it with some initial values
             Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
             pendingItemDisplay.putExtra("label", label);
-            pendingItemDisplay.putExtra("currentValue", formatUnitIfPresent(getValueForKey(key, model.getData())));
+            pendingItemDisplay.putExtra("currentValue", formatUnitIfPresent(model.getValueForKey(key)));
             pendingItemDisplay.putExtra("key", key);
 
             // Now create an array of pending values, [{id: X, value: "42",
