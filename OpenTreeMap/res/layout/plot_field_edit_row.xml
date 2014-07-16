@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10dip"
-    android:layout_marginRight="10dip"
-    android:orientation="vertical" >
+    style="@style/plot_edit_row_layout" >
 
     <TextView
         android:id="@+id/field_label"
@@ -29,10 +25,5 @@
             android:layout_toLeftOf="@id/field_unit" >
         </EditText>
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/choice_select"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

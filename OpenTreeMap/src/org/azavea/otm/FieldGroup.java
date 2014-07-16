@@ -2,16 +2,17 @@ package org.azavea.otm;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.User;
+import org.azavea.otm.fields.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,28 +67,25 @@ public class FieldGroup {
         return fields;
     }
 
-    private View render(LayoutInflater layout, Plot model, DisplayMode mode, User user, Context context) {
-
+    private View render(LayoutInflater layout, Plot model, DisplayMode mode, Activity activity) {
 
         View container = layout.inflate(R.layout.plot_field_group, null);
         LinearLayout group = (LinearLayout) container.findViewById(R.id.field_group);
         View fieldView;
         int renderedFieldCount = 0;
 
-
         ((TextView) group.findViewById(R.id.group_name)).setText(this.title);
+
         if (this.title != null) {
-            for (Entry<String, Field> field : fields.entrySet()) {
+            for (Field field : fields.values()) {
                 try {
                     fieldView = null;
                     switch (mode) {
                         case VIEW:
-                            if (!field.getValue().editViewOnly) {
-                                fieldView = field.getValue().renderForDisplay(layout, model, context);
-                            }
+                            fieldView = field.renderForDisplay(layout, model, activity);
                             break;
                         case EDIT:
-                            fieldView = field.getValue().renderForEdit(layout, model, user, context);
+                            fieldView = field.renderForEdit(layout, model, activity);
                             break;
                     }
 
@@ -97,7 +95,7 @@ public class FieldGroup {
                     }
 
                 } catch (JSONException e) {
-                    Log.d(App.LOG_TAG, "Error rendering field '" + field.getKey() + "' " + e.getMessage());
+                    Log.d(App.LOG_TAG, "Error rendering field '" + field.key + "' " + e.getMessage());
                 }
             }
         }
@@ -110,25 +108,30 @@ public class FieldGroup {
 
     /**
      * Render a field group and its child fields for viewing
-     *
-     * @throws JSONException
      */
-    public View renderForDisplay(LayoutInflater layout, Plot model, Context context) {
-        return render(layout, model, DisplayMode.VIEW, null, context);
+    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity) {
+        return render(layout, model, DisplayMode.VIEW, activity);
     }
 
     /**
      * Render a field group and its child fields for editing
-     *
-     * @throws JSONException
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, User user, Context context) {
-        return render(layout, model, DisplayMode.EDIT, user, context);
+    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
+        return render(layout, model, DisplayMode.EDIT, activity);
     }
 
     public void update(Model model) throws Exception {
-        for (Entry<String, Field> field : fields.entrySet()) {
-            field.getValue().update(model);
+        for (Field field : fields.values()) {
+            field.update(model);
+        }
+    }
+
+    public void receiveActivityResult(int resultCode, Intent data) {
+        Set<String> keys = data.getExtras().keySet();
+        for (String key: keys) {
+            if (fields.containsKey(key)) {
+                fields.get(key).receiveActivityResult(resultCode, data);
+            }
         }
     }
 }

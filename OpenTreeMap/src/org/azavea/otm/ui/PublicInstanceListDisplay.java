@@ -19,10 +19,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInfo> {
+    public static final String MODEL_DATA = "instance";
 
     @Override
     protected int getFilterHintTextId() {
         return R.string.filter_instances_hint;
+    }
+
+    @Override
+    protected String getIntentDataKey() {
+        return MODEL_DATA;
     }
 
     @Override

@@ -1,15 +1,12 @@
 package org.azavea.otm.ui;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.Map.Entry;
 
 import org.azavea.otm.App;
-import org.azavea.otm.Field;
 import org.azavea.otm.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.Species;
+import org.azavea.otm.fields.SpeciesField;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
@@ -25,27 +22,23 @@ import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class TreeEditDisplay extends TreeDisplay {
-
-    protected static final int SPECIES_SELECTOR = 0;
+    // Intent Request codes
+    public static final int FIELD_ACTIVITY_REQUEST_CODE = 0;
     protected static final int TREE_PHOTO = 1;
     protected static final int TREE_MOVE = 2;
     protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
     protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
-    private Field speciesField;
+    private SpeciesField speciesField;
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
     private final ProgressDialog savePhotoDialog = null;
@@ -136,8 +129,7 @@ public class TreeEditDisplay extends TreeDisplay {
         View first = null;
         // Add all the fields to the display for edit mode
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-            View fieldGroup = group.renderForEdit(layout, plot, App.getLoginManager().loggedInUser,
-                    TreeEditDisplay.this);
+            View fieldGroup = group.renderForEdit(layout, plot, TreeEditDisplay.this);
             if (first == null) {
                 first = fieldGroup;
             }
@@ -153,104 +145,8 @@ public class TreeEditDisplay extends TreeDisplay {
             first.requestFocus();
         }
 
-        setupCircumferenceField(layout);
-        setupSpeciesSelector();
         setupChangePhotoButton(layout, fieldList);
         setupDeleteButtons(layout, fieldList);
-    }
-
-    /**
-     * If the tree.diameter field exists for editing, also include a synced
-     * circumference field so that the user can enter either measurement
-     */
-    private void setupCircumferenceField(LayoutInflater layout) {
-        View dbhField = findViewById(R.id.dynamic_dbh);
-        if (dbhField == null) {
-            return;
-        }
-        final EditText dbh = (EditText) dbhField.findViewById(R.id.field_value);
-        final EditText cir = (EditText) findViewById(R.id.dynamic_circumference).findViewById(R.id.field_value);
-
-        dbh.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                handleTextChange(dbh, cir, false);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-        });
-
-        cir.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                handleTextChange(cir, dbh, true);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-        });
-
-        dbh.setText(dbh.getText());
-    }
-
-    private void handleTextChange(EditText editing, EditText receiving, boolean calcDbh) {
-        try {
-            DecimalFormat df = new DecimalFormat("#.##");
-
-            String editingText = editing.getText().toString();
-            String other = receiving.getText().toString();
-            double otherVal = (other.equals("") || other.equals(".")) ? 0 : Double.parseDouble(other);
-
-            // If the value was blanked, and the other is not already blank,
-            // blank it
-            if (editingText.equals("")) {
-                if (other.equals("")) {
-                    return;
-                } else {
-                    receiving.setText("");
-                }
-                return;
-            }
-
-            String display;
-            double calculatedVal;
-
-            // Handle cases where the first input is a decimal point
-            if (editingText.equals(".")) {
-                editingText = "0.";
-            }
-
-            if (calcDbh) {
-                double c = Double.parseDouble(editingText);
-                calculatedVal = c / Math.PI;
-            } else {
-                double d = Double.parseDouble(editingText);
-                calculatedVal = Math.PI * d;
-
-            }
-            display = df.format(calculatedVal);
-
-            // Only set the other text if there is a significant difference
-            // in from the calculated value
-            if (Math.abs(otherVal - calculatedVal) >= 0.05) {
-                receiving.setText(display);
-                receiving.setSelection(display.length());
-            }
-
-        } catch (Exception e) {
-            editing.setText("");
-        }
     }
 
     /**
@@ -338,29 +234,6 @@ public class TreeEditDisplay extends TreeDisplay {
         };
 
         confirmDelete(R.string.confirm_delete_plot_msg, confirm);
-    }
-
-    /**
-     * Species selector has its own activity and workflow. If it's enabled for
-     * this implementation. Since Activities with results can only be started from
-     * within other activities, this is created here, and applied to the view
-     * contained by the field class
-     */
-    private void setupSpeciesSelector() {
-
-        OnClickListener speciesClickListener = v -> {
-            Intent speciesSelector = new Intent(App.getAppInstance(), SpeciesListDisplay.class);
-            startActivityForResult(speciesSelector, SPECIES_SELECTOR);
-        };
-
-        for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-            if (group.getFields().containsKey(Field.TREE_SPECIES)) {
-                speciesField = group.getFields().get(Field.TREE_SPECIES);
-                speciesField.attachClickListener(speciesClickListener);
-                break;
-            }
-        }
-
     }
 
     /**
@@ -514,21 +387,13 @@ public class TreeEditDisplay extends TreeDisplay {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case SPECIES_SELECTOR:
+            // In order to allow Fields to handle activity results themselves, share the activity
+            // result with all of the FieldGroups, which will dispatch to the appropriate fields
+            // based on the keys in the intent data
+            case FIELD_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    CharSequence speciesJSON = data.getCharSequenceExtra(SpeciesListDisplay.MODEL_DATA);
-                    if (!JSONObject.NULL.equals(speciesJSON)) {
-                        Species species = new Species();
-                        try {
-
-                            species.setData(new JSONObject(speciesJSON.toString()));
-                            speciesField.setValue(species);
-
-                        } catch (JSONException e) {
-                            String msg = "Unable to retrieve selected species";
-                            Log.e(App.LOG_TAG, msg, e);
-                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-                        }
+                    for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
+                        group.receiveActivityResult(resultCode, data);
                     }
                 }
                 break;

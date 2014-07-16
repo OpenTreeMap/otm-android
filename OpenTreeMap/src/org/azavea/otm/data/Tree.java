@@ -1,6 +1,6 @@
 package org.azavea.otm.data;
 
-import org.azavea.otm.Field;
+import org.azavea.otm.fields.Field;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +35,7 @@ public class Tree extends Model {
         }
 
         // Use the field value, which could be a recent pending value
-        Object value = Field.getValueForKey("tree.diameter", plot);
+        Object value = plot.getValueForKey("tree.diameter");
         if (value != null) {
             return Double.parseDouble(value.toString());
         } else {
@@ -67,7 +67,7 @@ public class Tree extends Model {
         if (getCurrentOnly) {
             return data.getString("species_name");
         }
-        Object value = Field.getValueForKey("tree.species_name", plot);
+        Object value = plot.getValueForKey("tree.species_name");
         if (value != null) {
             return value.toString();
         } else {

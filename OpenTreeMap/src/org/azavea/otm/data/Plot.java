@@ -368,4 +368,45 @@ public class Plot extends Model {
         return this.data.optString("geoRevHash",
                 App.getAppInstance().getCurrentInstance().getGeoRevId());
     }
+
+    /**
+     * @param pendingKey: the key to get pending edits for
+     */
+    public String getValueForLatestPendingEdit(String pendingKey) {
+        // get the pending edit description object for this plot
+        PendingEditDescription ped;
+        try {
+            ped = getPendingEditForKey(pendingKey);
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "JSON exception reading pending edit field", e);
+            return "";
+        }
+
+        // get a list of pending edits
+        List<PendingEdit> pendingEditList;
+        try {
+            pendingEditList = ped.getPendingEdits();
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "JSON exception reading pending edit field", e);
+            return "";
+        }
+
+        // I assert that the most recent one is the first one. (argh.)
+        PendingEdit mostRecentPendingEdit;
+        if (pendingEditList.size() != 0) {
+            mostRecentPendingEdit = pendingEditList.get(0);
+        } else {
+            return "";
+        }
+
+        String value;
+        try {
+            value = mostRecentPendingEdit.getValue();
+        } catch (JSONException e) {
+            value = null;
+        }
+
+        return value;
+
+    }
 }

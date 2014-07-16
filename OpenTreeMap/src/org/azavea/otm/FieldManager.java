@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.fields.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,10 +87,8 @@ public class FieldManager {
 
     public Field getField(String name) {
         for (FieldGroup group : allDisplayFields) {
-            for (Map.Entry<String, Field> field : group.getFields().entrySet()) {
-                if (field.getKey().equals(name)) {
-                    return field.getValue();
-                }
+            if (group.getFields().containsKey(name)) {
+                return group.getFields().get(name);
             }
         }
         return null;

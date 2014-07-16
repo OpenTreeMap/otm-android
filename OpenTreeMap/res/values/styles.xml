@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Copyright 2009 Joe LaPenna -->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Allows Holo.Light.NoActionBar on SDK 11 -->
-    <style name="HoloNoTitle" parent="android:Theme.Holo.Light">
-        <item name="android:windowActionBar">false</item>
+    <!-- Allows Holo.Light.NoActionBar on SDK 10 -->
+    <style name="HoloNoTitle" parent="@style/_holo_custom">
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -282,5 +280,13 @@
     <style name="nearby_list_row" parent="@style/general_list_row_text">
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/instance_switcher_element_border</item>
+    </style>
+
+    <style name="plot_edit_row_layout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:orientation">vertical</item>
     </style>
 </resources>

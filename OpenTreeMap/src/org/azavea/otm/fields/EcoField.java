@@ -1,10 +1,11 @@
-package org.azavea.otm;
+package org.azavea.otm.fields;
 
+import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class EcoField extends Field {
     }
 
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot model, Context context)
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity)
             throws JSONException {
 
         View container = layout.inflate(R.layout.plot_ecofield_row, null);
@@ -40,7 +41,19 @@ public class EcoField extends Field {
 
         ((TextView) container.findViewById(R.id.field_money))
                 .setText(this.currency + " " +
-                        context.getString(R.string.eco_currencey_saved_text));
+                        activity.getString(R.string.eco_currencey_saved_text));
         return container;
+    }
+
+    @Override
+    @Deprecated
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
+        return null;
+    }
+
+    @Override
+    @Deprecated
+    protected Object getEditedValue() {
+        return null;
     }
 }

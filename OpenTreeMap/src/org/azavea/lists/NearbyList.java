@@ -6,10 +6,11 @@ import java.util.Map;
 
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
-import org.azavea.otm.Field;
+import org.azavea.otm.fields.Field;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
+import org.azavea.otm.fields.TextField;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
@@ -195,7 +196,7 @@ public class NearbyList implements InfoList {
 
     private String getDiameter(Plot p) {
         String dbhKey = "tree.diameter";
-        Field dbhField = App.getFieldManager().getField(dbhKey);
+        TextField dbhField = (TextField) App.getFieldManager().getField(dbhKey);
         String diameter = context.getString(R.string.diameter_missing);
 
         try {

@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
+import org.azavea.otm.fields.Field;
 import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
@@ -234,7 +235,7 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
         switch (requestCode) {
             case (SPECIES_SELECTOR): {
                 if (resultCode == Activity.RESULT_OK) {
-                    CharSequence speciesJSON = data.getCharSequenceExtra(SpeciesListDisplay.MODEL_DATA);
+                    CharSequence speciesJSON = data.getCharSequenceExtra(Field.TREE_SPECIES);
                     if (!JSONObject.NULL.equals(speciesJSON)) {
                         Species species = new Species();
                         try {

@@ -9,16 +9,21 @@ import org.azavea.otm.R;
 import org.azavea.otm.FilterManager;
 import org.azavea.otm.adapters.SpeciesAdapter;
 import org.azavea.otm.data.Species;
+import org.azavea.otm.fields.Field;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 public class SpeciesListDisplay extends FilterableListDisplay<Species> {
-
     @Override
     protected int getFilterHintTextId() {
         return R.string.filter_species_hint;
+    }
+
+    @Override
+    protected String getIntentDataKey() {
+        return Field.TREE_SPECIES;
     }
 
     @Override
