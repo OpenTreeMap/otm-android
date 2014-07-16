@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.azavea.otm.App;
-import org.azavea.otm.NestedJsonAndKey;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.PendingEdit;
@@ -26,6 +25,20 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+/***
+ * An abstract class for rendering and updating fields displayed on the TreeInfoDisplay and
+ * TreeEditDisplay activities
+ *
+ * The makeField method examines the JSON and dispatches out to the proper Field subclass
+ *
+ * In order to add a new type of Field it is necessary to implement 'renderForEdit' and 'getEditedValue'
+ *
+ * It may also be necessary to implement 'formatValue', if the value to be displayed in display mode
+ * is different from what is returned by 'getEditedValue'
+ *
+ * If the field you are adding uses a button or a textbox in edit mode, you should subclass
+ * ButtonField or TextField respectively
+ */
 public abstract class Field {
     public static final String TREE_SPECIES = "tree.species";
     public static final String TREE_DIAMETER = "tree.diameter";
@@ -96,6 +109,8 @@ public abstract class Field {
 
     /**
      * Render a view to display the given plot field in edit mode
+     *
+     * The Field will not be displayed if this method returns null
      */
     public abstract View renderForEdit(LayoutInflater layout, Plot plot, Activity activity);
 
