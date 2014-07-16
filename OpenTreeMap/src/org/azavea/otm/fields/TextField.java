@@ -34,13 +34,13 @@ public class TextField extends Field {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
 
         View container = null;
 
         if (this.canEdit) {
             container = layout.inflate(R.layout.plot_field_edit_row, null);
-            Object value = getValueForKey(this.key, model.getData());
+            Object value = getValueForKey(this.key, plot.getData());
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
             EditText edit = (EditText) container.findViewById(R.id.field_value);

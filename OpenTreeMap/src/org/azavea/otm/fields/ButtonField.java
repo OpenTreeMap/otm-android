@@ -36,19 +36,19 @@ public abstract class ButtonField extends Field {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
         View container = null;
 
         if (this.canEdit) {
             container = layout.inflate(R.layout.plot_field_edit_button_row, null);
-            Object value = getValueForKey(this.key, model.getData());
+            Object value = getValueForKey(this.key, plot.getData());
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
             Button choiceButton = (Button) container.findViewById(R.id.choice_select);
 
             this.valueView = choiceButton;
 
-            setupButton(choiceButton, value, model, activity);
+            setupButton(choiceButton, value, plot, activity);
         }
 
         return container;

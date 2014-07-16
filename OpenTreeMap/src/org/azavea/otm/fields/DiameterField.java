@@ -24,9 +24,9 @@ public class DiameterField extends TextField {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater inflater, Plot model, Activity activity) {
+    public View renderForEdit(LayoutInflater inflater, Plot plot, Activity activity) {
         if (this.canEdit) {
-            Object value = getValueForKey(this.key, model.getData());
+            Object value = getValueForKey(this.key, plot.getData());
             View container = inflater.inflate(R.layout.plot_field_edit_diameter_row, null);
 
             View diameterRow = container.findViewById(R.id.diameter_row);

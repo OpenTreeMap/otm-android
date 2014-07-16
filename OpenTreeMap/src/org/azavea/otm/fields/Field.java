@@ -95,9 +95,9 @@ public abstract class Field {
     }
 
     /**
-     * Render a view to display the given model field in edit mode
+     * Render a view to display the given plot field in edit mode
      */
-    public abstract View renderForEdit(LayoutInflater layout, Plot model, Activity activity);
+    public abstract View renderForEdit(LayoutInflater layout, Plot plot, Activity activity);
 
     /**
      * Gets the edited value for use when updating
@@ -107,9 +107,9 @@ public abstract class Field {
     protected abstract Object getEditedValue();
 
     /*
-     * Render a view to display the given model field in view mode
+     * Render a view to display the given plot field in view mode
      */
-    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity) throws JSONException {
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity) throws JSONException {
 
         // our ui elements
         View container = layout.inflate(R.layout.plot_field_row, null);
@@ -122,15 +122,15 @@ public abstract class Field {
         label.setText(this.label);
 
         // is this field pending (based on its own notion of pending.)
-        Boolean pending = isKeyPending(this.key, model);
+        Boolean pending = isKeyPending(this.key, plot);
 
         // Determine the current value of the field and update the ui. (Based on current
         // value or value of simple pending edit
         String value;
         if (!pending) {
-            value = formatUnitIfPresent(getValueForKey(this.key, model));
+            value = formatUnitIfPresent(getValueForKey(this.key, plot));
         } else {
-            value = model.getValueForLatestPendingEdit(this.key);
+            value = plot.getValueForLatestPendingEdit(this.key);
         }
         fieldValue.setText(value);
 
@@ -139,7 +139,7 @@ public abstract class Field {
         // Note that the semantics of the bindPendingEditClickHandler function take
         // a key into the pending edit array, and an optional related field.
         if (pending) {
-            bindPendingEditClickHandler(pendingButton, this.key, model, activity);
+            bindPendingEditClickHandler(pendingButton, this.key, plot, activity);
             pendingButton.setVisibility(View.VISIBLE);
         }
 

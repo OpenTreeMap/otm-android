@@ -30,7 +30,7 @@ public class EcoField extends Field {
     }
 
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity)
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity)
             throws JSONException {
 
         View container = layout.inflate(R.layout.plot_ecofield_row, null);
@@ -47,7 +47,7 @@ public class EcoField extends Field {
 
     @Override
     @Deprecated
-    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
         return null;
     }
 
