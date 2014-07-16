@@ -42,14 +42,14 @@ public class TreeEditDisplay extends TreeDisplay {
     protected static final int SPECIES_SELECTOR = 0;
     protected static final int TREE_PHOTO = 1;
     protected static final int TREE_MOVE = 2;
+    protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
+    protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
     private Field speciesField;
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
     private final ProgressDialog savePhotoDialog = null;
 
-    protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
-    protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
     private static String outputFilePath;
 

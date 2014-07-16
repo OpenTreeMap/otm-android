@@ -1,12 +1,12 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile project(':OpenTreeMap')
 }
 
 android {
-    compileSdkVersion 16
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 19
+    buildToolsVersion "20.0.0"
 
     sourceSets {
         main {

@@ -6,9 +6,8 @@ Development Instructions
 
 ### Android Studio Setup
 
-* This project uses [RetroLambda](https://github.com/evant/gradle-retrolambda) to support Java-8 Lambdas on Android, which requires some setup:
+* This project uses [RetroLambda](https://github.com/evant/gradle-retrolambda) to support Java-8 Lambdas on Android, which requires JDK8:
   * Install JDK8 (If you are running Ubuntu, [see here](http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html))
-  * Setup a JAVA8_HOME environment variable (On Ubuntu with the Oracle JVM this will be `/usr/lib/jvm/java-8-oracle/`)
 
 * download Android Studio
 
@@ -19,7 +18,7 @@ Development Instructions
     * `Google Play services`
     * `Google Repository`
     * `Android Support Repository`
-  * For all the SDK versions that you will use, (currently API 11, API 16, API [latest]), grab:
+  * For all the SDK versions that you will use, (currently API 10, API 16, API [latest]), grab:
     * `SDK Platform`
     * `Google APIs` (ARM if there's a choice)
     * `System Image` (if you are using an emulator)

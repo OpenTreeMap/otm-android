@@ -117,7 +117,7 @@ public abstract class FilterableListDisplay<T extends Model> extends ListActivit
         }
         for (T item : list) {
             //noinspection ConstantConditions
-            char firstChar = getKey.apply(item).toUpperCase().charAt(0);
+            char firstChar = getKey.apply(item).toUpperCase().trim().charAt(0);
             if (firstChar < 'A' || firstChar > 'Z') {
                 firstChar = 'A';
             }
