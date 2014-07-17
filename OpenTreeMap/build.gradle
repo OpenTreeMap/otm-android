@@ -9,6 +9,11 @@ dependencies {
     compile 'com.google.guava:guava:17.0'
 }
 
+// Work around bug with gradle-retrolambda and newest version of the android gradle plugin
+configurations {
+    compile.exclude module: 'support-annotations'
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "20.0.0"
