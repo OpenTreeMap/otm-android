@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android.png
-   :target: https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android
+[![Travis build status](https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android.png?branch=master)](https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android
+)
 
 OpenTreeMap for Android
 =======================
