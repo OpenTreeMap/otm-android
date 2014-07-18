@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android.png
+   :target: https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android
+
 OpenTreeMap for Android
 =======================
 
