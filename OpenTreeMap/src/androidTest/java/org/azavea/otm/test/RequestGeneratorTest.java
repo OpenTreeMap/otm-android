@@ -5,21 +5,16 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.RestClient;
 import org.azavea.otm.rest.handlers.RestHandler;
 
-
 import static org.mockito.Mockito.*;
 
-import junit.framework.TestCase;
 
-public class RequestGeneratorTest extends TestCase {
+public class RequestGeneratorTest extends OpenTreeMapTestCase {
     private RequestGenerator rg;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         rg = new RequestGenerator();
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
     public void testGetVersion() {
