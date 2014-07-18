@@ -352,8 +352,7 @@ public class RestClient {
      * verification
      */
     private String getTimestamp() {
-        SimpleDateFormat dateFormatUtc = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat dateFormatUtc = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateFormatUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormatUtc.format(new Date());
     }
@@ -405,8 +404,7 @@ public class RestClient {
         String credentials = String.format("%s:%s", username, password);
         String encoded = Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
-        return new BasicHeader("Authorization", String.format("%s %s", "Basic",
-                encoded));
+        return new BasicHeader("Authorization", String.format("%s %s", "Basic", encoded));
     }
 
     private AsyncHttpClient createHttpClient() {
