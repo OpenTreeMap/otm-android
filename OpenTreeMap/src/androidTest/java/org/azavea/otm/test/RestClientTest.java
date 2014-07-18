@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 public class RestClientTest extends TestCase {
 	private RestClient rc;
 	private String urlBase;
+
+    public RestClientTest() {
+
+    }
 	
 	public void setUp() {
 		rc = new RestClient();
