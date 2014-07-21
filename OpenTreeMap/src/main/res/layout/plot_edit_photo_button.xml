@@ -10,7 +10,6 @@
     <Button
         style="@style/full_width_button"
         android:id="@+id/edit_tree_picture"
-        android:onClick="changeTreePhoto"
         android:text="@string/change_tree_picture" />
 
 </LinearLayout>

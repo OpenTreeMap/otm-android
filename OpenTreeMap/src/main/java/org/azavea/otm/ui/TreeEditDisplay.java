@@ -101,6 +101,7 @@ public class TreeEditDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_edit_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_edit_activity);
+        findViewById(R.id.plot_save_button).setOnClickListener(this::saveEdit);
         setUpMapIfNeeded();
         initializeEditPage();
         mMap.setOnMapClickListener(point -> {
@@ -167,6 +168,7 @@ public class TreeEditDisplay extends TreeDisplay {
             // You can only change a tree picture if there is a tree
             if (addMode() || (plot.getId() != 0) && (plot.getTree() != null)) {
                 View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+                thePanel.findViewById(R.id.edit_tree_picture).setOnClickListener(this::changeTreePhoto);
                 fieldList.addView(thePanel);
             }
         } catch (Exception e) {

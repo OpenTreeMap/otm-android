@@ -32,6 +32,7 @@ public class TreeInfoDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_view_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_view_activity);
+        findViewById(R.id.plot_edit_button).setOnClickListener(this::doEdit);
         setUpMapIfNeeded();
         plotImage = (ImageView) findViewById(R.id.plot_photo);
         loadPlotInfo();

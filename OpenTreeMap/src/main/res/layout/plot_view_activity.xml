@@ -64,8 +64,8 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/plot_edit_button"
                 style="@style/plot_edit_button"
-                android:onClick="doEdit"
                 android:text="@string/plot_edit_button" >
             </Button>
         </LinearLayout>
