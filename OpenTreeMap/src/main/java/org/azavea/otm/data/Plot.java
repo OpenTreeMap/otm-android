@@ -206,22 +206,6 @@ public class Plot extends Model {
         plotDetails.put("geom", geom.getData());
     }
 
-    public boolean canEditPlot() {
-        return getPermission("plot", "can_edit");
-    }
-
-    public boolean canEditTree() {
-        return getPermission("tree", "can_edit");
-    }
-
-    public boolean canDeletePlot() {
-        return getPermission("plot", "can_delete");
-    }
-
-    public boolean canDeleteTree() {
-        return getPermission("tree", "can_delete");
-    }
-
     /**
      * Does this plot have current pending edits?
      *
@@ -261,29 +245,6 @@ public class Plot extends Model {
             }
         }
         return null;
-    }
-
-    /**
-     * Get a plot or tree permission from a plot json
-     *
-     * @param name     "tree" or "plot"
-     * @param editType "can_edit" or "can_delete"
-     * @return
-     */
-    private boolean getPermission(String name, String editType) {
-        try {
-            if (data.has("perm")) {
-                JSONObject perm = data.getJSONObject("perm");
-
-                if (perm.has(name)) {
-                    JSONObject json = perm.getJSONObject(name);
-                    return json.getBoolean(editType);
-                }
-            }
-            return false;
-        } catch (JSONException e) {
-            return false;
-        }
     }
 
     public boolean hasTree() {

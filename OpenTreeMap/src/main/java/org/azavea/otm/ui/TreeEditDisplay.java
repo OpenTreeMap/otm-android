@@ -156,22 +156,8 @@ public class TreeEditDisplay extends TreeDisplay {
      */
     private void setupDeleteButtons(LayoutInflater layout, LinearLayout fieldList) {
         View actionPanel = layout.inflate(R.layout.plot_edit_delete_buttons, null);
-        int plotVis = View.GONE;
-        int treeVis = View.GONE;
-
-        try {
-            if (plot.canDeletePlot()) {
-                plotVis = View.VISIBLE;
-            }
-            if (plot.canDeleteTree() && plot.getTree() != null) {
-                treeVis = View.VISIBLE;
-            }
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Cannot access plot permissions", e);
-        }
-
-        actionPanel.findViewById(R.id.delete_plot).setVisibility(plotVis);
-        actionPanel.findViewById(R.id.delete_tree).setVisibility(treeVis);
+        actionPanel.findViewById(R.id.delete_plot).setVisibility(View.GONE);
+        actionPanel.findViewById(R.id.delete_tree).setVisibility(View.GONE);
         fieldList.addView(actionPanel);
 
     }
