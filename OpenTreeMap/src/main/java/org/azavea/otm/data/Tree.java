@@ -102,21 +102,6 @@ public class Tree extends Model {
         data.put("condition", condition);
     }
 
-    public boolean isReadOnly() {
-        // "readonly" can be null in which case getBoolean will barf.
-        // I think the right thing to do for the case where it is null
-        // (or unreadable bc of some other error) is to return false.
-        try {
-            return data.getBoolean("readonly");
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public void setReadOnly(boolean readOnly) throws JSONException {
-        data.put("readonly", readOnly);
-    }
-
     public JSONObject getSpecies() {
         return data.optJSONObject("species");
     }

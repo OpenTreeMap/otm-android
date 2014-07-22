@@ -183,10 +183,6 @@ public class TreeInfoDisplay extends TreeDisplay {
     public void doEdit(View view) {
         try {
             Tree tree = plot.getTree();
-            if (tree != null && tree.isReadOnly()) {
-                Toast.makeText(TreeInfoDisplay.this, "Tree is read only.", Toast.LENGTH_LONG).show();
-                return;
-            }
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Could not check tree details", e);
             Toast.makeText(getApplicationContext(), "Could not check tree details", Toast.LENGTH_SHORT).show();
