@@ -40,14 +40,14 @@ public class SpeciesField extends ButtonField {
 
         // tree.species gets exploded to a double row with sci name and common name
         sciNamelabel.setText(R.string.scientific_name);
-        sciNameValue.setText(formatValue(plot.getScienticName()));
+        sciNameValue.setText(formatValueIfPresent(plot.getScienticName()));
 
         View commonNameRow = container.findViewById(R.id.common_name_row);
         TextView commonNameLabel = (TextView) commonNameRow.findViewById(R.id.field_label);
         TextView commonNameValue = (TextView) commonNameRow.findViewById(R.id.field_value);
 
         commonNameLabel.setText(R.string.common_name);
-        commonNameValue.setText(formatValue(plot.getCommonName()));
+        commonNameValue.setText(formatValueIfPresent(plot.getCommonName()));
 
         return container;
     }

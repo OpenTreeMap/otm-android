@@ -143,7 +143,7 @@ public abstract class Field {
         // value or value of simple pending edit
         String value;
         if (!pending) {
-            value = formatUnitIfPresent(getValueForKey(this.key, plot));
+            value = formatValueIfPresent(getValueForKey(this.key, plot));
         } else {
             value = plot.getValueForLatestPendingEdit(this.key);
         }
@@ -187,7 +187,7 @@ public abstract class Field {
         Log.w(App.LOG_TAG, "Received intent data for a field which doesn't start an activity.  Ignoring the intent result.");
     }
 
-    private String formatUnitIfPresent(Object value) {
+    protected String formatValueIfPresent(Object value) {
         // If there is no value, return an unspecified value
         if (JSONObject.NULL.equals(value) || value.equals("")) {
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
@@ -230,7 +230,7 @@ public abstract class Field {
             // initialize the intent, and load it with some initial values
             Intent pendingItemDisplay = new Intent(context, PendingItemDisplay.class);
             pendingItemDisplay.putExtra("label", label);
-            pendingItemDisplay.putExtra("currentValue", formatUnitIfPresent(model.getValueForKey(key)));
+            pendingItemDisplay.putExtra("currentValue", formatValueIfPresent(model.getValueForKey(key)));
             pendingItemDisplay.putExtra("key", key);
 
             // Now create an array of pending values, [{id: X, value: "42",
@@ -243,7 +243,7 @@ public abstract class Field {
                 for (PendingEdit pendingEdit : pendingEdits) {
                     // The value is the plain pending edit's value, or the value of the PE's
                     // related field. (IE retrieve Species Name instead of a species ID.)
-                    String value = formatUnitIfPresent(pendingEdit.getValue());
+                    String value = formatValueIfPresent(pendingEdit.getValue());
 
                     // Continue on loading all of the pending edit data into
                     // the serializedPendingEdit object
