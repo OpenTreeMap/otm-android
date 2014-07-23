@@ -49,21 +49,21 @@ public class TreeEditDisplay extends TreeDisplay {
     private final RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
         @Override
         public void onFailure(Throwable e, String message) {
-            deleteDialog.dismiss();
+            safeDismiss(deleteDialog);
             Toast.makeText(App.getAppInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
             Log.e(App.LOG_TAG, "Unable to delete tree.");
         }
 
         @Override
         protected void handleFailureMessage(Throwable e, String responseBody) {
-            deleteDialog.dismiss();
+            safeDismiss(deleteDialog);
             Toast.makeText(App.getAppInstance(), "Failure: Unable to delete tree", Toast.LENGTH_SHORT).show();
             Log.e(App.LOG_TAG, "Unable to delete tree.", e);
         }
 
         @Override
         public void dataReceived(Plot response) {
-            deleteDialog.dismiss();
+            safeDismiss(deleteDialog);
             Toast.makeText(App.getAppInstance(), "The tree was deleted.", Toast.LENGTH_SHORT).show();
             Intent resultIntent = new Intent();
 
@@ -81,14 +81,14 @@ public class TreeEditDisplay extends TreeDisplay {
         public void onSuccess(JSONObject response) {
             try {
                 if (response.getBoolean("ok")) {
-                    deleteDialog.dismiss();
+                    safeDismiss(deleteDialog);
                     Toast.makeText(App.getAppInstance(), "The planting site was deleted.", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_PLOT_DELETED);
                     finish();
 
                 }
             } catch (JSONException e) {
-                deleteDialog.dismiss();
+                safeDismiss(deleteDialog);
                 Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
             }
         }
@@ -101,6 +101,7 @@ public class TreeEditDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_edit_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_edit_activity);
+        findViewById(R.id.plot_save_button).setOnClickListener(this::saveEdit);
         setUpMapIfNeeded();
         initializeEditPage();
         mMap.setOnMapClickListener(point -> {
@@ -138,9 +139,6 @@ public class TreeEditDisplay extends TreeDisplay {
             }
         }
 
-        // TODO: This whole Activity shouldn't have made it here if first == null
-        // it would mean that the user has no editable fields, and
-        // this produces an empty edit form.
         if (first != null) {
             first.requestFocus();
         }
@@ -156,22 +154,8 @@ public class TreeEditDisplay extends TreeDisplay {
      */
     private void setupDeleteButtons(LayoutInflater layout, LinearLayout fieldList) {
         View actionPanel = layout.inflate(R.layout.plot_edit_delete_buttons, null);
-        int plotVis = View.GONE;
-        int treeVis = View.GONE;
-
-        try {
-            if (plot.canDeletePlot()) {
-                plotVis = View.VISIBLE;
-            }
-            if (plot.canDeleteTree() && plot.getTree() != null) {
-                treeVis = View.VISIBLE;
-            }
-        } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Cannot access plot permissions", e);
-        }
-
-        actionPanel.findViewById(R.id.delete_plot).setVisibility(plotVis);
-        actionPanel.findViewById(R.id.delete_tree).setVisibility(treeVis);
+        actionPanel.findViewById(R.id.delete_plot).setVisibility(View.GONE);
+        actionPanel.findViewById(R.id.delete_tree).setVisibility(View.GONE);
         fieldList.addView(actionPanel);
 
     }
@@ -181,6 +165,7 @@ public class TreeEditDisplay extends TreeDisplay {
             // You can only change a tree picture if there is a tree
             if (addMode() || (plot.getId() != 0) && (plot.getTree() != null)) {
                 View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
+                thePanel.findViewById(R.id.edit_tree_picture).setOnClickListener(this::changeTreePhoto);
                 fieldList.addView(thePanel);
             }
         } catch (Exception e) {
@@ -278,7 +263,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 @Override
                 protected void handleFailureMessage(Throwable e, String responseBody) {
                     Log.e("REST", responseBody, e);
-                    saveDialog.dismiss();
+                    safeDismiss(saveDialog);
                     Toast.makeText(App.getAppInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
                     Log.e(App.LOG_TAG, "Could not save tree", e);
                 }
@@ -293,7 +278,13 @@ public class TreeEditDisplay extends TreeDisplay {
         } catch (Exception e) {
             Log.e(App.LOG_TAG, "Could not save edited plot info", e);
             Toast.makeText(App.getAppInstance(), "Could not save tree info", Toast.LENGTH_LONG).show();
-            saveDialog.dismiss();
+            safeDismiss(saveDialog);
+        }
+    }
+
+    private void safeDismiss (ProgressDialog dialog) {
+        if (dialog != null) {
+            dialog.dismiss();
         }
     }
 
@@ -308,9 +299,7 @@ public class TreeEditDisplay extends TreeDisplay {
                             if (response.has("image")) {
                                 updatedPlot.assignNewTreePhoto(response);
 
-                                if (savePhotoDialog != null) {
-                                    savePhotoDialog.dismiss();
-                                }
+                                safeDismiss(savePhotoDialog);
                                 doFinish(updatedPlot, saveDialog);
 
                             } else {
@@ -326,7 +315,7 @@ public class TreeEditDisplay extends TreeDisplay {
                     @Override
                     public void onFailure(Throwable e, JSONObject errorResponse) {
                         Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
-                        savePhotoDialog.dismiss();
+                        safeDismiss(savePhotoDialog);
                     }
 
                     @Override
@@ -334,7 +323,7 @@ public class TreeEditDisplay extends TreeDisplay {
                         e.printStackTrace();
                         Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG)
                                 .show();
-                        savePhotoDialog.dismiss();
+                        safeDismiss(savePhotoDialog);
                     }
                 });
             } catch (JSONException e) {
@@ -348,9 +337,7 @@ public class TreeEditDisplay extends TreeDisplay {
     }
 
     private void doFinish(Plot updatedPlot, ProgressDialog saveDialog) {
-        if (saveDialog != null) {
-            saveDialog.dismiss();
-        }
+        safeDismiss(saveDialog);
         setResultOk(updatedPlot);
 
         // Updating may have changed the georev
@@ -434,6 +421,11 @@ public class TreeEditDisplay extends TreeDisplay {
     // Bind your change photo button to this handler.
     public void changeTreePhoto(View view) {
         Log.d("PHOTO", "changePhoto");
+
+        if (!App.getCurrentInstance().canEditTreePhoto()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.perms_add_tree_photo_fail), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.use_camera, (dialog, id) -> {

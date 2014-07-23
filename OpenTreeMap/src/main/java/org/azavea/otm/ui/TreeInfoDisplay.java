@@ -32,6 +32,7 @@ public class TreeInfoDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_view_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_view_activity);
+        findViewById(R.id.plot_edit_button).setOnClickListener(this::doEdit);
         setUpMapIfNeeded();
         plotImage = (ImageView) findViewById(R.id.plot_photo);
         loadPlotInfo();
@@ -180,12 +181,12 @@ public class TreeInfoDisplay extends TreeDisplay {
     }
 
     public void doEdit(View view) {
+        if (!App.getCurrentInstance().canEditTree()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.perms_edit_tree_fail), Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             Tree tree = plot.getTree();
-            if (tree != null && tree.isReadOnly()) {
-                Toast.makeText(TreeInfoDisplay.this, "Tree is read only.", Toast.LENGTH_LONG).show();
-                return;
-            }
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Could not check tree details", e);
             Toast.makeText(getApplicationContext(), "Could not check tree details", Toast.LENGTH_SHORT).show();

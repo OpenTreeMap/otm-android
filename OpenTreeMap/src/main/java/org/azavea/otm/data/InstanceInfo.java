@@ -99,6 +99,21 @@ public class InstanceInfo extends Model {
         return (JSONObject) getField("search");
     }
 
+    public boolean canAddTree () {
+        Boolean canAdd = (Boolean) getValueForKey("meta_perms.can_add_tree");
+        return canAdd == null ? false : canAdd;
+    }
+
+    public boolean canEditTree () {
+        Boolean canEdit = (Boolean) getValueForKey("meta_perms.can_edit_tree");
+        return canEdit == null ? false : canEdit;
+    }
+
+    public boolean canEditTreePhoto () {
+        Boolean canEdit = (Boolean) getValueForKey("meta_perms.can_edit_tree_photo");
+        return canEdit == null ? false : canEdit;
+    }
+
     public JSONObject getPlotEcoFields() {
         return getEcoFields("plot");
     }
