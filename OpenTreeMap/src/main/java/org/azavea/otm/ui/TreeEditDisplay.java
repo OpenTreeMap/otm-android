@@ -3,7 +3,7 @@ package org.azavea.otm.ui;
 import java.io.File;
 
 import org.azavea.otm.App;
-import org.azavea.otm.FieldGroup;
+import org.azavea.otm.fields.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.fields.SpeciesField;

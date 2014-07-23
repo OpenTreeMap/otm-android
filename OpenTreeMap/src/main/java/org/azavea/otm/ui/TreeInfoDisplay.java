@@ -2,7 +2,7 @@ package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
 import org.azavea.otm.fields.EcoField;
-import org.azavea.otm.FieldGroup;
+import org.azavea.otm.fields.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;

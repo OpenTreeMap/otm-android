@@ -1,9 +1,11 @@
-package org.azavea.otm;
+package org.azavea.otm.fields;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.fields.Field;
