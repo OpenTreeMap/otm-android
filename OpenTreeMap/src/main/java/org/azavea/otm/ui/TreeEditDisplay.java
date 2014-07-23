@@ -139,9 +139,6 @@ public class TreeEditDisplay extends TreeDisplay {
             }
         }
 
-        // TODO: This whole Activity shouldn't have made it here if first == null
-        // it would mean that the user has no editable fields, and
-        // this produces an empty edit form.
         if (first != null) {
             first.requestFocus();
         }
@@ -424,6 +421,11 @@ public class TreeEditDisplay extends TreeDisplay {
     // Bind your change photo button to this handler.
     public void changeTreePhoto(View view) {
         Log.d("PHOTO", "changePhoto");
+
+        if (!App.getCurrentInstance().canEditTreePhoto()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.perms_add_tree_photo_fail), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.use_camera, (dialog, id) -> {

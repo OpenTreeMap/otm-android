@@ -181,6 +181,10 @@ public class TreeInfoDisplay extends TreeDisplay {
     }
 
     public void doEdit(View view) {
+        if (!App.getCurrentInstance().canEditTree()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.perms_edit_tree_fail), Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             Tree tree = plot.getTree();
         } catch (JSONException e) {

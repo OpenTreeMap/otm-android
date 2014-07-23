@@ -136,4 +136,8 @@
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
 
+    <string name="perms_add_tree_fail">Adding trees is not available to all users</string>
+    <string name="perms_edit_tree_fail">Editing a tree\'s details is not available to all users</string>
+    <string name="perms_add_tree_photo_fail">Adding tree photos is not available to all users</string>
+
 </resources>
