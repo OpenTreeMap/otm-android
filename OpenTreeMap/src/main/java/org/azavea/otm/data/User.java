@@ -36,19 +36,19 @@ public class User extends Model {
     }
 
     public String getFirstName() throws JSONException {
-        return data.getString("firstname");
+        return data.getString("first_name");
     }
 
     public void setFirstName(String firstName) throws JSONException {
-        data.put("firstname", firstName);
+        data.put("first_name", firstName);
     }
 
     public String getLastName() throws JSONException {
-        return data.getString("lastname");
+        return data.getString("last_name");
     }
 
     public void setLastName(String lastName) throws JSONException {
-        data.put("lastname", lastName);
+        data.put("last_name", lastName);
     }
 
     public String getEmail() throws JSONException {
