@@ -421,17 +421,14 @@ public class MainMapActivity extends Fragment {
         });
 
         view.findViewById(R.id.addTreeButton).setOnClickListener(v -> {
-            if (!App.getCurrentInstance().canAddTree()) {
+            if (!App.getLoginManager().isLoggedIn()) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            } else if (!App.getCurrentInstance().canAddTree()) {
                 Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-            if (App.getLoginManager().isLoggedIn()) {
+            } else {
+                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
                 setTreeAddMode(CANCEL);
                 setTreeAddMode(STEP1);
-            } else {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
 
