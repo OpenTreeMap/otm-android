@@ -1,39 +1,31 @@
 package org.azavea.otm.fields;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Ints;
+import com.google.common.collect.Iterables;
 
-import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Iterables.partition;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Collections2.transform;
 
 /**
  * UDF Collections are odd and don't really fit into the ecosystem of other fields.
@@ -50,6 +42,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * As such, it doesn't make it's Field(s) until it is rendered, and the number of Fields may change
  */
 public class UDFCollectionFieldGroup extends FieldGroup {
+    private static final int NUM_FIELDS_PER_CLICK = 3;
 
     private String title;
     private String sortKey;
@@ -77,26 +70,43 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             // If there are no fieldKeys, we shouldn't show the group at all
             return null;
         }
-        View groupContainer = inflater.inflate(R.layout.plot_field_group, parent, false);
+        final View groupContainer = inflater.inflate(R.layout.collection_udf_field_group, parent, false);
 
-        TextView groupLabel = (TextView) groupContainer.findViewById(R.id.group_name);
+        final TextView groupLabel = (TextView) groupContainer.findViewById(R.id.group_name);
         groupLabel.setText(title);
 
-        LinearLayout fieldContainer = (LinearLayout) groupContainer.findViewById(R.id.fields);
+        final LinearLayout fieldContainer = (LinearLayout) groupContainer.findViewById(R.id.fields);
         fields = getFields(plot);
-        if (fields.isEmpty()) {
+
+        final View showMore = groupContainer.findViewById(R.id.show_more_button_container);
+        final Button showMoreButton = (Button) groupContainer.findViewById(R.id.show_more_button);
+
+        final Collection<View> fieldViews = filter(transform(fields.values(), field -> {
+            try {
+                return field.renderForDisplay(inflater, plot, activity, fieldContainer);
+            } catch (JSONException e) {
+                return null;
+            }
+        }), view -> view != null);
+
+        if (fieldViews.isEmpty()) {
             inflater.inflate(R.layout.collection_udf_empty, fieldContainer);
+            showMore.setVisibility(View.GONE);
         } else {
-            for (Field field : fields.values()) {
-                View fieldView;
-                try {
-                    fieldView = field.renderForDisplay(inflater, plot, activity, parent);
-                } catch (JSONException e) {
-                    fieldView = null;
-                }
-                if (fieldView != null) {
-                    fieldContainer.addView(fieldView);
-                }
+            // We only want to show so many fields at a time, and add more when a "Show More" button is clicked
+            final List<List<View>> fieldViewGroups = newArrayList(partition(fieldViews, NUM_FIELDS_PER_CLICK));
+
+            addFieldsToGroup(fieldViewGroups.remove(0), fieldContainer);
+
+            if (fieldViewGroups.isEmpty()) {
+                showMore.setVisibility(View.GONE);
+            } else {
+                showMoreButton.setOnClickListener(v -> {
+                    addFieldsToGroup(fieldViewGroups.remove(0), fieldContainer);
+                    if (fieldViewGroups.isEmpty()) {
+                        showMore.setVisibility(View.GONE);
+                    }
+                });
             }
         }
         return groupContainer;
@@ -134,5 +144,11 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         }
 
         return fieldsMap;
+    }
+
+    private void addFieldsToGroup(List<View> fieldGroup, ViewGroup parent) {
+        for (View fieldView : fieldGroup) {
+            parent.addView(fieldView);
+        }
     }
 }

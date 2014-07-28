@@ -143,5 +143,6 @@
 
     <string name="planting_site">Planting Site</string>
     <string name="tree">Tree</string>
+    <string name="load_more_collection_udf">Load more …</string>
 
 </resources>
