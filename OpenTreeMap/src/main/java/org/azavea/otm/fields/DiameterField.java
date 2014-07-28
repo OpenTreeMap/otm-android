@@ -56,7 +56,6 @@ public class DiameterField extends TextField {
     }
 
 
-
     /**
      * If the tree.diameter field exists for editing, also include a synced
      * circumference field so that the user can enter either measurement

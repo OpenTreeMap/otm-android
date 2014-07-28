@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,15 +125,15 @@ public class FieldGroup {
         return render(layout, model, DisplayMode.EDIT, activity, parent);
     }
 
-    public void update(Model model) throws Exception {
+    public void update(Plot plot) throws Exception {
         for (Field field : fields.values()) {
-            field.update(model);
+            field.update(plot);
         }
     }
 
     public void receiveActivityResult(int resultCode, Intent data) {
         Set<String> keys = data.getExtras().keySet();
-        for (String key: keys) {
+        for (String key : keys) {
             if (fields.containsKey(key)) {
                 fields.get(key).receiveActivityResult(resultCode, data);
             }

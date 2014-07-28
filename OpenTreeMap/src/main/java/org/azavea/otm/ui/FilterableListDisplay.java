@@ -25,12 +25,12 @@ import static org.azavea.otm.adapters.LinkedHashMapAdapter.Entry;
 
 public abstract class FilterableListDisplay<T extends Model> extends ListActivity {
 
-    /***
+    /**
      * @return The Resource id of the hint text to show in the filter textbox
      */
     protected abstract int getFilterHintTextId();
 
-    /***
+    /**
      * @return The key used to store the model data in the intent result
      */
     protected abstract String getIntentDataKey();

@@ -8,8 +8,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.common.collect.Iterables;
-
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONArray;
@@ -46,8 +44,8 @@ public class UDFCollectionFieldGroup extends FieldGroup {
 
     private String title;
     private String sortKey;
-    private JSONArray fieldKeys;
     private Map<String, JSONObject> udfDefinitions = new LinkedHashMap<>();
+    private final JSONArray fieldKeys;
 
     public UDFCollectionFieldGroup(JSONObject groupDefinition,
                                    Map<String, JSONObject> fieldDefinitions) throws JSONException {
@@ -122,7 +120,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     }
 
     @Override
-    public void update(Model model) {
+    public void update(Plot plot) {
         // TODO: Implement
     }
 

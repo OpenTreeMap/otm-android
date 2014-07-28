@@ -282,7 +282,7 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     }
 
-    private void safeDismiss (ProgressDialog dialog) {
+    private void safeDismiss(ProgressDialog dialog) {
         if (dialog != null) {
             dialog.dismiss();
         }

@@ -275,9 +275,8 @@ public class Plot extends Model {
      * Get the most recent tree thumbnail for this plot, by way of an
      * asynchronous response handler.
      *
-     * @param binary image handler which will receive callback from async http
+     * @param handler image handler which will receive callback from async http
      *               request
-     * @throws JSONException
      */
     public void getTreeThumbnail(BinaryHttpResponseHandler handler) {
         getTreeImage("thumbnail", handler);

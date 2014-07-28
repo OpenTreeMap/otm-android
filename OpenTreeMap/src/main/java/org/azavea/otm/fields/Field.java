@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.data.Model;
 import org.azavea.otm.data.PendingEdit;
 import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
@@ -26,17 +25,17 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-/***
+/**
  * An abstract class for rendering and updating fields displayed on the TreeInfoDisplay and
  * TreeEditDisplay activities
- *
+ * <p>
  * The makeField method examines the JSON and dispatches out to the proper Field subclass
- *
+ * <p>
  * In order to add a new type of Field it is necessary to implement 'renderForEdit' and 'getEditedValue'
- *
+ * <p>
  * It may also be necessary to implement 'formatValue', if the value to be displayed in display mode
  * is different from what is returned by 'getEditedValue'
- *
+ * <p>
  * If the field you are adding uses a button or a textbox in edit mode, you should subclass
  * ButtonField or TextField respectively
  */
@@ -110,7 +109,7 @@ public abstract class Field {
 
     /**
      * Render a view to display the given plot field in edit mode
-     *
+     * <p>
      * The Field will not be displayed if this method returns null
      */
     public abstract View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent);
@@ -168,19 +167,18 @@ public abstract class Field {
         return container;
     }
 
-    public void update(Model model) throws Exception {
+    public void update(Plot plot) throws Exception {
         // If there is no valueView, this field was not rendered for edit
         if (this.valueView != null) {
             Object currentValue = getEditedValue();
 
             // If the model doesn't have they key, add it. This creates
             // a tree when tree values are added to a plot with no tree
-            Plot p = (Plot) model;
-            if (key.split("[.]")[0].equals("tree") && !p.hasTree() && currentValue != null) {
-                p.createTree();
+            if (key.split("[.]")[0].equals("tree") && !plot.hasTree() && currentValue != null) {
+                plot.createTree();
             }
 
-            model.setValueForKey(key, currentValue);
+            plot.setValueForKey(key, currentValue);
         }
     }
 
@@ -208,7 +206,7 @@ public abstract class Field {
         if (pending != null) {
             return plot.getPendingEditForKey(key).getLatestValue();
         } else {
-            return plot. getValueForKey(key);
+            return plot.getValueForKey(key);
         }
     }
 

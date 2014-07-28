@@ -94,7 +94,7 @@ public class SpeciesField extends ButtonField {
      * current use case for this is setting the species value on a species
      * selector from the calling activity.
      */
-    public void setValue(Species species) {
+    private void setValue(Species species) {
         if (this.valueView != null) {
 
             Button speciesButton = (Button) this.valueView;

@@ -28,7 +28,6 @@ import static com.google.common.base.Strings.nullToEmpty;
 public class UDFCollectionValueField extends Field implements Comparable<UDFCollectionValueField> {
     private static final int DEFAULT_DIGITS = 2;
 
-    private final JSONObject udfDefinition;
     private final Map<String, JSONObject> nameToType = new LinkedHashMap<>();
     private final String sortKey;
     private final JSONObject value;
@@ -36,7 +35,6 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     public UDFCollectionValueField(String collectionKey, int index, JSONObject udfDefinition,
                                    String sortKey, JSONObject value) {
         super(String.format("%s[%d]", collectionKey, index), getLabel(collectionKey));
-        this.udfDefinition  = udfDefinition;
         this.sortKey = sortKey;
         this.value = value;
 
@@ -123,7 +121,8 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
                             Ordering.natural()
                                     .nullsFirst()
                                     .reverse()
-                                    .onResultOf(v -> v.value.optString(sortKey)))
+                                    .onResultOf(v -> v.value.optString(sortKey))
+                    )
                     .result();
         } else {
             return Doubles.compare(another.value.optDouble(sortKey, Double.MIN_VALUE), value.optDouble(sortKey, Double.MIN_VALUE));
