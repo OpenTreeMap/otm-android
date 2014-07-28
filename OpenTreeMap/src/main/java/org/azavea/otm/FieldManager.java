@@ -8,6 +8,7 @@ import java.util.Map;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.fields.Field;
 import org.azavea.otm.fields.FieldGroup;
+import org.azavea.otm.fields.UDFCollectionFieldGroup;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,8 +78,11 @@ public class FieldManager {
 
         try {
             for (int i = 0; i < displayData.length(); i++) {
-                JSONObject fieldGroup = displayData.getJSONObject(i);
-                allDisplayFields.add(new FieldGroup(fieldGroup, baseFields));
+                JSONObject fieldGroupDef = displayData.getJSONObject(i);
+                FieldGroup group = fieldGroupDef.has("collection_udf_keys")
+                        ? new UDFCollectionFieldGroup(fieldGroupDef, baseFields)
+                        : new FieldGroup(fieldGroupDef, baseFields);
+                allDisplayFields.add(group);
             }
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Unable to load field group", e);

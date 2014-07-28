@@ -8,7 +8,6 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Plot;
-import org.azavea.otm.fields.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +23,13 @@ import android.widget.TextView;
 public class FieldGroup {
 
     private String title;
-    private Map<String, Field> fields = new LinkedHashMap<>();
+    protected Map<String, Field> fields = new LinkedHashMap<>();
 
     private enum DisplayMode {VIEW, EDIT}
+
+    protected FieldGroup() {
+
+    }
 
     public FieldGroup(String title) {
         this.title = title;

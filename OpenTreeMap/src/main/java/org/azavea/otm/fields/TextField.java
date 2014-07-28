@@ -64,12 +64,8 @@ public class TextField extends Field {
      */
     @Override
     protected String formatValue(Object value) {
-        if (format != null) {
-            if (format.equals("float")) {
-                return formatWithDigits(value, this.digits) + " " + this.unitText;
-            }
-        }
-        return value + " " + this.unitText;
+        String formatted = "float".equals(format) ? formatWithDigits(value, this.digits) : String.valueOf(value);
+        return formatted + " " + this.unitText;
     }
 
     @Override
@@ -102,7 +98,7 @@ public class TextField extends Field {
         return null;
     }
 
-    private String formatWithDigits(Object value, int digits) {
+    public static String formatWithDigits(Object value, int digits) {
         try { // attempt to round 'value'
             Double d = Double.parseDouble(value.toString());
             return String.format("%." + digits + "f", d);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The text for this will have to come from the API when we support additional collection UDFS -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/collection_udf_empty_label"
+    android:text="@string/collection_udf_empty_text"
+    style="@style/plot_row_value" />

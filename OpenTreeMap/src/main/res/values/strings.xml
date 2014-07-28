@@ -139,5 +139,9 @@
     <string name="perms_add_tree_fail">Adding trees is not available to all users</string>
     <string name="perms_edit_tree_fail">Editing a tree\'s details is not available to all users</string>
     <string name="perms_add_tree_photo_fail">Adding tree photos is not available to all users</string>
+    <string name="collection_udf_empty_text">No stewardship actions entered yet.</string>
+
+    <string name="planting_site">Planting Site</string>
+    <string name="tree">Tree</string>
 
 </resources>
