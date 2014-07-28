@@ -1,12 +1,9 @@
 package org.azavea.otm.ui;
 
-import java.util.ArrayList;
-
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
 import org.json.JSONException;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 
@@ -22,7 +19,7 @@ public class TreeMove extends TreeDisplay {
         setUpMapIfNeeded();
         showPositionOnMap();
         plotMarker.setDraggable(true);
-        SegmentedButton buttons = (SegmentedButton)findViewById(R.id.basemap_controls);
+        SegmentedButton buttons = (SegmentedButton) findViewById(R.id.basemap_controls);
         MapHelper.setUpBasemapControls(buttons, mMap);
     }
 

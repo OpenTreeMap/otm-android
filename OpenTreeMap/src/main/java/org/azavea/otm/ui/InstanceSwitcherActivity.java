@@ -184,7 +184,8 @@ public class InstanceSwitcherActivity extends Activity {
                                 redirectToTabLayout(instance);
                             });
                         }
-                    });
+                    }
+            );
 
             updateAccountElements();
         }

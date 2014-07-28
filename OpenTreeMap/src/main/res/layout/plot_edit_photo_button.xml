@@ -8,7 +8,7 @@
     android:paddingTop="40dip" >
 
     <Button
-        style="@style/full_width_button"
+        style="@style/plot_edit_button"
         android:id="@+id/edit_tree_picture"
         android:text="@string/change_tree_picture" />
 

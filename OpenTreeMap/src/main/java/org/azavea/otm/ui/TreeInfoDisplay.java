@@ -2,7 +2,7 @@ package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
 import org.azavea.otm.fields.EcoField;
-import org.azavea.otm.FieldGroup;
+import org.azavea.otm.fields.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.Tree;
@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class TreeInfoDisplay extends TreeDisplay {
             setHeaderValues(plot);
             showPositionOnMap();
             for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-                View fieldGroup = group.renderForDisplay(layout, plot, TreeInfoDisplay.this);
+                View fieldGroup = group.renderForDisplay(layout, plot, TreeInfoDisplay.this, fieldList);
                 if (fieldGroup != null) {
                     fieldList.addView(fieldGroup);
                 }
@@ -56,7 +57,7 @@ public class TreeInfoDisplay extends TreeDisplay {
 
             // Eco benefit fields are not defined on the instance, but directly
             // on the plot. Create and render a field group on the fly
-            View ecoFields = createEcoGroup(plot, layout);
+            View ecoFields = createEcoGroup(plot, layout, fieldList);
             if (ecoFields != null) {
                 fieldList.addView(ecoFields);
             }
@@ -70,7 +71,7 @@ public class TreeInfoDisplay extends TreeDisplay {
 
     }
 
-    private View createEcoGroup(Plot plot, LayoutInflater layout) {
+    private View createEcoGroup(Plot plot, LayoutInflater layout, ViewGroup parent) {
 
         FieldGroup ecoGroup = new FieldGroup(getString(R.string.eco_fieldgroup_header));
         JSONObject benefits = (JSONObject) plot.getField("benefits");
@@ -93,7 +94,7 @@ public class TreeInfoDisplay extends TreeDisplay {
                 ecoGroup.addField(new EcoField(ecoField));
             }
         }
-        return ecoGroup.renderForDisplay(layout, plot, TreeInfoDisplay.this);
+        return ecoGroup.renderForDisplay(layout, plot, TreeInfoDisplay.this, parent);
 
     }
 

@@ -58,7 +58,6 @@ import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -397,7 +396,7 @@ public class MainMapActivity extends Fragment {
 
             // Set up the default click listener
             mMap.setOnMapClickListener(showPopupMapClickListener);
-            SegmentedButton buttons = (SegmentedButton)view.findViewById(R.id.basemap_controls);
+            SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.basemap_controls);
 
             MapHelper.setUpBasemapControls(buttons, mMap);
         } catch (Exception e) {

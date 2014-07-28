@@ -164,15 +164,28 @@
 
     <style name="plot_label">
         <item name="android:textColor">@color/text_light</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="plot_group_label" parent="@style/plot_label">
         <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/secondary_color</item>
+    </style>
+
+    <style name="plot_row_label" parent="@style/plot_list_row">
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="plot_row_value" parent="@style/plot_list_row">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <!-- textboxes -->
@@ -196,11 +209,23 @@
     </style>
 
     <!--  Other -->
+    <style name="plot_activity">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/main_background_color</item>
+        <item name="android:paddingLeft">13dp</item>
+        <item name="android:paddingRight">13dp</item>
+    </style>
     <style name="general_list_row">
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">20dp</item>
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="plot_list_row" parent="@style/general_list_row">
+        <item name="android:paddingLeft">0dp</item>
     </style>
 
     <style name="general_list_row_subtext">
@@ -226,27 +251,10 @@
     </style>
 
     <style name="instance_switcher_element_row" parent="@style/general_list_row">
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textSize">20sp</item>
         <item name="android:layout_marginBottom">5dp</item>
-    </style>
-
-    <style name="plot_row" parent="@style/general_list_row" />
-
-    <style name="plot_row_value" parent="@style/plot_row">
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_marginBottom">5dp</item>
-    </style>
-
-    <style name="plot_row_label" parent="@style/plot_row">
-        <item name="android:textColor">@color/text_light</item>
-        <item name="android:textSize">21sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="plot_edit_row" parent="@style/plot_row_value">
-        <item name="android:paddingLeft">0dp</item>
         <item name="android:layout_marginLeft">1dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerVertical">true</item>
@@ -282,11 +290,14 @@
         <item name="android:background">@drawable/instance_switcher_element_border</item>
     </style>
 
-    <style name="plot_edit_row_layout">
-        <item name="android:layout_width">fill_parent</item>
+    <style name="plot_row_layout">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/top_border</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+    <style name="plot_edit_row_layout" parent="@style/plot_row_layout">
     </style>
 </resources>

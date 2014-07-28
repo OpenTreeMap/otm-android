@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -24,10 +25,10 @@ public class DiameterField extends TextField {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater inflater, Plot plot, Activity activity) {
+    public View renderForEdit(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent) {
         if (this.canEdit) {
             Object value = plot.getValueForKey(this.key);
-            View container = inflater.inflate(R.layout.plot_field_edit_diameter_row, null);
+            View container = inflater.inflate(R.layout.plot_field_edit_diameter_row, parent, false);
 
             View diameterRow = container.findViewById(R.id.diameter_row);
 
@@ -53,7 +54,6 @@ public class DiameterField extends TextField {
         }
         return null;
     }
-
 
 
     /**

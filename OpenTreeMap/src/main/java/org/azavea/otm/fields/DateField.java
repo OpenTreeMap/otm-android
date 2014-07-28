@@ -65,7 +65,7 @@ public class DateField extends ButtonField {
         });
     }
 
-    private Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
+    public static Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
         final Calendar cal = new GregorianCalendar();
         final SimpleDateFormat timestampFormatter =
                 new SimpleDateFormat(context.getString(R.string.server_date_format));
@@ -81,7 +81,7 @@ public class DateField extends ButtonField {
         return cal;
     }
 
-    private String getTimestamp(Context context, int year, int month, int day) {
+    public static String getTimestamp(Context context, int year, int month, int day) {
         final SimpleDateFormat timestampFormatter =
                 new SimpleDateFormat(context.getString(R.string.server_date_format));
         final Calendar updatedCal = new GregorianCalendar();
@@ -92,7 +92,7 @@ public class DateField extends ButtonField {
         return timestampFormatter.format(updatedCal.getTime());
     }
 
-    private String formatTimestampForDisplay(String timestamp) {
+    public static String formatTimestampForDisplay(String timestamp) {
         final String displayPattern = App.getCurrentInstance().getShortDateFormat();
         final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
 

@@ -1,17 +1,13 @@
 package org.azavea.otm.ui;
 
 import org.azavea.otm.App;
-import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;

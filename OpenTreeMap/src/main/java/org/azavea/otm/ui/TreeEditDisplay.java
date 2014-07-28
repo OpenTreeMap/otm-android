@@ -3,7 +3,7 @@ package org.azavea.otm.ui;
 import java.io.File;
 
 import org.azavea.otm.App;
-import org.azavea.otm.FieldGroup;
+import org.azavea.otm.fields.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.fields.SpeciesField;
@@ -130,7 +130,7 @@ public class TreeEditDisplay extends TreeDisplay {
         View first = null;
         // Add all the fields to the display for edit mode
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-            View fieldGroup = group.renderForEdit(layout, plot, TreeEditDisplay.this);
+            View fieldGroup = group.renderForEdit(layout, plot, TreeEditDisplay.this, fieldList);
             if (first == null) {
                 first = fieldGroup;
             }
@@ -282,7 +282,7 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     }
 
-    private void safeDismiss (ProgressDialog dialog) {
+    private void safeDismiss(ProgressDialog dialog) {
         if (dialog != null) {
             dialog.dismiss();
         }

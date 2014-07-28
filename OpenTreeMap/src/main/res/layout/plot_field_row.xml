@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    style="@style/plot_row_layout" >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -10,7 +8,7 @@
         android:orientation="horizontal" >
 
         <TextView
-            style="@style/plot_row"
+            style="@style/plot_row_label"
             android:id="@+id/field_label" />
 
         <!-- TODO: Extract style -->
