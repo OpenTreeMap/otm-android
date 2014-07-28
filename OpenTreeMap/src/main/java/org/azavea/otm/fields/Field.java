@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,7 +113,7 @@ public abstract class Field {
      *
      * The Field will not be displayed if this method returns null
      */
-    public abstract View renderForEdit(LayoutInflater layout, Plot plot, Activity activity);
+    public abstract View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent);
 
     /**
      * Gets the edited value for use when updating
@@ -124,10 +125,10 @@ public abstract class Field {
     /*
      * Render a view to display the given plot field in view mode
      */
-    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity) throws JSONException {
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) throws JSONException {
 
         // our ui elements
-        View container = layout.inflate(R.layout.plot_field_row, null);
+        View container = layout.inflate(R.layout.plot_field_row, parent, false);
         TextView label = (TextView) container.findViewById(R.id.field_label);
         TextView fieldValue = (TextView) container.findViewById(R.id.field_value);
         View infoButton = container.findViewById(R.id.info);

@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -72,9 +73,9 @@ public class FieldGroup {
         return fields;
     }
 
-    private View render(LayoutInflater layout, Plot model, DisplayMode mode, Activity activity) {
+    private View render(LayoutInflater layout, Plot model, DisplayMode mode, Activity activity, ViewGroup parent) {
 
-        View container = layout.inflate(R.layout.plot_field_group, null);
+        View container = layout.inflate(R.layout.plot_field_group, parent, false);
         LinearLayout group = (LinearLayout) container.findViewById(R.id.field_group);
         View fieldView;
         int renderedFieldCount = 0;
@@ -87,10 +88,10 @@ public class FieldGroup {
                     fieldView = null;
                     switch (mode) {
                         case VIEW:
-                            fieldView = field.renderForDisplay(layout, model, activity);
+                            fieldView = field.renderForDisplay(layout, model, activity, group);
                             break;
                         case EDIT:
-                            fieldView = field.renderForEdit(layout, model, activity);
+                            fieldView = field.renderForEdit(layout, model, activity, group);
                             break;
                     }
 
@@ -114,15 +115,15 @@ public class FieldGroup {
     /**
      * Render a field group and its child fields for viewing
      */
-    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity) {
-        return render(layout, model, DisplayMode.VIEW, activity);
+    public View renderForDisplay(LayoutInflater layout, Plot model, Activity activity, ViewGroup parent) {
+        return render(layout, model, DisplayMode.VIEW, activity, parent);
     }
 
     /**
      * Render a field group and its child fields for editing
      */
-    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
-        return render(layout, model, DisplayMode.EDIT, activity);
+    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity, ViewGroup parent) {
+        return render(layout, model, DisplayMode.EDIT, activity, parent);
     }
 
     public void update(Model model) throws Exception {

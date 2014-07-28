@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -71,12 +72,12 @@ public class UDFCollectionFieldGroup extends FieldGroup {
      * Render a field group and its child fields for viewing
      */
     @Override
-    public View renderForDisplay(LayoutInflater inflater, Plot plot, Activity activity) {
+    public View renderForDisplay(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent) {
         if (fieldKeys.length() == 0) {
             // If there are no fieldKeys, we shouldn't show the group at all
             return null;
         }
-        View groupContainer = inflater.inflate(R.layout.plot_field_group, null);
+        View groupContainer = inflater.inflate(R.layout.plot_field_group, parent, false);
 
         TextView groupLabel = (TextView) groupContainer.findViewById(R.id.group_name);
         groupLabel.setText(title);
@@ -89,7 +90,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             for (Field field : fields.values()) {
                 View fieldView;
                 try {
-                    fieldView = field.renderForDisplay(inflater, plot, activity);
+                    fieldView = field.renderForDisplay(inflater, plot, activity, parent);
                 } catch (JSONException e) {
                     fieldView = null;
                 }
@@ -105,7 +106,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
      * Render a field group and its child fields for editing
      */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot model, Activity activity, ViewGroup parent) {
         // TODO: Implement edit mode
         return null;
     }

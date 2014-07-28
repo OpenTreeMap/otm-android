@@ -72,7 +72,9 @@
                     android:id="@+id/profile_field_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp" />
 
                 <LinearLayout
                     android:id="@+id/user_fields"

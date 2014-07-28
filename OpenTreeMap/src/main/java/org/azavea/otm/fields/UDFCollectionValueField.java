@@ -3,6 +3,7 @@ package org.azavea.otm.fields;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
@@ -48,9 +49,9 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     }
 
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity)
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent)
             throws JSONException {
-        View container = layout.inflate(R.layout.collection_udf_element_row, null);
+        View container = layout.inflate(R.layout.collection_udf_element_row, parent, false);
         TextView labelView = (TextView) container.findViewById(R.id.primary_text);
         TextView secondaryTextView = (TextView) container.findViewById(R.id.secondary_text);
         TextView sortTextView = (TextView) container.findViewById(R.id.sort_key_field);
@@ -72,7 +73,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     }
 
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) {
         // TODO: Implement
         return null;
     }

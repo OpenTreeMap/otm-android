@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +30,8 @@ public class SpeciesField extends ButtonField {
      * Render a view to display the given model field in view mode
      */
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity) throws JSONException {
-        View container = layout.inflate(R.layout.plot_field_species_row, null);
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) throws JSONException {
+        View container = layout.inflate(R.layout.plot_field_species_row, parent, false);
 
         View sciNameRow = container.findViewById(R.id.scientific_name_row);
         TextView sciNamelabel = (TextView) sciNameRow.findViewById(R.id.field_label);

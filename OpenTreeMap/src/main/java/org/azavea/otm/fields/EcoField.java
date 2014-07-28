@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class EcoField extends Field {
@@ -30,10 +31,10 @@ public class EcoField extends Field {
     }
 
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity)
+    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent)
             throws JSONException {
 
-        View container = layout.inflate(R.layout.plot_ecofield_row, null);
+        View container = layout.inflate(R.layout.plot_ecofield_row, parent, false);
         ((TextView) container.findViewById(R.id.field_label)).setText(this.label);
 
         ((TextView) container.findViewById(R.id.field_value))
@@ -47,7 +48,7 @@ public class EcoField extends Field {
 
     @Override
     @Deprecated
-    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) {
         return null;
     }
 

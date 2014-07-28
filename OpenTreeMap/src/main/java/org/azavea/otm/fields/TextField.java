@@ -5,6 +5,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,12 +35,12 @@ public class TextField extends Field {
      * Render a view to display the given model field in edit mode
      */
     @Override
-    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity) {
+    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) {
 
         View container = null;
 
         if (this.canEdit) {
-            container = layout.inflate(R.layout.plot_field_edit_row, null);
+            container = layout.inflate(R.layout.plot_field_edit_row, parent, false);
             Object value = plot.getValueForKey(this.key);
 
             ((TextView) container.findViewById(R.id.field_label)).setText(this.label);

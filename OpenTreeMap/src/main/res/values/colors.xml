@@ -14,6 +14,7 @@
     <color name="line_dark">#221F1F</color>
     <color name="line_medium">#939597</color>
     <color name="line_light">#A7A9AB</color>
+    <color name="light_border_line">#939597</color>
 
     <color name="secondary_button">#A7A9AB</color>
 
