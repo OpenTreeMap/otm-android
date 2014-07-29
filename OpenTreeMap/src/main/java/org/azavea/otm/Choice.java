@@ -1,7 +1,9 @@
 package org.azavea.otm;
 
 
-public class Choice {
+import java.io.Serializable;
+
+public class Choice implements Serializable {
     private String value;
     private String text;
 

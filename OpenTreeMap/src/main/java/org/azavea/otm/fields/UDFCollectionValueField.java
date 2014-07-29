@@ -11,45 +11,48 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Doubles;
 
+import org.azavea.helpers.UDFCollectionHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
-import org.json.JSONArray;
+import org.azavea.otm.fields.FieldGroup.DisplayMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Strings.nullToEmpty;
 
 public class UDFCollectionValueField extends Field implements Comparable<UDFCollectionValueField> {
     private static final int DEFAULT_DIGITS = 2;
 
-    private final Map<String, JSONObject> nameToType = new LinkedHashMap<>();
+    private final HashMap<String, JSONObject> nameToType;
     private final String sortKey;
     private final JSONObject value;
 
-    public UDFCollectionValueField(String collectionKey, int index, JSONObject udfDefinition,
-                                   String sortKey, JSONObject value) {
-        super(String.format("%s[%d]", collectionKey, index), getLabel(collectionKey));
+    public UDFCollectionValueField(int index, JSONObject udfDefinition, String sortKey, JSONObject value) {
+        super(String.format("%s[%d]", udfDefinition.optString("field_key"), index), UDFCollectionHelper.getLabel(udfDefinition));
         this.sortKey = sortKey;
         this.value = value;
 
-        // It is easier to work with the data by name, so we pull it into a LinkedHashMap
-        JSONArray dataTypes = udfDefinition.optJSONArray("data_type");
-        for (int i = 0; i < dataTypes.length(); i++) {
-            JSONObject dataType = dataTypes.optJSONObject(i);
-            nameToType.put(dataType.optString("name"), dataType);
-        }
+        nameToType = UDFCollectionHelper.groupTypesByName(udfDefinition);
     }
 
     @Override
-    public View renderForDisplay(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent)
+    public View renderForDisplay(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent)
             throws JSONException {
-        View container = layout.inflate(R.layout.collection_udf_element_row, parent, false);
+        return render(inflater, plot, activity, parent, DisplayMode.VIEW);
+    }
+
+    @Override
+    public View renderForEdit(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent) {
+        return render(inflater, plot, activity, parent, DisplayMode.EDIT);
+    }
+
+    private View render(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent, DisplayMode mode) {
+        View container = inflater.inflate(R.layout.collection_udf_element_row, parent, false);
         TextView labelView = (TextView) container.findViewById(R.id.primary_text);
         TextView secondaryTextView = (TextView) container.findViewById(R.id.secondary_text);
         TextView sortTextView = (TextView) container.findViewById(R.id.sort_key_field);
@@ -67,13 +70,17 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         }
         secondaryTextView.setText(Joiner.on('\n').join(secondaryText));
 
-        return container;
-    }
+        View chevron = container.findViewById(R.id.chevron);
+        if (mode == DisplayMode.VIEW) {
+            chevron.setVisibility(View.GONE);
+        } else {
+            chevron.setVisibility(View.VISIBLE);
+            container.setOnClickListener(v -> {
+                // TODO: Implement
+            });
+        }
 
-    @Override
-    public View renderForEdit(LayoutInflater layout, Plot plot, Activity activity, ViewGroup parent) {
-        // TODO: Implement
-        return null;
+        return container;
     }
 
     @Override
@@ -96,15 +103,6 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         }
 
         return String.valueOf(value.opt(key));
-    }
-
-    private static String getLabel(String collectionKey) {
-        App app = App.getAppInstance();
-        if (collectionKey.contains(".") && "tree".equals(collectionKey.split("[.]")[0])) {
-            return app.getString(R.string.tree);
-        } else {
-            return app.getString(R.string.planting_site);
-        }
     }
 
     @Override

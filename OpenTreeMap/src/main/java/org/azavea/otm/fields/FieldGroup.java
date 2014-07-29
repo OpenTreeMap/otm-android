@@ -25,7 +25,7 @@ public class FieldGroup {
     private String title;
     protected Map<String, Field> fields = new LinkedHashMap<>();
 
-    private enum DisplayMode {VIEW, EDIT}
+    public static enum DisplayMode {VIEW, EDIT}
 
     protected FieldGroup() {
 

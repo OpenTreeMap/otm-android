@@ -2,36 +2,29 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">Open Tree Map</string>
-
     <string name="filter_button">Filter</string>
     <string name="add_tree_button">Add Tree</string>
     <string name="add_tree_next_button">Next</string>
     <string name="add_tree_step_1">Step 1: Tap to add a tree marker</string>
     <string name="add_tree_step_2">Step 2: Long press to move the tree into position, then click next.</string>
     <string name="move_tree_text">Long press to move the tree into position, then click next.</string>
-
     <string name="tab_map">Tree Map</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_lists">Lists</string>
     <string name="tab_about">About</string>
-
     <string name="test_auth">Get/Auth</string>
     <string name="title_activity_map_display">MapDisplay</string>
-
     <string name="title_activity_login">Login</string>
     <string name="show_map">Map</string>
     <string name="show_location">My Location</string>
-
     <string name="hint_email">Username</string>
     <string name="hint_password">Password</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="cancel">Cancel</string>
-
     <string name="filter_range_to">to</string>
     <string name="finish_filtering">Done</string>
     <string name="clear_filtering">Clear</string>
-
     <string name="test_get">Get</string>
     <string name="title_activity_request_generator">RequestGenerator</string>
     <string name="show_request_generator">RG</string>
@@ -39,15 +32,12 @@
     <string name="profile_text">You have to login or register to see the profiles page</string>
     <string name="list_text">All the lists</string>
     <string name="filter_species_hint">Filter species...</string>
-
     <string name="unspecified_field_value">Unspecified</string>
     <string name="filter_display_label">Filter:</string>
-
     <string name="no_address">No Address</string>
     <string name="species_missing">Species Missing</string>
     <string name="dbh_missing">Diameter Missing</string>
     <string name="address_missing">Address Missing</string>
-
     <string name="toggle_nearby">Nearby</string>
     <string name="toggle_recent">Recent</string>
     <string name="toggle_pending">Pending</string>
@@ -58,7 +48,6 @@
     <string name="recent_edits_caption">My Recent Edits</string>
     <string name="unspecified_eco_value">0.0</string>
     <string name="unspecified_eco_field_money">$0.00</string>
-
     <string name="plot_edit_button">Edit</string>
     <string name="save_plot_edit_button">Save</string>
     <string name="delete">Delete</string>
@@ -108,10 +97,8 @@
     <string name="iso_locale_language">English</string>
     <string name="iso_locale_country">US</string>
     <string name="default_measure_units">in</string>
-
     <string name="search_field_hint">search location</string>
     <string name="search_field_button">Address</string>
-
     <string name="eco_fieldgroup_header">Ecosystem Benefits</string>
     <string name="eco_currencey_saved_text">saved</string>
     <string name="diameter_missing">Diameter missing</string>
@@ -120,9 +107,7 @@
     <string name="save">Save</string>
     <string name="tree_image">Tree image</string>
     <string name="user_profile_details">User Profile Details</string>
-
     <string name="profile_activity_switch_instance">Switch Tree Map</string>
-
     <string name="instance_switcher_activity_title">Tree Map Switcher</string>
     <string name="instance_switcher_no_instances_found">No tree maps found.</string>
     <string name="instance_switcher_account_question">Have an account?</string>
@@ -135,14 +120,13 @@
     <string name="instance_switcher_location_off_text">Location services must be turned on in order to see any nearby tree maps</string>
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
-
     <string name="perms_add_tree_fail">Adding trees is not available to all users</string>
     <string name="perms_edit_tree_fail">Editing a tree\'s details is not available to all users</string>
     <string name="perms_add_tree_photo_fail">Adding tree photos is not available to all users</string>
     <string name="collection_udf_empty_text">No stewardship actions entered yet.</string>
-
     <string name="planting_site">Planting Site</string>
     <string name="tree">Tree</string>
     <string name="load_more_collection_udf">Load more …</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
