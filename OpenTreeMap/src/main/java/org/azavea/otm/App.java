@@ -235,7 +235,7 @@ public class App extends Application {
     }
 
     public static boolean hasSkinCode() {
-        return !TextUtils.isEmpty(appInstance.getString(R.string.instance_code));
+        return !TextUtils.isEmpty(appInstance.getString(R.string.skin_code));
     }
 
     public static boolean hasInstanceCode() {
@@ -262,7 +262,7 @@ public class App extends Application {
     }
 
     public static void reloadInstanceInfo(Callback callback) {
-        String hardCodedInstanceCode = appInstance.getString(R.string.instance_code);
+        String hardCodedInstanceCode = appInstance.getString(R.string.skin_code);
         String instanceCode;
         if (!TextUtils.isEmpty(hardCodedInstanceCode)) {
             instanceCode = hardCodedInstanceCode;

@@ -3,7 +3,7 @@
 <resources>
     <!-- Instance specific -->
     <string name="app_name">%(appname)s</string>
-    <string name="instance_code">%(url_name)s</string>
+    <string name="skin_code">%(url_name)s</string>
 
     <!-- backend specific -->
     <string name="base_url">%(baseurl)s</string>
