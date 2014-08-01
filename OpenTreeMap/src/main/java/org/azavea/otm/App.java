@@ -164,9 +164,17 @@ public class App extends Application {
      * TODO: Move to another class.
      */
     public static String getInstanceName() {
-        InstanceInfo currentInstance = App.getCurrentInstance();
-        return currentInstance == null ?
-                appInstance.getString(R.string.app_name) : currentInstance.getName();
+        // If this is a skinned app, always return the app name
+        // If this is the cloud app, conditionally return either
+        // the app name or the instance name, depending on whether
+        // the user is connected to an instance.
+        String appName = appInstance.getString(R.string.app_name);
+        if (hasSkinCode()) {
+            return appName;
+        } else {
+            InstanceInfo currentInstance = App.getCurrentInstance();
+            return currentInstance == null ? appName : currentInstance.getName();
+        }
     }
 
 
@@ -235,7 +243,7 @@ public class App extends Application {
     }
 
     public static boolean hasSkinCode() {
-        return !TextUtils.isEmpty(appInstance.getString(R.string.instance_code));
+        return !TextUtils.isEmpty(appInstance.getString(R.string.skin_code));
     }
 
     public static boolean hasInstanceCode() {
@@ -262,7 +270,7 @@ public class App extends Application {
     }
 
     public static void reloadInstanceInfo(Callback callback) {
-        String hardCodedInstanceCode = appInstance.getString(R.string.instance_code);
+        String hardCodedInstanceCode = appInstance.getString(R.string.skin_code);
         String instanceCode;
         if (!TextUtils.isEmpty(hardCodedInstanceCode)) {
             instanceCode = hardCodedInstanceCode;
