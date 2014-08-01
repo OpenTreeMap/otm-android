@@ -164,9 +164,17 @@ public class App extends Application {
      * TODO: Move to another class.
      */
     public static String getInstanceName() {
-        InstanceInfo currentInstance = App.getCurrentInstance();
-        return currentInstance == null ?
-                appInstance.getString(R.string.app_name) : currentInstance.getName();
+        // If this is a skinned app, always return the app name
+        // If this is the cloud app, conditionally return either
+        // the app name or the instance name, depending on whether
+        // the user is connected to an instance.
+        String appName = appInstance.getString(R.string.app_name);
+        if (hasSkinCode()) {
+            return appName;
+        } else {
+            InstanceInfo currentInstance = App.getCurrentInstance();
+            return currentInstance == null ? appName : currentInstance.getName();
+        }
     }
 
 
