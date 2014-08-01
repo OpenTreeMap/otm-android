@@ -12,7 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 
-public class TabLayout extends ActionBarActivity {
+public class TabLayout extends OTMActionBarActivity {
 
     private static final String SELECTED_TAB = "TAB";
 
@@ -57,12 +57,6 @@ public class TabLayout extends ActionBarActivity {
         if (savedInstanceState != null) {
             actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB));
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.setTitle(App.getInstanceName());
     }
 
     @Override
