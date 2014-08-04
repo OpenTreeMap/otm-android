@@ -108,10 +108,12 @@ public class LoginManager {
 
     public void logOut(Activity activity) {
         logOut();
-        Intent intent = new Intent(activity, InstanceSwitcherActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
-        activity.finish();
+        if (!App.hasSkinCode()) {
+            Intent intent = new Intent(activity, InstanceSwitcherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+            activity.finish();
+        }
     }
 
     private void logOut() {
