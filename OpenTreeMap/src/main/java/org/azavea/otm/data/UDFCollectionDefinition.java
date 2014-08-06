@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.common.base.Predicate;
+
 import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -11,9 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
 
 public class UDFCollectionDefinition extends Model implements Parcelable {
 
@@ -46,7 +50,7 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         return 0;
     }
 
-    static final Parcelable.Creator<UDFCollectionDefinition> CREATOR
+    public static final Parcelable.Creator<UDFCollectionDefinition> CREATOR
             = new Parcelable.Creator<UDFCollectionDefinition>() {
 
         public UDFCollectionDefinition createFromParcel(Parcel in) {
@@ -62,8 +66,12 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         return data.isNull(DATA_TYPE) ? new JSONArray() : data.optJSONArray(DATA_TYPE);
     }
 
-    public boolean isEditable() {
+    public boolean isWritable() {
         return data.optBoolean(CAN_EDIT);
+    }
+
+    public boolean isEditable() {
+        return !getTypesForEdit().isEmpty() && isWritable();
     }
 
     public String getCollectionKey() {
@@ -80,6 +88,18 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
             map.put(dataType.optString(FIELD_NAME), dataType);
         }
         return map;
+    }
+
+    public List<JSONObject> getTypesForAdd() {
+        return getTypesForPredicate(j -> !j.has("default"));
+    }
+
+    public List<JSONObject> getTypesForEdit() {
+        return getTypesForPredicate(j -> j.has("default"));
+    }
+
+    private List<JSONObject> getTypesForPredicate(Predicate<JSONObject> pred) {
+        return newArrayList(filter(groupTypesByName().values(), pred));
     }
 
     public List<String> getFieldNamesForUDF() {

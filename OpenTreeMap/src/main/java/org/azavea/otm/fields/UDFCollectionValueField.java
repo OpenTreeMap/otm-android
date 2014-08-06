@@ -1,6 +1,8 @@
 package org.azavea.otm.fields;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,28 +18,39 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.UDFCollectionDefinition;
 import org.azavea.otm.fields.FieldGroup.DisplayMode;
+import org.azavea.otm.ui.TreeEditDisplay;
+import org.azavea.otm.ui.UDFCollectionEditActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.Lists.newArrayList;
 
 public class UDFCollectionValueField extends Field implements Comparable<UDFCollectionValueField> {
     private static final int DEFAULT_DIGITS = 2;
+    private static final AtomicInteger seq = new AtomicInteger(0);
+
+    // Every UDF needs a unique tag, so that edits can be associated with the correct UDF
+    // This tag is returned by getTag()
+    private final int tag = seq.incrementAndGet();
 
     private final HashMap<String, JSONObject> nameToType;
     private final String sortKey;
     private final JSONObject value;
+    private final UDFCollectionDefinition udfDef;
 
     public UDFCollectionValueField(UDFCollectionDefinition udfDefinition, String sortKey, JSONObject value) {
         super(udfDefinition.getCollectionKey(), udfDefinition.getLabel());
         this.sortKey = sortKey;
         this.value = value;
+        this.udfDef = udfDefinition;
 
-        nameToType = udfDefinition.groupTypesByName();
+        this.nameToType = udfDefinition.groupTypesByName();
     }
 
     @Override
@@ -82,10 +95,15 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         View chevron = container.findViewById(R.id.chevron);
         if (mode == DisplayMode.VIEW) {
             chevron.setVisibility(View.GONE);
-        } else {
+        } else if (udfDef.isEditable()) {
             chevron.setVisibility(View.VISIBLE);
             container.setOnClickListener(v -> {
-                // TODO: Implement
+                Intent intent = new Intent(activity, UDFCollectionEditActivity.class);
+                // Edit UDF shares code with Create UDF (which handles multiple UDFs), so we pass list of definitions
+                intent.putParcelableArrayListExtra(UDFCollectionEditActivity.UDF_DEFINITIONS, newArrayList(udfDef));
+                intent.putExtra(UDFCollectionEditActivity.INITIAL_VALUE, value.toString());
+                intent.putExtra(UDFCollectionEditActivity.TAG, tag);
+                activity.startActivityForResult(intent, TreeEditDisplay.FIELD_ACTIVITY_REQUEST_CODE);
             });
         }
 
@@ -133,5 +151,9 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         } else {
             return Doubles.compare(another.value.optDouble(sortKey, Double.MIN_VALUE), value.optDouble(sortKey, Double.MIN_VALUE));
         }
+    }
+
+    public int getTag() {
+        return tag;
     }
 }

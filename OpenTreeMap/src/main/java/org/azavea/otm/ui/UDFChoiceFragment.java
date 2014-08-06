@@ -21,7 +21,7 @@ import static com.google.common.collect.Lists.transform;
 public abstract class UDFChoiceFragment extends Fragment {
 
     protected static final String CHOICES = "choices";
-    protected UDFCollectionCreateActivity listener;
+    protected UDFCollectionActivity listener;
 
     private List<Choice> choices;
     private int currentRow = -1;
@@ -63,7 +63,7 @@ public abstract class UDFChoiceFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (UDFCollectionCreateActivity) activity;
+            listener = (UDFCollectionActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must be UDFCollectionCreateActivity");
         }
@@ -76,12 +76,9 @@ public abstract class UDFChoiceFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        final View container = getView();
-        if (container != null) {
-            ListView list = (ListView) container.findViewById(R.id.udf_choices);
-            setSelectedStyle(list);
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden && currentRow != -1 && listener != null) {
+            callListener(choices.get(currentRow));
         }
     }
 

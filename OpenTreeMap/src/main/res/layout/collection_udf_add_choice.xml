@@ -6,6 +6,8 @@
 
     <ListView
         android:id="@+id/udf_choices"
+        android:choiceMode="singleChoice"
+        android:listSelector="@drawable/list_header_border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

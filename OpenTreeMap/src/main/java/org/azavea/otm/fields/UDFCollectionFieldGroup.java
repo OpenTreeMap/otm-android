@@ -22,6 +22,7 @@ import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.UDFCollectionDefinition;
 import org.azavea.otm.ui.TreeEditDisplay;
 import org.azavea.otm.ui.UDFCollectionCreateActivity;
+import org.azavea.otm.ui.UDFCollectionEditActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +37,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.partition;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Collections2.transform;
@@ -61,6 +64,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     private final String title;
     private final String sortKey;
     private final LinkedHashMap<String, UDFCollectionDefinition> udfDefinitions = new LinkedHashMap<>();
+    private final LinkedHashMap<String, UDFCollectionDefinition> editableUdfDefinitions = new LinkedHashMap<>();
     private final List<String> fieldKeys;
 
     private ViewGroup fieldContainer;
@@ -77,6 +81,9 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             if (fieldDefinitions.containsKey(key)) {
                 final UDFCollectionDefinition udfDef = new UDFCollectionDefinition(fieldDefinitions.get(key));
                 udfDefinitions.put(key, udfDef);
+                if (udfDef.isWritable()) {
+                    editableUdfDefinitions.put(key, udfDef);
+                }
             }
         }
     }
@@ -99,20 +106,32 @@ public class UDFCollectionFieldGroup extends FieldGroup {
 
     @Override
     public void receiveActivityResult(int resultCode, Intent data, Activity activity) {
-        final Set<String> keys = data.getExtras().keySet();
-        for (String key : keys) {
-            if (udfDefinitions.containsKey(key)) {
+        for (String key : editableUdfDefinitions.keySet()) {
+            if (data.getExtras().containsKey(key)) {
                 final String json = data.getStringExtra(key);
-                final UDFCollectionDefinition udfDef = udfDefinitions.get(key);
+                final UDFCollectionDefinition udfDef = editableUdfDefinitions.get(key);
+                final JSONObject value;
                 try {
-                    final JSONObject value = new JSONObject(json);
-                    fields.add(new UDFCollectionValueField(udfDef, sortKey, value));
+                    value = new JSONObject(json);
                 } catch (JSONException e) {
                     Log.e(App.LOG_TAG, "Error parsing JSON passed as activity result", e);
+                    continue;
+                }
+                final UDFCollectionValueField field = new UDFCollectionValueField(udfDef, sortKey, value);
+                if (data.getExtras().containsKey(UDFCollectionEditActivity.TAG)) {
+                    final int tag = data.getIntExtra(UDFCollectionEditActivity.TAG, -1);
+                    if (tag == -1 || fields.isEmpty()) {
+                        Log.w(App.LOG_TAG, "Invalid tag for UDF, ignoring it");
+                    } else {
+                        // If we received a modified field, remove the old field and add it back with new data
+                        fields = newArrayList(concat(filter(fields, f -> f.getTag() != tag), newArrayList(field)));
+                    }
+                } else {
+                    fields.add(field);
                 }
             }
         }
-        replaceFields(activity);
+        replaceEditFields(activity);
     }
 
     @Override
@@ -145,8 +164,8 @@ public class UDFCollectionFieldGroup extends FieldGroup {
      * Dispatches to helpers for those parts which are different based on DisplayMode
      */
     private View render(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent, DisplayMode mode) {
-        if (fieldKeys.isEmpty()) {
-            // If there are no fieldKeys, we shouldn't show the group at all
+        if (getCurrentUdfDefinitions(mode).isEmpty()) {
+            // If there are no udfDefinitions, we shouldn't show the group at all
             return null;
         }
         final View groupContainer = inflater.inflate(R.layout.collection_udf_field_group, parent, false);
@@ -157,9 +176,9 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         final View buttonContainer = groupContainer.findViewById(R.id.udf_button_container);
         final Button button = (Button) groupContainer.findViewById(R.id.udf_button);
 
-        fields = getFields(plot);
+        fields = getFields(plot, mode);
         fieldContainer = (LinearLayout) groupContainer.findViewById(R.id.fields);
-        final Collection<View> fieldViews = getViewsForFields(inflater, activity);
+        final Collection<View> fieldViews = getViewsForFields(inflater, activity, mode);
 
         if (mode == DisplayMode.VIEW) {
             setupFieldsForDisplay(inflater, buttonContainer, button, fieldViews);
@@ -208,26 +227,26 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             Intent udfCreator = new Intent(App.getAppInstance(), UDFCollectionCreateActivity.class);
 
             udfCreator.putParcelableArrayListExtra(UDFCollectionCreateActivity.UDF_DEFINITIONS,
-                    newArrayList(udfDefinitions.values()));
+                    newArrayList(editableUdfDefinitions.values()));
 
             activity.startActivityForResult(udfCreator, TreeEditDisplay.FIELD_ACTIVITY_REQUEST_CODE);
         });
     }
 
-    private void replaceFields(Activity activity) {
+    private void replaceEditFields(Activity activity) {
         fieldContainer.removeAllViews();
         Collections.sort(fields);
 
         LayoutInflater inflater = activity.getLayoutInflater();
-        Collection<View> fieldViews = getViewsForFields(inflater, activity);
+        Collection<View> fieldViews = getViewsForFields(inflater, activity, DisplayMode.EDIT);
         for (View view : fieldViews) {
             fieldContainer.addView(view);
         }
     }
 
-    private List<UDFCollectionValueField> getFields(Plot plot) {
+    private List<UDFCollectionValueField> getFields(Plot plot, DisplayMode mode) {
         final List<UDFCollectionValueField> fieldsList = newArrayList();
-        for (UDFCollectionDefinition udfDef : udfDefinitions.values()) {
+        for (UDFCollectionDefinition udfDef : getCurrentUdfDefinitions(mode).values()) {
             JSONArray collectionValues = (JSONArray) plot.getValueForKey(udfDef.getCollectionKey());
             if (!JSONObject.NULL.equals(collectionValues)) {
                 for (int i = 0; i < collectionValues.length(); i++) {
@@ -240,11 +259,19 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         return fieldsList;
     }
 
-    private Collection<View> getViewsForFields(LayoutInflater inflater, Activity activity) {
+    private Map<String, UDFCollectionDefinition> getCurrentUdfDefinitions(DisplayMode mode) {
+        return (mode == DisplayMode.VIEW) ? udfDefinitions : editableUdfDefinitions;
+    }
+
+    private Collection<View> getViewsForFields(LayoutInflater inflater, Activity activity, DisplayMode mode) {
         Collections.sort(fields);
         return filter(transform(fields, field -> {
             try {
-                return field.renderForDisplay(inflater, activity, fieldContainer);
+                if (mode == DisplayMode.VIEW) {
+                    return field.renderForDisplay(inflater, activity, fieldContainer);
+                } else {
+                    return field.renderForEdit(inflater, activity, fieldContainer);
+                }
             } catch (JSONException e) {
                 return null;
             }
