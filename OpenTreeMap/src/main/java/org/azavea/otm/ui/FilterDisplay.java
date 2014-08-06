@@ -116,8 +116,7 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
                 Log.e(App.LOG_TAG,
                         "Invalid filter specified, unable to create UI");
             }
-            view.setTag(R.id.filter_key, filter.key); // this is a bit
-                                                      // arbitrary...
+            view.setTag(R.id.filter_key, filter.key); // this is a bit arbitrary...
             parent.addView(view);
         }
     }
