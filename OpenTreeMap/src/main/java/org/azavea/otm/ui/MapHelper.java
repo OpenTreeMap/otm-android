@@ -23,8 +23,8 @@ public class MapHelper {
     public static void setUpBasemapControls(SegmentedButton buttons, GoogleMap mMap) {
         final String[] mapLabels = {"map", "satellite", "hybrid"};
         final int[] mapTypes = {GoogleMap.MAP_TYPE_NORMAL,
-                                GoogleMap.MAP_TYPE_SATELLITE,
-                                GoogleMap.MAP_TYPE_HYBRID};
+                GoogleMap.MAP_TYPE_SATELLITE,
+                GoogleMap.MAP_TYPE_HYBRID};
 
         // match the clicked index of mapLabels to the element of mapTypes
         buttons.clearButtons();

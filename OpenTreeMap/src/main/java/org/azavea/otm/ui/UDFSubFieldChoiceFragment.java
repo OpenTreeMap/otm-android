@@ -17,7 +17,6 @@ import static com.google.common.collect.Lists.transform;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link UDFSubFieldChoiceFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class UDFSubFieldChoiceFragment extends UDFChoiceFragment {
 
@@ -35,7 +34,7 @@ public class UDFSubFieldChoiceFragment extends UDFChoiceFragment {
     public static UDFSubFieldChoiceFragment newInstance(JSONObject fieldDefinition) {
         UDFSubFieldChoiceFragment fragment = new UDFSubFieldChoiceFragment();
         List<String> choiceValues = JSONHelper.jsonStringArrayToList(fieldDefinition.optJSONArray("choices"));
-        ArrayList<Choice> choices = newArrayList(transform(choiceValues, c -> new Choice(c,c)));
+        ArrayList<Choice> choices = newArrayList(transform(choiceValues, c -> new Choice(c, c)));
         Bundle args = new Bundle();
         args.putSerializable(CHOICES, choices);
         args.putString(NAME, fieldDefinition.optString("name"));

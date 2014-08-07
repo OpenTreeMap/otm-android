@@ -152,7 +152,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         for (Map.Entry<String, JSONArray> entry : collectionUdfArrays.entrySet()) {
             try {
                 plot.setValueForKey(entry.getKey(), entry.getValue());
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // TODO: Extract String
                 Toast.makeText(App.getAppInstance(), "Error saving Stewardship fields", Toast.LENGTH_SHORT).show();
             }

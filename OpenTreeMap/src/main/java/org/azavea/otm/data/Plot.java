@@ -276,7 +276,7 @@ public class Plot extends Model {
      * asynchronous response handler.
      *
      * @param handler image handler which will receive callback from async http
-     *               request
+     *                request
      */
     public void getTreeThumbnail(BinaryHttpResponseHandler handler) {
         getTreeImage("thumbnail", handler);

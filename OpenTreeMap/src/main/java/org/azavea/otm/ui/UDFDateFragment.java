@@ -24,7 +24,6 @@ import java.util.List;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link org.azavea.otm.ui.UDFDateFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class UDFDateFragment extends Fragment {
 
@@ -41,7 +40,7 @@ public class UDFDateFragment extends Fragment {
      * @return A new instance of fragment UDFDateFragment.
      */
     public static UDFDateFragment newInstance(JSONObject fieldDefinition) {
-        UDFDateFragment fragment = new  UDFDateFragment();
+        UDFDateFragment fragment = new UDFDateFragment();
         Bundle args = new Bundle();
         args.putString(NAME, fieldDefinition.optString("name"));
         fragment.setArguments(args);
@@ -68,7 +67,7 @@ public class UDFDateFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.collection_udf_add_date, container, false);
         DatePicker picker = (DatePicker) layout.findViewById(R.id.udf_datepicker);
-        picker.init(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), (view, year, month, dayOfMonth) ->{
+        picker.init(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), (view, year, month, dayOfMonth) -> {
             String timestamp = DateField.getTimestamp(getActivity(), year, month, dayOfMonth);
             listener.onValueChanged(fieldName, timestamp);
         });
