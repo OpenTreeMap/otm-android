@@ -57,6 +57,7 @@ public class UDFDateFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             fieldName = getArguments().getString(NAME);
+            listener.setActionBarTitle(fieldName);
             // Today's date is perfectly valid, so we should immediately call valueChanged
             sendCurrentDate();
         }

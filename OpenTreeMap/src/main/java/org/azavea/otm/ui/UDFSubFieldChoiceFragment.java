@@ -52,6 +52,7 @@ public class UDFSubFieldChoiceFragment extends UDFChoiceFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             fieldName = getArguments().getString(NAME);
+            listener.setActionBarTitle(fieldName);
         }
     }
 

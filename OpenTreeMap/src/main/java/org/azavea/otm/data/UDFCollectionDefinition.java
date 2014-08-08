@@ -107,6 +107,10 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         return JSONHelper.jsonStringArrayToList(dataTypes);
     }
 
+    public String getDisplayName() {
+        return safeGetString(DISPLAY_NAME);
+    }
+
     public String getLabel() {
         final String collectionKey = safeGetString(COLLECTION_KEY);
         final String displayName = safeGetString(DISPLAY_NAME);

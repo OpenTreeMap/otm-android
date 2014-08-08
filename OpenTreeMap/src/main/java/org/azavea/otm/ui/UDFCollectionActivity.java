@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Lists.newArrayList;
 
 public abstract class UDFCollectionActivity extends ActionBarActivity {
@@ -142,12 +143,18 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
         }
     }
 
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
     private void setCurrentFragment(int fieldNumber) {
         this.currentFragmentIndex = fieldNumber;
         if (fieldNumber < 0 && fieldChoiceFragment == null) {
             // If there is no UDF choice screen, go back to the tree edit screen
             super.onBackPressed();
         } else if (fieldNumber < 0) {
+            final String title = getLast(udfDefinitions.values()).getDisplayName();
+            setActionBarTitle(title);
             setFragment(fieldChoiceFragment);
         } else if (fieldNumber < fieldFragments.size()) {
             setFragment(fieldFragments.get(fieldNumber));
