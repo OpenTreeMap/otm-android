@@ -1,7 +1,6 @@
 package org.azavea.otm.fields;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.collect.Lists;
-
 import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
-import org.azavea.otm.adapters.LinkedHashMapAdapter;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.UDFCollectionDefinition;
 import org.azavea.otm.ui.TreeEditDisplay;
@@ -27,18 +23,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.partition;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Collections2.transform;
