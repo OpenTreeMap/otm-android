@@ -161,6 +161,8 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
 
             if ("choice".equals(type)) {
                 fragments.add(UDFSubFieldChoiceFragment.newInstance(subFieldDef));
+            } else if ("date".equals(type)) {
+                fragments.add(UDFDateFragment.newInstance(subFieldDef));
             } else {
                 // TODO: log
             }
