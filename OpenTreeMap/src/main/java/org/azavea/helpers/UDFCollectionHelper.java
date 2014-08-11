@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
+// TODO: Should this class be a UDFDefinition Model subclass?
 public class UDFCollectionHelper {
 
     public static final String DATA_TYPE = "data_type";
@@ -24,9 +26,9 @@ public class UDFCollectionHelper {
         return data;
     }
 
-    public static JSONObject getTypeForField(JSONObject udfDefinition, int fieldNumber) {
+    public static List<String> getFieldNamesForUDF(JSONObject udfDefinition) {
         JSONArray dataTypes = udfDefinition.optJSONArray(DATA_TYPE);
-        return dataTypes.isNull(fieldNumber) ? null : dataTypes.optJSONObject(fieldNumber);
+        return JSONHelper.jsonStringArrayToList(dataTypes);
     }
 
     public static String getLabel(JSONObject udfDefinition) {

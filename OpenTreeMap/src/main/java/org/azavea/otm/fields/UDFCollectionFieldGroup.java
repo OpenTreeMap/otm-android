@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.common.collect.Lists;
 
+import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Iterables.partition;
@@ -56,17 +58,18 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     private ArrayList<JSONObject> udfDefinitions = new ArrayList<>();
     private List<UDFCollectionValueField> fields;
 
-    private final JSONArray fieldKeys;
+    private final List<String> fieldKeys;
 
     public UDFCollectionFieldGroup(JSONObject groupDefinition,
                                    Map<String, JSONObject> fieldDefinitions) throws JSONException {
 
         title = groupDefinition.optString("header");
         sortKey = groupDefinition.optString("sort_key");
-        fieldKeys = groupDefinition.getJSONArray("collection_udf_keys");
-        for (int i = 0; i < fieldKeys.length(); i++) {
-            String key = fieldKeys.getString(i);
-            udfDefinitions.add(fieldDefinitions.get(key));
+        fieldKeys = JSONHelper.jsonStringArrayToList(groupDefinition.getJSONArray("collection_udf_keys"));
+        for (String key : fieldKeys) {
+            if (fieldDefinitions.containsKey(key)) {
+                udfDefinitions.add(fieldDefinitions.get(key));
+            }
         }
     }
 
@@ -96,7 +99,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
      * Dispatches to helpers for those parts which are different based on DisplayMode
      */
     private View render(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent, DisplayMode mode) {
-        if (fieldKeys.length() == 0) {
+        if (fieldKeys.isEmpty()) {
             // If there are no fieldKeys, we shouldn't show the group at all
             return null;
         }
@@ -171,9 +174,11 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         List<UDFCollectionValueField> fieldsList = newArrayList();
         for (JSONObject udfDef : udfDefinitions) {
             JSONArray collectionValues = (JSONArray) plot.getValueForKey(udfDef.optString("field_key"));
-            for (int i = 0; i < collectionValues.length(); i++) {
-                JSONObject value = collectionValues.optJSONObject(i);
-                fieldsList.add(new UDFCollectionValueField(i, udfDef, sortKey, value));
+            if (!JSONObject.NULL.equals(collectionValues)) {
+                for (int i = 0; i < collectionValues.length(); i++) {
+                    JSONObject value = collectionValues.optJSONObject(i);
+                    fieldsList.add(new UDFCollectionValueField(udfDef, sortKey, value));
+                }
             }
         }
         Collections.sort(fieldsList);
