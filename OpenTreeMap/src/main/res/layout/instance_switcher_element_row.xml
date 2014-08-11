@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:background="@drawable/instance_switcher_element_border"
+    android:background="@drawable/list_element_border"
     android:orientation="vertical"
     android:padding="5dp">
 

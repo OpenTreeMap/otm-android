@@ -32,8 +32,8 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     private final String sortKey;
     private final JSONObject value;
 
-    public UDFCollectionValueField(int index, JSONObject udfDefinition, String sortKey, JSONObject value) {
-        super(String.format("%s[%d]", udfDefinition.optString("field_key"), index), UDFCollectionHelper.getLabel(udfDefinition));
+    public UDFCollectionValueField(JSONObject udfDefinition, String sortKey, JSONObject value) {
+        super(udfDefinition.optString("field_key"), UDFCollectionHelper.getLabel(udfDefinition));
         this.sortKey = sortKey;
         this.value = value;
 
