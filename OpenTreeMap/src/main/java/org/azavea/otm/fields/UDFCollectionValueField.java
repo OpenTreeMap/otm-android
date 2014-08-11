@@ -11,10 +11,10 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Doubles;
 
-import org.azavea.helpers.UDFCollectionHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.UDFCollectionDefinition;
 import org.azavea.otm.fields.FieldGroup.DisplayMode;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +32,12 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     private final String sortKey;
     private final JSONObject value;
 
-    public UDFCollectionValueField(JSONObject udfDefinition, String sortKey, JSONObject value) {
-        super(udfDefinition.optString("field_key"), UDFCollectionHelper.getLabel(udfDefinition));
+    public UDFCollectionValueField(UDFCollectionDefinition udfDefinition, String sortKey, JSONObject value) {
+        super(udfDefinition.getCollectionKey(), udfDefinition.getLabel());
         this.sortKey = sortKey;
         this.value = value;
 
-        nameToType = UDFCollectionHelper.groupTypesByName(udfDefinition);
+        nameToType = udfDefinition.groupTypesByName();
     }
 
     @Override

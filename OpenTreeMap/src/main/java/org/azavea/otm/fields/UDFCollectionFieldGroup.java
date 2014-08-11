@@ -19,6 +19,7 @@ import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.adapters.LinkedHashMapAdapter;
 import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.UDFCollectionDefinition;
 import org.azavea.otm.ui.TreeEditDisplay;
 import org.azavea.otm.ui.UDFCollectionCreateActivity;
 import org.json.JSONArray;
@@ -59,7 +60,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
 
     private final String title;
     private final String sortKey;
-    private final LinkedHashMap<String, JSONObject> udfDefinitions = new LinkedHashMap<>();
+    private final LinkedHashMap<String, UDFCollectionDefinition> udfDefinitions = new LinkedHashMap<>();
     private final List<String> fieldKeys;
 
     private ViewGroup fieldContainer;
@@ -71,9 +72,11 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         title = groupDefinition.optString("header");
         sortKey = groupDefinition.optString("sort_key");
         fieldKeys = JSONHelper.jsonStringArrayToList(groupDefinition.getJSONArray("collection_udf_keys"));
+
         for (String key : fieldKeys) {
             if (fieldDefinitions.containsKey(key)) {
-                udfDefinitions.put(key, fieldDefinitions.get(key));
+                final UDFCollectionDefinition udfDef = new UDFCollectionDefinition(fieldDefinitions.get(key));
+                udfDefinitions.put(key, udfDef);
             }
         }
     }
@@ -100,7 +103,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         for (String key : keys) {
             if (udfDefinitions.containsKey(key)) {
                 final String json = data.getStringExtra(key);
-                final JSONObject udfDef = udfDefinitions.get(key);
+                final UDFCollectionDefinition udfDef = udfDefinitions.get(key);
                 try {
                     final JSONObject value = new JSONObject(json);
                     fields.add(new UDFCollectionValueField(udfDef, sortKey, value));
@@ -204,9 +207,8 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         button.setOnClickListener(v -> {
             Intent udfCreator = new Intent(App.getAppInstance(), UDFCollectionCreateActivity.class);
 
-            // JSONObject is not serializable, so we send the string representation
-            Collection<String> jsonUdfDefs = transform(udfDefinitions.values(), JSONObject::toString);
-            udfCreator.putExtra(UDFCollectionCreateActivity.UDF_DEFINITIONS, newArrayList(jsonUdfDefs));
+            udfCreator.putParcelableArrayListExtra(UDFCollectionCreateActivity.UDF_DEFINITIONS,
+                    newArrayList(udfDefinitions.values()));
 
             activity.startActivityForResult(udfCreator, TreeEditDisplay.FIELD_ACTIVITY_REQUEST_CODE);
         });
@@ -224,9 +226,9 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     }
 
     private List<UDFCollectionValueField> getFields(Plot plot) {
-        List<UDFCollectionValueField> fieldsList = newArrayList();
-        for (JSONObject udfDef : udfDefinitions.values()) {
-            JSONArray collectionValues = (JSONArray) plot.getValueForKey(udfDef.optString("field_key"));
+        final List<UDFCollectionValueField> fieldsList = newArrayList();
+        for (UDFCollectionDefinition udfDef : udfDefinitions.values()) {
+            JSONArray collectionValues = (JSONArray) plot.getValueForKey(udfDef.getCollectionKey());
             if (!JSONObject.NULL.equals(collectionValues)) {
                 for (int i = 0; i < collectionValues.length(); i++) {
                     JSONObject value = collectionValues.optJSONObject(i);

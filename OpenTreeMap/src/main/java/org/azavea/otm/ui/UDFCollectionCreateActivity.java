@@ -11,10 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.azavea.helpers.UDFCollectionHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.Choice;
 import org.azavea.otm.R;
+import org.azavea.otm.data.UDFCollectionDefinition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Collections2.transform;
 
@@ -38,7 +37,7 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
     private List<Fragment> fieldFragments;
     // Index into subFieldDefinitions, set to -1 so the first +1 puts us at the start of fieldFragments
     private int currentFragmentIndex = -1;
-    private Map<String, JSONObject> udfDefinitions;
+    private Map<String, UDFCollectionDefinition> udfDefinitions;
     private MenuItem nextButton;
 
     @Override
@@ -46,19 +45,9 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection_udf_add_activity);
 
-        final List<String> jsonUdfDefinitions = (ArrayList<String>) getIntent().getExtras().getSerializable(UDF_DEFINITIONS);
-        final Collection<JSONObject> udfDefinitions = filter(transform(jsonUdfDefinitions, j -> {
-            try {
-                return new JSONObject(j);
-            } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Failed to parse passed in JSON String", e);
-                return null;
-            }
-        }), u -> u != null);
+        final List<UDFCollectionDefinition> udfDefinitions = getIntent().getExtras().getParcelableArrayList(UDF_DEFINITIONS);
         final ArrayList<Choice> choices = newArrayList(
-                transform(udfDefinitions,
-                          u -> new Choice(UDFCollectionHelper.getLabel(u),
-                                          u.optString(UDFCollectionHelper.COLLECTION_KEY))));
+                transform(udfDefinitions, u -> new Choice(u.getLabel(), u.getCollectionKey())));
 
         this.udfDefinitions = groupUdfDefinitionsByKey(udfDefinitions);
 
@@ -102,11 +91,11 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
     }
 
     public void onUDFFieldSelected(String collectionKey) {
-        final JSONObject currentUDFDef = udfDefinitions.get(collectionKey);
+        final UDFCollectionDefinition currentUDFDef = udfDefinitions.get(collectionKey);
 
         this.collectionKey = collectionKey;
-        this.fieldFragments = getFieldFragments(currentUDFDef);
         this.value = new JSONObject();
+        this.fieldFragments = getFieldFragments(currentUDFDef);
 
         nextButton.setEnabled(true);
     }
@@ -146,19 +135,17 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
         }
     }
 
-    private static LinkedHashMap<String, JSONObject> groupUdfDefinitionsByKey(Collection<JSONObject> udfDefs) {
-        final LinkedHashMap<String, JSONObject> udfDefMap = new LinkedHashMap<>(udfDefs.size());
-        for (JSONObject udfDef : udfDefs) {
-            if (!udfDef.isNull(UDFCollectionHelper.COLLECTION_KEY)) {
-                final String udfDefKey = udfDef.optString(UDFCollectionHelper.COLLECTION_KEY);
-                udfDefMap.put(udfDefKey, udfDef);
-            }
+    private static LinkedHashMap<String, UDFCollectionDefinition> groupUdfDefinitionsByKey(Collection<UDFCollectionDefinition> udfDefs) {
+        final LinkedHashMap<String, UDFCollectionDefinition> udfDefMap = new LinkedHashMap<>(udfDefs.size());
+        for (UDFCollectionDefinition udfDef : udfDefs) {
+            final String udfDefKey = udfDef.getCollectionKey();
+            udfDefMap.put(udfDefKey, udfDef);
         }
         return udfDefMap;
     }
 
-    private static List<Fragment> getFieldFragments(JSONObject udfDef) {
-        final List<JSONObject> fieldDefs = newArrayList(UDFCollectionHelper.groupTypesByName(udfDef).values());
+    private static List<Fragment> getFieldFragments(UDFCollectionDefinition udfDef) {
+        final List<JSONObject> fieldDefs = newArrayList(udfDef.groupTypesByName().values());
         final List<Fragment> fragments = new ArrayList<>();
         for (JSONObject subFieldDef : fieldDefs) {
             final String type = subFieldDef.optString("type");
