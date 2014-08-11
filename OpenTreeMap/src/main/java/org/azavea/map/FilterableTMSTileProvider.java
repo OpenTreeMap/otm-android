@@ -9,6 +9,12 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 
+import com.atlassian.fugue.Either;
+
+import static com.atlassian.fugue.Eithers.filterLeft;
+import static com.atlassian.fugue.Eithers.filterRight;
+import static com.atlassian.fugue.Eithers.sequenceLeft;
+
 public class FilterableTMSTileProvider extends TMSTileProvider {
     private JSONArray parameters = null;
 
@@ -41,15 +47,18 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
         }
     }
 
-    public void setParameters(Collection<JSONObject> filters) {
+    public void setParameters(Collection<Either<JSONObject, JSONArray>> filters) {
         clearParameters();
         if (filters.isEmpty()) {
             return;
         }
         this.parameters = new JSONArray();
         this.parameters.put("AND");
-        for (JSONObject filter : filters) {
+        for (JSONObject filter : filterLeft(filters)) {
             this.parameters.put(filter);
+        }
+        for (JSONArray combinedFilters : filterRight(filters)) {
+            this.parameters.put(combinedFilters);
         }
     }
 

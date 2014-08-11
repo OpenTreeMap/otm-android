@@ -6,11 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
+import org.azavea.otm.filters.DefaultFilter;
 import org.azavea.otm.filters.MissingFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.filters.SpeciesFilter;
@@ -26,6 +29,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
+import com.atlassian.fugue.Either;
+
 public class FilterManager {
     private RequestGenerator request = new RequestGenerator();
 
@@ -35,7 +40,12 @@ public class FilterManager {
     // List of all species received from the API
     private LinkedHashMap<Integer, Species> species = new LinkedHashMap<>();
 
-    public FilterManager(JSONObject filterDefinitions) {
+    private final InstanceInfo instanceInfo;
+
+    public FilterManager(InstanceInfo instanceInfo) {
+        this.instanceInfo = instanceInfo;
+
+        final JSONObject filterDefinitions = instanceInfo.getSearchDefinitions();
         Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
         loadSpeciesList();
         loadFilterDefinitions(filterDefinitions);
@@ -87,8 +97,8 @@ public class FilterManager {
         callback.handleMessage(resultMessage);
     }
 
-    private BaseFilter makeMapFilter(String key, String identifier,
-                                     String label, String type, JSONArray choices) throws Exception {
+    private BaseFilter makeMapFilter(String key, String identifier, String label, String type,
+                                     JSONArray choices, String defaultIdentifier) throws Exception {
 
         if (type.equals("BOOL")) {
             return new BooleanFilter(key, identifier, label);
@@ -100,9 +110,11 @@ public class FilterManager {
             return new MissingFilter(key, identifier, label);
         } else if (type.equals("CHOICE")) {
             return new ChoiceFilter(key, identifier, label, choices);
+        } else if (type.equals("DEFAULT")) {
+            final JSONObject fieldDef = instanceInfo.getFieldDefinitions().optJSONObject(defaultIdentifier);
+            return new DefaultFilter(key, identifier, label, fieldDef);
         } else {
-            throw new Exception("Invalid filter type defined in config: "
-                    + type);
+            throw new Exception("Invalid filter type defined in config: " + type);
         }
     }
 
@@ -130,9 +142,9 @@ public class FilterManager {
                     type = "MISSING";
                 }
                 JSONArray choices = def.optJSONArray("choices");
+                String defaultIdentifier = def.optString("default_identifier", identifier);
 
-                BaseFilter filter = makeMapFilter(key, identifier, label, type,
-                        choices);
+                BaseFilter filter = makeMapFilter(key, identifier, label, type, choices, defaultIdentifier);
                 allFilters.put(key, filter);
 
             } catch (Exception e) {
@@ -197,14 +209,29 @@ public class FilterManager {
     }
 
     /**
-     * Returns a RequestParams object loaded with the filter values.
+     * Returns the active filters to serialize into a tiler query
+     * @return a list of filter objects. Some filters have to be grouped together into JSONArrays,
+     *         the others are returned as JSONObjects
      */
-    public Collection<JSONObject> getActiveFilters() {
-        List<JSONObject> filterObjects = new ArrayList<>();
+    public Collection<Either<JSONObject, JSONArray>> getActiveFilters() {
+        final List<Either<JSONObject, JSONArray>> filterObjects = new ArrayList<>();
+
+        // Right now the only default filters are for Alerts search.
+        // They need to be grouped into an "OR" group
+        final JSONArray defaultFilters = new JSONArray();
+        defaultFilters.put("OR");
         for (BaseFilter filter : allFilters.values()) {
             if (filter.isActive()) {
-                filterObjects.add(filter.getFilterObject());
+                final JSONObject filterObject = filter.getFilterObject();
+                if (filter instanceof DefaultFilter) {
+                    defaultFilters.put(filterObject);
+                } else {
+                    filterObjects.add(Either.left(filterObject));
+                }
             }
+        }
+        if (defaultFilters.length() > 1) {
+            filterObjects.add(Either.right(defaultFilters));
         }
         return filterObjects;
     }

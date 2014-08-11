@@ -321,7 +321,7 @@ public class App extends Application {
         try {
             fieldManager = new FieldManager(currentInstance);
 
-            filterManager = new FilterManager(currentInstance.getSearchDefinitions());
+            filterManager = new FilterManager(currentInstance);
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "Unable to create field manager from instance", e);
