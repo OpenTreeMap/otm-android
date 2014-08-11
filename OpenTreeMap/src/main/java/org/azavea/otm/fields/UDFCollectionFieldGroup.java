@@ -1,7 +1,9 @@
 package org.azavea.otm.fields;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.google.common.collect.Lists;
 import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
+import org.azavea.otm.adapters.LinkedHashMapAdapter;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.ui.TreeEditDisplay;
 import org.azavea.otm.ui.UDFCollectionCreateActivity;
@@ -25,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +57,13 @@ public class UDFCollectionFieldGroup extends FieldGroup {
 
     private static final int NUM_FIELDS_PER_CLICK = 3;
 
-    private String title;
-    private String sortKey;
-    private ArrayList<JSONObject> udfDefinitions = new ArrayList<>();
-    private List<UDFCollectionValueField> fields;
-
+    private final String title;
+    private final String sortKey;
+    private final LinkedHashMap<String, JSONObject> udfDefinitions = new LinkedHashMap<>();
     private final List<String> fieldKeys;
+
+    private ViewGroup fieldContainer;
+    private List<UDFCollectionValueField> fields;
 
     public UDFCollectionFieldGroup(JSONObject groupDefinition,
                                    Map<String, JSONObject> fieldDefinitions) throws JSONException {
@@ -68,7 +73,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         fieldKeys = JSONHelper.jsonStringArrayToList(groupDefinition.getJSONArray("collection_udf_keys"));
         for (String key : fieldKeys) {
             if (fieldDefinitions.containsKey(key)) {
-                udfDefinitions.add(fieldDefinitions.get(key));
+                udfDefinitions.put(key, fieldDefinitions.get(key));
             }
         }
     }
@@ -90,8 +95,46 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     }
 
     @Override
+    public void receiveActivityResult(int resultCode, Intent data, Activity activity) {
+        final Set<String> keys = data.getExtras().keySet();
+        for (String key : keys) {
+            if (udfDefinitions.containsKey(key)) {
+                final String json = data.getStringExtra(key);
+                final JSONObject udfDef = udfDefinitions.get(key);
+                try {
+                    final JSONObject value = new JSONObject(json);
+                    fields.add(new UDFCollectionValueField(udfDef, sortKey, value));
+                } catch (JSONException e) {
+                    Log.e(App.LOG_TAG, "Error parsing JSON passed as activity result", e);
+                }
+            }
+        }
+        replaceFields(activity);
+    }
+
+    @Override
     public void update(Plot plot) {
-        // TODO: Implement
+        Map<String, JSONArray> collectionUdfArrays = new HashMap<>(fieldKeys.size());
+        for (String collectionKey : fieldKeys) {
+            collectionUdfArrays.put(collectionKey, new JSONArray());
+        }
+        for (Field field : fields) {
+            String collectionKey = field.key;
+            if (collectionUdfArrays.containsKey(collectionKey)) {
+                JSONArray udfData = collectionUdfArrays.get(collectionKey);
+                udfData.put(field.getEditedValue());
+            } else {
+                Log.w(App.LOG_TAG, "Impossible state - UDFCollectionGroup has a field not in it's fieldKeys");
+            }
+        }
+        for (Map.Entry<String, JSONArray> entry : collectionUdfArrays.entrySet()) {
+            try {
+                plot.setValueForKey(entry.getKey(), entry.getValue());
+            } catch(Exception e) {
+                // TODO: Extract String
+                Toast.makeText(App.getAppInstance(), "Error saving Stewardship fields", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -108,25 +151,24 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         final TextView groupLabel = (TextView) groupContainer.findViewById(R.id.group_name);
         groupLabel.setText(title);
 
-        final LinearLayout fieldContainer = (LinearLayout) groupContainer.findViewById(R.id.fields);
-        fields = getFields(plot);
-
         final View buttonContainer = groupContainer.findViewById(R.id.udf_button_container);
         final Button button = (Button) groupContainer.findViewById(R.id.udf_button);
 
-        final Collection<View> fieldViews = getViewsForFields(inflater, plot, activity, fieldContainer);
+        fields = getFields(plot);
+        fieldContainer = (LinearLayout) groupContainer.findViewById(R.id.fields);
+        final Collection<View> fieldViews = getViewsForFields(inflater, activity);
 
         if (mode == DisplayMode.VIEW) {
-            setupFieldsForDisplay(inflater, fieldContainer, buttonContainer, button, fieldViews);
+            setupFieldsForDisplay(inflater, buttonContainer, button, fieldViews);
         } else {
-            setupFieldsForEdit(fieldContainer, button, fieldViews, activity);
+            setupFieldsForEdit(button, fieldViews, activity);
         }
 
         return groupContainer;
     }
 
-    private void setupFieldsForDisplay(LayoutInflater inflater, LinearLayout fieldContainer,
-                                       View buttonContainer, Button button, Collection<View> fieldViews) {
+    private void setupFieldsForDisplay(LayoutInflater inflater, View buttonContainer, Button button,
+                                       Collection<View> fieldViews) {
         button.setText(R.string.load_more_collection_udf);
 
         if (fieldViews.isEmpty()) {
@@ -151,7 +193,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         }
     }
 
-    private void setupFieldsForEdit(LinearLayout fieldContainer, Button button, Collection<View> fieldViews, Activity activity) {
+    private void setupFieldsForEdit(Button button, Collection<View> fieldViews, Activity activity) {
         // TODO: String extraction
         button.setText("Add New");
 
@@ -163,16 +205,27 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             Intent udfCreator = new Intent(App.getAppInstance(), UDFCollectionCreateActivity.class);
 
             // JSONObject is not serializable, so we send the string representation
-            Collection<String> jsonUdfDefs = transform(udfDefinitions, JSONObject::toString);
+            Collection<String> jsonUdfDefs = transform(udfDefinitions.values(), JSONObject::toString);
             udfCreator.putExtra(UDFCollectionCreateActivity.UDF_DEFINITIONS, newArrayList(jsonUdfDefs));
 
             activity.startActivityForResult(udfCreator, TreeEditDisplay.FIELD_ACTIVITY_REQUEST_CODE);
         });
     }
 
+    private void replaceFields(Activity activity) {
+        fieldContainer.removeAllViews();
+        Collections.sort(fields);
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        Collection<View> fieldViews = getViewsForFields(inflater, activity);
+        for (View view : fieldViews) {
+            fieldContainer.addView(view);
+        }
+    }
+
     private List<UDFCollectionValueField> getFields(Plot plot) {
         List<UDFCollectionValueField> fieldsList = newArrayList();
-        for (JSONObject udfDef : udfDefinitions) {
+        for (JSONObject udfDef : udfDefinitions.values()) {
             JSONArray collectionValues = (JSONArray) plot.getValueForKey(udfDef.optString("field_key"));
             if (!JSONObject.NULL.equals(collectionValues)) {
                 for (int i = 0; i < collectionValues.length(); i++) {
@@ -181,15 +234,15 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 }
             }
         }
-        Collections.sort(fieldsList);
 
         return fieldsList;
     }
 
-    private Collection<View> getViewsForFields(LayoutInflater inflater, Plot plot, Activity activity, LinearLayout fieldContainer) {
+    private Collection<View> getViewsForFields(LayoutInflater inflater, Activity activity) {
+        Collections.sort(fields);
         return filter(transform(fields, field -> {
             try {
-                return field.renderForDisplay(inflater, plot, activity, fieldContainer);
+                return field.renderForDisplay(inflater, activity, fieldContainer);
             } catch (JSONException e) {
                 return null;
             }

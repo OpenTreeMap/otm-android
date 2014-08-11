@@ -371,7 +371,7 @@ public class TreeEditDisplay extends TreeDisplay {
             case FIELD_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
-                        group.receiveActivityResult(resultCode, data);
+                        group.receiveActivityResult(resultCode, data, this);
                     }
                 }
                 break;

@@ -49,6 +49,8 @@
     <string name="unspecified_eco_value">0.0</string>
     <string name="unspecified_eco_field_money">$0.00</string>
     <string name="plot_edit_button">Edit</string>
+    <string name="udf_create_done_text">Done</string>
+    <string name="udf_create_error_saving">There was a problem saving the stewardship event</string>
     <string name="save_plot_edit_button">Save</string>
     <string name="delete">Delete</string>
     <string name="delete_tree">Delete Tree</string>

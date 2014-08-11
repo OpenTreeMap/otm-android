@@ -79,12 +79,12 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.udf_create_next_button) {
-            if (currentFragmentIndex < fieldFragments.size()) {
+            if (currentFragmentIndex + 1 < fieldFragments.size()) {
                 setCurrentFragment(currentFragmentIndex + 1);
             } else {
                 Intent result = new Intent();
                 result.putExtra(collectionKey, value.toString());
-                setResult(TreeEditDisplay.FIELD_ACTIVITY_REQUEST_CODE, result);
+                setResult(RESULT_OK, result);
                 finish();
             }
             return true;
@@ -116,7 +116,7 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
             this.value.put(fieldName, value);
             nextButton.setEnabled(true);
         } catch (JSONException e) {
-            Toast.makeText(this, "Something weird happened", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.udf_create_error_saving, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -127,8 +127,13 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
         } else if (fieldNumber < fieldFragments.size()) {
             setFragment(fieldFragments.get(fieldNumber));
             // If fieldNumber == fieldFragments.size() -1, change next button text?
+            if (fieldNumber == fieldFragments.size() - 1) {
+                nextButton.setTitle(R.string.udf_create_done_text);
+            } else {
+                nextButton.setTitle(R.string.udf_create_next_button_text);
+            }
         } else {
-            // TODO:, set the activity result, or WTF?  Unclear
+            Log.e(App.LOG_TAG, "Fragment requested, but there was none to show...");
         }
     }
 
@@ -136,7 +141,6 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();
-        // TODO: Change ActionBar title?
         if (nextButton != null) {
             nextButton.setEnabled(false);
         }
@@ -164,7 +168,7 @@ public class UDFCollectionCreateActivity extends ActionBarActivity {
             } else if ("date".equals(type)) {
                 fragments.add(UDFDateFragment.newInstance(subFieldDef));
             } else {
-                // TODO: log
+                Log.w(App.LOG_TAG, "Unsupported Collection UDF field type " + type);
             }
         }
         return fragments;

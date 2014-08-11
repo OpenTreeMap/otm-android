@@ -43,15 +43,24 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     @Override
     public View renderForDisplay(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent)
             throws JSONException {
-        return render(inflater, plot, activity, parent, DisplayMode.VIEW);
+        return render(inflater, activity, parent, DisplayMode.VIEW);
     }
 
     @Override
     public View renderForEdit(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent) {
-        return render(inflater, plot, activity, parent, DisplayMode.EDIT);
+        return render(inflater, activity, parent, DisplayMode.EDIT);
     }
 
-    private View render(LayoutInflater inflater, Plot plot, Activity activity, ViewGroup parent, DisplayMode mode) {
+    public View renderForDisplay(LayoutInflater inflater, Activity activity, ViewGroup parent)
+            throws JSONException {
+        return render(inflater, activity, parent, DisplayMode.VIEW);
+    }
+
+    public View renderForEdit(LayoutInflater inflater, Activity activity, ViewGroup parent) {
+        return render(inflater, activity, parent, DisplayMode.EDIT);
+    }
+
+    private View render(LayoutInflater inflater, Activity activity, ViewGroup parent, DisplayMode mode) {
         View container = inflater.inflate(R.layout.collection_udf_element_row, parent, false);
         TextView labelView = (TextView) container.findViewById(R.id.primary_text);
         TextView secondaryTextView = (TextView) container.findViewById(R.id.secondary_text);
@@ -85,8 +94,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
 
     @Override
     protected Object getEditedValue() {
-        // TODO: Implement
-        return null;
+        return value;
     }
 
     private String formatSubValue(String key) {
