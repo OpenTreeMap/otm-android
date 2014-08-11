@@ -38,7 +38,6 @@ public class TreeEditDisplay extends TreeDisplay {
     protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
     protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
 
-    private SpeciesField speciesField;
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
     private final ProgressDialog savePhotoDialog = null;
@@ -127,20 +126,12 @@ public class TreeEditDisplay extends TreeDisplay {
         LinearLayout fieldList = (LinearLayout) findViewById(R.id.field_list);
         LayoutInflater layout = this.getLayoutInflater();
 
-        View first = null;
         // Add all the fields to the display for edit mode
         for (FieldGroup group : App.getFieldManager().getFieldGroups()) {
             View fieldGroup = group.renderForEdit(layout, plot, TreeEditDisplay.this, fieldList);
-            if (first == null) {
-                first = fieldGroup;
-            }
             if (fieldGroup != null) {
                 fieldList.addView(fieldGroup);
             }
-        }
-
-        if (first != null) {
-            first.requestFocus();
         }
 
         setupChangePhotoButton(layout, fieldList);
