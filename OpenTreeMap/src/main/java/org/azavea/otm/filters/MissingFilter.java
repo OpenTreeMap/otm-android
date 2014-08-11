@@ -11,11 +11,6 @@ public class MissingFilter extends BooleanFilter {
         super(key, identifier, label);
     }
 
-    public MissingFilter(String key, String identifier, String label,
-                         boolean active) {
-        super(key, identifier, label, active);
-    }
-
     @Override
     public JSONObject getFilterObject() {
         return buildNestedFilter(this.identifier, "ISNULL", this.active);

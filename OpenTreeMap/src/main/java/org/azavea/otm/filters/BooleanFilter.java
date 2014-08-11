@@ -10,18 +10,14 @@ public class BooleanFilter extends BaseFilter {
     public boolean active;
 
     public BooleanFilter(String key, String identifier, String label) {
-        initialize(key, identifier, label, false);
+        initialize(key, identifier, label);
     }
 
-    public BooleanFilter(String key, String identifier, String label, boolean active) {
-        initialize(key, identifier, label, active);
-    }
-
-    private void initialize(String key, String identifier, String label, boolean active) {
+    private void initialize(String key, String identifier, String label) {
         this.key = key;
         this.identifier = identifier;
-        this.active = active;
         this.label = label;
+        this.active = false;
     }
 
     @Override
