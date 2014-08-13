@@ -271,7 +271,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
             // check if we are adding a new tree or editing an existing one.
             if (addMode()) {
-                rg.addTree(plot, responseHandler);
+                rg.addPlot(plot, responseHandler);
             } else {
                 rg.updatePlot(plot.getId(), plot, responseHandler);
             }
