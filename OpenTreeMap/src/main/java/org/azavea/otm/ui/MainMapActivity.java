@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.atlassian.fugue.Either;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -55,6 +56,7 @@ import org.azavea.otm.data.Tree;
 import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -263,7 +265,7 @@ public class MainMapActivity extends Fragment {
         switch (requestCode) {
             case FILTER_INTENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    Collection<JSONObject> activeFilters = App.getFilterManager().getActiveFilters();
+                    Collection<Either<JSONObject, JSONArray>> activeFilters = App.getFilterManager().getActiveFilters();
                     setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
 
                     filterTileProvider.setParameters(activeFilters);

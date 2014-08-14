@@ -60,6 +60,7 @@
     <orderEntry type="library" exported="" name="slf4j-api-1.7.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="jdeferred-core-1.2.1" level="project" />
+    <orderEntry type="library" exported="" name="fugue-2.1.0" level="project" />
     <orderEntry type="module" module-name="OpenTreeMap" exported="" />
   </component>
 </module>
