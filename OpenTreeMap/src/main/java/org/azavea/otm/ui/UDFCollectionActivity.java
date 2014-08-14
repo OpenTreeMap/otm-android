@@ -62,7 +62,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
             setCurrentFragment(0);
         } else {
             fieldChoiceFragment = UDFKeyChoiceFragment.newInstance(choices);
-            setFragment(fieldChoiceFragment);
+            setFieldChoiceFragment();
         }
     }
 
@@ -131,8 +131,9 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
 
     /**
      * Set the value of the specified UDF sub-field
+     *
      * @param fieldName the field name to set a value for
-     * @param value the value to save
+     * @param value     the value to save
      */
     public void onValueChanged(String fieldName, String value) {
         try {
@@ -153,9 +154,8 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
             // If there is no UDF choice screen, go back to the tree edit screen
             super.onBackPressed();
         } else if (fieldNumber < 0) {
-            final String title = getLast(udfDefinitions.values()).getDisplayName();
-            setActionBarTitle(title);
-            setFragment(fieldChoiceFragment);
+            setFieldChoiceFragment();
+
         } else if (fieldNumber < fieldFragments.size()) {
             setFragment(fieldFragments.get(fieldNumber));
             if (nextButton != null) {
@@ -168,6 +168,13 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
         } else {
             Log.e(App.LOG_TAG, "Fragment requested, but there was none to show...");
         }
+    }
+
+    private void setFieldChoiceFragment() {
+        // The collection UDFs in a group usually have the same name, so just use the last one
+        final String title = getLast(udfDefinitions.values()).getDisplayName();
+        setActionBarTitle(title);
+        setFragment(fieldChoiceFragment);
     }
 
     private void setFragment(Fragment fragment) {

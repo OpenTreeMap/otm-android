@@ -6,19 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ListView;
 
-import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.R;
 import org.azavea.otm.fields.DateField;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -30,7 +25,7 @@ public class UDFDateFragment extends Fragment {
     private static final String NAME = "name";
 
     private String fieldName;
-    private UDFCollectionCreateActivity listener;
+    private UDFCollectionCreateActivity changeListener;
 
     /**
      * Creates a Fragment for setting choice values for a field in a collection UDF
@@ -56,7 +51,7 @@ public class UDFDateFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             fieldName = getArguments().getString(NAME);
-            listener.setActionBarTitle(fieldName);
+            changeListener.setActionBarTitle(fieldName);
             // Today's date is perfectly valid, so we should immediately call valueChanged
             sendCurrentDate();
         }
@@ -69,7 +64,7 @@ public class UDFDateFragment extends Fragment {
         DatePicker picker = (DatePicker) layout.findViewById(R.id.udf_datepicker);
         picker.init(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), (view, year, month, dayOfMonth) -> {
             String timestamp = DateField.getTimestamp(getActivity(), year, month, dayOfMonth);
-            listener.onValueChanged(fieldName, timestamp);
+            changeListener.onValueChanged(fieldName, timestamp);
         });
         return layout;
     }
@@ -78,7 +73,7 @@ public class UDFDateFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (UDFCollectionCreateActivity) activity;
+            changeListener = (UDFCollectionCreateActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must be UDFCollectionCreateActivity");
         }
@@ -87,13 +82,13 @@ public class UDFDateFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        changeListener = null;
     }
 
     private void sendCurrentDate() {
         Calendar cal = new GregorianCalendar();
         String timestamp = DateField.getTimestamp(getActivity(), cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        listener.onValueChanged(fieldName, timestamp);
+        changeListener.onValueChanged(fieldName, timestamp);
     }
 }

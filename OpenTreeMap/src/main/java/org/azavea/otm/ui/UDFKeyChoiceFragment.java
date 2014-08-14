@@ -34,6 +34,6 @@ public class UDFKeyChoiceFragment extends UDFChoiceFragment {
 
     @Override
     protected void callListener(Choice choice) {
-        listener.onUDFFieldSelected(choice.getValue());
+        changeListener.onUDFFieldSelected(choice.getValue());
     }
 }

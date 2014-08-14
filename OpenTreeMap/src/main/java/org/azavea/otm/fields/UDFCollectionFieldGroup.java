@@ -103,6 +103,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             if (data.getExtras().containsKey(key)) {
                 final String json = data.getStringExtra(key);
                 final UDFCollectionDefinition udfDef = editableUdfDefinitions.get(key);
+
                 final JSONObject value;
                 try {
                     value = new JSONObject(json);
@@ -110,6 +111,8 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                     Log.e(App.LOG_TAG, "Error parsing JSON passed as activity result", e);
                     continue;
                 }
+
+                // The presence of a tag tells us if this is an edit to an existing field or an add
                 final UDFCollectionValueField field = new UDFCollectionValueField(udfDef, sortKey, value);
                 if (data.getExtras().containsKey(UDFCollectionEditActivity.TAG)) {
                     final int tag = data.getIntExtra(UDFCollectionEditActivity.TAG, -1);
@@ -124,7 +127,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 }
             }
         }
-        replaceEditFields(activity);
+        rerenderEditFields(activity);
     }
 
     @Override
@@ -143,11 +146,13 @@ public class UDFCollectionFieldGroup extends FieldGroup {
             }
         }
         for (Map.Entry<String, JSONArray> entry : collectionUdfArrays.entrySet()) {
-            try {
-                plot.setValueForKey(entry.getKey(), entry.getValue());
-            } catch (Exception e) {
-                // TODO: Extract String
-                Toast.makeText(App.getAppInstance(), "Error saving Stewardship fields", Toast.LENGTH_SHORT).show();
+            JSONArray collectionValues = entry.getValue();
+            if (collectionValues.length() > 0) {
+                try {
+                    plot.setValueForKey(entry.getKey(), collectionValues);
+                } catch (Exception e) {
+                    Toast.makeText(App.getAppInstance(), R.string.udf_save_error, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -209,8 +214,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
     }
 
     private void setupFieldsForEdit(Button button, Collection<View> fieldViews, Activity activity) {
-        // TODO: String extraction
-        button.setText("Add New");
+        button.setText(R.string.udf_create_new);
 
         for (View view : fieldViews) {
             fieldContainer.addView(view);
@@ -226,7 +230,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         });
     }
 
-    private void replaceEditFields(Activity activity) {
+    private void rerenderEditFields(Activity activity) {
         fieldContainer.removeAllViews();
         Collections.sort(fields);
 

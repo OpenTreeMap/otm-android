@@ -12,7 +12,6 @@ import android.widget.ListView;
 import org.azavea.otm.Choice;
 import org.azavea.otm.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.transform;
@@ -21,7 +20,7 @@ import static com.google.common.collect.Lists.transform;
 public abstract class UDFChoiceFragment extends Fragment {
 
     protected static final String CHOICES = "choices";
-    protected UDFCollectionActivity listener;
+    protected UDFCollectionActivity changeListener;
 
     private List<Choice> choices;
     private int currentRow = -1;
@@ -51,7 +50,7 @@ public abstract class UDFChoiceFragment extends Fragment {
         list.setOnItemClickListener((listView, rowView, pos, id) -> {
             currentRow = pos;
             setSelectedStyle(list);
-            if (listener != null) {
+            if (changeListener != null) {
                 callListener(choices.get(pos));
             }
         });
@@ -63,7 +62,7 @@ public abstract class UDFChoiceFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (UDFCollectionActivity) activity;
+            changeListener = (UDFCollectionActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must be UDFCollectionCreateActivity");
         }
@@ -72,12 +71,12 @@ public abstract class UDFChoiceFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        changeListener = null;
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden && currentRow != -1 && listener != null) {
+        if (!hidden && currentRow != -1 && changeListener != null) {
             callListener(choices.get(currentRow));
         }
     }

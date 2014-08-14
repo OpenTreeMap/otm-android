@@ -129,7 +129,8 @@
     <string name="planting_site">Planting Site</string>
     <string name="tree">Tree</string>
     <string name="load_more_collection_udf">Load more …</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="udf_save_error">Error saving Stewardship Fields</string>
     <string name="udf_create_next_button_text">Next</string>
+    <string name="udf_create_new">Add New</string>
 
 </resources>

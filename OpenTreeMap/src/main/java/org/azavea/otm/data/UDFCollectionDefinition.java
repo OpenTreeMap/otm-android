@@ -32,6 +32,10 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
     }
 
     // This constructor, writeToParcel, describeContents, and the CREATOR field are all used for serialization
+
+    /**
+     * ****** Serialization ********
+     */
     private UDFCollectionDefinition(Parcel in) {
         try {
             this.data = new JSONObject(in.readString());
@@ -62,6 +66,9 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         }
     };
 
+    /**
+     * ****** Helper methods ********
+     */
     public JSONArray getDataTypes() {
         return data.isNull(DATA_TYPE) ? new JSONArray() : data.optJSONArray(DATA_TYPE);
     }
@@ -90,21 +97,22 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         return map;
     }
 
+    /**
+     * @return A list of sub-fields to use in UDFCollectionCreateActivity
+     */
     public List<JSONObject> getTypesForAdd() {
         return getTypesForPredicate(j -> !j.has("default"));
     }
 
+    /**
+     * @return A list of sub-fields to use in UDFCollectionEditActivity
+     */
     public List<JSONObject> getTypesForEdit() {
         return getTypesForPredicate(j -> j.has("default"));
     }
 
     private List<JSONObject> getTypesForPredicate(Predicate<JSONObject> pred) {
         return newArrayList(filter(groupTypesByName().values(), pred));
-    }
-
-    public List<String> getFieldNamesForUDF() {
-        final JSONArray dataTypes = getDataTypes();
-        return JSONHelper.jsonStringArrayToList(dataTypes);
     }
 
     public String getDisplayName() {
@@ -115,10 +123,13 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         final String collectionKey = safeGetString(COLLECTION_KEY);
         final String displayName = safeGetString(DISPLAY_NAME);
         final App app = App.getAppInstance();
-        if (collectionKey.contains(".") && "tree".equals(collectionKey.split("[.]")[0])) {
+        final String model = collectionKey.contains(".") ? collectionKey.split("[.]")[0] : null;
+        if ("tree".equals(model)) {
             return String.format("%s - %s", app.getString(R.string.tree), displayName);
-        } else {
+        } else if ("plot".equals(model)) {
             return String.format("%s - %s", app.getString(R.string.planting_site), displayName);
+        } else {
+            return displayName;
         }
     }
 }

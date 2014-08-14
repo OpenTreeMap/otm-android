@@ -2,7 +2,6 @@ package org.azavea.otm.fields;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
     // This tag is returned by getTag()
     private final int tag = seq.incrementAndGet();
 
-    private final HashMap<String, JSONObject> nameToType;
+    private final HashMap<String, JSONObject> subFieldDefinitionsByName;
     private final String sortKey;
     private final JSONObject value;
     private final UDFCollectionDefinition udfDef;
@@ -50,7 +49,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         this.value = value;
         this.udfDef = udfDefinition;
 
-        this.nameToType = udfDefinition.groupTypesByName();
+        this.subFieldDefinitionsByName = udfDefinition.groupTypesByName();
     }
 
     @Override
@@ -82,7 +81,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         labelView.setText(label);
 
         List<String> secondaryText = new ArrayList<>();
-        for (String key : nameToType.keySet()) {
+        for (String key : subFieldDefinitionsByName.keySet()) {
             String formattedValue = formatSubValue(key);
             if (sortKey.equals(key)) {
                 sortTextView.setText(formattedValue);
@@ -93,9 +92,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         secondaryTextView.setText(Joiner.on('\n').join(secondaryText));
 
         View chevron = container.findViewById(R.id.chevron);
-        if (mode == DisplayMode.VIEW) {
-            chevron.setVisibility(View.GONE);
-        } else if (udfDef.isEditable()) {
+        if (udfDef.isEditable()) {
             chevron.setVisibility(View.VISIBLE);
             container.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, UDFCollectionEditActivity.class);
@@ -117,7 +114,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
 
     private String formatSubValue(String key) {
         Object subValue = value.opt(key);
-        JSONObject typeDef = nameToType.get(key);
+        JSONObject typeDef = subFieldDefinitionsByName.get(key);
         String type = typeDef.optString("type");
 
         if (JSONObject.NULL.equals(subValue)) {
@@ -133,7 +130,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
 
     @Override
     public int compareTo(UDFCollectionValueField another) {
-        String sortKeyType = nameToType.get(sortKey).optString("type");
+        String sortKeyType = subFieldDefinitionsByName.get(sortKey).optString("type");
 
         if ("date".equals(sortKeyType)) {
             // Dates are serialized in ISO format, which allows us to sort them lexicographically
