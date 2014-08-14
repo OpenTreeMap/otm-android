@@ -17,11 +17,10 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/plot_row_layout"
-        android:id="@+id/show_more_button_container"
+        android:id="@+id/udf_button_container"
         android:orientation="horizontal">
-        <Button android:id="@+id/show_more_button"
-            style="@style/full_width_button"
-            android:text="@string/load_more_collection_udf"/>
+        <Button android:id="@+id/udf_button"
+            style="@style/full_width_button" />
     </LinearLayout>
 
 </LinearLayout>

@@ -28,18 +28,7 @@ public class DateField extends ButtonField {
      */
     @Override
     protected String formatValue(Object value) {
-        String timestamp = (String) value;
-        final String displayPattern = App.getCurrentInstance().getShortDateFormat();
-        final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
-
-        final SimpleDateFormat timestampFormatter = new SimpleDateFormat(serverPattern);
-        final SimpleDateFormat displayFormatter = new SimpleDateFormat(displayPattern);
-        try {
-            final Date date = timestampFormatter.parse(timestamp);
-            return displayFormatter.format(date);
-        } catch (ParseException e) {
-            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
-        }
+        return formatTimestampForDisplay((String) value);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class FieldGroup {
     private String title;
     protected Map<String, Field> fields = new LinkedHashMap<>();
 
-    private enum DisplayMode {VIEW, EDIT}
+    public static enum DisplayMode {VIEW, EDIT}
 
     protected FieldGroup() {
 
@@ -131,7 +131,7 @@ public class FieldGroup {
         }
     }
 
-    public void receiveActivityResult(int resultCode, Intent data) {
+    public void receiveActivityResult(int resultCode, Intent data, Activity activity) {
         Set<String> keys = data.getExtras().keySet();
         for (String key : keys) {
             if (fields.containsKey(key)) {

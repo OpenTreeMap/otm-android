@@ -3,13 +3,15 @@ apply plugin: 'retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.1'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1'
     compile 'com.google.android.gms:play-services:4.+'
     compile 'com.android.support:appcompat-v7:19.1.+'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.1'
     compile 'com.google.guava:guava:17.0'
-
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.1'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1'
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-v4:19.+'
 }
 
 // Work around bug with gradle-retrolambda and newest version of the android gradle plugin

@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LinkedHashMapAdapter<T extends Model> extends BaseAdapter implements Filterable {
+public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
 
     private LinkedHashMap<CharSequence, List<T>> originalData = null;
     private List<Entry<T>> flattenedData;
