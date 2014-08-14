@@ -14,6 +14,7 @@ import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -139,9 +140,11 @@ public class RequestGenerator {
                            AsyncHttpResponseHandler handler) {
         if (loginManager.isLoggedIn()) {
             try {
+                final Plot plotCopy = getPlotCopy(plot);
+
                 client.putWithAuthentication(getInstanceNameUri("plots/"),
                         loginManager.loggedInUser.getUserName(),
-                        loginManager.loggedInUser.getPassword(), id, plot, handler);
+                        loginManager.loggedInUser.getPassword(), id, plotCopy, handler);
             } catch (JSONException e) {
                 handleBadResponse(e);
             }
@@ -239,12 +242,13 @@ public class RequestGenerator {
         client.post(context, "/user", user, handler);
     }
 
-    public void addTree(Plot plot, AsyncHttpResponseHandler handler)
+    public void addPlot(Plot plot, AsyncHttpResponseHandler handler)
             throws JSONException {
 
+        final Plot plotCopy = getPlotCopy(plot);
         client.postWithAuthentication(getInstanceNameUri("plots"),
                 loginManager.loggedInUser.getUserName(),
-                loginManager.loggedInUser.getPassword(), plot, handler);
+                loginManager.loggedInUser.getPassword(), plotCopy, handler);
     }
 
     public void rejectPendingEdit(int id, JsonHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
@@ -257,5 +261,14 @@ public class RequestGenerator {
         String url = String.format("/pending-edits/%d/approve", id);
         client.postWithAuthentication(url, loginManager.loggedInUser.getUserName(),
                 loginManager.loggedInUser.getPassword(), handler);
+    }
+
+    private Plot getPlotCopy(Plot plot) throws JSONException {
+        // Only send up plot and tree, and only send tree if the tree is there
+        final String[] fieldsToCopy = plot.hasTree()
+                ? new String[] {"plot", "tree"}
+                : new String[] {"plot"};
+        final JSONObject copy = new JSONObject(plot.getData(), fieldsToCopy);
+        return new Plot(copy);
     }
 }
