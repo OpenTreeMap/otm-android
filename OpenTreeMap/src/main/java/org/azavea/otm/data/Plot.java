@@ -74,60 +74,8 @@ public class Plot extends Model {
         return plotDetails.getInt("id");
     }
 
-    public void setId(int id) throws JSONException {
-        plotDetails.put("id", id);
-    }
-
     public String getTitle() {
         return this.data.optString("title", null);
-    }
-
-    public long getWidth() throws JSONException {
-        return getLongOrDefault("width", 0l);
-    }
-
-    public void setWidth(long width) throws JSONException {
-        plotDetails.put("width", width);
-    }
-
-    public long getLength() throws JSONException {
-        return getLongOrDefault("length", 0l);
-    }
-
-    public void setLength(long length) throws JSONException {
-        plotDetails.put("length", length);
-    }
-
-    public String getType() throws JSONException {
-        return data.getString("type");
-    }
-
-    public void setType(String type) throws JSONException {
-        data.put("type", type);
-    }
-
-    public boolean isReadOnly() throws JSONException {
-        return plotDetails.getBoolean("readonly");
-    }
-
-    public void setReadOnly(boolean readOnly) throws JSONException {
-        plotDetails.put("readonly", readOnly);
-    }
-
-    public String getPowerlineConflictPotential() throws JSONException {
-        return data.getString("power_lines");
-    }
-
-    public void setPowerlineConflictPotential(String powerlineConflictPotential) throws JSONException {
-        data.put("power_lines", powerlineConflictPotential);
-    }
-
-    public String getSidewalkDamage() throws JSONException {
-        return data.getString("sidewalk_damage");
-    }
-
-    public void setSidewalkDamage(String sidewalkDamage) throws JSONException {
-        data.put("sidewalk_damage", sidewalkDamage);
     }
 
     public String getAddress() {
