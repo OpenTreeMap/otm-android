@@ -172,12 +172,6 @@ public abstract class Field {
         if (this.valueView != null) {
             Object currentValue = getEditedValue();
 
-            // If the model doesn't have they key, add it. This creates
-            // a tree when tree values are added to a plot with no tree
-            if (key.split("[.]")[0].equals("tree") && !plot.hasTree() && currentValue != null) {
-                plot.createTree();
-            }
-
             plot.setValueForKey(key, currentValue);
         }
     }

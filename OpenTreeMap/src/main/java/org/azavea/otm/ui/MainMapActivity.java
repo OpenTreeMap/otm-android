@@ -681,7 +681,6 @@ public class MainMapActivity extends Fragment {
             newPlot.setAddress("No Address");
         }
 
-        newPlot.setTree(new Tree());
         return newPlot;
     }
 

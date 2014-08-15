@@ -51,10 +51,19 @@ public class Plot extends Model {
     @Override
     public void setData(JSONObject data) {
         super.setData(data);
-        setupPlotDetails(data);
+        setupPlotDetails();
     }
 
-    private void setupPlotDetails(JSONObject data) {
+    @Override
+    public void setValueForKey(String key, Object value) throws Exception {
+        // Make a tree if this key is for a tree and this plot doesn't have a tree
+        if (key.split("[.]")[0].equals("tree") && !hasTree() && !JSONObject.NULL.equals(value)) {
+            this.createTree();
+        }
+        super.setValueForKey(key, value);
+    }
+
+    private void setupPlotDetails() {
         try {
             this.plotDetails = this.data.optJSONObject("plot");
             if (!JSONObject.NULL.equals(plotDetails) && this.hasTree()) {
