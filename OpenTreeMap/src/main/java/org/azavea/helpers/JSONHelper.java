@@ -1,6 +1,7 @@
 package org.azavea.helpers;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,5 +13,9 @@ public class JSONHelper {
             strings.add(array.isNull(i) ? null : array.optString(i));
         }
         return strings;
+    }
+
+    public static String safeGetString(JSONObject data, String key) {
+        return data.isNull(key) ? null : data.optString(key);
     }
 }

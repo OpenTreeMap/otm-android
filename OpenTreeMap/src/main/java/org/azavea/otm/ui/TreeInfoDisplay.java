@@ -101,7 +101,7 @@ public class TreeInfoDisplay extends TreeDisplay {
     private void setHeaderValues(Plot plot) {
         try {
 
-            String streetAddress = plot.getAddressStreet();
+            String streetAddress = plot.getAddress();
             if (!TextUtils.isEmpty(streetAddress)) {
                 setText(R.id.address, streetAddress);
             }

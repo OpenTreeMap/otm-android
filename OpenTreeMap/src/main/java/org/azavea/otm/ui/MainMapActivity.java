@@ -474,7 +474,7 @@ public class MainMapActivity extends Fragment {
         plotImageView.setImageResource(R.drawable.missing_tree_photo);
 
         try {
-            String addr = plot.getAddressStreet();
+            String addr = plot.getAddress();
             if (!TextUtils.isEmpty(addr)) {
                 plotAddressView.setText(addr);
             }
@@ -652,34 +652,7 @@ public class MainMapActivity extends Fragment {
         newGeometry.setSrid(4326);
         newPlot.setGeometry(newGeometry);
 
-        List<Address> addresses = null;
-        try {
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            addresses = geocoder.getFromLocation(lat, lon, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if ((addresses != null) && (addresses.size() != 0)) {
-            Address addressData = addresses.get(0);
-            String streetAddress = null;
-            String city;
-            String zip;
-            if (addressData.getMaxAddressLineIndex() != 0) {
-                streetAddress = addressData.getAddressLine(0);
-            }
-            if (streetAddress == null || streetAddress.equals("")) {
-                streetAddress = "No Address";
-            }
-            city = addressData.getLocality();
-            zip = addressData.getPostalCode();
-
-            newPlot.setAddressCity(city);
-            newPlot.setAddressZip(zip);
-            newPlot.setAddress(streetAddress);
-        } else {
-            newPlot.setAddress("No Address");
-        }
+        newPlot.setAddressFromGeocoder(new Geocoder(getActivity(), Locale.getDefault()));
 
         newPlot.setTree(new Tree());
         return newPlot;

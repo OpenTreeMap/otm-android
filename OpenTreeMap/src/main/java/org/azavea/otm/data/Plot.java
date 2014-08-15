@@ -1,18 +1,26 @@
 package org.azavea.otm.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.rest.RequestGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
 
+import com.google.common.base.Joiner;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
 
 public class Plot extends Model {
 
@@ -79,35 +87,49 @@ public class Plot extends Model {
     }
 
     public String getAddress() {
-        return safeGetString("address");
+        final String streetAddress = JSONHelper.safeGetString(plotDetails, "address_street");
+        final String city = JSONHelper.safeGetString(plotDetails, "address_city");
+        final String zip = JSONHelper.safeGetString(plotDetails, "address_zip");
+
+        Collection<String> addresses = filter(newArrayList(streetAddress, city, zip), s -> s != null);
+
+        return Joiner.on(", ").join(addresses);
     }
 
-    public void setAddress(String address) throws JSONException {
-        plotDetails.put("address_street", address);
-    }
+    public void setAddressFromGeocoder(Geocoder geocoder) {
+        Geometry geom = getGeometry();
+        if (geom == null) {
+            Log.w(App.LOG_TAG, "Cannot set Address for a plot with no geometry");
+            return;
+        }
 
-    public String getAddressStreet() {
-        return safeGetString("address_street");
-    }
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(geom.getX(), geom.getY(), 1);
+        } catch (Exception e) {
+            Log.e(App.LOG_TAG, "Error Geocoding address", e);
+            return;
+        }
 
-    public void setAddressStreet(String addressStreet) throws JSONException {
-        plotDetails.put("address_street", addressStreet);
-    }
+        if ((addresses != null) && (addresses.size() != 0)) {
+            Address addressData = addresses.get(0);
+            String streetAddress = null;
+            String city;
+            String zip;
+            if (addressData.getMaxAddressLineIndex() != 0) {
+                streetAddress = addressData.getAddressLine(0);
+            }
+            city = addressData.getLocality();
+            zip = addressData.getPostalCode();
 
-    public String getAddressCity() throws JSONException {
-        return plotDetails.getString("address_city");
-    }
-
-    public void setAddressCity(String addressCity) throws JSONException {
-        plotDetails.put("address_city", addressCity);
-    }
-
-    public String getAddressZip() throws JSONException {
-        return plotDetails.getString("address_zip");
-    }
-
-    public void setAddressZip(String addressZip) throws JSONException {
-        plotDetails.put("address_zip", addressZip);
+            try {
+                plotDetails.put("address_city", city);
+                plotDetails.put("address_street", streetAddress);
+                plotDetails.put("address_zip", zip);
+            } catch (JSONException e) {
+                Log.e(App.LOG_TAG, "Error saving geocoded address", e);
+            }
+        }
     }
 
     public String getLastUpdated() throws JSONException {
@@ -144,9 +166,13 @@ public class Plot extends Model {
         data.put("has_tree", true);
     }
 
-    public Geometry getGeometry() throws JSONException {
+    public Geometry getGeometry() {
+        if (plotDetails.isNull("geom")) {
+            return null;
+        }
+
         Geometry retGeom = new Geometry();
-        retGeom.setData(plotDetails.getJSONObject("geom"));
+        retGeom.setData(plotDetails.optJSONObject("geom"));
         return retGeom;
     }
 
