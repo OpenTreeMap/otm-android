@@ -24,6 +24,19 @@ import static com.google.common.collect.Lists.newArrayList;
 
 public class Plot extends Model {
 
+    public static final String PLOT = "plot";
+    public static final String ID = "id";
+    public static final String TITLE = "title";
+    public static final String ADDRESS_STREET = "address_street";
+    public static final String ADDRESS_CITY = "address_city";
+    public static final String ADDRESS_ZIP = "address_zip";
+    public static final String TREE = "tree";
+    public static final String HAS_TREE = "has_tree";
+    public static final String GEOM = "geom";
+    public static final String PHOTOS = "photos";
+    public static final String PHOTO_IMAGE = "image";
+    public static final String PHOTO_THUMBNAIL = "thumbnail";
+
     private PendingStatus hasPending = PendingStatus.Unset;
     private JSONObject plotDetails = null;
     private Species species = null;
@@ -44,7 +57,7 @@ public class Plot extends Model {
             // Basic empty plot json structure
             JSONObject fullPlot = new JSONObject();
             plotDetails = new JSONObject();
-            fullPlot.put("plot", plotDetails);
+            fullPlot.put(PLOT, plotDetails);
             this.setData(fullPlot);
 
         } catch (JSONException e) {
@@ -64,7 +77,7 @@ public class Plot extends Model {
 
     private void setupPlotDetails(JSONObject data) {
         try {
-            this.plotDetails = this.data.optJSONObject("plot");
+            this.plotDetails = this.data.optJSONObject(PLOT);
             if (!JSONObject.NULL.equals(plotDetails) && this.hasTree()) {
                 Tree tree = this.getTree();
                 JSONObject speciesData = tree.getSpecies();
@@ -79,17 +92,17 @@ public class Plot extends Model {
     }
 
     public int getId() throws JSONException {
-        return plotDetails.getInt("id");
+        return plotDetails.getInt(ID);
     }
 
     public String getTitle() {
-        return this.data.optString("title", null);
+        return this.data.optString(TITLE, null);
     }
 
     public String getAddress() {
-        final String streetAddress = JSONHelper.safeGetString(plotDetails, "address_street");
-        final String city = JSONHelper.safeGetString(plotDetails, "address_city");
-        final String zip = JSONHelper.safeGetString(plotDetails, "address_zip");
+        final String streetAddress = JSONHelper.safeGetString(plotDetails, ADDRESS_STREET);
+        final String city = JSONHelper.safeGetString(plotDetails, ADDRESS_CITY);
+        final String zip = JSONHelper.safeGetString(plotDetails, ADDRESS_ZIP);
 
         Collection<String> addresses = filter(newArrayList(streetAddress, city, zip), s -> s != null);
 
@@ -123,9 +136,9 @@ public class Plot extends Model {
             zip = addressData.getPostalCode();
 
             try {
-                plotDetails.put("address_city", city);
-                plotDetails.put("address_street", streetAddress);
-                plotDetails.put("address_zip", zip);
+                plotDetails.put(ADDRESS_CITY, city);
+                plotDetails.put(ADDRESS_STREET, streetAddress);
+                plotDetails.put(ADDRESS_ZIP, zip);
             } catch (JSONException e) {
                 Log.e(App.LOG_TAG, "Error saving geocoded address", e);
             }
@@ -153,31 +166,31 @@ public class Plot extends Model {
     }
 
     public Tree getTree() throws JSONException {
-        if (data.isNull("tree")) {
+        if (data.isNull(TREE)) {
             return null;
         }
         Tree retTree = new Tree(this);
-        retTree.setData(data.getJSONObject("tree"));
+        retTree.setData(data.getJSONObject(TREE));
         return retTree;
     }
 
     public void setTree(Tree tree) throws JSONException {
-        data.put("tree", tree.getData());
-        data.put("has_tree", true);
+        data.put(TREE, tree.getData());
+        data.put(HAS_TREE, true);
     }
 
     public Geometry getGeometry() {
-        if (plotDetails.isNull("geom")) {
+        if (plotDetails.isNull(GEOM)) {
             return null;
         }
 
         Geometry retGeom = new Geometry();
-        retGeom.setData(plotDetails.optJSONObject("geom"));
+        retGeom.setData(plotDetails.optJSONObject(GEOM));
         return retGeom;
     }
 
     public void setGeometry(Geometry geom) throws JSONException {
-        plotDetails.put("geom", geom.getData());
+        plotDetails.put(GEOM, geom.getData());
     }
 
     /**
@@ -222,7 +235,7 @@ public class Plot extends Model {
     }
 
     public boolean hasTree() {
-        return data.optBoolean("has_tree", false);
+        return data.optBoolean(HAS_TREE, false);
     }
 
     public void createTree() throws JSONException {
@@ -230,17 +243,17 @@ public class Plot extends Model {
     }
 
     public JSONObject getMostRecentPhoto() {
-        JSONArray photos = data.optJSONArray("photos");
+        JSONArray photos = data.optJSONArray(PHOTOS);
         if (photos != null && photos.length() > 0 && this.hasTree()) {
             List<JSONObject> photoObjects = new ArrayList<>(photos.length());
             for (int i = 0; i < photos.length(); i++) {
                 JSONObject photo = photos.optJSONObject(i);
                 // If we start supporting multiple trees, we'll need to check the tree id here
-                if (photo != null && photo.optInt("id") != 0 && photo.has("image") && photo.has("thumbnail")) {
+                if (photo != null && photo.optInt(ID) != 0 && photo.has(PHOTO_IMAGE) && photo.has(PHOTO_THUMBNAIL)) {
                     photoObjects.add(photo);
                 }
             }
-            return Collections.max(photoObjects, (a, b) -> a.optInt("id") - b.optInt("id"));
+            return Collections.max(photoObjects, (a, b) -> a.optInt(ID) - b.optInt(ID));
         }
         return null;
     }
@@ -253,11 +266,11 @@ public class Plot extends Model {
      *                request
      */
     public void getTreeThumbnail(BinaryHttpResponseHandler handler) {
-        getTreeImage("thumbnail", handler);
+        getTreeImage(PHOTO_THUMBNAIL, handler);
     }
 
     public void getTreePhoto(BinaryHttpResponseHandler handler) {
-        getTreeImage("image", handler);
+        getTreeImage(PHOTO_IMAGE, handler);
     }
 
     private void getTreeImage(String name, BinaryHttpResponseHandler handler) {
@@ -272,10 +285,10 @@ public class Plot extends Model {
     }
 
     public void assignNewTreePhoto(JSONObject image) throws JSONException {
-        JSONArray photos = data.optJSONArray("photos");
+        JSONArray photos = data.optJSONArray(PHOTOS);
         if (photos == null) {
             photos = new JSONArray();
-            data.put("photos", photos);
+            data.put(PHOTOS, photos);
         }
         photos.put(image);
     }
