@@ -112,7 +112,8 @@ public class Plot extends Model {
     public void setAddressFromGeocoder(Geocoder geocoder) {
         Geometry geom = getGeometry();
         if (geom == null) {
-            Log.w(App.LOG_TAG, "Cannot set Address for a plot with no geometry");
+            Log.e(App.LOG_TAG, "Cannot set Address for a plot with no geometry");
+            setAddressFields(null, null, null);
             return;
         }
 
@@ -120,28 +121,27 @@ public class Plot extends Model {
         try {
             addresses = geocoder.getFromLocation(geom.getX(), geom.getY(), 1);
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Error Geocoding address", e);
+            Log.w(App.LOG_TAG, "Error Geocoding address", e);
+            setAddressFields(null, null, null);
             return;
         }
 
         if ((addresses != null) && (addresses.size() != 0)) {
             Address addressData = addresses.get(0);
-            String streetAddress = null;
-            String city;
-            String zip;
-            if (addressData.getMaxAddressLineIndex() != 0) {
-                streetAddress = addressData.getAddressLine(0);
-            }
-            city = addressData.getLocality();
-            zip = addressData.getPostalCode();
+            String streetAddress = addressData.getMaxAddressLineIndex() == 0
+                    ? null : addressData.getAddressLine(0);
 
-            try {
-                plotDetails.put(ADDRESS_CITY, city);
-                plotDetails.put(ADDRESS_STREET, streetAddress);
-                plotDetails.put(ADDRESS_ZIP, zip);
-            } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Error saving geocoded address", e);
-            }
+            setAddressFields(streetAddress, addressData.getLocality(), addressData.getPostalCode());
+        }
+    }
+
+    private void setAddressFields(String streetAddress, String city, String zip) {
+        try {
+            plotDetails.put(ADDRESS_CITY, city);
+            plotDetails.put(ADDRESS_STREET, streetAddress);
+            plotDetails.put(ADDRESS_ZIP, zip);
+        } catch (JSONException e) {
+            Log.e(App.LOG_TAG, "Error saving geocoded address", e);
         }
     }
 
