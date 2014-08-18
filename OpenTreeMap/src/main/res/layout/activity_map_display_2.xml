@@ -110,6 +110,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/popup_background"
         android:minHeight="110dp"
+        android:paddingLeft="10dp"
         android:visibility="invisible" >
 
         <ImageView
@@ -131,7 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/plotSpecies"
-            android:layout_toRightOf="@+id/plotImage" />
+            android:layout_toRightOf="@+id/plotImage"
+            android:text="@string/no_address"/>
     </RelativeLayout>
 
     <include

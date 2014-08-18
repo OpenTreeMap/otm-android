@@ -7,13 +7,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/main_background_color"
-        android:color="@color/text_dark"
-        android:padding="10dp" >
+        android:color="@color/text_dark" >
 
         <ImageView
             android:id="@+id/plot_photo"
             style="@style/plot_thumbnail"
-            android:layout_marginTop="0dp"
             android:onClick="handlePhotoDetailClick" />
 
         <TextView
@@ -30,7 +28,6 @@
             style="@style/medium_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_alignLeft="@+id/species"
             android:layout_below="@+id/species"
             android:text="@string/no_address" />

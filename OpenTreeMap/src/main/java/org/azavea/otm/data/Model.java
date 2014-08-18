@@ -2,6 +2,7 @@ package org.azavea.otm.data;
 
 import android.util.Log;
 
+import org.azavea.helpers.JSONHelper;
 import org.azavea.otm.App;
 import org.azavea.otm.NestedJsonAndKey;
 import org.json.JSONException;
@@ -11,11 +12,7 @@ public abstract class Model {
     protected JSONObject data;
 
     protected String safeGetString(String key) {
-        try {
-            return data.isNull(key) ? null : data.getString(key);
-        } catch (JSONException e) {
-            return null;
-        }
+        return JSONHelper.safeGetString(data, key);
     }
 
     protected long getLongOrDefault(String key, Long defaultValue) throws JSONException {
