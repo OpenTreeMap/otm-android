@@ -35,6 +35,10 @@ import com.loopj.android.http.RequestParams;
 // This class is designed to take care of the base-url
 // and otm api-key for REST requests
 public class RestClient {
+    private static final int NUM_OF_RETRIES = 3;
+    private static final int TIMEOUT_IN_MILLIS = 3000;  // 4 seconds
+    private static final int TIMEOUT_BETWEEN_RETRIES = 1500;  // 1.5 seconds
+
     private final String apiUrl;
 
     private final String baseUrl;
@@ -414,6 +418,8 @@ public class RestClient {
     private AsyncHttpClient createHttpClient() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("platform-ver-build", appVersion);
+        client.setTimeout(TIMEOUT_IN_MILLIS);
+        client.setMaxRetriesAndTimeout(NUM_OF_RETRIES, TIMEOUT_BETWEEN_RETRIES);
         return client;
     }
 
