@@ -92,7 +92,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         secondaryTextView.setText(Joiner.on('\n').join(secondaryText));
 
         View chevron = container.findViewById(R.id.chevron);
-        if (udfDef.isEditable()) {
+        if (udfDef.isEditable() && mode == DisplayMode.EDIT) {
             chevron.setVisibility(View.VISIBLE);
             container.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, UDFCollectionEditActivity.class);
