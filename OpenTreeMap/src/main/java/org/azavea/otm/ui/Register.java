@@ -1,10 +1,12 @@
 package org.azavea.otm.ui;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,9 +93,9 @@ public class Register extends FragmentActivity {
     /*
      * Response handlers
      */
-    private final JsonHttpResponseHandler registrationResponseHandler = new JsonHttpResponseHandler() {
+    private final JsonHttpResponseHandler registrationResponseHandler = new LoggingJsonHttpResponseHandler() {
         @Override
-        public void onSuccess(JSONObject response) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             dialog.dismiss();
             if (responseIsSuccess(response)) {
                 loginManager.logIn(App.getAppInstance(), username, password, afterLoginSendProfilePictureAndFinish);
@@ -104,26 +106,19 @@ public class Register extends FragmentActivity {
         }
 
         @Override
-        public void handleFailureMessage(Throwable e, String msg) {
-            dialog.dismiss();
-            alert(msg);
-            Log.e(App.LOG_TAG, msg, e);
-        }
-
-        @Override
-        public void onFailure(Throwable e, JSONObject response) {
+        public void failure(Throwable e, String response) {
             dialog.dismiss();
             if (responseIsConflict(e, response)) {
                 alert(R.string.username_is_taken);
             } else {
-                Log.e("Register", response.toString() + "\n" + e.getMessage());
+                Log.e("Register", response + "\n" + e.getMessage());
                 alert(R.string.problem_creating_account);
             }
         }
     };
-    private final JsonHttpResponseHandler profilePictureResponseHandler = new JsonHttpResponseHandler() {
+    private final JsonHttpResponseHandler profilePictureResponseHandler = new LoggingJsonHttpResponseHandler() {
         @Override
-        public void onSuccess(JSONObject response) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             if (!responseIsSuccess(response)) {
                 alert(R.string.problem_setting_profile_picture);
                 Log.e("Register", "problem setting profile picture");
@@ -133,11 +128,9 @@ public class Register extends FragmentActivity {
         }
 
         @Override
-        public void onFailure(Throwable e, JSONObject response) {
+        public void failure(Throwable e, String response) {
             alert(R.string.problem_setting_profile_picture);
-            Log.e("Register", "problem setting profile picture");
-            Log.e("Register", response.toString());
-            Log.e("Register", e.getMessage());
+            Log.e(App.LOG_TAG, "problem setting profile picture");
         }
     };
     private final Callback afterLoginSendProfilePictureAndFinish = new Callback() {
@@ -227,10 +220,8 @@ public class Register extends FragmentActivity {
     /*
      * Other helper functions
      */
-    private static boolean responseIsConflict(Throwable t, JSONObject response) {
-        String msg = t.getMessage();
-        Log.d("Register", msg);
-        return msg.equals("CONFLICT");
+    private static boolean responseIsConflict(Throwable t, String response) {
+        return response.equals("CONFLICT");
     }
 
     private void sendProfilePicture() {

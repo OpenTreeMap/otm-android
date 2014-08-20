@@ -45,6 +45,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.azavea.map.FilterableTMSTileProvider;
 import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
@@ -56,6 +57,7 @@ import org.azavea.otm.data.Tree;
 import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,7 +134,7 @@ public class MainMapActivity extends Fragment {
                 new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
 
                     @Override
-                    public void onFailure(Throwable e, String message) {
+                    public void failure(Throwable e, String message) {
                         dialog.hide();
                         Log.e("TREE_CLICK",
                                 "Error retrieving plots on map touch event: ", e);
@@ -530,13 +532,13 @@ public class MainMapActivity extends Fragment {
     private void showImageOnPlotPopup(Plot plot) {
         plot.getTreeThumbnail(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
-            public void onSuccess(byte[] imageData) {
+            public void onSuccess(int statusCode, Header[] headers, byte[] imageData) {
                 ImageView plotImage = (ImageView) getActivity().findViewById(R.id.plotImage);
                 plotImage.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
             }
 
             @Override
-            public void onFailure(Throwable e, byte[] imageData) {
+            public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
                 // Log the error, but not important enough to bother the user
                 Log.e(App.LOG_TAG, "Could not retreive tree image", e);
             }
@@ -668,9 +670,8 @@ public class MainMapActivity extends Fragment {
         Toast.makeText(getActivity(), "Location search error.", Toast.LENGTH_SHORT).show();
     }
 
-    JsonHttpResponseHandler handleGoogleGeocodeResponse = new JsonHttpResponseHandler() {
-        @Override
-        public void onSuccess(JSONObject data) {
+    JsonHttpResponseHandler handleGoogleGeocodeResponse = new LoggingJsonHttpResponseHandler() {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
             LatLng pos = FallbackGeocoder.decodeGoogleJsonResponse(data);
             if (pos == null) {
                 alertGeocodeError();
@@ -680,7 +681,7 @@ public class MainMapActivity extends Fragment {
         }
 
         @Override
-        protected void handleFailureMessage(Throwable arg0, String arg1) {
+        public void failure(Throwable arg0, String arg1) {
             alertGeocodeError();
         }
     };

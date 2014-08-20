@@ -70,21 +70,14 @@ public class LoginManager {
             }
 
             @Override
-            public void onFailure(Throwable e, String message) {
+            public void failure(Throwable e, String message) {
                 if (e instanceof ConnectException) {
                     Log.e(App.LOG_TAG, "timeout");
                     data.putBoolean(SUCCESS_KEY, false);
                     data.putString(MESSAGE_KEY, "Could not connect to server");
-                    handleCallback(data);
                 }
-                rg.cancelRequests(activityContext);
-            }
-
-            @Override
-            public void handleFailureMessage(Throwable e, String responseBody) {
-                data.putBoolean(SUCCESS_KEY, false);
-                data.putString(MESSAGE_KEY, "Error logging in, please check your username and password.");
                 handleCallback(data);
+                rg.cancelRequests(activityContext);
             }
 
             @Override

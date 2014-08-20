@@ -8,11 +8,13 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.R;
 import org.azavea.otm.adapters.LinkedHashMapAdapter;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
 
 import java.util.LinkedHashMap;
@@ -40,9 +42,9 @@ public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInf
                 getString(R.string.instance_switcher_dialog_heading),
                 getString(R.string.instance_switcher_loading_instances));
 
-        rg.getPublicInstances(new JsonHttpResponseHandler() {
+        rg.getPublicInstances(new LoggingJsonHttpResponseHandler() {
             @Override
-            public void onSuccess(JSONArray response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 loadingInstances.dismiss();
 
                 List<InstanceInfo> list = InstanceInfo.getInstanceInfosFromJSON(response);
@@ -58,16 +60,7 @@ public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInf
             }
 
             @Override
-            public void onFailure(Throwable e, JSONArray errorResponse) {
-                loadingInstances.dismiss();
-
-                Log.e(App.LOG_TAG, "Error retrieving public instances", e);
-                Toast.makeText(App.getAppInstance(), R.string.instances_failed,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            protected void handleFailureMessage(Throwable e, String responseBody) {
+            public void failure(Throwable e, String responseBody) {
                 loadingInstances.dismiss();
 
                 Log.e(App.LOG_TAG, "Error retrieving public instances", e);

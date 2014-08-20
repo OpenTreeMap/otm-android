@@ -3,11 +3,13 @@ package org.azavea.otm.ui;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.PendingEditDescription;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,13 +209,12 @@ public class PendingItemDisplay extends Activity {
     }
 
     public JsonHttpResponseHandler createRejectionResponseHandlder(final String key) {
-        return new JsonHttpResponseHandler() {
+        return new LoggingJsonHttpResponseHandler() {
             @Override
-            public void onSuccess(JSONObject plotData) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject plotData) {
                 try {
                     processNextId(plotData);
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     doError();
                 }
             }
@@ -239,9 +240,7 @@ public class PendingItemDisplay extends Activity {
             }
 
             @Override
-            protected void handleFailureMessage(Throwable arg0, String arg1) {
-                Log.e("PENDING", arg0.toString());
-                Log.e("PENDING", arg1);
+            public void failure(Throwable arg0, String arg1) {
                 doError();
             }
 
@@ -251,9 +250,9 @@ public class PendingItemDisplay extends Activity {
         };
     }
 
-    private final JsonHttpResponseHandler handleApprovedPendingEdit = new JsonHttpResponseHandler() {
+    private final JsonHttpResponseHandler handleApprovedPendingEdit = new LoggingJsonHttpResponseHandler() {
         @Override
-        public void onSuccess(JSONObject plotData) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject plotData) {
             Intent intent = new Intent();
             intent.putExtra("plot", plotData.toString());
             setResult(RESULT_OK, intent);
@@ -261,8 +260,7 @@ public class PendingItemDisplay extends Activity {
         }
 
         @Override
-        protected void handleFailureMessage(Throwable arg0, String arg1) {
-            arg0.printStackTrace();
+        public void failure(Throwable arg0, String arg1) {
             Toast.makeText(PendingItemDisplay.this, "Error with pending edits", Toast.LENGTH_SHORT).show();
         }
     };

@@ -1,8 +1,10 @@
 package org.azavea.otm.rest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,20 +84,18 @@ public class RestClient {
             headers = new ArrayList<>();
         }
 
+        String reqUrl = getAbsoluteUrl(url);
+        RequestParams reqParams = prepareParams(params);
         try {
-            String reqUrl = getAbsoluteUrl(url);
-            RequestParams reqParams = prepareParams(params);
             headers.add(reqSigner.getSignatureHeader("GET", reqUrl, reqParams));
-
-            Header[] fullHeaders = prepareHeaders(headers);
-
-            client.get(App.getAppInstance(), reqUrl, fullHeaders, reqParams,
-                    responseHandler);
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
             String msg = "Failure making GET request";
             Log.e(App.LOG_TAG, msg, e);
-            responseHandler.onFailure(e, msg);
+            return;
         }
+
+        Header[] fullHeaders = prepareHeaders(headers);
+        client.get(App.getAppInstance(), reqUrl, fullHeaders, reqParams, responseHandler);
     }
 
     /**
@@ -129,27 +129,25 @@ public class RestClient {
                      ArrayList<Header> headers,
                      String body,
                      AsyncHttpResponseHandler responseHandler) {
+        String reqUrl = safePathJoin(getAbsoluteUrl(url), id == -1 ? "" : Integer.toString(id));
+        String reqUrlWithParams = prepareUrl(reqUrl);
+        if (headers == null) {
+            headers = new ArrayList<>();
+        }
 
+        StringEntity bodyEntity;
         try {
-            String reqUrl = safePathJoin(getAbsoluteUrl(url),
-                    id == -1 ? "" : Integer.toString(id));
-            String reqUrlWithParams = prepareUrl(reqUrl);
-            if (headers == null) {
-                headers = new ArrayList<>();
-            }
             headers.add(reqSigner.getSignatureHeader("PUT", reqUrlWithParams, body));
-
-            Header[] fullHeaders = prepareHeaders(headers);
-
-            StringEntity bodyEntity = new StringEntity(body, "UTF-8");
-            client.put(App.getAppInstance(), reqUrlWithParams, fullHeaders,
-                    bodyEntity, "application/json", responseHandler);
-
-        } catch (Exception e) {
+            bodyEntity = new StringEntity(body, "UTF-8");
+        } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
             String msg = "Failure making PUT request";
             Log.e(App.LOG_TAG, msg, e);
-            responseHandler.onFailure(e, msg);
+            return;
         }
+
+        Header[] fullHeaders = prepareHeaders(headers);
+        client.put(App.getAppInstance(), reqUrlWithParams, fullHeaders,
+                bodyEntity, "application/json", responseHandler);
     }
 
     public void put(String url, int id, Model model,
@@ -188,25 +186,30 @@ public class RestClient {
     private void post(String url, ArrayList<Header> headers, String body,
                       AsyncHttpResponseHandler responseHandler) {
 
-        try {
-            String reqUrl = getAbsoluteUrl(url);
-            String reqUrlWithParams = prepareUrl(reqUrl);
-            if (headers == null) {
-                headers = new ArrayList<>();
-            }
-            headers.add(reqSigner.getSignatureHeader("POST", reqUrlWithParams, body));
-
-            Header[] fullHeaders = prepareHeaders(headers);
-
-            StringEntity bodyEntity = new StringEntity(body, "UTF-8");
-            client.post(App.getAppInstance(), reqUrlWithParams, fullHeaders,
-                    bodyEntity, "application/json", responseHandler);
-
-        } catch (Exception e) {
-            String msg = "Failure making POST request";
-            Log.e(App.LOG_TAG, msg, e);
-            responseHandler.onFailure(e, msg);
+        String type = "POST";
+        final String reqUrlWithParams = getAbsoluteUrlwithParams(url);
+        if (headers == null) {
+            headers = new ArrayList<>();
         }
+
+        StringEntity bodyEntity;
+        try {
+            headers.add(reqSigner.getSignatureHeader(type, reqUrlWithParams, body));
+            bodyEntity = new StringEntity(body, "UTF-8");
+        } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
+            Log.e(App.LOG_TAG, "Error creating signature on POST");
+            return;
+        }
+
+        Header[] fullHeaders = prepareHeaders(headers);
+
+        client.post(App.getAppInstance(), reqUrlWithParams, fullHeaders,
+                bodyEntity, "application/json", responseHandler);
+    }
+
+    private String getAbsoluteUrlwithParams(String url) {
+        String reqUrl = getAbsoluteUrl(url);
+        return prepareUrl(reqUrl);
     }
 
     /**
@@ -257,14 +260,15 @@ public class RestClient {
         AsyncHttpClient authenticatedClient = createAutheniticatedHttpClient(
                 username, password);
 
+        // Add the signature based on the base64 encoded representation of the bitmap
+        Header sig;
         try {
-            // Add the signature based on the base64 encoded representation of the bitmap
-            Header sig = reqSigner.getSignatureHeader("POST", completeUrl, bitmapdata);
-            authenticatedClient.addHeader(sig.getName(), sig.getValue());
-        } catch (Exception e) {
-            responseHandler.onFailure(e, "Unable to sign photo upload request");
+            sig = reqSigner.getSignatureHeader("POST", completeUrl, bitmapdata);
+        } catch (URISyntaxException | SignatureException e) {
+            Log.e(App.LOG_TAG, "Error creating signature on POST");
             return;
         }
+        authenticatedClient.addHeader(sig.getName(), sig.getValue());
 
         authenticatedClient.setTimeout(timeout);
         authenticatedClient.post(App.getAppInstance(), completeUrl, bae, contentType,

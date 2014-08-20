@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.fields.EcoField;
 import org.azavea.otm.fields.FieldGroup;
@@ -126,12 +127,12 @@ public class TreeInfoDisplay extends TreeDisplay {
 
         plot.getTreeThumbnail(new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
-            public void onSuccess(byte[] imageData) {
+            public void onSuccess(int statusCode, Header[] headers, byte[] imageData) {
                 plotImage.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
             }
 
             @Override
-            public void onFailure(Throwable e, byte[] imageData) {
+            public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
                 // Log the error, but not important enough to bother the user
                 Log.e(App.LOG_TAG, "Could not retreive tree image", e);
             }

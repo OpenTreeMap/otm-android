@@ -2,12 +2,14 @@ package org.azavea.otm.ui;
 
 import java.io.File;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.fields.FieldGroup;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.fields.SpeciesField;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,17 +49,10 @@ public class TreeEditDisplay extends TreeDisplay {
 
     private final RestHandler<Plot> deleteTreeHandler = new RestHandler<Plot>(new Plot()) {
         @Override
-        public void onFailure(Throwable e, String message) {
+        public void failure(Throwable e, String message) {
             safeDismiss(deleteDialog);
             Toast.makeText(App.getAppInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
             Log.e(App.LOG_TAG, "Unable to delete tree.");
-        }
-
-        @Override
-        protected void handleFailureMessage(Throwable e, String responseBody) {
-            safeDismiss(deleteDialog);
-            Toast.makeText(App.getAppInstance(), "Failure: Unable to delete tree", Toast.LENGTH_SHORT).show();
-            Log.e(App.LOG_TAG, "Unable to delete tree.", e);
         }
 
         @Override
@@ -75,9 +70,9 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     };
 
-    private final JsonHttpResponseHandler deletePlotHandler = new JsonHttpResponseHandler() {
+    private final JsonHttpResponseHandler deletePlotHandler = new LoggingJsonHttpResponseHandler() {
         @Override
-        public void onSuccess(JSONObject response) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             try {
                 if (response.getBoolean("ok")) {
                     safeDismiss(deleteDialog);
@@ -90,6 +85,12 @@ public class TreeEditDisplay extends TreeDisplay {
                 safeDismiss(deleteDialog);
                 Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        public void failure(Throwable e, String message) {
+            safeDismiss(deleteDialog);
+            Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -252,7 +253,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 }
 
                 @Override
-                protected void handleFailureMessage(Throwable e, String responseBody) {
+                public void failure(Throwable e, String responseBody) {
                     Log.e("REST", responseBody, e);
                     safeDismiss(saveDialog);
                     Toast.makeText(App.getAppInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
@@ -283,9 +284,9 @@ public class TreeEditDisplay extends TreeDisplay {
         if (this.newTreePhoto != null) {
             RequestGenerator rc = new RequestGenerator();
             try {
-                rc.addTreePhoto(updatedPlot, this.newTreePhoto, new JsonHttpResponseHandler() {
+                rc.addTreePhoto(updatedPlot, this.newTreePhoto, new LoggingJsonHttpResponseHandler() {
                     @Override
-                    public void onSuccess(JSONObject response) {
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
                             if (response.has("image")) {
                                 updatedPlot.assignNewTreePhoto(response);
@@ -304,16 +305,8 @@ public class TreeEditDisplay extends TreeDisplay {
                     }
 
                     @Override
-                    public void onFailure(Throwable e, JSONObject errorResponse) {
+                    public void failure(Throwable e, String errorResponse) {
                         Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
-                        safeDismiss(savePhotoDialog);
-                    }
-
-                    @Override
-                    protected void handleFailureMessage(Throwable e, String responseBody) {
-                        e.printStackTrace();
-                        Toast.makeText(App.getAppInstance(), "The tree photo could not be added.", Toast.LENGTH_LONG)
-                                .show();
                         safeDismiss(savePhotoDialog);
                     }
                 });

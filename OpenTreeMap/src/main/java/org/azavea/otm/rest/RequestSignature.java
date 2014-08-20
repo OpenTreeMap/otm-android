@@ -1,6 +1,8 @@
 package org.azavea.otm.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.security.SignatureException;
 import java.util.Arrays;
@@ -34,7 +36,8 @@ public class RequestSignature {
      * This assumes that the URL has been constructed with the access key and
      * the timestamp already appended.
      */
-    public String getSignature(String verb, String url, RequestParams params, String body) throws Exception {
+    public String getSignature(String verb, String url, RequestParams params, String body)
+            throws UnsupportedEncodingException, URISyntaxException, SignatureException {
         // Add the params to the existing query string arguments, or add as new
         String separator = url.contains("?") ? "&" : "?";
         url += separator + params.toString();
@@ -50,7 +53,7 @@ public class RequestSignature {
      * This assumes that the URL has been constructed with the access key and
      * the timestamp already appended.
      */
-    public String getSignature(String verb, String url, byte[] body) throws Exception {
+    public String getSignature(String verb, String url, byte[] body) throws URISyntaxException, SignatureException {
 
         URI uri = new URI(url);
         String hostWithPort = uri.getAuthority();
@@ -81,20 +84,24 @@ public class RequestSignature {
     /**
      * Generate HMAC API signature header to include in all requests
      */
-    public Header getSignatureHeader(String verb, String url, RequestParams params) throws Exception {
+    public Header getSignatureHeader(String verb, String url, RequestParams params)
+            throws UnsupportedEncodingException, URISyntaxException, SignatureException {
         return getSignatureHeader(verb, url, params, "");
     }
 
-    public Header getSignatureHeader(String verb, String url, String body) throws Exception {
+    public Header getSignatureHeader(String verb, String url, String body)
+            throws UnsupportedEncodingException, URISyntaxException, SignatureException {
         return getSignatureHeader(verb, url, body.getBytes("UTF-8"));
     }
 
-    public Header getSignatureHeader(String verb, String url, byte[] body) throws Exception {
+    public Header getSignatureHeader(String verb, String url, byte[] body)
+            throws URISyntaxException, SignatureException {
         String sig = getSignature(verb, url, body);
         return new BasicHeader("X-Signature", sig);
     }
 
-    public Header getSignatureHeader(String verb, String url, RequestParams params, String body) throws Exception {
+    public Header getSignatureHeader(String verb, String url, RequestParams params, String body)
+            throws UnsupportedEncodingException, URISyntaxException, SignatureException {
 
         String sig = getSignature(verb, url, params, body);
         return new BasicHeader("X-Signature", sig);
@@ -104,7 +111,6 @@ public class RequestSignature {
      * Computes RFC 2104-compliant HMAC signature.
      *
      * @param data The data to be signed.
-     * @param key  The signing key.
      * @return The Base64-encoded RFC 2104-compliant HMAC signature.
      * @throws SignatureException
      */

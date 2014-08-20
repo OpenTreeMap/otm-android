@@ -20,12 +20,14 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,9 +157,9 @@ public class InstanceSwitcherActivity extends Activity {
             loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
                     getString(R.string.instance_switcher_loading_instances));
             rg.getInstancesNearLocation(latitude, longitude,
-                    new JsonHttpResponseHandler() {
+                    new LoggingJsonHttpResponseHandler() {
                         @Override
-                        public void onSuccess(JSONObject data) {
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
                             final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
                             // TODO: Extract strings
                             instances.put("My Tree Maps", inflateForKey(data, "personal"));
@@ -183,6 +185,11 @@ public class InstanceSwitcherActivity extends Activity {
                                 InstanceInfo instance = adapter.getItem(position).value;
                                 redirectToTabLayout(instance);
                             });
+                        }
+
+                        @Override
+                        public void failure(Throwable e, String message) {
+                            Toast.makeText(InstanceSwitcherActivity.this, "Failed to load tree map", Toast.LENGTH_SHORT).show();
                         }
                     }
             );
