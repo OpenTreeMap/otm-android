@@ -188,6 +188,14 @@
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
+    <style name="udf_collection_centered_field" parent="@style/plot_row_value">
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
     <!-- textboxes -->
     <style name="textbox">
         <item name="android:layout_margin">4dp</item>
