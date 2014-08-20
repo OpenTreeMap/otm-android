@@ -21,19 +21,12 @@
     </LinearLayout>
 
     <TextView android:id="@+id/sort_key_field"
-        style="@style/plot_row_value"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" />
+        style="@style/udf_collection_centered_field" />
 
     <ImageView
         android:id="@+id/chevron"
         android:background="@drawable/ic_chevron_right"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        style="@style/udf_collection_centered_field"
         android:visibility="gone" />
 
 </LinearLayout>
