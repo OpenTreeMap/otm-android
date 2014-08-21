@@ -2,10 +2,12 @@ package org.azavea.otm.ui;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
 import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,9 +26,9 @@ public class ChangePassword extends UpEnabledActionBarActivity {
     private String newPassword;
     LoginManager loginManager = App.getLoginManager();
 
-    private JsonHttpResponseHandler changePasswordResponseHandler = new JsonHttpResponseHandler() {
+    private JsonHttpResponseHandler changePasswordResponseHandler = new LoggingJsonHttpResponseHandler() {
         @Override
-        public void onSuccess(JSONObject response) {
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             try {
                 if (response.has("username")) {
                     loginManager.loggedInUser.setPassword(newPassword);
@@ -42,13 +44,7 @@ public class ChangePassword extends UpEnabledActionBarActivity {
         }
 
         @Override
-        public void onFailure(Throwable e, JSONObject errorResponse) {
-            Log.e(App.LOG_TAG, "Error changing password", e);
-            alert(R.string.password_change_error);
-        }
-
-        @Override
-        protected void handleFailureMessage(Throwable e, String responseBody) {
+        public void failure(Throwable e, String responseBody) {
             Log.e(App.LOG_TAG, "Error changing password", e);
             alert(R.string.password_change_error);
         }

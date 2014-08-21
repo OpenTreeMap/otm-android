@@ -1,11 +1,10 @@
 package org.azavea.otm.rest.handlers;
 
+import org.apache.http.Header;
 import org.azavea.otm.data.Model;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-public class RestHandler<T extends Model> extends JsonHttpResponseHandler {
+public abstract class RestHandler<T extends Model> extends LoggingJsonHttpResponseHandler {
     public static final String SUCCESS_KEY = "success";
 
     private T resultObject;
@@ -15,13 +14,11 @@ public class RestHandler<T extends Model> extends JsonHttpResponseHandler {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         resultObject.setData(response);
         dataReceived(resultObject);
     }
 
     // Overridden by consuming class
-    public void dataReceived(T responseObject) {
-
-    }
+    public abstract void dataReceived(T responseObject);
 }

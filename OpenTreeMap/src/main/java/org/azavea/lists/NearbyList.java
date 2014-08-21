@@ -21,6 +21,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NearbyList implements InfoList {
     private static final long MIN_TIME_DELAY = 5000;
@@ -154,9 +155,13 @@ public class NearbyList implements InfoList {
                 new PlotContainer()) {
             @Override
             public void dataReceived(PlotContainer responseObject) {
-                super.dataReceived(responseObject);
                 nearbyPlots = responseObject;
                 notifyObservers();
+            }
+
+            @Override
+            public void failure(Throwable e, String message) {
+                Toast.makeText(context, "Could not load nearby trees", Toast.LENGTH_SHORT).show();
             }
         });
     }

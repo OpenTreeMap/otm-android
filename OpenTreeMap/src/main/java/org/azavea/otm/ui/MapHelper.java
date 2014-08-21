@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.apache.http.Header;
 import org.azavea.otm.App;
 import org.azavea.otm.data.Plot;
 
@@ -44,7 +45,7 @@ public class MapHelper {
     protected static BinaryHttpResponseHandler getPhotoDetailHandler(final FragmentActivity activity) {
         return new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
-            public void onSuccess(byte[] imageData) {
+            public void onSuccess(int statusCode, Header[] headers, byte[] imageData) {
                 ImageView imageView = new ImageView(activity);
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
@@ -56,7 +57,7 @@ public class MapHelper {
             }
 
             @Override
-            public void onFailure(Throwable e, byte[] imageData) {
+            public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
                 Log.e(App.LOG_TAG, "Could not retreive tree image", e);
                 Toast.makeText(activity.getApplicationContext(), "Could not retrieve full image", Toast.LENGTH_SHORT).show();
             }

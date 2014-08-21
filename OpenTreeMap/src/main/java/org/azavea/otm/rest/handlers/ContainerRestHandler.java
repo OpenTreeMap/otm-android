@@ -1,12 +1,10 @@
 package org.azavea.otm.rest.handlers;
 
+import org.apache.http.Header;
 import org.azavea.otm.data.ModelContainer;
 import org.json.JSONArray;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-@SuppressWarnings("rawtypes")
-public class ContainerRestHandler<T extends ModelContainer> extends JsonHttpResponseHandler {
+public abstract class ContainerRestHandler<T extends ModelContainer<?>> extends LoggingJsonHttpResponseHandler {
     private T resultObject;
 
     public ContainerRestHandler(T resultObject) {
@@ -14,12 +12,11 @@ public class ContainerRestHandler<T extends ModelContainer> extends JsonHttpResp
     }
 
     @Override
-    public void onSuccess(JSONArray response) {
+    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
         resultObject.setData(response);
         dataReceived(resultObject);
     }
 
     // Overridden by consuming class
-    public void dataReceived(T responseObject) {
-    }
+    public abstract void dataReceived(T responseObject);
 }

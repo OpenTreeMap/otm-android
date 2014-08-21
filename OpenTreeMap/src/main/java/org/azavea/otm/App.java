@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.http.Header;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.rest.RequestGenerator;
@@ -224,7 +225,7 @@ public class App extends Application {
         }
 
         @Override
-        public void onFailure(Throwable e, String message) {
+        public void failure(Throwable e, String message) {
             Log.e(App.LOG_TAG, "Unable to Load Instance: " + responseInstanceInfo.getName(), e);
             Toast.makeText(appInstance, "Cannot load configured instance.",
                     Toast.LENGTH_LONG).show();

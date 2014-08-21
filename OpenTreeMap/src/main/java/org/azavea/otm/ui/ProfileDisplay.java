@@ -216,7 +216,7 @@ public class ProfileDisplay extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Throwable e, String message) {
+                        public void failure(Throwable e, String message) {
                             loadingRecentEdits = false;
                             Log.e(App.LOG_TAG, message);
                             Toast.makeText(App.getAppInstance(), "Could not retrieve user edits", Toast.LENGTH_SHORT)

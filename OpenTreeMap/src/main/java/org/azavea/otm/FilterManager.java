@@ -80,7 +80,7 @@ public class FilterManager {
             }
 
             @Override
-            public void onFailure(Throwable e, String message) {
+            public void failure(Throwable e, String message) {
                 Log.e(App.LOG_TAG, message, e);
                 if (callback != null) {
                     handleSpeciesCallback(callback, false);
