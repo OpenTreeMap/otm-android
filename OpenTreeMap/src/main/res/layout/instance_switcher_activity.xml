@@ -14,17 +14,30 @@
         android:padding="@dimen/padding_12"
         android:divider="@color/base" />
 
-    <TextView
+    <LinearLayout
         android:id="@+id/instance_list_empty"
         style="@style/instance_switcher_empty_list_view"
-        android:text="@string/instance_switcher_no_instances_found"
-        android:visibility="gone" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/instance_list_none_found"
+            style="@style/instance_switcher_label"
+            android:text="@string/instance_switcher_no_instances_found"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/instance_list_location_off"
-        style="@style/instance_switcher_empty_list_view"
-        android:text="@string/instance_switcher_location_off_text"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/instance_list_location_off"
+            style="@style/instance_switcher_label"
+            android:text="@string/instance_switcher_location_off_text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/instance_list_retry"
+            style="@style/padded_full_width_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reload_instance_list"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/have_account_text"

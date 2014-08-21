@@ -120,6 +120,11 @@
     <string name="instance_switcher_loading_instance">Loading Tree Map</string>
     <string name="instance_switcher_public_instances">See All Public Tree Maps</string>
     <string name="instance_switcher_location_off_text">Location services must be turned on in order to see any nearby tree maps</string>
+    <string name="reload_instance_list">Reload</string>
+    <string name="my_tree_maps">My Tree Maps</string>
+    <string name="neary_tree_maps">Nearby Tree Maps</string>
+    <string name="request_failed">Request Failed</string>
+    <string name="instance_switcher_request_failed">Failed to load tree maps</string>
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
     <string name="perms_add_tree_fail">Adding trees is not available to all users</string>

@@ -21,6 +21,7 @@ public class LoginManager {
     private static final String MESSAGE_KEY = "message";
     private static final String USER_KEY = "user";
     private static final String PASS_KEY = "pass";
+    public static final String COULD_NOT_CONNECT_TO_SERVER = "Could not connect to server";
 
     private final Context context;
     private final SharedPreferences prefs;
@@ -51,9 +52,8 @@ public class LoginManager {
         rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
 
             Message resultMessage = new Message();
-            Bundle data = new Bundle();
 
-            private void handleCallback(Bundle resp) {
+            private void handleCallback(Bundle data) {
                 resultMessage.setData(data);
 
                 if (App.hasInstanceCode()) {
@@ -71,17 +71,16 @@ public class LoginManager {
 
             @Override
             public void failure(Throwable e, String message) {
-                if (e instanceof ConnectException) {
-                    Log.e(App.LOG_TAG, "timeout");
-                    data.putBoolean(SUCCESS_KEY, false);
-                    data.putString(MESSAGE_KEY, "Could not connect to server");
-                }
+                final Bundle data = new Bundle();
+                data.putBoolean(SUCCESS_KEY, false);
+                data.putString(MESSAGE_KEY, COULD_NOT_CONNECT_TO_SERVER);
                 handleCallback(data);
                 rg.cancelRequests(activityContext);
             }
 
             @Override
             public void dataReceived(User response) {
+                final Bundle data = new Bundle();
                 prefs.edit().putString(USER_KEY, username).commit();
                 storePassword(password);
 

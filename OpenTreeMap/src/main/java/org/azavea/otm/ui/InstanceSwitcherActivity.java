@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -144,61 +145,81 @@ public class InstanceSwitcherActivity extends Activity {
         final User newUser = App.getLoginManager().loggedInUser;
 
         if (user != newUser || areLocationsDistant(userLocation, newLocation)) {
-            RequestGenerator rg = new RequestGenerator();
-
-            // TODO: Rather than using 0,0 when the GPS is off, we should hit a different endpoint to retrieve just "my tree maps"
-            double latitude = 0;
-            double longitude = 0;
-            if (newLocation != null) {
-                latitude = newLocation.getLatitude();
-                longitude = newLocation.getLongitude();
-            }
-
-            loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
-                    getString(R.string.instance_switcher_loading_instances));
-            rg.getInstancesNearLocation(latitude, longitude,
-                    new LoggingJsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                            final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
-                            // TODO: Extract strings
-                            instances.put("My Tree Maps", inflateForKey(data, "personal"));
-                            instances.put("Nearby Tree Maps", inflateForKey(data, "nearby"));
-
-                            final ListView instancesView = (ListView) findViewById(R.id.instance_list);
-                            InstanceInfoArrayAdapter adapter =
-                                    new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, newLocation);
-
-                            instancesView.setAdapter(adapter);
-
-                            if (newLocation == null) {
-                                instancesView.setEmptyView(findViewById(R.id.instance_list_location_off));
-                            } else {
-                                instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
-                            }
-
-                            if (loadingInstances != null) {
-                                loadingInstances.dismiss();
-                            }
-
-                            instancesView.setOnItemClickListener((parent, v, position, id) -> {
-                                InstanceInfo instance = adapter.getItem(position).value;
-                                redirectToTabLayout(instance);
-                            });
-                        }
-
-                        @Override
-                        public void failure(Throwable e, String message) {
-                            Toast.makeText(InstanceSwitcherActivity.this, "Failed to load tree map", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-            );
-
-            updateAccountElements();
+            reloadNearbyInstanceList(newLocation);
         }
 
         userLocation = newLocation;
         user = newUser;
+
+        updateAccountElements();
+    }
+
+    private void reloadNearbyInstanceList(final Location newLocation) {
+        RequestGenerator rg = new RequestGenerator();
+
+        // TODO: Rather than using 0,0 when the GPS is off, we should hit a different endpoint to retrieve just "my tree maps"
+        double latitude = 0;
+        double longitude = 0;
+        if (newLocation != null) {
+            latitude = newLocation.getLatitude();
+            longitude = newLocation.getLongitude();
+        }
+
+        loadingInstances = ProgressDialog.show(this, getString(R.string.instance_switcher_dialog_heading),
+                getString(R.string.instance_switcher_loading_instances));
+
+        final ListView instancesView = (ListView) findViewById(R.id.instance_list);
+        instancesView.setEmptyView(findViewById(R.id.instance_list_empty));
+
+        rg.getInstancesNearLocation(latitude, longitude,
+                new LoggingJsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        final LinkedHashMap<CharSequence, List<InstanceInfo>> instances = new LinkedHashMap<>();
+                        instances.put(getString(R.string.my_tree_maps), inflateForKey(data, "personal"));
+                        instances.put(getString(R.string.neary_tree_maps), inflateForKey(data, "nearby"));
+
+                        InstanceInfoArrayAdapter adapter =
+                                new InstanceInfoArrayAdapter(instances, InstanceSwitcherActivity.this, newLocation);
+
+                        instancesView.setAdapter(adapter);
+
+                        resetInstanceListViews(newLocation);
+
+                        instancesView.setOnItemClickListener((parent, v, position, id) -> {
+                            InstanceInfo instance = adapter.getItem(position).value;
+                            redirectToTabLayout(instance);
+                        });
+                    }
+
+                    @Override
+                    public void failure(Throwable e, String message) {
+                        resetInstanceListViews(newLocation);
+                        new AlertDialog.Builder(InstanceSwitcherActivity.this)
+                                .setTitle(R.string.request_failed)
+                                .setMessage(R.string.instance_switcher_request_failed)
+                                .setNeutralButton(R.string.reload_instance_list,
+                                        (dialog, which) -> reloadNearbyInstanceList(newLocation))
+                                .setCancelable(true)
+                                .show();
+                    }
+                }
+        );
+    }
+
+    private void resetInstanceListViews(Location newLocation) {
+        findViewById(R.id.instance_list_retry).setVisibility(View.VISIBLE);
+        if (newLocation == null) {
+            findViewById(R.id.instance_list_location_off).setVisibility(View.VISIBLE);
+            findViewById(R.id.instance_list_none_found).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.instance_list_location_off).setVisibility(View.GONE);
+            findViewById(R.id.instance_list_none_found).setVisibility(View.VISIBLE);
+        }
+
+        if (loadingInstances != null) {
+            loadingInstances.dismiss();
+        }
     }
 
     /**
