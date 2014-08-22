@@ -1,5 +1,6 @@
 package org.azavea.otm.test;
 
+import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Version;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.RestClient;
@@ -19,7 +20,17 @@ public class RequestGeneratorTest extends OpenTreeMapTestCase {
 
     public void testGetVersion() {
         // Create a handler
-        RestHandler<Version> handler = new RestHandler<>(new Version());
+        RestHandler<Version> handler = new RestHandler<Version>(new Version()) {
+            @Override
+            public void dataReceived(Version responseObject) {
+                
+            }
+
+            @Override
+            public void failure(Throwable e, String message) {
+
+            }
+        };
         // Create a mock RestClient
         RestClient mockClient = mock(RestClient.class);
 

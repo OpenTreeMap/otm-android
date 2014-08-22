@@ -141,7 +141,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="instance_switcher_empty_list_view" parent="@style/instance_switcher_label">
+    <style name="instance_switcher_empty_list_view">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>

@@ -36,7 +36,7 @@ import com.loopj.android.http.RequestParams;
 // and otm api-key for REST requests
 public class RestClient {
     private static final int NUM_OF_RETRIES = 3;
-    private static final int TIMEOUT_IN_MILLIS = 3000;  // 4 seconds
+    private static final int TIMEOUT_IN_MILLIS = 4000;  // 4 seconds
     private static final int TIMEOUT_BETWEEN_RETRIES = 1500;  // 1.5 seconds
 
     private final String apiUrl;
