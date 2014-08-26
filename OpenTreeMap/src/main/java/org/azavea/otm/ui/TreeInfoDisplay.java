@@ -188,15 +188,6 @@ public class TreeInfoDisplay extends TreeDisplay {
         } else if (!App.getCurrentInstance().canEditTree()) {
             Toast.makeText(getApplicationContext(), getString(R.string.perms_edit_tree_fail), Toast.LENGTH_SHORT).show();
         } else {
-            // TODO: is this try block necessary?
-            try {
-                Tree tree = plot.getTree();
-            } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Could not check tree details", e);
-                Toast.makeText(getApplicationContext(), "Could not check tree details", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             Intent editPlot = new Intent(this, TreeEditDisplay.class);
             editPlot.putExtra("plot", plot.getData().toString());
             startActivityForResult(editPlot, EDIT_REQUEST);
