@@ -185,7 +185,7 @@ public class TreeInfoDisplay extends TreeDisplay {
     public void doEdit(View view) {
         if (!App.getLoginManager().isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
-        } else if (!App.getCurrentInstance().canEditTree()) {
+        } else if (!(App.getCurrentInstance().canEditTree() || App.getCurrentInstance().canEditTreePhoto())) {
             Toast.makeText(getApplicationContext(), getString(R.string.perms_edit_tree_fail), Toast.LENGTH_SHORT).show();
         } else {
             Intent editPlot = new Intent(this, TreeEditDisplay.class);

@@ -257,11 +257,14 @@ public class TreeEditDisplay extends TreeDisplay {
                 }
             };
 
-            // check if we are adding a new tree or editing an existing one.
             if (addMode()) {
                 rg.addPlot(plot, responseHandler);
             } else {
-                rg.updatePlot(plot.getId(), plot, responseHandler);
+                if (App.getCurrentInstance().canEditTree()) {
+                    rg.updatePlot(plot, responseHandler);
+                } else {
+                    savePhotoForPlot(plot);
+                }
             }
         } catch (Exception e) {
             handleSaveFailure(e);
