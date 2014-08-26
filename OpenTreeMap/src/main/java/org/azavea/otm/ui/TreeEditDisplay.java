@@ -42,8 +42,6 @@ public class TreeEditDisplay extends TreeDisplay {
 
     private ProgressDialog deleteDialog = null;
     private ProgressDialog saveDialog = null;
-    private final ProgressDialog savePhotoDialog = null;
-
 
     private static String outputFilePath;
 
@@ -249,15 +247,13 @@ public class TreeEditDisplay extends TreeDisplay {
                 @Override
                 public void dataReceived(Plot updatedPlot) {
                     // Tree was updated, check if a photo needs to be also added
-                    savePhotoForPlot(updatedPlot, saveDialog);
+                    savePhotoForPlot(updatedPlot);
                 }
 
                 @Override
                 public void failure(Throwable e, String responseBody) {
                     Log.e("REST", responseBody, e);
-                    safeDismiss(saveDialog);
-                    Toast.makeText(App.getAppInstance(), "Could not save tree!", Toast.LENGTH_SHORT).show();
-                    Log.e(App.LOG_TAG, "Could not save tree", e);
+                    handleSaveFailure(e);
                 }
             };
 
@@ -268,9 +264,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 rg.updatePlot(plot.getId(), plot, responseHandler);
             }
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Could not save edited plot info", e);
-            Toast.makeText(App.getAppInstance(), "Could not save tree info", Toast.LENGTH_LONG).show();
-            safeDismiss(saveDialog);
+            handleSaveFailure(e);
         }
     }
 
@@ -280,43 +274,59 @@ public class TreeEditDisplay extends TreeDisplay {
         }
     }
 
-    protected void savePhotoForPlot(final Plot updatedPlot, final ProgressDialog saveDialog) {
-        if (this.newTreePhoto != null) {
-            RequestGenerator rc = new RequestGenerator();
-            try {
-                rc.addTreePhoto(updatedPlot, this.newTreePhoto, new LoggingJsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            if (response.has("image")) {
-                                updatedPlot.assignNewTreePhoto(response);
+    private void handleSaveFailure (Throwable e) {
+        String msg = getString(R.string.save_tree_failure);
+        Log.e(App.LOG_TAG, msg, e);
+        safeDismiss(saveDialog);
+        Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_SHORT).show();
+    }
 
-                                safeDismiss(savePhotoDialog);
-                                doFinish(updatedPlot, saveDialog);
+    private void handlePhotoSaveFailure (Throwable e) {
+        String msg = getString(R.string.save_tree_photo_failure);
+        Log.e(App.LOG_TAG, msg, e);
+        safeDismiss(saveDialog);
+        Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_SHORT).show();
+    }
 
-                            } else {
-                                Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG)
-                                        .show();
-                                Log.d("AddTreePhoto", "photo response no success");
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(App.getAppInstance(), "Unable to add tree photo", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void failure(Throwable e, String errorResponse) {
-                        Toast.makeText(App.getAppInstance(), "Unable to add tree photo.", Toast.LENGTH_LONG).show();
-                        safeDismiss(savePhotoDialog);
-                    }
-                });
-            } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Unable to upload photo", e);
-                Toast.makeText(getBaseContext(), "Photo could not be added, please try again", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        } else {
+    private void savePhotoForPlot(final Plot updatedPlot) {
+        if (this.newTreePhoto == null) {
             doFinish(updatedPlot, saveDialog);
+            return;
+        }
+
+        if (!App.getCurrentInstance().canEditTreePhoto()) {
+            handlePhotoSaveFailure(null);
+            return;
+        }
+
+        RequestGenerator rc = new RequestGenerator();
+        try {
+            rc.addTreePhoto(updatedPlot, this.newTreePhoto, new LoggingJsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.has("image")) {
+                            updatedPlot.assignNewTreePhoto(response);
+
+                            safeDismiss(saveDialog);
+                            doFinish(updatedPlot, saveDialog);
+
+                        } else {
+                            handlePhotoSaveFailure(null);
+                            Log.d("AddTreePhoto", "photo response no success");
+                        }
+                    } catch (JSONException e) {
+                        handlePhotoSaveFailure(e);
+                    }
+                }
+
+                @Override
+                public void failure(Throwable e, String errorResponse) {
+                    handlePhotoSaveFailure(e);
+                }
+            });
+        } catch (JSONException e) {
+            handlePhotoSaveFailure(e);
         }
     }
 

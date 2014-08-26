@@ -136,7 +136,7 @@ public class RequestGenerator {
         return "";
     }
 
-    public void updatePlot(int id, Plot plot,
+    public void updatePlot(Plot plot,
                            AsyncHttpResponseHandler handler) {
         if (loginManager.isLoggedIn()) {
             try {
@@ -144,7 +144,7 @@ public class RequestGenerator {
 
                 client.putWithAuthentication(getInstanceNameUri("plots/"),
                         loginManager.loggedInUser.getUserName(),
-                        loginManager.loggedInUser.getPassword(), id, plotCopy, handler);
+                        loginManager.loggedInUser.getPassword(), plot.getId(), plotCopy, handler);
             } catch (JSONException e) {
                 handleBadResponse(e);
             }

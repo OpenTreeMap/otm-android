@@ -138,4 +138,7 @@
     <string name="udf_create_next_button_text">Next</string>
     <string name="udf_create_new">Add New</string>
 
+    <string name="save_tree_failure">Can not save tree</string>
+    <string name="save_tree_photo_failure">Unable to upload photo</string>
+
 </resources>
