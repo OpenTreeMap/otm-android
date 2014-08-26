@@ -128,7 +128,7 @@ public class Plot extends Model {
 
         List<Address> addresses;
         try {
-            addresses = geocoder.getFromLocation(geom.getX(), geom.getY(), 1);
+            addresses = geocoder.getFromLocation(geom.getY(), geom.getX(), 1);
         } catch (Exception e) {
             Log.w(App.LOG_TAG, "Error Geocoding address", e);
             setAddressFields(null, null, null);
