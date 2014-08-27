@@ -136,13 +136,15 @@ public class UDFCollectionFieldGroup extends FieldGroup {
         for (String collectionKey : fieldKeys) {
             collectionUdfArrays.put(collectionKey, new JSONArray());
         }
-        for (Field field : fields) {
-            String collectionKey = field.key;
-            if (collectionUdfArrays.containsKey(collectionKey)) {
-                JSONArray udfData = collectionUdfArrays.get(collectionKey);
-                udfData.put(field.getEditedValue());
-            } else {
-                Log.w(App.LOG_TAG, "Impossible state - UDFCollectionGroup has a field not in it's fieldKeys");
+        if (fields != null) {
+            for (Field field : fields) {
+                String collectionKey = field.key;
+                if (collectionUdfArrays.containsKey(collectionKey)) {
+                    JSONArray udfData = collectionUdfArrays.get(collectionKey);
+                    udfData.put(field.getEditedValue());
+                } else {
+                    Log.w(App.LOG_TAG, "Impossible state - UDFCollectionGroup has a field not in it's fieldKeys");
+                }
             }
         }
         for (Map.Entry<String, JSONArray> entry : collectionUdfArrays.entrySet()) {
