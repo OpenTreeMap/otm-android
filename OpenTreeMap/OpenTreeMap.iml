@@ -71,14 +71,13 @@
     <orderEntry type="library" exported="" name="jdeferred-android-aar-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="guava-17.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
-    <orderEntry type="library" exported="" name="android-async-http-1.4.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="dexmaker-mockito-1.1" level="project" />
     <orderEntry type="library" exported="" name="jdeferred-core-1.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.1" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.2" level="project" />
+    <orderEntry type="library" exported="" name="android-async-http-1.4.5" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.9.5" level="project" />
-    <orderEntry type="library" name="android-async-http-1.4.5" level="project" />
   </component>
 </module>
 
