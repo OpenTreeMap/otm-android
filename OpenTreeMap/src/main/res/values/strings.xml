@@ -50,7 +50,7 @@
     <string name="unspecified_eco_field_money">$0.00</string>
     <string name="plot_edit_button">Edit</string>
     <string name="udf_create_done_text">Done</string>
-    <string name="udf_create_error_saving">There was a problem saving the stewardship event</string>
+    <string name="udf_create_error_saving">There was a problem saving the item</string>
     <string name="save_plot_edit_button">Save</string>
     <string name="delete">Delete</string>
     <string name="delete_tree">Delete Tree</string>
@@ -130,11 +130,11 @@
     <string name="perms_add_tree_fail">Adding trees is not available to all users</string>
     <string name="perms_edit_tree_fail">Editing a tree\'s details is not available to all users</string>
     <string name="perms_add_tree_photo_fail">Adding tree photos is not available to all users</string>
-    <string name="collection_udf_empty_text">No stewardship actions entered yet.</string>
+    <string name="collection_udf_empty_text">No items entered yet.</string>
     <string name="planting_site">Planting Site</string>
     <string name="tree">Tree</string>
     <string name="load_more_collection_udf">Load more …</string>
-    <string name="udf_save_error">Error saving Stewardship Fields</string>
+    <string name="udf_save_error">Error saving fields</string>
     <string name="udf_create_next_button_text">Next</string>
     <string name="udf_create_new">Add New</string>
 
