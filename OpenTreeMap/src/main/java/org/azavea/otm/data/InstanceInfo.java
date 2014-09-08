@@ -151,7 +151,7 @@ public class InstanceInfo extends Model {
         try {
             JSONObject json = data.getJSONObject("extent");
 
-            return new InstanceExtent(json.getDouble("min_lng"), json.getDouble("max_lat"), json.getDouble("max_lng"),
+            return new InstanceExtent(json.getDouble("min_lng"), json.getDouble("min_lat"), json.getDouble("max_lng"),
                     json.getDouble("max_lat"));
         } catch (JSONException e) {
             Log.e(App.LOG_TAG, "Invalid Instance extent Received", e);
