@@ -696,7 +696,7 @@ public class MainMapActivity extends Fragment {
             return;
         }
 
-        FallbackGeocoder geocoder = new FallbackGeocoder(getActivity(), App.getCurrentInstance().getExtent());
+        FallbackGeocoder geocoder = new FallbackGeocoder(getActivity(), App.getCurrentInstance());
 
         LatLng pos = geocoder.androidGeocode(address);
 

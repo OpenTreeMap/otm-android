@@ -99,6 +99,8 @@ public class InstanceInfo extends Model {
         return (JSONObject) getField("search");
     }
 
+    public double getRadius() throws JSONException { return data.getLong("extent_radius"); }
+
     public boolean canAddTree() {
         Boolean canAdd = (Boolean) getValueForKey("meta_perms.can_add_tree");
         return canAdd == null ? false : canAdd;

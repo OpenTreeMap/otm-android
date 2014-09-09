@@ -1,15 +1,21 @@
 package org.azavea.otm.map;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
+import org.azavea.otm.App;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.InstanceInfo.InstanceExtent;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -19,6 +25,7 @@ import com.loopj.android.http.RequestParams;
 public class FallbackGeocoder {
 
     // search box
+    private final InstanceInfo currentInstance;
     private final InstanceExtent extent;
 
     // activity context
@@ -28,33 +35,54 @@ public class FallbackGeocoder {
     private final AsyncHttpClient client;
 
     // construct with a reference to the context and a search bounding box.
-    public FallbackGeocoder(Context context, InstanceExtent extent) {
+    public FallbackGeocoder(Context context, InstanceInfo currentInstance) {
         this.context = context;
-        this.extent = extent;
+        this.currentInstance = currentInstance;
+        this.extent = currentInstance.getExtent();
         client = new AsyncHttpClient();
     }
 
-    // Use android's native geocoder.
-    public LatLng androidGeocode(String address) {
+    // *Attempt* to use android's native reverse geocoder
+    //
+    // numerous failure conditions can cause this method to return null.
+    // best used in conjunction with the http geocoder as a fallback.
+    //
+    // due to a bug that surfaced in the android geocoder in 9/2014, this method
+    // was modified to stop using extents to hint/bias the geocoder to favor the
+    // region containing the instance. See this page for more details:
+    // http://stackoverflow.com/questions/25621087/android-geocoder-getfromlocationname-stopped-working-with-bounds
+
+    public LatLng androidGeocode(String addressText) {
+        List<Address> addresses;
         Geocoder g = new Geocoder(this.context);
         try {
-            List<Address> a;
-            if (extent != null) {
-                a = g.getFromLocationName(address, 1, extent.minLatitude, extent.minLongitude, extent.maxLatitude,
-                        extent.maxLongitude);
-            } else {
-                a = g.getFromLocationName(address, 1);
-            }
-            if (a.size() == 0) {
-                return null;
-            } else {
-                Address geocoded = a.get(0);
-                return new LatLng(geocoded.getLatitude(), geocoded.getLongitude());
-            }
-        } catch (Exception e) {
+            addresses = g.getFromLocationName(addressText, 10);
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+
+        double instanceRadius, instanceLat, instanceLng;
+        try {
+            instanceRadius = currentInstance.getRadius();
+            instanceLat = currentInstance.getLat();
+            instanceLng = currentInstance.getLon();
+        } catch (Exception e) {
+            Log.e(App.LOG_TAG, "Required instance data not found. Exiting android geocoder", e);
+            return null;
+        }
+
+        // addresses returned by the geocoder are sorted by match quality
+        // return the first one that is within an acceptable distance
+        for (Address address : addresses) {
+            float[] results = new float[1];
+            Location.distanceBetween(instanceLat, instanceLng, address.getLatitude(), address.getLongitude(), results);
+            if (results[0] <= instanceRadius) {
+                return new LatLng(address.getLatitude(), address.getLongitude());
+            }
+        }
+
+        return null;
     }
 
     // Use Google's Http geocoder.
