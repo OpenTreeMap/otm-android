@@ -22,6 +22,7 @@ public class LoginManager {
     private static final String USER_KEY = "user";
     private static final String PASS_KEY = "pass";
     public static final String COULD_NOT_CONNECT_TO_SERVER = "Could not connect to server";
+    private static final String WRONG_USER_OR_PASS = "Incorrect Username or Password."
 
     private final Context context;
     private final SharedPreferences prefs;
@@ -73,7 +74,7 @@ public class LoginManager {
             public void failure(Throwable e, String message) {
                 final Bundle data = new Bundle();
                 data.putBoolean(SUCCESS_KEY, false);
-                data.putString(MESSAGE_KEY, COULD_NOT_CONNECT_TO_SERVER);
+                data.putString(MESSAGE_KEY, WRONG_USER_OR_PASS);
                 handleCallback(data);
                 rg.cancelRequests(activityContext);
             }
