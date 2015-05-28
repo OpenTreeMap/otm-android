@@ -4,15 +4,10 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <permission
-        android:name="org.azavea.otm.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="21" />
 
-    <uses-permission android:name="org.azavea.otm2.dev.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
