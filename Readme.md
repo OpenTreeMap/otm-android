@@ -1,4 +1,4 @@
-[![Travis build status](https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android.png?branch=master)](https://travis-ci.org/OpenTreeMap/OpenTreeMap-Android
+[![Travis build status](https://travis-ci.org/OpenTreeMap/otm-android.png?branch=master)](https://travis-ci.org/OpenTreeMap/otm-android
 )
 
 OpenTreeMap for Android
@@ -38,7 +38,7 @@ http://developer.android.com/tools/device.html
 
 * Put the appropriate values into the templates in OpenTreeMapSkinned (for more information, see the [OpenTreeMapSkinned README](OpenTreeMapSkinned/README.md))
 
-* Setup google maps API key. See [PDF](https://github.com/OpenTreeMap/OpenTreeMap-Android/blob/9b67bd669825ac0d87f7799d5ad79695f08c95a7/howto.pdf) for suggestions.
+* Setup google maps API key. See [PDF](https://github.com/OpenTreeMap/otm-android/blob/9b67bd669825ac0d87f7799d5ad79695f08c95a7/howto.pdf) for suggestions.
 
 ### Weird Bugs
 
