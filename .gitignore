@@ -40,9 +40,11 @@ OpenTreeMapTests/project.properties
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.idea/runConfigurations.xml
 .idea/libraries/*
 .idea/copyright/*
 .idea/.name
+*.iml
 
 # Gradle
 .gradle/
