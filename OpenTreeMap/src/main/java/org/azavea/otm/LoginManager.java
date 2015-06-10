@@ -21,7 +21,6 @@ public class LoginManager {
     private static final String MESSAGE_KEY = "message";
     private static final String USER_KEY = "user";
     private static final String PASS_KEY = "pass";
-    public static final String COULD_NOT_CONNECT_TO_SERVER = "Could not connect to server";
 
     private final Context context;
     private final SharedPreferences prefs;
@@ -51,18 +50,15 @@ public class LoginManager {
 
         rg.logIn(activityContext, username, password, new RestHandler<User>(new User()) {
 
-            Message resultMessage = new Message();
+            final Message resultMessage = new Message();
 
             private void handleCallback(Bundle data) {
                 resultMessage.setData(data);
 
                 if (App.hasInstanceCode()) {
-                    App.reloadInstanceInfo(new Callback() {
-                        @Override
-                        public boolean handleMessage(Message msg) {
-                            callback.handleMessage(resultMessage);
-                            return true;
-                        }
+                    App.reloadInstanceInfo(msg -> {
+                        callback.handleMessage(resultMessage);
+                        return true;
                     });
                 } else {
                     callback.handleMessage(resultMessage);
@@ -73,7 +69,7 @@ public class LoginManager {
             public void failure(Throwable e, String message) {
                 final Bundle data = new Bundle();
                 data.putBoolean(SUCCESS_KEY, false);
-                data.putString(MESSAGE_KEY, COULD_NOT_CONNECT_TO_SERVER);
+                data.putString(MESSAGE_KEY, activityContext.getString(R.string.could_not_connect));
                 handleCallback(data);
                 rg.cancelRequests(activityContext);
             }
@@ -124,15 +120,12 @@ public class LoginManager {
         String user = prefs.getString(USER_KEY, null);
         String pass = prefs.getString(PASS_KEY, null);
         if (user != null && pass != null) {
-            logIn(context, user, pass, new Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    Bundle data = msg.getData();
-                    if (data == null || !data.getBoolean(RestHandler.SUCCESS_KEY)) {
-                        logOut();
-                    }
-                    return callback.handleMessage(msg);
+            logIn(context, user, pass, msg -> {
+                Bundle data = msg.getData();
+                if (data == null || !data.getBoolean(RestHandler.SUCCESS_KEY)) {
+                    logOut();
                 }
+                return callback.handleMessage(msg);
             });
         } else if (App.hasInstanceCode()) {
             // If there is no user to auto login, the app still needs to
