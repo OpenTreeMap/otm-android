@@ -22,6 +22,7 @@
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="could_not_connect">Could not connect to server</string>
+    <string name="incorrect_username_or_password">Incorrect username or password</string>
     <string name="cancel">Cancel</string>
     <string name="filter_range_to">to</string>
     <string name="finish_filtering">Done</string>

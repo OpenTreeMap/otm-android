@@ -2,6 +2,7 @@ package org.azavea.otm;
 
 import java.net.ConnectException;
 
+import org.apache.http.client.HttpResponseException;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
@@ -70,6 +71,13 @@ public class LoginManager {
                 final Bundle data = new Bundle();
                 data.putBoolean(SUCCESS_KEY, false);
                 data.putString(MESSAGE_KEY, activityContext.getString(R.string.could_not_connect));
+                if (e instanceof HttpResponseException) {
+                    final HttpResponseException actualError = (HttpResponseException) e;
+                    if (actualError.getStatusCode() == 401) {
+                        data.putString(MESSAGE_KEY, activityContext.getString(R.string.incorrect_username_or_password));
+                    }
+                }
+
                 handleCallback(data);
                 rg.cancelRequests(activityContext);
             }
