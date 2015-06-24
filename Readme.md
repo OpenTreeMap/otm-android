@@ -7,6 +7,8 @@ OpenTreeMap for Android
 Development Instructions
 ------------------------
 
+You will need to run an OpenTreeMap server to use the Android app.  If you do not have an OpenTreeMap development environment, you can use the [otm-vagrant project](https://github.com/OpenTreeMap/otm-vagrant) to get started.
+
 ### Android Studio Setup
 
 * This project uses [RetroLambda](https://github.com/evant/gradle-retrolambda) to support Java-8 Lambdas on Android, which requires JDK8:
