@@ -40,7 +40,7 @@ http://developer.android.com/tools/device.html
 
 * Put the appropriate values into the templates in OpenTreeMapSkinned (for more information, see the [OpenTreeMapSkinned README](OpenTreeMapSkinned/README.md))
 
-* Setup google maps API key. See [PDF](https://github.com/OpenTreeMap/otm-android/blob/9b67bd669825ac0d87f7799d5ad79695f08c95a7/howto.pdf) for suggestions.
+* Setup google maps API key. See [Google's documentation](https://developers.google.com/maps/documentation/android/start#step_4_get_a_google_maps_api_key) for help in doing so.  Set this key as the `google_maps_api_key` in the `defaults.xml` template in the OpenTreeMapSkinned project.
 
 ### Weird Bugs
 
