@@ -26,6 +26,9 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -35,7 +38,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 public class TreeEditDisplay extends TreeDisplay {
     // Intent Request codes
     public static final int FIELD_ACTIVITY_REQUEST_CODE = 0;
-    protected static final int TREE_PHOTO = 1;
     protected static final int TREE_MOVE = 2;
     protected static final int PHOTO_USING_CAMERA_RESPONSE = 7;
     protected static final int PHOTO_USING_GALLERY_RESPONSE = 8;
@@ -99,7 +101,6 @@ public class TreeEditDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_edit_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_edit_activity);
-        findViewById(R.id.plot_save_button).setOnClickListener(this::saveEdit);
         setUpMapIfNeeded();
         initializeEditPage();
         mMap.setOnMapClickListener(point -> {
@@ -114,6 +115,26 @@ public class TreeEditDisplay extends TreeDisplay {
         super.onResume();
         plotLocation = getPlotLocation(plot);
         showPositionOnMap();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tree_edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        int id = item.getItemId();
+        if (id == R.id.plot_save_button) {
+            save();
+            return true;
+        } else if (id == R.id.edit_tree_picture) {
+            changeTreePhoto();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeEditPage() {
@@ -133,7 +154,6 @@ public class TreeEditDisplay extends TreeDisplay {
             }
         }
 
-        setupChangePhotoButton(layout, fieldList);
         setupDeleteButtons(layout, fieldList);
     }
 
@@ -148,19 +168,6 @@ public class TreeEditDisplay extends TreeDisplay {
         actionPanel.findViewById(R.id.delete_tree).setVisibility(View.GONE);
         fieldList.addView(actionPanel);
 
-    }
-
-    private void setupChangePhotoButton(LayoutInflater layout, LinearLayout fieldList) {
-        try {
-            // You can only change a tree picture if there is a tree
-            if (addMode() || (plot.getId() != 0) && (plot.getTree() != null)) {
-                View thePanel = layout.inflate(R.layout.plot_edit_photo_button, null);
-                thePanel.findViewById(R.id.edit_tree_picture).setOnClickListener(this::changeTreePhoto);
-                fieldList.addView(thePanel);
-            }
-        } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Error getting tree, not allowing photo to be taken", e);
-        }
     }
 
     public void confirmDelete(int messageResource, final Callback callback) {
@@ -408,15 +415,10 @@ public class TreeEditDisplay extends TreeDisplay {
 
     }
 
-    public void saveEdit(View view) {
-        save();
-    }
-
     /*
      * Photo Editing Functions
      */
-    // Bind your change photo button to this handler.
-    public void changeTreePhoto(View view) {
+    public void changeTreePhoto() {
         Log.d("PHOTO", "changePhoto");
 
         if (!App.getCurrentInstance().canEditTreePhoto()) {

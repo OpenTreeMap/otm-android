@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:otm="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/edit_tree_picture"
+        android:icon="@drawable/ic_photo_camera_black_24dp"
+        android:title="@string/change_tree_picture"
+        otm:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/plot_save_button"
+        android:title="@string/save_plot_edit_button"
+        otm:showAsAction="always" />
+</menu>

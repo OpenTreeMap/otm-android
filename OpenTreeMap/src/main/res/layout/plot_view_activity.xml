@@ -55,12 +55,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
             </LinearLayout>
-
-            <Button
-                android:id="@+id/plot_edit_button"
-                style="@style/plot_edit_button"
-                android:text="@string/plot_edit_button" >
-            </Button>
         </LinearLayout>
     </ScrollView>
 
