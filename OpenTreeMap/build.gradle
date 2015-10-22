@@ -25,7 +25,7 @@ configurations {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
