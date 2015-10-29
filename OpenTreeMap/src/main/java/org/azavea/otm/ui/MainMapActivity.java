@@ -381,6 +381,7 @@ public class MainMapActivity extends Fragment {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.setMyLocationEnabled(true);
 
         try {
             TMSTileProvider boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);

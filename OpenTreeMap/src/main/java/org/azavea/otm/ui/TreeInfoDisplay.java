@@ -17,6 +17,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,10 +37,27 @@ public class TreeInfoDisplay extends TreeDisplay {
         mapFragmentId = R.id.vignette_map_view_mode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plot_view_activity);
-        findViewById(R.id.plot_edit_button).setOnClickListener(this::doEdit);
         setUpMapIfNeeded();
         plotImage = (ImageView) findViewById(R.id.plot_photo);
         loadPlotInfo();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tree_info_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        int id = item.getItemId();
+        if (id == R.id.plot_edit_button) {
+            doEdit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadPlotInfo() {
@@ -174,15 +194,11 @@ public class TreeInfoDisplay extends TreeDisplay {
                     setResult(RESULT_PLOT_DELETED);
                     finish();
 
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // Do nothing?
                 }
-                break;
-
         }
     }
 
-    public void doEdit(View view) {
+    public void doEdit() {
         if (!App.getLoginManager().isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
         } else if (!(App.getCurrentInstance().canEditTree() || App.getCurrentInstance().canEditTreePhoto())) {

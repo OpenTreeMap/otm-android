@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,7 +22,15 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        EditText password = (EditText) findViewById(R.id.login_password);
+
+        password.setOnEditorActionListener((textView, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                login(textView);
+                return true;
+            }
+            return false;
+        });
     }
 
     private boolean validate(String user, String pass) {
