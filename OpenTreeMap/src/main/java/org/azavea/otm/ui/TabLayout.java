@@ -1,6 +1,5 @@
 package org.azavea.otm.ui;
 
-import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
@@ -68,8 +67,12 @@ public class TabLayout extends OTMActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar.getSelectedTab().getTag() == MAIN_MAP) {
             final FragmentManager manager = TabLayout.this.getSupportFragmentManager();
-            MainMapActivity mainMap = (MainMapActivity) manager.findFragmentByTag(MAIN_MAP);
-            mainMap.onBackPressed();
+            MainMapFragment mainMap = (MainMapFragment) manager.findFragmentByTag(MAIN_MAP);
+            if (mainMap.shouldHandleBackPress()) {
+                mainMap.onBackPressed();
+            } else {
+                super.onBackPressed();
+            }
         } else {
             super.onBackPressed();
         }

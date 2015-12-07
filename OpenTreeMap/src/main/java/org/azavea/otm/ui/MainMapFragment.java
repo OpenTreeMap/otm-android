@@ -86,6 +86,7 @@ public class MainMapFragment extends Fragment {
     private MapView mapView;
     private GoogleMap mMap;
     private TextView filterDisplay;
+    private int treeAddMode = CANCEL;
 
     FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
@@ -177,6 +178,10 @@ public class MainMapFragment extends Fragment {
         hidePopup();
         removePlotMarker();
         setTreeAddMode(CANCEL);
+    }
+
+    public boolean shouldHandleBackPress() {
+        return treeAddMode != CANCEL || currentPlot != null;
     }
 
     @Override
@@ -518,6 +523,7 @@ public class MainMapFragment extends Fragment {
     private void removePlotMarker() {
         if (plotMarker != null) {
             plotMarker.remove();
+            plotMarker = null;
         }
     }
 
@@ -581,8 +587,13 @@ public class MainMapFragment extends Fragment {
 
     }
 
+    public boolean isAddTreeModeActive() {
+        View filterAddButtons = getActivity().findViewById(R.id.filter_add_buttons);
+        return filterAddButtons.getVisibility() == View.GONE;
+    }
+
     /* tree add modes:
-     *     CANCEL : not adding a tree
+     *  CANCEL : not adding a tree
      *  STEP1  : "Tap to add a tree"
      *  STEP2  : "Long press to move the tree into position, then click next"
      *  FINISH : Create tree and redirect to tree detail page.
@@ -591,6 +602,7 @@ public class MainMapFragment extends Fragment {
         if (mMap == null) {
             return;
         }
+        this.treeAddMode = step;
 
         View step1 = getActivity().findViewById(R.id.addTreeStep1);
         View step2 = getActivity().findViewById(R.id.addTreeStep2);
@@ -637,6 +649,7 @@ public class MainMapFragment extends Fragment {
                     setTreeAddMode(CANCEL);
                     Toast.makeText(getActivity(), "Error creating new tree", Toast.LENGTH_LONG).show();
                 }
+                this.treeAddMode = CANCEL;
         }
     }
 

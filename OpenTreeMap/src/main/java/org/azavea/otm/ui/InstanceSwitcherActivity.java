@@ -81,13 +81,6 @@ public class InstanceSwitcherActivity extends Activity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (App.hasInstanceCode()) {
-            super.onBackPressed();
-        }
-    }
-
     private void redirectToTabLayout(InstanceInfo instance) {
         loadingInstance = ProgressDialog.show(this,
                 getString(R.string.instance_switcher_dialog_heading),
