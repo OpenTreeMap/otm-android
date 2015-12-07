@@ -49,18 +49,6 @@
         android:background="@color/main_background_color"
         android:visibility="gone" />
 
-    <ImageButton
-        android:id="@+id/mylocationbutton"
-        style="@style/button_primary"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/filterDisplay"
-        android:layout_marginRight="3dp"
-        android:layout_marginTop="3dp"
-        android:contentDescription="@string/show_location"
-        android:src="@drawable/ic_menu_locate" />
-
     <LinearLayout
         android:id="@+id/addTreeStep1"
         android:layout_width="match_parent"

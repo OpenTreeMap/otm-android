@@ -93,27 +93,6 @@ public class MainMapFragment extends Fragment {
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
 
-    private Location currentLocation;
-    private LocationManager locationManager = null;
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            currentLocation = location;
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    };
-
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = point -> {
         Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
@@ -187,10 +166,10 @@ public class MainMapFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {
-            disableLocationUpdating();
-        } else {
-            setupLocationUpdating(getActivity());
+        if (hidden && mMap != null) {
+            mMap.setMyLocationEnabled(false);
+        } else if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
         }
     }
 
@@ -201,7 +180,6 @@ public class MainMapFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setupLocationUpdating(getActivity());
 
         final View view = inflater.inflate(R.layout.main_map, container, false);
 
@@ -249,7 +227,6 @@ public class MainMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setupLocationUpdating(getActivity());
         MapHelper.checkGooglePlay(getActivity());
         mapView.onResume();
         if (App.getAppInstance().getCurrentInstance() != null) {
@@ -328,7 +305,6 @@ public class MainMapFragment extends Fragment {
         if (mapView != null) {
             mapView.onPause();
         }
-        disableLocationUpdating();
     }
 
     @Override
@@ -450,24 +426,6 @@ public class MainMapFragment extends Fragment {
             }
             startActivityForResult(viewPlot, INFO_INTENT);
         });
-
-        view.findViewById(R.id.mylocationbutton).setOnClickListener(v -> {
-            boolean success = false;
-            if (currentLocation != null) {
-                zoomMapToLocation(currentLocation);
-                success = true;
-            } else {
-                Location cachedLocation = getCachedLocation();
-                if (cachedLocation != null) {
-                    zoomMapToLocation(cachedLocation);
-                    success = true;
-                }
-            }
-
-            if (!success) {
-                Toast.makeText(getActivity(), "Could not determine current location.", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private void showPopup(Plot plot) {
@@ -558,34 +516,6 @@ public class MainMapFragment extends Fragment {
         }
     }
 
-    private void zoomMapToLocation(Location l) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                l.getLatitude(),
-                l.getLongitude()
-        ), STREET_ZOOM_LEVEL));
-
-    }
-
-    private Location getCachedLocation() {
-        Context context = getActivity();
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_FINE);
-        LocationManager locationManager =
-                (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            String provider = locationManager.getBestProvider(crit, true);
-
-            if (provider != null) {
-                Location loc = locationManager.getLastKnownLocation(provider);
-                if (loc != null) {
-                    return loc;
-                }
-
-            }
-        }
-        return null;
-
-    }
 
     public boolean isAddTreeModeActive() {
         View filterAddButtons = getActivity().findViewById(R.id.filter_add_buttons);
@@ -715,23 +645,6 @@ public class MainMapFragment extends Fragment {
             geocoder.httpGeocode(address, handleGoogleGeocodeResponse);
         } else {
             moveMapAndFinishGeocode(pos);
-        }
-    }
-
-    private void setupLocationUpdating(Context applicationContext) {
-        if (locationManager == null) {
-            locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);
-        }
-    }
-
-    private void disableLocationUpdating() {
-        if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
         }
     }
 
