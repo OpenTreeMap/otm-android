@@ -33,7 +33,7 @@ public class TabLayout extends OTMActionBarActivity {
                 actionBar.newTab()
                         .setText(R.string.tab_map)
                         .setTag(MAIN_MAP)
-                        .setTabListener(new TabListener<>(this, MAIN_MAP, MainMapActivity.class))
+                        .setTabListener(new TabListener<>(this, MAIN_MAP, MainMapFragment.class))
         );
 
         actionBar.addTab(

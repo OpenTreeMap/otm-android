@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
@@ -53,7 +52,6 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
-import org.azavea.otm.data.Tree;
 import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
@@ -64,10 +62,9 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
-public class MainMapActivity extends Fragment {
+public class MainMapFragment extends Fragment {
     private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
@@ -201,7 +198,7 @@ public class MainMapActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setupLocationUpdating(getActivity());
 
-        final View view = inflater.inflate(R.layout.activity_map_display_2, container, false);
+        final View view = inflater.inflate(R.layout.main_map, container, false);
 
         MapsInitializer.initialize(getActivity());
         MapHelper.checkGooglePlay(getActivity());
@@ -412,7 +409,7 @@ public class MainMapActivity extends Fragment {
 
     private void setupViewHandlers(View view) {
         view.findViewById(R.id.plotImage).setOnClickListener(v -> {
-            if (MainMapActivity.this.currentPlot != null) {
+            if (MainMapFragment.this.currentPlot != null) {
                 currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity()));
             }
         });

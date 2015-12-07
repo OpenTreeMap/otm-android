@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:otm="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/plot_edit_button"
+        android:title="@string/plot_edit_button"
+        otm:showAsAction="always" />
+</menu>

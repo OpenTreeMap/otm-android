@@ -34,7 +34,7 @@ public class ListDisplay extends Fragment implements ListObserver {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.list_activity, container, false);
+        View view = inflater.inflate(R.layout.list_trees, container, false);
 
         // Create the segmented buttons
         SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.segmented);
