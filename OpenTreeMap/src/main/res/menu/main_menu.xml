@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:otm="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/plot_edit_button"
-        android:title="@string/plot_edit_button"
-        otm:showAsAction="always" />
+    <group android:id="@+id/main_map_menu_group">
+        <item
+            android:id="@+id/filterButton"
+            android:title="@string/filter_button"
+            android:icon="@drawable/ic_filter"
+            android:orderInCategory="2"
+            otm:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/addTreeButton"
+            android:title="@string/add_tree_button"
+            android:icon="@drawable/ic_add_black_24dp"
+            android:orderInCategory="3"
+            otm:showAsAction="ifRoom" />
+        <!-- The search icon is always shown so that we don't have to show an alert
+             if it got pushed into the overflow menu -->
+        <item
+            android:id="@+id/search_button"
+            android:title="@string/search_field_button"
+            android:icon="@drawable/ic_magnify"
+            android:orderInCategory="1"
+            otm:actionViewClass="android.support.v7.widget.SearchView"
+            otm:showAsAction="always" />
+    </group>
 </menu>

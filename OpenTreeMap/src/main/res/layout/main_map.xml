@@ -8,44 +8,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <LinearLayout
-        android:id="@+id/location_bar"
-        style="@android:style/ButtonBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/main_background_color"
-        android:padding="3dp" >
-
-        <EditText
-            android:id="@+id/locationSearchField"
-            style="@style/textbox"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="8"
-            android:hint="@string/search_field_hint"
-            android:imeOptions="actionSearch"
-            android:inputType="text" >
-
-        </EditText>
-
-        <ImageButton
-            android:id="@+id/locationSearchButton"
-            style="@style/button_primary"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="2"
-            android:contentDescription="@string/search_field_button"
-            android:src="@drawable/ic_menu_search" >
-        </ImageButton>
-    </LinearLayout>
-
     <TextView
         android:id="@+id/filterDisplay"
         style="@style/small_map_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/location_bar"
         android:background="@color/main_background_color"
         android:visibility="gone" />
 
@@ -55,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plotPopup"
         android:background="@color/main_background_color"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/treeAddInstructions"
@@ -71,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plotPopup"
         android:background="@color/main_background_color"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <TextView
             style="@style/add_tree_label"
@@ -131,23 +98,5 @@
         android:layout_marginLeft="3dp"
         android:layout_marginTop="3dp"
         layout="@layout/segmented_button" />
-
-    <LinearLayout
-        android:id="@+id/filter_add_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="6dp" >
-
-        <Button
-            style="@style/map_button_primary"
-            android:id="@+id/filterButton"
-            android:text="@string/filter_button" />
-
-        <Button
-            style="@style/map_button_primary"
-            android:id="@+id/addTreeButton"
-            android:text="@string/add_tree_button" />
-    </LinearLayout>
 
 </RelativeLayout>

@@ -2,26 +2,27 @@ package org.azavea.otm.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -77,6 +78,8 @@ public class MainMapFragment extends Fragment {
     private static final int CANCEL = 3;
     private static final int FINISH = 4;
 
+    private Menu menu;
+    private SearchView searchView;
     private TextView plotSpeciesView;
     private TextView plotAddressView;
     private ImageView plotImageView;
@@ -157,10 +160,11 @@ public class MainMapFragment extends Fragment {
         hidePopup();
         removePlotMarker();
         setTreeAddMode(CANCEL);
+        searchView.setIconified(true);
     }
 
     public boolean shouldHandleBackPress() {
-        return treeAddMode != CANCEL || currentPlot != null;
+        return treeAddMode != CANCEL || currentPlot != null || !searchView.isIconified();
     }
 
     @Override
@@ -180,6 +184,7 @@ public class MainMapFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.setHasOptionsMenu(true);
 
         final View view = inflater.inflate(R.layout.main_map, container, false);
 
@@ -196,15 +201,11 @@ public class MainMapFragment extends Fragment {
             try {
                 if (result.getData().getBoolean("success")) {
                     START_POS = App.getCurrentInstance().getStartPos();
-                    bindActionToLocationSearchBar(view);
                     filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
                     setUpMapIfNeeded(view);
                     plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
                     setPopupViews(view);
                     clearTileCache();
-                    if (plotPopup.getVisibility() == View.VISIBLE) {
-                        view.findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                    }
                     setupViewHandlers(view);
                 }
                 return true;
@@ -225,6 +226,30 @@ public class MainMapFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.main_menu, menu);
+        setupSearchView(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+        if (id == R.id.filterButton) {
+            Intent filter = new Intent(getActivity(), FilterDisplay.class);
+            startActivityForResult(filter, FILTER_INTENT);
+            return true;
+        } else if (id == R.id.addTreeButton) {
+            handleAddTree();
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         MapHelper.checkGooglePlay(getActivity());
@@ -233,10 +258,6 @@ public class MainMapFragment extends Fragment {
             setUpMapIfNeeded(getView());
             setTreeAddMode(CANCEL);
             clearTileCache();
-
-            if (plotPopup != null && plotPopup.getVisibility() == View.VISIBLE) {
-                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-            }
         }
     }
 
@@ -319,6 +340,18 @@ public class MainMapFragment extends Fragment {
      * Private methods
      *********************************/
 
+    private void hideMenuItems() {
+        if (menu != null) {
+            menu.setGroupVisible(R.id.main_map_menu_group, false);
+        }
+    }
+
+    private void showMenuItems() {
+        if (menu != null) {
+            menu.setGroupVisible(R.id.main_map_menu_group, true);
+        }
+    }
+
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
@@ -395,25 +428,6 @@ public class MainMapFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.locationSearchButton).setOnClickListener(v -> doLocationSearch());
-
-        view.findViewById(R.id.filterButton).setOnClickListener(v -> {
-            Intent filter = new Intent(getActivity(), FilterDisplay.class);
-            startActivityForResult(filter, FILTER_INTENT);
-        });
-
-        view.findViewById(R.id.addTreeButton).setOnClickListener(v -> {
-            if (!App.getLoginManager().isLoggedIn()) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            } else if (!App.getCurrentInstance().canAddTree()) {
-                Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
-            } else {
-                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                setTreeAddMode(CANCEL);
-                setTreeAddMode(STEP1);
-            }
-        });
-
         view.findViewById(R.id.treeAddNext).setOnClickListener(v -> setTreeAddMode(FINISH));
 
         view.findViewById(R.id.plotPopup).setOnClickListener(v -> {
@@ -428,9 +442,18 @@ public class MainMapFragment extends Fragment {
         });
     }
 
-    private void showPopup(Plot plot) {
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
+    private void handleAddTree() {
+        if (!App.getLoginManager().isLoggedIn()) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else if (!App.getCurrentInstance().canAddTree()) {
+            Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            setTreeAddMode(CANCEL);
+            setTreeAddMode(STEP1);
+        }
+    }
 
+    private void showPopup(Plot plot) {
         //set default text
         plotSpeciesView.setText(getString(R.string.species_missing));
         plotAddressView.setText(getString(R.string.address_missing));
@@ -458,7 +481,6 @@ public class MainMapFragment extends Fragment {
         }
         currentPlot = plot;
         plotPopup.setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     }
 
     private LatLng zoomToPlot(Plot plot) throws JSONException {
@@ -472,7 +494,6 @@ public class MainMapFragment extends Fragment {
     }
 
     private void hidePopup() {
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
         RelativeLayout plotPopup = (RelativeLayout) getActivity().findViewById(R.id.plotPopup);
         plotPopup.setVisibility(View.INVISIBLE);
         currentPlot = null;
@@ -516,12 +537,6 @@ public class MainMapFragment extends Fragment {
         }
     }
 
-
-    public boolean isAddTreeModeActive() {
-        View filterAddButtons = getActivity().findViewById(R.id.filter_add_buttons);
-        return filterAddButtons.getVisibility() == View.GONE;
-    }
-
     /* tree add modes:
      *  CANCEL : not adding a tree
      *  STEP1  : "Tap to add a tree"
@@ -536,20 +551,25 @@ public class MainMapFragment extends Fragment {
 
         View step1 = getActivity().findViewById(R.id.addTreeStep1);
         View step2 = getActivity().findViewById(R.id.addTreeStep2);
-        View filterAddButtons = getActivity().findViewById(R.id.filter_add_buttons);
         switch (step) {
             case CANCEL:
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
                 mMap.setOnMapClickListener(showPopupMapClickListener);
-                filterAddButtons.setVisibility(View.VISIBLE);
+                showMenuItems();
                 break;
             case STEP1:
                 hidePopup();
                 removePlotMarker();
-                filterAddButtons.setVisibility(View.GONE);
+                hideMenuItems();
                 step2.setVisibility(View.GONE);
-                step1.setVisibility(View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    step1.setTranslationY(step1.getHeight());
+                    step1.setVisibility(View.VISIBLE);
+                    step1.animate().translationY(0);
+                } else {
+                    step1.setVisibility(View.VISIBLE);
+                }
 
                 if (mMap != null) {
                     mMap.setOnMapClickListener(addMarkerMapClickListener);
@@ -557,7 +577,7 @@ public class MainMapFragment extends Fragment {
                 break;
             case STEP2:
                 hidePopup();
-                filterAddButtons.setVisibility(View.GONE);
+                hideMenuItems();
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.VISIBLE);
                 if (mMap != null) {
@@ -580,6 +600,7 @@ public class MainMapFragment extends Fragment {
                     Toast.makeText(getActivity(), "Error creating new tree", Toast.LENGTH_LONG).show();
                 }
                 this.treeAddMode = CANCEL;
+                showMenuItems();
         }
     }
 
@@ -600,11 +621,26 @@ public class MainMapFragment extends Fragment {
         return newPlot;
     }
 
+    private void setupSearchView(Menu menu) {
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search_button));
+        searchView.setQueryHint(getString(R.string.search_field_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                doLocationSearch(s);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+    }
+
     private void moveMapAndFinishGeocode(LatLng pos) {
-        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
-        InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        im.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
     private void alertGeocodeError() {
@@ -628,9 +664,8 @@ public class MainMapFragment extends Fragment {
     };
 
     /* Read the location search field, geocode it, and zoom to the location. */
-    public void doLocationSearch() {
-        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
-        String address = et.getText().toString();
+    public void doLocationSearch(CharSequence query) {
+        String address = query.toString();
 
         if (address.equals("")) {
             Toast.makeText(getActivity(), "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
@@ -656,17 +691,5 @@ public class MainMapFragment extends Fragment {
         if (filterTileOverlay != null) {
             filterTileOverlay.clearTileCache();
         }
-    }
-
-    private void bindActionToLocationSearchBar(final View view) {
-        EditText et = (EditText) view.findViewById(R.id.locationSearchField);
-        et.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                doLocationSearch();
-                return true;
-            } else {
-                return false;
-            }
-        });
     }
 }

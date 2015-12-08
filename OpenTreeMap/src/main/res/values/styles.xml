@@ -151,6 +151,7 @@
         <item name="android:background">@color/main_background_color</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">10dp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 

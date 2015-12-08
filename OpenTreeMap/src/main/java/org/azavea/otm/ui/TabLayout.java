@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 public class TabLayout extends OTMActionBarActivity {
 
@@ -19,6 +21,7 @@ public class TabLayout extends OTMActionBarActivity {
     private static final String PROFILE = "ProfileDisplay";
     private static final String LISTS = "ListDisplay";
     private static final String ABOUT = "AboutDisplay";
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,12 @@ public class TabLayout extends OTMActionBarActivity {
         if (savedInstanceState != null) {
             actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -128,6 +137,7 @@ public class TabLayout extends OTMActionBarActivity {
                 // Detach the fragment, because another one is being attached
                 ft.hide(tabFragment);
             }
+            menu.clear();
         }
 
         @Override
