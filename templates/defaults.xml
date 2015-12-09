@@ -14,10 +14,8 @@
 
     <!-- build specific -->
     <string name="platform_ver_build">%(platform_ver_build)s</string>
+    <string name="environment">%(environment)s</string>
 
     <!-- Developer specific -->
     <string name="google_maps_api_key">%(google_maps_api_key)s</string>
-
-    <!-- TODO: Constants should probably be in the main repo -->
-    <string name="starting_zoom_level">12</string>
 </resources>

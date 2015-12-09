@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.http.Header;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.rest.RequestGenerator;
@@ -27,6 +26,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.rollbar.android.Rollbar;
 
 /**
  * A global singleton object to maintain application state
@@ -141,14 +141,10 @@ public class App extends Application {
         // the app can try to auto log in on any saved credentials
         getLoginManager();
         loadPendingStatus();
-    }
-
-    public static AsyncHttpClient getAsyncHttpClient() {
-        if (asyncHttpClient == null) {
-            asyncHttpClient = new AsyncHttpClient();
+        String rollbarKey = getString(R.string.rollbar_client_access_token);
+        if (!"".equals(rollbarKey)) {
+            Rollbar.init(this, rollbarKey, getString(R.string.environment));
         }
-
-        return asyncHttpClient;
     }
 
     public static NearbyList getNearbyList(Context context) {
