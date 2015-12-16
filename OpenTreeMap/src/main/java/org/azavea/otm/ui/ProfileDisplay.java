@@ -39,7 +39,7 @@ public class ProfileDisplay extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.profile_activity, container, false);
+        View view = inflater.inflate(R.layout.profile, container, false);
 
         int switcherVisibility = App.hasSkinCode() ? View.GONE : View.VISIBLE;
         view.findViewById(R.id.change_instance_anonymous).setVisibility(switcherVisibility);

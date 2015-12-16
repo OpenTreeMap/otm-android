@@ -1,9 +1,9 @@
 package org.azavea.otm.ui;
 
-import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +11,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class TabLayout extends OTMActionBarActivity {
 
@@ -20,6 +24,7 @@ public class TabLayout extends OTMActionBarActivity {
     private static final String PROFILE = "ProfileDisplay";
     private static final String LISTS = "ListDisplay";
     private static final String ABOUT = "AboutDisplay";
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class TabLayout extends OTMActionBarActivity {
                 actionBar.newTab()
                         .setText(R.string.tab_map)
                         .setTag(MAIN_MAP)
-                        .setTabListener(new TabListener<>(this, MAIN_MAP, MainMapActivity.class))
+                        .setTabListener(new TabListener<>(this, MAIN_MAP, MainMapFragment.class))
         );
 
         actionBar.addTab(
@@ -60,6 +65,12 @@ public class TabLayout extends OTMActionBarActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public void onBackPressed() {
         // A bit of an annoyance, the TabLayout Activity gets the backpress events
         // and must delegate them back down to the MainMapActivity Fragment
@@ -68,8 +79,12 @@ public class TabLayout extends OTMActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar.getSelectedTab().getTag() == MAIN_MAP) {
             final FragmentManager manager = TabLayout.this.getSupportFragmentManager();
-            MainMapActivity mainMap = (MainMapActivity) manager.findFragmentByTag(MAIN_MAP);
-            mainMap.onBackPressed();
+            MainMapFragment mainMap = (MainMapFragment) manager.findFragmentByTag(MAIN_MAP);
+            if (mainMap.shouldHandleBackPress()) {
+                mainMap.onBackPressed();
+            } else {
+                super.onBackPressed();
+            }
         } else {
             super.onBackPressed();
         }
@@ -125,6 +140,13 @@ public class TabLayout extends OTMActionBarActivity {
                 // Detach the fragment, because another one is being attached
                 ft.hide(tabFragment);
             }
+            // Hide the soft keyboard if it is up
+            View currentView = getCurrentFocus();
+            if (currentView != null) {
+                InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(currentView.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+            }
+            menu.clear();
         }
 
         @Override

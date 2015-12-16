@@ -2,27 +2,27 @@ package org.azavea.otm.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,7 +53,6 @@ import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
-import org.azavea.otm.data.Tree;
 import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
@@ -64,10 +63,9 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
-public class MainMapActivity extends Fragment {
+public class MainMapFragment extends Fragment {
     private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
@@ -80,6 +78,8 @@ public class MainMapActivity extends Fragment {
     private static final int CANCEL = 3;
     private static final int FINISH = 4;
 
+    private Menu menu;
+    private SearchView searchView;
     private TextView plotSpeciesView;
     private TextView plotAddressView;
     private ImageView plotImageView;
@@ -89,32 +89,12 @@ public class MainMapActivity extends Fragment {
     private MapView mapView;
     private GoogleMap mMap;
     private TextView filterDisplay;
+    private int treeAddMode = CANCEL;
 
     FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
-
-    private Location currentLocation;
-    private LocationManager locationManager = null;
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            currentLocation = location;
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    };
 
     // Map click listener for normal view mode
     private final OnMapClickListener showPopupMapClickListener = point -> {
@@ -180,15 +160,20 @@ public class MainMapActivity extends Fragment {
         hidePopup();
         removePlotMarker();
         setTreeAddMode(CANCEL);
+        searchView.setIconified(true);
+    }
+
+    public boolean shouldHandleBackPress() {
+        return treeAddMode != CANCEL || currentPlot != null || !searchView.isIconified();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {
-            disableLocationUpdating();
-        } else {
-            setupLocationUpdating(getActivity());
+        if (hidden && mMap != null) {
+            mMap.setMyLocationEnabled(false);
+        } else if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
         }
     }
 
@@ -199,9 +184,9 @@ public class MainMapActivity extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setupLocationUpdating(getActivity());
+        this.setHasOptionsMenu(true);
 
-        final View view = inflater.inflate(R.layout.activity_map_display_2, container, false);
+        final View view = inflater.inflate(R.layout.main_map, container, false);
 
         MapsInitializer.initialize(getActivity());
         MapHelper.checkGooglePlay(getActivity());
@@ -216,15 +201,11 @@ public class MainMapActivity extends Fragment {
             try {
                 if (result.getData().getBoolean("success")) {
                     START_POS = App.getCurrentInstance().getStartPos();
-                    bindActionToLocationSearchBar(view);
                     filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
                     setUpMapIfNeeded(view);
                     plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
                     setPopupViews(view);
                     clearTileCache();
-                    if (plotPopup.getVisibility() == View.VISIBLE) {
-                        view.findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                    }
                     setupViewHandlers(view);
                 }
                 return true;
@@ -245,19 +226,38 @@ public class MainMapActivity extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.main_menu, menu);
+        setupSearchView(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+        if (id == R.id.filterButton) {
+            Intent filter = new Intent(getActivity(), FilterDisplay.class);
+            startActivityForResult(filter, FILTER_INTENT);
+            return true;
+        } else if (id == R.id.addTreeButton) {
+            handleAddTree();
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        setupLocationUpdating(getActivity());
         MapHelper.checkGooglePlay(getActivity());
         mapView.onResume();
         if (App.getAppInstance().getCurrentInstance() != null) {
             setUpMapIfNeeded(getView());
             setTreeAddMode(CANCEL);
             clearTileCache();
-
-            if (plotPopup != null && plotPopup.getVisibility() == View.VISIBLE) {
-                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-            }
         }
     }
 
@@ -326,7 +326,6 @@ public class MainMapActivity extends Fragment {
         if (mapView != null) {
             mapView.onPause();
         }
-        disableLocationUpdating();
     }
 
     @Override
@@ -340,6 +339,18 @@ public class MainMapActivity extends Fragment {
     /*********************************
      * Private methods
      *********************************/
+
+    private void hideMenuItems() {
+        if (menu != null) {
+            menu.setGroupVisible(R.id.main_map_menu_group, false);
+        }
+    }
+
+    private void showMenuItems() {
+        if (menu != null) {
+            menu.setGroupVisible(R.id.main_map_menu_group, true);
+        }
+    }
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -412,27 +423,8 @@ public class MainMapActivity extends Fragment {
 
     private void setupViewHandlers(View view) {
         view.findViewById(R.id.plotImage).setOnClickListener(v -> {
-            if (MainMapActivity.this.currentPlot != null) {
+            if (MainMapFragment.this.currentPlot != null) {
                 currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity()));
-            }
-        });
-
-        view.findViewById(R.id.locationSearchButton).setOnClickListener(v -> doLocationSearch());
-
-        view.findViewById(R.id.filterButton).setOnClickListener(v -> {
-            Intent filter = new Intent(getActivity(), FilterDisplay.class);
-            startActivityForResult(filter, FILTER_INTENT);
-        });
-
-        view.findViewById(R.id.addTreeButton).setOnClickListener(v -> {
-            if (!App.getLoginManager().isLoggedIn()) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            } else if (!App.getCurrentInstance().canAddTree()) {
-                Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
-            } else {
-                getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-                setTreeAddMode(CANCEL);
-                setTreeAddMode(STEP1);
             }
         });
 
@@ -448,29 +440,20 @@ public class MainMapActivity extends Fragment {
             }
             startActivityForResult(viewPlot, INFO_INTENT);
         });
+    }
 
-        view.findViewById(R.id.mylocationbutton).setOnClickListener(v -> {
-            boolean success = false;
-            if (currentLocation != null) {
-                zoomMapToLocation(currentLocation);
-                success = true;
-            } else {
-                Location cachedLocation = getCachedLocation();
-                if (cachedLocation != null) {
-                    zoomMapToLocation(cachedLocation);
-                    success = true;
-                }
-            }
-
-            if (!success) {
-                Toast.makeText(getActivity(), "Could not determine current location.", Toast.LENGTH_LONG).show();
-            }
-        });
+    private void handleAddTree() {
+        if (!App.getLoginManager().isLoggedIn()) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else if (!App.getCurrentInstance().canAddTree()) {
+            Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            setTreeAddMode(CANCEL);
+            setTreeAddMode(STEP1);
+        }
     }
 
     private void showPopup(Plot plot) {
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
-
         //set default text
         plotSpeciesView.setText(getString(R.string.species_missing));
         plotAddressView.setText(getString(R.string.address_missing));
@@ -498,7 +481,6 @@ public class MainMapActivity extends Fragment {
         }
         currentPlot = plot;
         plotPopup.setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.GONE);
     }
 
     private LatLng zoomToPlot(Plot plot) throws JSONException {
@@ -512,7 +494,6 @@ public class MainMapActivity extends Fragment {
     }
 
     private void hidePopup() {
-        getActivity().findViewById(R.id.filter_add_buttons).setVisibility(View.VISIBLE);
         RelativeLayout plotPopup = (RelativeLayout) getActivity().findViewById(R.id.plotPopup);
         plotPopup.setVisibility(View.INVISIBLE);
         currentPlot = null;
@@ -521,6 +502,7 @@ public class MainMapActivity extends Fragment {
     private void removePlotMarker() {
         if (plotMarker != null) {
             plotMarker.remove();
+            plotMarker = null;
         }
     }
 
@@ -555,37 +537,8 @@ public class MainMapActivity extends Fragment {
         }
     }
 
-    private void zoomMapToLocation(Location l) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                l.getLatitude(),
-                l.getLongitude()
-        ), STREET_ZOOM_LEVEL));
-
-    }
-
-    private Location getCachedLocation() {
-        Context context = getActivity();
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_FINE);
-        LocationManager locationManager =
-                (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            String provider = locationManager.getBestProvider(crit, true);
-
-            if (provider != null) {
-                Location loc = locationManager.getLastKnownLocation(provider);
-                if (loc != null) {
-                    return loc;
-                }
-
-            }
-        }
-        return null;
-
-    }
-
     /* tree add modes:
-     *     CANCEL : not adding a tree
+     *  CANCEL : not adding a tree
      *  STEP1  : "Tap to add a tree"
      *  STEP2  : "Long press to move the tree into position, then click next"
      *  FINISH : Create tree and redirect to tree detail page.
@@ -594,23 +547,29 @@ public class MainMapActivity extends Fragment {
         if (mMap == null) {
             return;
         }
+        this.treeAddMode = step;
 
         View step1 = getActivity().findViewById(R.id.addTreeStep1);
         View step2 = getActivity().findViewById(R.id.addTreeStep2);
-        View filterAddButtons = getActivity().findViewById(R.id.filter_add_buttons);
         switch (step) {
             case CANCEL:
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
                 mMap.setOnMapClickListener(showPopupMapClickListener);
-                filterAddButtons.setVisibility(View.VISIBLE);
+                showMenuItems();
                 break;
             case STEP1:
                 hidePopup();
                 removePlotMarker();
-                filterAddButtons.setVisibility(View.GONE);
+                hideMenuItems();
                 step2.setVisibility(View.GONE);
-                step1.setVisibility(View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    step1.setTranslationY(step1.getHeight());
+                    step1.setVisibility(View.VISIBLE);
+                    step1.animate().translationY(0);
+                } else {
+                    step1.setVisibility(View.VISIBLE);
+                }
 
                 if (mMap != null) {
                     mMap.setOnMapClickListener(addMarkerMapClickListener);
@@ -618,7 +577,7 @@ public class MainMapActivity extends Fragment {
                 break;
             case STEP2:
                 hidePopup();
-                filterAddButtons.setVisibility(View.GONE);
+                hideMenuItems();
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.VISIBLE);
                 if (mMap != null) {
@@ -640,6 +599,8 @@ public class MainMapActivity extends Fragment {
                     setTreeAddMode(CANCEL);
                     Toast.makeText(getActivity(), "Error creating new tree", Toast.LENGTH_LONG).show();
                 }
+                this.treeAddMode = CANCEL;
+                showMenuItems();
         }
     }
 
@@ -660,11 +621,26 @@ public class MainMapActivity extends Fragment {
         return newPlot;
     }
 
+    private void setupSearchView(Menu menu) {
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search_button));
+        searchView.setQueryHint(getString(R.string.search_field_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                doLocationSearch(s);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+    }
+
     private void moveMapAndFinishGeocode(LatLng pos) {
-        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
-        InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        im.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
     private void alertGeocodeError() {
@@ -688,9 +664,8 @@ public class MainMapActivity extends Fragment {
     };
 
     /* Read the location search field, geocode it, and zoom to the location. */
-    public void doLocationSearch() {
-        EditText et = (EditText) getActivity().findViewById(R.id.locationSearchField);
-        String address = et.getText().toString();
+    public void doLocationSearch(CharSequence query) {
+        String address = query.toString();
 
         if (address.equals("")) {
             Toast.makeText(getActivity(), "Enter an address in the search field to search.", Toast.LENGTH_SHORT).show();
@@ -708,23 +683,6 @@ public class MainMapActivity extends Fragment {
         }
     }
 
-    private void setupLocationUpdating(Context applicationContext) {
-        if (locationManager == null) {
-            locationManager = (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2 * 60 * 1000, 0, locationListener);
-        }
-    }
-
-    private void disableLocationUpdating() {
-        if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
-        }
-    }
-
     private void clearTileCache() {
         if (canopyTileOverlay != null) {
             canopyTileOverlay.clearTileCache();
@@ -733,17 +691,5 @@ public class MainMapActivity extends Fragment {
         if (filterTileOverlay != null) {
             filterTileOverlay.clearTileCache();
         }
-    }
-
-    private void bindActionToLocationSearchBar(final View view) {
-        EditText et = (EditText) view.findViewById(R.id.locationSearchField);
-        et.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                doLocationSearch();
-                return true;
-            } else {
-                return false;
-            }
-        });
     }
 }

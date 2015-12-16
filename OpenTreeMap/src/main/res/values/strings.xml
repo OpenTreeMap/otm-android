@@ -16,7 +16,6 @@
     <string name="title_activity_map_display">MapDisplay</string>
     <string name="title_activity_login">Login</string>
     <string name="show_map">Map</string>
-    <string name="show_location">My Location</string>
     <string name="hint_email">Username</string>
     <string name="hint_password">Password</string>
     <string name="login">Login</string>
@@ -101,8 +100,8 @@
     <string name="iso_locale_language">English</string>
     <string name="iso_locale_country">US</string>
     <string name="default_measure_units">in</string>
+    <string name="search_field_button">Search Location</string>
     <string name="search_field_hint">search location</string>
-    <string name="search_field_button">Address</string>
     <string name="eco_fieldgroup_header">Ecosystem Benefits</string>
     <string name="eco_currencey_saved_text">saved</string>
     <string name="diameter_missing">Diameter missing</string>
