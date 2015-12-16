@@ -3,6 +3,7 @@ package org.azavea.otm.ui;
 import org.azavea.otm.R;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,8 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class TabLayout extends OTMActionBarActivity {
 
@@ -136,6 +139,12 @@ public class TabLayout extends OTMActionBarActivity {
             if (tabFragment != null) {
                 // Detach the fragment, because another one is being attached
                 ft.hide(tabFragment);
+            }
+            // Hide the soft keyboard if it is up
+            View currentView = getCurrentFocus();
+            if (currentView != null) {
+                InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(currentView.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
             menu.clear();
         }
