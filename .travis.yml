@@ -9,7 +9,7 @@ env:
 
 android:
   components:
-    - build-tools-21.1.1
+    - build-tools-21.1.2
     - platform-tools
     - android-21
     - sys-img-armeabi-v7a-android-21
@@ -22,6 +22,7 @@ android:
     - '.*intel.+'
 
 before_install:
+  - cp ci/AndroidManifest.xml OpenTreeMapSkinned/AndroidManifest.xml
   - export "JAVA8_HOME=/usr/lib/jvm/java-8-oracle"
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI --skin WVGA800
   - sleep 5
