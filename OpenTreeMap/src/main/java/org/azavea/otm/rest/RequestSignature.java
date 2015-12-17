@@ -1,5 +1,14 @@
 package org.azavea.otm.rest;
 
+import android.text.TextUtils;
+import android.util.Base64;
+
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+import org.azavea.helpers.Logger;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,16 +18,6 @@ import java.util.Arrays;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
-import org.azavea.otm.App;
-
-import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
-
-import com.loopj.android.http.RequestParams;
 
 public class RequestSignature {
     private static final String HMAC_ALGORITHM = "HmacSHA256";
@@ -128,7 +127,7 @@ public class RequestSignature {
             result = Base64.encodeToString(rawHmac, Base64.NO_WRAP);
 
         } catch (Exception ex) {
-            Log.e(App.LOG_TAG, "Failed to generate HMAC for API:" + ex.getMessage());
+            Logger.error("Failed to generate HMAC for API", ex);
             throw new SignatureException("Could not sign API request");
         }
         return result;

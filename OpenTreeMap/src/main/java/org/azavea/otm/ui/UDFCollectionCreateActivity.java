@@ -1,17 +1,12 @@
 package org.azavea.otm.ui;
 
-import android.util.Log;
-
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.data.UDFCollectionDefinition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Lists.newArrayList;
 
 public class UDFCollectionCreateActivity extends UDFCollectionActivity {
 
@@ -29,7 +24,7 @@ public class UDFCollectionCreateActivity extends UDFCollectionActivity {
                 try {
                     value.put(fieldType.optString("name"), fieldType.opt("default"));
                 } catch (JSONException e) {
-                    Log.e(App.LOG_TAG, "Unable to set default value on collection UDF", e);
+                    Logger.error("Unable to set default value on collection UDF", e);
                 }
             }
         }

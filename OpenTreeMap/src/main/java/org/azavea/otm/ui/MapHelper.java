@@ -1,14 +1,8 @@
 package org.azavea.otm.ui;
 
-import org.apache.http.Header;
-import org.azavea.otm.App;
-import org.azavea.otm.data.Plot;
-
-
 import android.app.Dialog;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,6 +12,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.data.Plot;
 
 public class MapHelper {
 
@@ -58,7 +56,7 @@ public class MapHelper {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
-                Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+                Logger.error("Could not retreive tree image", e);
                 Toast.makeText(activity.getApplicationContext(), "Could not retrieve full image", Toast.LENGTH_SHORT).show();
             }
         };

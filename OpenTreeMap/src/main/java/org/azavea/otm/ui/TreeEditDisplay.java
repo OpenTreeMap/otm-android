@@ -1,19 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.io.File;
-
-import org.apache.http.Header;
-import org.azavea.otm.App;
-import org.azavea.otm.fields.FieldGroup;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.fields.SpeciesField;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
-import org.azavea.otm.rest.handlers.RestHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -35,6 +21,20 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.fields.FieldGroup;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
+import org.azavea.otm.rest.handlers.RestHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+
 public class TreeEditDisplay extends TreeDisplay {
     // Intent Request codes
     public static final int FIELD_ACTIVITY_REQUEST_CODE = 0;
@@ -52,7 +52,7 @@ public class TreeEditDisplay extends TreeDisplay {
         public void failure(Throwable e, String message) {
             safeDismiss(deleteDialog);
             Toast.makeText(App.getAppInstance(), "Unable to delete tree", Toast.LENGTH_SHORT).show();
-            Log.e(App.LOG_TAG, "Unable to delete tree.");
+            Logger.error("Unable to delete tree.", e);
         }
 
         @Override
@@ -82,6 +82,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
                 }
             } catch (JSONException e) {
+                Logger.error("Unable to delete plot", e);
                 safeDismiss(deleteDialog);
                 Toast.makeText(App.getAppInstance(), "Unable to delete plot", Toast.LENGTH_SHORT).show();
             }
@@ -193,7 +194,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 try {
                     rc.deleteCurrentTreeOnPlot(App.getAppInstance(), plot.getId(), deleteTreeHandler);
                 } catch (JSONException e) {
-                    Log.e(App.LOG_TAG, "Error deleting tree", e);
+                    Logger.error("Error deleting tree", e);
                 }
             }
             return true;
@@ -209,7 +210,7 @@ public class TreeEditDisplay extends TreeDisplay {
                 try {
                     rc.deletePlot(App.getAppInstance(), plot.getId(), deletePlotHandler);
                 } catch (JSONException e) {
-                    Log.e(App.LOG_TAG, "Error deleting tree plot", e);
+                    Logger.error("Error deleting tree plot", e);
                 }
             }
             return true;
@@ -259,7 +260,7 @@ public class TreeEditDisplay extends TreeDisplay {
 
                 @Override
                 public void failure(Throwable e, String responseBody) {
-                    Log.e("REST", responseBody, e);
+                    Logger.warning("Failure saving tree", e);
                     handleSaveFailure(e);
                 }
             };
@@ -286,14 +287,14 @@ public class TreeEditDisplay extends TreeDisplay {
 
     private void handleSaveFailure (Throwable e) {
         String msg = getString(R.string.save_tree_failure);
-        Log.e(App.LOG_TAG, msg, e);
+        Logger.error(msg, e);
         safeDismiss(saveDialog);
         Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_SHORT).show();
     }
 
     private void handlePhotoSaveFailure (Throwable e) {
         String msg = getString(R.string.save_tree_photo_failure);
-        Log.e(App.LOG_TAG, msg, e);
+        Logger.error(msg, e);
         safeDismiss(saveDialog);
         Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -323,7 +324,6 @@ public class TreeEditDisplay extends TreeDisplay {
 
                         } else {
                             handlePhotoSaveFailure(null);
-                            Log.d("AddTreePhoto", "photo response no success");
                         }
                     } catch (JSONException e) {
                         handlePhotoSaveFailure(e);
@@ -393,8 +393,7 @@ public class TreeEditDisplay extends TreeDisplay {
                     try {
                         plot.setData(new JSONObject(data.getStringExtra("plot")));
                     } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Logger.error(e);
                     }
                     plotLocation = getPlotLocation(plot);
                     showPositionOnMap();

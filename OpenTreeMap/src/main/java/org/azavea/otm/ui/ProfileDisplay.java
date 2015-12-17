@@ -1,17 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.LinkedHashMap;
-
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.EditEntry;
-import org.azavea.otm.data.EditEntryContainer;
-import org.azavea.otm.data.User;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.ContainerRestHandler;
-import org.json.JSONException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +10,19 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.EditEntry;
+import org.azavea.otm.data.EditEntryContainer;
+import org.azavea.otm.data.User;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.ContainerRestHandler;
+import org.json.JSONException;
+
+import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 
 public class ProfileDisplay extends Fragment {
 
@@ -153,7 +154,7 @@ public class ProfileDisplay extends Fragment {
                                 addEditEntriesToView(layout, container);
 
                             } catch (JSONException e) {
-                                Log.e(App.LOG_TAG, "Could not parse user edits response", e);
+                                Logger.error("Could not parse user edits response", e);
                                 Toast.makeText(App.getAppInstance(), "Could not retrieve user edits",
                                         Toast.LENGTH_SHORT).show();
                             } finally {
@@ -210,7 +211,7 @@ public class ProfileDisplay extends Fragment {
                                 } catch (Exception e) {
                                     String msg = "Unable to display tree/plot info";
                                     Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
-                                    Log.e(App.LOG_TAG, msg, e);
+                                    Logger.error(msg, e);
                                 }
                             });
                         }
@@ -226,7 +227,7 @@ public class ProfileDisplay extends Fragment {
             );
 
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Failed to fetch user edits", e);
+            Logger.error("Failed to fetch user edits", e);
             Toast.makeText(getActivity(), "Could not retrieve user edits", Toast.LENGTH_SHORT).show();
         }
     }

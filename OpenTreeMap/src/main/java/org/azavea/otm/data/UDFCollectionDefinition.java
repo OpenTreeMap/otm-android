@@ -2,11 +2,10 @@ package org.azavea.otm.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.common.base.Predicate;
 
-import org.azavea.helpers.JSONHelper;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.json.JSONArray;
@@ -40,7 +39,7 @@ public class UDFCollectionDefinition extends Model implements Parcelable {
         try {
             this.data = new JSONObject(in.readString());
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Received a Parcel with unparseable json");
+            Logger.error("Received a Parcel with unparseable json", e);
         }
     }
 

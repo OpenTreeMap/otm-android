@@ -1,5 +1,6 @@
 package org.azavea.otm.data;
 
+import org.azavea.helpers.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,7 +109,7 @@ public class User extends Model {
             ut = getUserType();
             return ut.getLevel() >= UserType.ADMINISTRATOR_LEVEL;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Logger.warning("Error when getting user type", e);
             return false;
         }
 

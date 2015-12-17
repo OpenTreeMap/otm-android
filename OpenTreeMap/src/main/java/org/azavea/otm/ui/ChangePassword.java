@@ -1,8 +1,17 @@
 package org.azavea.otm.ui;
 
-import java.io.UnsupportedEncodingException;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.text.Editable;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
@@ -11,16 +20,7 @@ import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
+import java.io.UnsupportedEncodingException;
 
 public class ChangePassword extends UpEnabledActionBarActivity {
     private String newPassword;
@@ -38,14 +38,14 @@ public class ChangePassword extends UpEnabledActionBarActivity {
                     alert(R.string.password_change_error);
                 }
             } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Error changing password", e);
+                Logger.warning("Error changing password", e);
                 alert(R.string.password_change_error);
             }
         }
 
         @Override
         public void failure(Throwable e, String responseBody) {
-            Log.e(App.LOG_TAG, "Error changing password", e);
+            Logger.warning("Error changing password", e);
             alert(R.string.password_change_error);
         }
 
@@ -110,8 +110,7 @@ public class ChangePassword extends UpEnabledActionBarActivity {
         try {
             authorizedToChangePassword = authorizedToChangePassword();
         } catch (JSONException e) {
-            Log.e("PasswordChange", "exception checking current password");
-            Log.e("PasswordChange", e.toString());
+            Logger.error(e);
             alert(R.string.password_change_error);
             return;
         }
@@ -129,9 +128,8 @@ public class ChangePassword extends UpEnabledActionBarActivity {
         } else {
             try {
                 changePassword();
-            } catch (Exception e) {
-                Log.e("ChangePassword", "exception generating request");
-                Log.e("ChangePassword", e.toString());
+            } catch (JSONException | UnsupportedEncodingException e) {
+                Logger.error(e);
                 alert(R.string.password_change_error);
             }
         }

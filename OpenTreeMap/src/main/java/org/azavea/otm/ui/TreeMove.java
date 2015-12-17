@@ -1,15 +1,16 @@
 package org.azavea.otm.ui;
 
-import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
-import org.json.JSONException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
+import org.json.JSONException;
 
 public class TreeMove extends TreeDisplay {
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class TreeMove extends TreeDisplay {
             g.setX(position.longitude);
             plot.setGeometry(g);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
         Intent editPlot = new Intent(this, TreeEditDisplay.class);
         editPlot.putExtra("plot", plot.getData().toString());

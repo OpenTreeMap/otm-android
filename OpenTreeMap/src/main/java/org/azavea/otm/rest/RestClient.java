@@ -1,5 +1,26 @@
 package org.azavea.otm.rest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.text.TextUtils;
+import android.util.Base64;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.data.Model;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -10,27 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
-
-import org.apache.http.Header;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.azavea.otm.App;
-import org.azavea.otm.data.Model;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 // This class is designed to take care of the base-url
 // and otm api-key for REST requests
@@ -68,7 +68,7 @@ public class RestClient {
             // Authority is servername[:port] if port is not 80
             host = new URI(apiUrl).getAuthority();
         } catch (URISyntaxException e) {
-            Log.e(App.LOG_TAG, "Could not determine valid HOST from base URL");
+            Logger.error("Could not determine valid HOST from base URL", e);
         }
     }
 
@@ -93,8 +93,7 @@ public class RestClient {
         try {
             headers.add(reqSigner.getSignatureHeader("GET", reqUrl, reqParams));
         } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
-            String msg = "Failure making GET request";
-            Log.e(App.LOG_TAG, msg, e);
+            Logger.error("Failure making GET request", e);
             return;
         }
 
@@ -144,8 +143,7 @@ public class RestClient {
             headers.add(reqSigner.getSignatureHeader("PUT", reqUrlWithParams, body));
             bodyEntity = new StringEntity(body, "UTF-8");
         } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
-            String msg = "Failure making PUT request";
-            Log.e(App.LOG_TAG, msg, e);
+            Logger.error("Failure making PUT request", e);
             return;
         }
 
@@ -201,7 +199,7 @@ public class RestClient {
             headers.add(reqSigner.getSignatureHeader(type, reqUrlWithParams, body));
             bodyEntity = new StringEntity(body, "UTF-8");
         } catch (UnsupportedEncodingException | URISyntaxException | SignatureException e) {
-            Log.e(App.LOG_TAG, "Error creating signature on POST");
+            Logger.error("Error creating signature on POST");
             return;
         }
 
@@ -269,7 +267,7 @@ public class RestClient {
         try {
             sig = reqSigner.getSignatureHeader("POST", completeUrl, bitmapdata);
         } catch (URISyntaxException | SignatureException e) {
-            Log.e(App.LOG_TAG, "Error creating signature on POST");
+            Logger.error("Error creating signature on POST");
             return;
         }
         authenticatedClient.addHeader(sig.getName(), sig.getValue());

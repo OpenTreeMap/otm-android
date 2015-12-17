@@ -1,14 +1,5 @@
 package org.azavea.otm;
 
-import java.net.ConnectException;
-
-import org.apache.http.client.HttpResponseException;
-import org.azavea.otm.data.User;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.RestHandler;
-import org.azavea.otm.ui.InstanceSwitcherActivity;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +7,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.util.Log;
+
+import org.apache.http.client.HttpResponseException;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.data.User;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.RestHandler;
+import org.azavea.otm.ui.InstanceSwitcherActivity;
+import org.json.JSONException;
 
 public class LoginManager {
     private static final String MESSAGE_KEY = "message";
@@ -92,8 +90,7 @@ public class LoginManager {
                 try {
                     loggedInUser.setPassword(password);
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Logger.error("Error setting user password", e);
                 }
 
                 data.putBoolean(SUCCESS_KEY, true);

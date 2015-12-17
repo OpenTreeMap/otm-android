@@ -1,9 +1,21 @@
 package org.azavea.otm.ui;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
@@ -16,21 +28,9 @@ import org.azavea.otm.filters.SpeciesFilter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 //import org.azavea.otm.filters.ChoiceFilter;
 
 public class FilterDisplay extends UpEnabledActionBarActivity {
@@ -113,8 +113,8 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
             } else if (filter instanceof ChoiceFilter) {
                 view = makeChoiceFilter((ChoiceFilter) filter, layout);
             } else {
-                Log.e(App.LOG_TAG,
-                        "Invalid filter specified, unable to create UI");
+                Logger.error("Invalid filter specified, unable to create UI");
+                return;
             }
             view.setTag(R.id.filter_key, filter.key); // this is a bit arbitrary...
             parent.addView(view);
@@ -244,7 +244,7 @@ public class FilterDisplay extends UpEnabledActionBarActivity {
 
                         } catch (JSONException e) {
                             String msg = "Unable to retrieve selected species";
-                            Log.e(App.LOG_TAG, msg, e);
+                            Logger.error(msg, e);
                             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                         }
                     }

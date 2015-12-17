@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONObject;
@@ -104,6 +105,7 @@ public class TextField extends Field {
             Double d = Double.parseDouble(value.toString());
             return String.format("%." + digits + "f", d);
         } catch (ClassCastException e) {
+            Logger.warning("Problem formatting number", e);
             return value.toString();
         }
     }

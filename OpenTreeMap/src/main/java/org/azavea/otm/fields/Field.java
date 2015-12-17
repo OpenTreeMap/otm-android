@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.PendingEdit;
@@ -177,7 +177,7 @@ public abstract class Field {
     }
 
     public void receiveActivityResult(int resultCode, Intent data) {
-        Log.w(App.LOG_TAG, "Received intent data for a field which doesn't start an activity.  Ignoring the intent result.");
+        Logger.warning("Received intent data for a field which doesn't start an activity.  Ignoring the intent result.");
     }
 
     protected String formatValueIfPresent(Object value) {

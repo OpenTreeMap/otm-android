@@ -2,7 +2,6 @@ package org.azavea.otm.fields;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
@@ -83,7 +83,7 @@ public class SpeciesField extends ButtonField {
 
             } catch (JSONException e) {
                 String msg = "Unable to retrieve selected species";
-                Log.e(App.LOG_TAG, msg, e);
+                Logger.error(msg, e);
                 Toast.makeText(App.getAppInstance(), msg, Toast.LENGTH_LONG).show();
             }
         }

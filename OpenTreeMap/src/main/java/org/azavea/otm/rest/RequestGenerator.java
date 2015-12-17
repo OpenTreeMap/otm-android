@@ -1,12 +1,18 @@
 package org.azavea.otm.rest;
 
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
-import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.LoginManager;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Password;
 import org.azavea.otm.data.Plot;
@@ -16,15 +22,9 @@ import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.util.Log;
-
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestGenerator {
     private RestClient client;
@@ -79,6 +79,7 @@ public class RequestGenerator {
                 client.get(url, rp, handler);
             }
         } catch (JSONException e) {
+            Logger.error(e);
             client.get(url, rp, handler);
         }
     }
@@ -230,7 +231,7 @@ public class RequestGenerator {
     }
 
     private void handleBadResponse(JSONException e) {
-        Log.e(App.LOG_TAG, "Unable to parse JSON response", e);
+        Logger.error(e);
     }
 
     private void redirectToLoginActivity() {

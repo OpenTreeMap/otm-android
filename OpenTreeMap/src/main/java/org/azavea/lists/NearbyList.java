@@ -1,9 +1,14 @@
 package org.azavea.lists;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Map;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.widget.Toast;
 
+import org.azavea.helpers.Logger;
 import org.azavea.lists.data.DisplayablePlot;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -14,14 +19,9 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONException;
 
-import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Map;
 
 public class NearbyList implements InfoList {
     private static final long MIN_TIME_DELAY = 5000;
@@ -127,7 +127,7 @@ public class NearbyList implements InfoList {
                 }
             }
         } catch (JSONException e) {
-            Log.d(App.LOG_TAG, "JSONException e: " + e.getMessage());
+            Logger.error("JSONException from nearby plot list", e);
         }
 
         return listValues.toArray(new DisplayablePlot[0]);
@@ -193,6 +193,7 @@ public class NearbyList implements InfoList {
         try {
             supplementaryInfo = Integer.toString(p.getId());
         } catch (Exception e) {
+            Logger.warning("Tree missing id field", e);
             supplementaryInfo = "Missing ID";
         }
         return supplementaryInfo;
@@ -210,7 +211,7 @@ public class NearbyList implements InfoList {
                 diameter = Double.toString(dbh) + " " + dbhField.unitText;
             }
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Unable to get list diameter", e);
+            Logger.error("Unable to get tree diameter", e);
         }
         return diameter;
     }
@@ -240,8 +241,8 @@ public class NearbyList implements InfoList {
         try {
             Map<Integer, Plot> plotMap = nearbyPlots.getAll();
             plots = plotMap.values().toArray();
-            Log.d(App.LOG_TAG, "Number of list-values: " + plots.length);
         } catch (JSONException e) {
+            Logger.error("Error parsing nearby plot JSON", e);
             return null;
         }
 

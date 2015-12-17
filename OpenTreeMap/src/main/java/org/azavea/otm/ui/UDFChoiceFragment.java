@@ -61,11 +61,7 @@ public abstract class UDFChoiceFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            changeListener = (UDFCollectionActivity) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must be UDFCollectionCreateActivity");
-        }
+        changeListener = (UDFCollectionActivity) activity;
     }
 
     @Override

@@ -1,11 +1,10 @@
 package org.azavea.otm.filters;
 
-import org.azavea.otm.App;
+import android.view.View;
+
+import org.azavea.helpers.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
-import android.view.View;
 
 public abstract class BaseFilter {
     /**
@@ -55,7 +54,7 @@ public abstract class BaseFilter {
             predicatePair.put(predicate, value);
             filter.put(identifier, predicatePair);
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error creating JSONObject for filter", e);
+            Logger.error("Error building search filter", e);
         }
 
         return filter;

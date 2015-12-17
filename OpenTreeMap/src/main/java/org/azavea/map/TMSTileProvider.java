@@ -1,5 +1,20 @@
 package org.azavea.map;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.net.Uri;
+
+import com.google.android.gms.maps.model.Tile;
+import com.google.android.gms.maps.model.TileProvider;
+
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.data.InstanceInfo;
+import org.json.JSONArray;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,21 +23,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.azavea.otm.App;
-import org.azavea.otm.data.InstanceInfo;
-import org.json.JSONArray;
-
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.net.Uri;
-import android.util.Log;
-
-import com.google.android.gms.maps.model.Tile;
-import com.google.android.gms.maps.model.TileProvider;
 
 public class TMSTileProvider implements TileProvider {
     private final static int TILE_HEIGHT = 256;
@@ -79,14 +79,13 @@ public class TMSTileProvider implements TileProvider {
             imageStream = this.getTileUrl(x, y, zoom).openStream();
             inputImage = BitmapFactory.decodeStream(imageStream);
         } catch (IOException e) {
-            Log.e(App.LOG_TAG, "Could not convert tiler results to Bitmap", e);
+            Logger.error("Could not convert tiler results to Bitmap", e);
             return null;
         } finally {
             if (imageStream != null) {
                 try {
                     imageStream.close();
-                } catch (IOException e) {
-                }
+                } catch (IOException ignored) {}
             }
         }
         if (inputImage == null) {

@@ -1,13 +1,11 @@
 package org.azavea.otm.data;
 
-import org.azavea.otm.App;
+import com.google.android.gms.maps.model.LatLng;
+
+import org.azavea.helpers.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -55,7 +53,7 @@ public class InstanceInfo extends Model {
             super.setData(data);
 
         } catch (JSONException ex) {
-            Log.e(App.LOG_TAG, "Invalid Instance Info Received", ex);
+            Logger.error("Invalid Instance Info Received", ex);
         }
     }
 
@@ -156,7 +154,7 @@ public class InstanceInfo extends Model {
             return new InstanceExtent(json.getDouble("min_lng"), json.getDouble("min_lat"), json.getDouble("max_lng"),
                     json.getDouble("max_lat"));
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Invalid Instance extent Received", e);
+            Logger.error("Invalid Instance extent Received", e);
         }
         return null;
     }
@@ -166,8 +164,7 @@ public class InstanceInfo extends Model {
             JSONObject center = (JSONObject) getField("center");
             return center.getDouble(coordinatePart);
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Can't get center-part for instance:"
-                    + coordinatePart, e);
+            Logger.error("Can't get center-part for instance:" + coordinatePart, e);
             return 0;
         }
     }
@@ -190,6 +187,7 @@ public class InstanceInfo extends Model {
                     instanceInfo.setData(instances.getJSONObject(i));
                     instanceInfos.add(instanceInfo);
                 } catch (JSONException e) {
+                    Logger.error("Could not load instance info", e);
                 }
             }
         }

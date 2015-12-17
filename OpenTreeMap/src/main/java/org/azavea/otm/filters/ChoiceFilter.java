@@ -1,16 +1,15 @@
 package org.azavea.otm.filters;
 
-import java.util.ArrayList;
+import android.text.TextUtils;
+import android.view.View;
 
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.Choice;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
+import java.util.ArrayList;
 
 public class ChoiceFilter extends BaseFilter {
     public Choice[] choices;
@@ -36,8 +35,7 @@ public class ChoiceFilter extends BaseFilter {
 
                 choices.add(new Choice(display, value));
             } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Improperly configured choices for filter: "
-                        + this.identifier, e);
+                Logger.error("Improperly configured choices for filter: " + this.identifier, e);
             }
         }
         // The Android UI doesn't need to display and empty value

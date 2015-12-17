@@ -72,11 +72,7 @@ public class UDFDateFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            changeListener = (UDFCollectionCreateActivity) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must be UDFCollectionCreateActivity");
-        }
+        changeListener = (UDFCollectionCreateActivity) activity;
     }
 
     @Override

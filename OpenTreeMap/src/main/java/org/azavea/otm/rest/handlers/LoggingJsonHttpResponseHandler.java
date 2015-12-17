@@ -1,19 +1,16 @@
 package org.azavea.otm.rest.handlers;
 
-import android.util.Log;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.azavea.otm.App;
-import org.azavea.otm.data.Model;
+import org.azavea.helpers.Logger;
 import org.json.JSONObject;
 
 public abstract class LoggingJsonHttpResponseHandler extends JsonHttpResponseHandler {
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String message, Throwable e) {
-        Log.w(App.LOG_TAG, String.format("Error in HTTP request. Status [%d] Message [%s]", statusCode, message), e);
+        Logger.warning(String.format("Error in HTTP request. Status [%d] Message [%s]", statusCode, message), e);
         failure(e, message);
     }
 
