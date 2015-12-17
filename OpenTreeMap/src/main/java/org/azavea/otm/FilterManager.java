@@ -1,13 +1,14 @@
 package org.azavea.otm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import android.os.Bundle;
+import android.os.Handler.Callback;
+import android.os.Message;
+import android.view.View;
 
+import com.atlassian.fugue.Either;
+
+import org.azavea.helpers.Logger;
 import org.azavea.otm.data.InstanceInfo;
-import org.azavea.otm.data.Model;
 import org.azavea.otm.data.Species;
 import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BaseFilter;
@@ -23,13 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Bundle;
-import android.os.Handler.Callback;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-
-import com.atlassian.fugue.Either;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FilterManager {
     private RequestGenerator request = new RequestGenerator();
@@ -46,7 +45,6 @@ public class FilterManager {
         this.instanceInfo = instanceInfo;
 
         final JSONObject filterDefinitions = instanceInfo.getSearchDefinitions();
-        Log.d(App.LOG_TAG, "Creating new instance of Filter Manager");
         loadSpeciesList();
         loadFilterDefinitions(filterDefinitions);
     }
@@ -75,13 +73,13 @@ public class FilterManager {
                         handleSpeciesCallback(callback, true);
                     }
                 } catch (JSONException e) {
-                    Log.e(App.LOG_TAG, "Error in Species retrieval", e);
+                    Logger.error("Error in Species retrieval", e);
                 }
             }
 
             @Override
             public void failure(Throwable e, String message) {
-                Log.e(App.LOG_TAG, message, e);
+                Logger.error(message, e);
                 if (callback != null) {
                     handleSpeciesCallback(callback, false);
                 }
@@ -148,8 +146,7 @@ public class FilterManager {
                 allFilters.put(key, filter);
 
             } catch (Exception e) {
-                Log.e(App.LOG_TAG, "Could not create a filter from def # " + i,
-                        e);
+                Logger.error("Could not create a filter from def # " + i, e);
             }
         }
     }

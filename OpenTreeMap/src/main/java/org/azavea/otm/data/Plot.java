@@ -1,23 +1,24 @@
 package org.azavea.otm.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.azavea.helpers.JSONHelper;
-import org.azavea.otm.App;
-import org.azavea.otm.rest.RequestGenerator;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
 import com.google.common.base.Joiner;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+
+import org.azavea.helpers.JSONHelper;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.rest.RequestGenerator;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
@@ -61,7 +62,7 @@ public class Plot extends Model {
             this.setData(fullPlot);
 
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error creating empty plot", e);
+            Logger.error("Error creating empty plot", e);
         }
     }
 
@@ -96,6 +97,7 @@ public class Plot extends Model {
                 }
             }
         } catch (JSONException e) {
+            Logger.error("Error loading plot information", e);
             this.plotDetails = null;
         }
     }
@@ -130,7 +132,7 @@ public class Plot extends Model {
         try {
             addresses = geocoder.getFromLocation(geom.getY(), geom.getX(), 1);
         } catch (Exception e) {
-            Log.w(App.LOG_TAG, "Error Geocoding address", e);
+            Logger.warning("Error Geocoding address", e);
             setAddressFields(null, null, null);
             return;
         }
@@ -150,7 +152,7 @@ public class Plot extends Model {
             plotDetails.put(ADDRESS_STREET, streetAddress);
             plotDetails.put(ADDRESS_ZIP, zip);
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error saving geocoded address", e);
+            Logger.error("Error saving geocoded address", e);
         }
     }
 

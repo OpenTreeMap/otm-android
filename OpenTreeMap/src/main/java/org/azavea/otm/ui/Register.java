@@ -1,15 +1,5 @@
 package org.azavea.otm.ui;
 
-import org.apache.http.Header;
-import org.azavea.otm.App;
-import org.azavea.otm.LoginManager;
-import org.azavea.otm.R;
-import org.azavea.otm.data.User;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,6 +16,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.LoginManager;
+import org.azavea.otm.R;
+import org.azavea.otm.data.User;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Register extends FragmentActivity {
     private String username;
@@ -73,8 +74,7 @@ public class Register extends FragmentActivity {
             try {
                 model = new User(username, firstName, lastName, email, password);
             } catch (JSONException e) {
-                Log.e("Register", "error in User JSON.");
-                e.printStackTrace();
+                Logger.error("error in User JSON.", e);
                 alert(R.string.problem_creating_account);
                 dialog.dismiss();
             }
@@ -82,8 +82,7 @@ public class Register extends FragmentActivity {
             try {
                 rc.register(App.getAppInstance(), model, registrationResponseHandler);
             } catch (Exception e) {
-                Log.e("Register", "exception in rc.addUser");
-                e.printStackTrace();
+                Logger.error(e);
                 alert(R.string.problem_creating_account);
                 dialog.dismiss();
             }
@@ -100,7 +99,7 @@ public class Register extends FragmentActivity {
             if (responseIsSuccess(response)) {
                 loginManager.logIn(App.getAppInstance(), username, password, afterLoginSendProfilePictureAndFinish);
             } else {
-                Log.e("Register", response.toString());
+                Logger.warning("Problem creating user account");
                 alert(R.string.problem_creating_account);
             }
         }
@@ -111,7 +110,7 @@ public class Register extends FragmentActivity {
             if (responseIsConflict(e, response)) {
                 alert(R.string.username_is_taken);
             } else {
-                Log.e("Register", response + "\n" + e.getMessage());
+                Logger.warning("Problem creating user account", e);
                 alert(R.string.problem_creating_account);
             }
         }
@@ -121,8 +120,7 @@ public class Register extends FragmentActivity {
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             if (!responseIsSuccess(response)) {
                 alert(R.string.problem_setting_profile_picture);
-                Log.e("Register", "problem setting profile picture");
-                Log.e("Register", response.toString());
+                Logger.warning("Problem setting profile picture");
             }
             notifyUserThatAcctCreatedAndReturnToProfile();
         }
@@ -130,7 +128,7 @@ public class Register extends FragmentActivity {
         @Override
         public void failure(Throwable e, String response) {
             alert(R.string.problem_setting_profile_picture);
-            Log.e(App.LOG_TAG, "problem setting profile picture");
+            Logger.warning("Problem setting profile picture", e);
         }
     };
     private final Callback afterLoginSendProfilePictureAndFinish = new Callback() {
@@ -212,7 +210,7 @@ public class Register extends FragmentActivity {
         try {
             status = response.getString("status");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
         return status.equals("success");
     }
@@ -230,8 +228,7 @@ public class Register extends FragmentActivity {
             rc.addProfilePhoto(profilePicture, profilePictureResponseHandler);
         } catch (JSONException e) {
             alert(R.string.problem_setting_profile_picture);
-            Log.e("Register", "Error formulating rc.addProfilePhoto request.");
-            e.printStackTrace();
+            Logger.error(e);
         }
     }
 }

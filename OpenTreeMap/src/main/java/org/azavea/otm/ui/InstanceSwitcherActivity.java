@@ -13,26 +13,24 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import org.apache.http.Header;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
-import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.LoginManager;
 import org.azavea.otm.R;
+import org.azavea.otm.adapters.InstanceInfoArrayAdapter;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.azavea.otm.adapters.InstanceInfoArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -242,7 +240,7 @@ public class InstanceSwitcherActivity extends Activity {
                 userNameView.setText(makeUserNameString(loginManager.loggedInUser.getUserName()));
                 userNameView.setVisibility(View.VISIBLE);
             } catch (JSONException e) {
-                Log.e(App.LOG_TAG, "Could not get username.", e);
+                Logger.error("Could not get username.", e);
             }
             findViewById(R.id.logout_button).setVisibility(View.VISIBLE);
         } else {
@@ -273,7 +271,7 @@ public class InstanceSwitcherActivity extends Activity {
                             redirectToTabLayout(instance);
                         } catch (JSONException e) {
                             String msg = "Unable to retrieve selected Tree Map";
-                            Log.e(App.LOG_TAG, msg, e);
+                            Logger.error(msg, e);
                             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                         }
                     }

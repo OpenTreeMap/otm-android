@@ -1,12 +1,5 @@
 package org.azavea.otm.ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.azavea.otm.App;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,8 +11,15 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.util.Log;
 import android.widget.Toast;
+
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PhotoActivity {
     public static double PHOTO_HEIGHT = 768;
@@ -136,8 +136,7 @@ public class PhotoActivity {
                 );
                 return rotation;
             } catch (IOException e) {
-                Log.e(App.LOG_TAG, "Error checking exif", e);
-
+                Logger.warning("Error checking exif", e);
             }
         }
         return 0f;

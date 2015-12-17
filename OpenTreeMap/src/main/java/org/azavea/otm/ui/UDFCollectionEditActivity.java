@@ -2,18 +2,13 @@ package org.azavea.otm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.data.UDFCollectionDefinition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Lists.newArrayList;
 
 public class UDFCollectionEditActivity extends UDFCollectionActivity {
 
@@ -32,7 +27,7 @@ public class UDFCollectionEditActivity extends UDFCollectionActivity {
             initialValue = new JSONObject(json);
             value = initialValue;
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Could not parse passed in JSON string");
+            Logger.error("Could not parse passed in JSON string");
         }
     }
 

@@ -1,11 +1,12 @@
 package org.azavea.otm.filters;
 
+import android.view.View;
+
+import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Species;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.view.View;
 
 public class SpeciesFilter extends BaseFilter {
     public Species species = null;
@@ -41,6 +42,7 @@ public class SpeciesFilter extends BaseFilter {
         try {
             return buildNestedFilter(this.identifier, "IS", this.species.getId());
         } catch (JSONException e) {
+            Logger.error("Error building species filter object", e);
             return null;
         }
     }

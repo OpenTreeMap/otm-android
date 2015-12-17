@@ -1,26 +1,24 @@
 package org.azavea.otm.map;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.Locale;
-
-import org.azavea.otm.App;
-import org.azavea.otm.data.InstanceInfo;
-import org.azavea.otm.data.InstanceInfo.InstanceExtent;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.azavea.helpers.Logger;
+import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.data.InstanceInfo.InstanceExtent;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Locale;
 
 public class FallbackGeocoder {
 
@@ -58,7 +56,7 @@ public class FallbackGeocoder {
         try {
             addresses = g.getFromLocationName(addressText, 10);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("Geocoder exception", e);
             return null;
         }
 
@@ -68,7 +66,7 @@ public class FallbackGeocoder {
             instanceLat = currentInstance.getLat();
             instanceLng = currentInstance.getLon();
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Required instance data not found. Exiting android geocoder", e);
+            Logger.error("Required instance data not found. Exiting android geocoder", e);
             return null;
         }
 
@@ -119,7 +117,7 @@ public class FallbackGeocoder {
             // time we get to here, just return null.
             return new LatLng(lat, lon);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error("Problem parsing geocoder response", e);
             return null;
         }
     }

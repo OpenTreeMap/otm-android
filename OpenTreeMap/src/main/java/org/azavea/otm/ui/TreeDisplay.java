@@ -1,12 +1,5 @@
 package org.azavea.otm.ui;
 
-import org.azavea.otm.App;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.Plot;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +15,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.azavea.helpers.Logger;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.Plot;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class TreeDisplay extends UpEnabledActionBarActivity {
     protected LatLng plotLocation;
@@ -41,7 +41,7 @@ public class TreeDisplay extends UpEnabledActionBarActivity {
             plotLocation = getPlotLocation(plot);
         } catch (JSONException e) {
             Toast.makeText(this, "Could not retrieve Tree information", Toast.LENGTH_SHORT).show();
-            Log.e(App.LOG_TAG, "Failed to create tree view", e);
+            Logger.error("Failed to create tree view", e);
         }
     }
 
@@ -58,7 +58,7 @@ public class TreeDisplay extends UpEnabledActionBarActivity {
             double lat = geom.getY();
             return new LatLng(lat, lon);
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Unable to get plot geometry", e);
+            Logger.error("Unable to get plot geometry", e);
             return null;
         }
     }

@@ -1,21 +1,10 @@
 package org.azavea.otm.ui;
 
-import org.apache.http.Header;
-import org.azavea.otm.App;
-import org.azavea.otm.fields.EcoField;
-import org.azavea.otm.fields.FieldGroup;
-import org.azavea.otm.R;
-import org.azavea.otm.data.Plot;
-import org.azavea.otm.data.Tree;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
+import org.azavea.otm.data.Plot;
+import org.azavea.otm.data.Tree;
+import org.azavea.otm.fields.EcoField;
+import org.azavea.otm.fields.FieldGroup;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class TreeInfoDisplay extends TreeDisplay {
     public final static int EDIT_REQUEST = 1;
@@ -85,7 +85,7 @@ public class TreeInfoDisplay extends TreeDisplay {
 
             showImage(plot);
         } catch (Exception e) {
-            Log.e(App.LOG_TAG, "Unable to render tree view", e);
+            Logger.error("Unable to render tree view", e);
             Toast.makeText(App.getAppInstance(), "Unable to render view for display", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -136,7 +136,7 @@ public class TreeInfoDisplay extends TreeDisplay {
             }
         } catch (JSONException e) {
             Toast.makeText(this, "Could not access plot information for display", Toast.LENGTH_SHORT).show();
-            Log.e(App.LOG_TAG, "Failed to create tree view", e);
+            Logger.error("Failed to create tree view", e);
         }
 
     }
@@ -154,7 +154,7 @@ public class TreeInfoDisplay extends TreeDisplay {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
                 // Log the error, but not important enough to bother the user
-                Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+                Logger.error("Could not retrieve tree image", e);
             }
         });
     }
@@ -184,7 +184,7 @@ public class TreeInfoDisplay extends TreeDisplay {
                             setResult(TreeDisplay.RESULT_PLOT_EDITED, updatedPlot);
 
                         } catch (JSONException e) {
-                            Log.e(App.LOG_TAG, "Unable to load edited plot");
+                            Logger.error("Unable to load edited plot", e);
                             finish();
                         }
                     }

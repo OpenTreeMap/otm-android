@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.Choice;
 import org.azavea.otm.R;
 import org.azavea.otm.data.UDFCollectionDefinition;
@@ -140,6 +139,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
             this.value.put(fieldName, value);
             nextButton.setEnabled(true);
         } catch (JSONException e) {
+            Logger.error(e);
             Toast.makeText(this, R.string.udf_create_error_saving, Toast.LENGTH_SHORT).show();
         }
     }
@@ -166,7 +166,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
                 }
             }
         } else {
-            Log.e(App.LOG_TAG, "Fragment requested, but there was none to show...");
+            Logger.error("Fragment requested, but there was none to show...");
         }
     }
 
@@ -205,7 +205,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
             } else if ("date".equals(type)) {
                 fragments.add(UDFDateFragment.newInstance(subFieldDef));
             } else {
-                Log.w(App.LOG_TAG, "Unsupported Collection UDF field type " + type);
+                Logger.warning("Unsupported Collection UDF field type " + type);
             }
         }
         return fragments;

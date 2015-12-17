@@ -2,7 +2,6 @@ package org.azavea.otm.fields;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.azavea.helpers.JSONHelper;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.partition;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Collections2.transform;
 
 /**
  * UDF Collections are odd and don't really fit into the ecosystem of other fields.
@@ -108,7 +108,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 try {
                     value = new JSONObject(json);
                 } catch (JSONException e) {
-                    Log.e(App.LOG_TAG, "Error parsing JSON passed as activity result", e);
+                    Logger.error("Error parsing JSON passed as activity result", e);
                     continue;
                 }
 
@@ -117,7 +117,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 if (data.getExtras().containsKey(UDFCollectionEditActivity.TAG)) {
                     final int tag = data.getIntExtra(UDFCollectionEditActivity.TAG, -1);
                     if (tag == -1 || fields.isEmpty()) {
-                        Log.w(App.LOG_TAG, "Invalid tag for UDF, ignoring it");
+                        Logger.warning("Invalid tag for UDF, ignoring it");
                     } else {
                         // If we received a modified field, remove the old field and add it back with new data
                         fields = newArrayList(concat(filter(fields, f -> f.getTag() != tag), newArrayList(field)));
@@ -143,7 +143,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                     JSONArray udfData = collectionUdfArrays.get(collectionKey);
                     udfData.put(field.getEditedValue());
                 } else {
-                    Log.w(App.LOG_TAG, "Impossible state - UDFCollectionGroup has a field not in it's fieldKeys");
+                    Logger.warning("Impossible state - UDFCollectionGroup has a field not in it's fieldKeys");
                 }
             }
         }
@@ -153,6 +153,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 try {
                     plot.setValueForKey(entry.getKey(), collectionValues);
                 } catch (Exception e) {
+                    Logger.error(e);
                     Toast.makeText(App.getAppInstance(), R.string.udf_save_error, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -272,6 +273,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                     return field.renderForEdit(inflater, activity, fieldContainer);
                 }
             } catch (JSONException e) {
+                Logger.error("Error creating collection UDF view", e);
                 return null;
             }
         }), view -> view != null);

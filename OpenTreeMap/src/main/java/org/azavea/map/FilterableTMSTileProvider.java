@@ -1,19 +1,18 @@
 package org.azavea.map;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.net.Uri;
 
 import com.atlassian.fugue.Either;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+
 import static com.atlassian.fugue.Eithers.filterLeft;
 import static com.atlassian.fugue.Eithers.filterRight;
-import static com.atlassian.fugue.Eithers.sequenceLeft;
 
 public class FilterableTMSTileProvider extends TMSTileProvider {
     private JSONArray parameters = null;

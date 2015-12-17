@@ -1,24 +1,23 @@
 package org.azavea.otm.fields;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class FieldGroup {
 
@@ -53,7 +52,7 @@ public class FieldGroup {
 
     public void addField(String key, JSONObject fieldDef) {
         if (fieldDef == null) {
-            Log.w(App.LOG_TAG, "Missing field definition for display field: " + key);
+            Logger.warning("Missing field definition for display field: " + key);
             return;
         }
 
@@ -100,7 +99,7 @@ public class FieldGroup {
                     }
 
                 } catch (JSONException e) {
-                    Log.d(App.LOG_TAG, "Error rendering field '" + field.key + "' " + e.getMessage());
+                    Logger.error("Error rendering field '" + field.key + "'", e);
                 }
             }
         }

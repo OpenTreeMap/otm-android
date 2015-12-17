@@ -1,10 +1,6 @@
 package org.azavea.otm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import org.azavea.helpers.Logger;
 import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.fields.Field;
 import org.azavea.otm.fields.FieldGroup;
@@ -13,7 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class FieldManager {
 
@@ -65,7 +64,7 @@ public class FieldManager {
             }
 
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Bad Field Definition", e);
+            Logger.error("Bad Field Definition", e);
             throw new Exception("Incorrectly configured base field list");
         }
     }
@@ -85,7 +84,7 @@ public class FieldManager {
                 allDisplayFields.add(group);
             }
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Unable to load field group", e);
+            Logger.error("Unable to load field group", e);
             throw new Exception("Bad field group definition");
         }
     }

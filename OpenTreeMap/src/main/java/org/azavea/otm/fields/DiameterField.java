@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONObject;
@@ -139,6 +140,7 @@ public class DiameterField extends TextField {
             }
 
         } catch (Exception e) {
+            Logger.error("Exception with diameter calculator", e);
             editing.setText("");
         }
     }

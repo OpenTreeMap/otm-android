@@ -1,19 +1,5 @@
 package org.azavea.otm;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.azavea.lists.NearbyList;
-import org.azavea.otm.data.InstanceInfo;
-import org.azavea.otm.rest.RequestGenerator;
-import org.azavea.otm.rest.handlers.RestHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +13,21 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.rollbar.android.Rollbar;
+
+import org.azavea.helpers.Logger;
+import org.azavea.lists.NearbyList;
+import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.rest.RequestGenerator;
+import org.azavea.otm.rest.handlers.RestHandler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * A global singleton object to maintain application state
@@ -222,8 +223,8 @@ public class App extends Application {
 
         @Override
         public void failure(Throwable e, String message) {
-            Log.e(App.LOG_TAG, "Unable to Load Instance: " + responseInstanceInfo.getName(), e);
-            Toast.makeText(appInstance, "Cannot load configured instance.",
+            Logger.error("Unable to Load Instance: " + responseInstanceInfo.getName(), e);
+            Toast.makeText(appInstance, "Cannot load configured tree map.",
                     Toast.LENGTH_LONG).show();
             handleCallback(false);
         }
@@ -275,7 +276,7 @@ public class App extends Application {
             String neverUsed = "";
             instanceCode = getSharedPreferences().getString(INSTANCE_CODE, neverUsed);
         } else {
-            Log.e(LOG_TAG, "Incorrect state, attempted to reload an instance without an instance code");
+            Logger.error("Incorrect state, attempted to reload an instance without an instance code");
             return;
         }
         reloadInstanceInfo(instanceCode, callback);
@@ -321,9 +322,8 @@ public class App extends Application {
             filterManager = new FilterManager(currentInstance);
 
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Unable to create field manager from instance", e);
-            Toast.makeText(appInstance, "Error setting up OpenTreeMap",
-                    Toast.LENGTH_LONG).show();
+            Logger.error("Unable to create field manager from instance", e);
+            Toast.makeText(appInstance, "Error setting up OpenTreeMap", Toast.LENGTH_LONG).show();
         }
     }
 

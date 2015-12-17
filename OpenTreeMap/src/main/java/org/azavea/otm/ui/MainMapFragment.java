@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler.Callback;
@@ -46,6 +43,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.azavea.helpers.Logger;
 import org.azavea.map.FilterableTMSTileProvider;
 import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
@@ -130,8 +128,7 @@ public class MainMapFragment extends Fragment {
                                 hidePopup();
                             }
                         } catch (JSONException e) {
-                            Log.e("TREE_CLICK",
-                                    "Error retrieving plot info on map touch event: ", e);
+                            Logger.error("Error retrieving plot info on map touch event: ", e);
                         } finally {
                             dialog.hide();
                         }
@@ -211,7 +208,7 @@ public class MainMapFragment extends Fragment {
                 return true;
 
             } catch (Exception e) {
-                Log.e(App.LOG_TAG, "Unable to setup map", e);
+                Logger.error("Unable to setup map", e);
                 Toast.makeText(App.getAppInstance(), "Unable to setup map", Toast.LENGTH_LONG).show();
                 return false;
 
@@ -298,7 +295,7 @@ public class MainMapFragment extends Fragment {
             showPopup(updatedPlot);
 
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Unable to deserialze updated plot for map popup", e);
+            Logger.error("Unable to deserialze updated plot for map popup", e);
             hidePopup();
         }
     }
@@ -377,7 +374,7 @@ public class MainMapFragment extends Fragment {
                 setUpMap(view);
             } else {
                 Toast.makeText(getActivity(), "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
-                Log.e(App.LOG_TAG, "Map was null!");
+                Logger.warning("Map was null, missing google play support?");
             }
         }
     }
@@ -416,7 +413,7 @@ public class MainMapFragment extends Fragment {
 
             MapHelper.setUpBasemapControls(buttons, mMap);
         } catch (Exception e) {
-            Log.e("BASEMAP_SETUP", "Error Setting Up Basemap: ", e);
+            Logger.error("Error Setting Up Basemap", e);
             Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
         }
     }
@@ -477,7 +474,7 @@ public class MainMapFragment extends Fragment {
                     .title("")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Could not show tree popup", e);
+            Logger.error("Could not show tree popup", e);
         }
         currentPlot = plot;
         plotPopup.setVisibility(View.VISIBLE);
@@ -523,7 +520,7 @@ public class MainMapFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] imageData, Throwable e) {
                 // Log the error, but not important enough to bother the user
-                Log.e(App.LOG_TAG, "Could not retreive tree image", e);
+                Logger.warning("Could not retreive tree image", e);
             }
         });
     }
@@ -595,7 +592,7 @@ public class MainMapFragment extends Fragment {
                     startActivityForResult(editPlotIntent, ADD_INTENT);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Logger.error("Error creating tree", e);
                     setTreeAddMode(CANCEL);
                     Toast.makeText(getActivity(), "Error creating new tree", Toast.LENGTH_LONG).show();
                 }

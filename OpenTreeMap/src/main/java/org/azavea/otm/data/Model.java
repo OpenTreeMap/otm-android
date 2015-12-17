@@ -1,12 +1,12 @@
 package org.azavea.otm.data;
 
-import android.util.Log;
 
 import org.azavea.helpers.JSONHelper;
-import org.azavea.otm.App;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.NestedJsonAndKey;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 public abstract class Model {
     protected JSONObject data;
@@ -57,8 +57,8 @@ public abstract class Model {
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            Log.w(App.LOG_TAG, "Could not find key: " + key + " on plot/tree object");
+        } catch (JSONException e) {
+            Logger.info("Could not find key: " + key + " on plot/tree object", e);
             return null;
         }
     }
@@ -70,11 +70,11 @@ public abstract class Model {
             if (found != null) {
                 found.set(value);
             } else {
-                Log.w(App.LOG_TAG, "Specified key does not exist, cannot set value: " + key);
+                Logger.warning("Specified key does not exist, cannot set value: " + key);
             }
 
         } catch (Exception e) {
-            Log.w(App.LOG_TAG, "Could not set value key: " + key + " on plot/tree object");
+            Logger.info("Could not set value key: " + key + " on plot/tree object");
             throw e;
         }
     }

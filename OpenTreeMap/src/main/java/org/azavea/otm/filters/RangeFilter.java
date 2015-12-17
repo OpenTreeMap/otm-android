@@ -1,13 +1,12 @@
 package org.azavea.otm.filters;
 
-import org.azavea.otm.App;
+import android.view.View;
+import android.widget.EditText;
+
+import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 
 public class RangeFilter extends BaseFilter {
     private Double min;
@@ -70,7 +69,7 @@ public class RangeFilter extends BaseFilter {
                 filter.put(this.identifier, predicateFilter);
             }
         } catch (JSONException e) {
-            Log.e(App.LOG_TAG, "Error creating JSONObject for filter", e);
+            Logger.error("Error creating JSONObject for filter", e);
         }
 
         return filter;

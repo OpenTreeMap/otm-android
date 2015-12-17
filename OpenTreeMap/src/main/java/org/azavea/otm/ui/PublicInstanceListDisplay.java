@@ -3,16 +3,14 @@ package org.azavea.otm.ui;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import org.apache.http.Header;
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
-import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.R;
 import org.azavea.otm.adapters.LinkedHashMapAdapter;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONArray;
@@ -63,7 +61,7 @@ public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInf
             public void failure(Throwable e, String responseBody) {
                 loadingInstances.dismiss();
 
-                Log.e(App.LOG_TAG, "Error retrieving public instances", e);
+                Logger.error("Error retrieving public instances", e);
                 Toast.makeText(App.getAppInstance(), R.string.instances_failed,
                         Toast.LENGTH_SHORT).show();
             }

@@ -3,9 +3,9 @@ package org.azavea.otm.fields;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Button;
 
+import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Model;
@@ -64,7 +64,7 @@ public class DateField extends ButtonField {
             try {
                 cal.setTime(timestampFormatter.parse(setTimestamp));
             } catch (ParseException e) {
-                Log.e(App.LOG_TAG, "Error parsing date stored on tag.", e);
+                Logger.error("Error parsing date stored on tag.", e);
             }
         }
         return cal;
@@ -91,6 +91,7 @@ public class DateField extends ButtonField {
             final Date date = timestampFormatter.parse(timestamp);
             return displayFormatter.format(date);
         } catch (ParseException e) {
+            Logger.warning("Problem parsing date", e);
             return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
         }
     }
