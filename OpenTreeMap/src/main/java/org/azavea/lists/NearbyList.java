@@ -207,11 +207,11 @@ public class NearbyList implements InfoList {
         try {
             Double dbh = p.getTree().getDiameter();
 
-            if (dbhField != null && dbh > 0d) {
+            if (dbhField != null && dbh != null && dbh > 0d) {
                 diameter = Double.toString(dbh) + " " + dbhField.unitText;
             }
-        } catch (Exception e) {
-            Logger.error("Unable to get tree diameter", e);
+        } catch (JSONException e) {
+            Logger.error("Unable to get tree diameter field", e);
         }
         return diameter;
     }

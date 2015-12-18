@@ -23,7 +23,7 @@ public abstract class Model {
         }
     }
 
-    protected double getDoubleOrDefault(String key, Double defaultValue) throws JSONException {
+    protected Double getDoubleOrDefault(String key, Double defaultValue) throws JSONException {
         if (data.isNull(key)) {
             return defaultValue;
         } else {
