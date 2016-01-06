@@ -1,5 +1,7 @@
 package org.azavea.otm.data;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,22 +26,9 @@ public class Tree extends Model {
         data.put("id", id);
     }
 
-    public double getDiameter() throws JSONException {
-        return getDiameter(false);
-    }
-
-    public double getDiameter(boolean getCurrentOnly) throws JSONException {
-        if (getCurrentOnly) {
-            return getDoubleOrDefault("tree.diameter", 0d);
-        }
-
-        // Use the field value, which could be a recent pending value
-        Object value = plot.getValueForKey("tree.diameter");
-        if (value != null) {
-            return Double.parseDouble(value.toString());
-        } else {
-            return 0d;
-        }
+    @Nullable
+    public Double getDiameter() throws JSONException {
+        return getDoubleOrDefault("tree.diameter", null);
     }
 
     public String getDateRemoved() throws JSONException {
