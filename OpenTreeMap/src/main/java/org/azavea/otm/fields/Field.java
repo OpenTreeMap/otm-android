@@ -45,6 +45,7 @@ public abstract class Field {
 
     public static final String DATE_TYPE = "date";
     public static final String CHOICE_TYPE = "choice";
+    public static final String MULTICHOICE_TYPE = "multichoice";
 
     // This is the view control, either button or EditText, which has the user value
     protected View valueView = null;
@@ -96,6 +97,8 @@ public abstract class Field {
 
         if (CHOICE_TYPE.equals(format)) {
             return new ChoiceField(fieldDef);
+        } else if (MULTICHOICE_TYPE.equals(format)) {
+            return new MultiChoiceField(fieldDef);
         } else if (DATE_TYPE.equals(format)) {
             return new DateField(fieldDef);
         } else if (TREE_SPECIES.equals(key)) {
