@@ -16,6 +16,7 @@ import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.DefaultFilter;
 import org.azavea.otm.filters.MissingFilter;
+import org.azavea.otm.filters.MultiChoiceFilter;
 import org.azavea.otm.filters.RangeFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.rest.RequestGenerator;
@@ -108,6 +109,8 @@ public class FilterManager {
             return new MissingFilter(key, identifier, label);
         } else if (type.equals("CHOICE")) {
             return new ChoiceFilter(key, identifier, label, choices);
+        } else if (type.equals("MULTICHOICE")) {
+            return new MultiChoiceFilter(key, identifier, label, choices);
         } else if (type.equals("DEFAULT")) {
             final JSONObject fieldDef = instanceInfo.getFieldDefinitions().optJSONObject(defaultIdentifier);
             return new DefaultFilter(key, identifier, label, fieldDef);
