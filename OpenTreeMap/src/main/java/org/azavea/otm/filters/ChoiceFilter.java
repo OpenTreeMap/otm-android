@@ -12,9 +12,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ChoiceFilter extends BaseFilter {
-    public Choice[] choices;
-    private int DEFAULT = -1;
-    private int selectedIndex = DEFAULT;
+    private static final int DEFAULT = -1;
+
+    protected Choice[] choices;
+    protected int selectedIndex = DEFAULT;
 
     public ChoiceFilter(String key, String identifier, String label,
                         JSONArray choices) {

@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class ChoiceField extends ButtonField {
     // Any choices associated with this field, keyed by value with order preserved
-    private final Map<String, Choice> choiceMap = new LinkedHashMap<>();
+    protected final Map<String, Choice> choiceMap = new LinkedHashMap<>();
 
     // The order of values loaded into selection panel. Used to map index to keys in ChoiceMap
-    private final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
-    private final ArrayList<String> choiceDisplayValues = new ArrayList<>();
+    protected final ArrayList<String> choiceSelectionIndex = new ArrayList<>();
+    protected final ArrayList<String> choiceDisplayValues = new ArrayList<>();
 
     ChoiceField(JSONObject fieldDef) {
         super(fieldDef);
@@ -56,21 +56,14 @@ public class ChoiceField extends ButtonField {
 
     @Override
     protected void setupButton(final Button choiceButton, Object value, Model model, Activity activity) {
-        choiceButton.setText(R.string.unspecified_field_value);
-
-        if (!JSONObject.NULL.equals(value)) {
-            Choice currentChoice = choiceMap.get(value);
-            if (!JSONObject.NULL.equals(currentChoice)) {
-                choiceButton.setText(currentChoice.getText());
-            }
-        }
-
+        String label = formatValueIfPresent(value);
+        choiceButton.setText(label);
         choiceButton.setTag(R.id.choice_button_value_tag, value);
 
         handleChoiceDisplay(choiceButton, this);
     }
 
-    private void handleChoiceDisplay(final Button choiceButton, final ChoiceField editedField) {
+    protected void handleChoiceDisplay(final Button choiceButton, final ChoiceField editedField) {
         choiceButton.setOnClickListener(view -> {
             // Determine which item should be selected by default
             Object currentValue = choiceButton.getTag(R.id.choice_button_value_tag);
@@ -94,7 +87,8 @@ public class ChoiceField extends ButtonField {
                                         editedField.choiceSelectionIndex.get(which));
                                 dialog.dismiss();
                             }
-                    ).create().show();
+                    )
+                    .create().show();
         });
     }
 }

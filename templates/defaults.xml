@@ -7,7 +7,7 @@
 
     <!-- backend specific -->
     <string name="base_url">%(baseurl)s</string>
-    <string name="api_url">%(baseurl)s/api/v3</string>
+    <string name="api_url">%(baseurl)s/api/v4</string>
     <string name="tiler_url">%(tilerurl)s/tile/</string>
     <string name="access_key">%(accesskey)s</string>
     <string name="secret_key">%(secretkey)s</string>
