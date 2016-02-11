@@ -20,6 +20,7 @@ import org.azavea.otm.filters.MissingFilter;
 import org.azavea.otm.filters.MultiChoiceFilter;
 import org.azavea.otm.filters.NumericRangeFilter;
 import org.azavea.otm.filters.SpeciesFilter;
+import org.azavea.otm.filters.TextFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONArray;
@@ -114,6 +115,8 @@ public class FilterManager {
             return new ChoiceFilter(key, identifier, label, choices);
         } else if (type.equals("MULTICHOICE")) {
             return new MultiChoiceFilter(key, identifier, label, choices);
+        } else if (type.equals("STRING")) {
+            return new TextFilter(key, identifier, label);
         } else if (type.equals("DEFAULT")) {
             final JSONObject fieldDef = instanceInfo.getFieldDefinitions().optJSONObject(defaultIdentifier);
             return new DefaultFilter(key, identifier, label, fieldDef);
