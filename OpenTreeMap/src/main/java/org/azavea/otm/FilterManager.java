@@ -14,6 +14,7 @@ import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
+import org.azavea.otm.filters.DateRangeFilter;
 import org.azavea.otm.filters.DefaultFilter;
 import org.azavea.otm.filters.MissingFilter;
 import org.azavea.otm.filters.MultiChoiceFilter;
@@ -103,6 +104,8 @@ public class FilterManager {
             return new BooleanFilter(key, identifier, label);
         } else if (type.equals("RANGE")) {
             return new NumericRangeFilter(key, identifier, label);
+        } else if (type.equals("DATERANGE")) {
+            return new DateRangeFilter(key, identifier, label);
         } else if (type.equals("SPECIES")) {
             return new SpeciesFilter(key, identifier, label);
         } else if (type.equals("MISSING")) {

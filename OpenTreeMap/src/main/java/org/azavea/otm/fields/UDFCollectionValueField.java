@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.azavea.helpers.DateButtonListener.formatTimestampForDisplay;
 
 public class UDFCollectionValueField extends Field implements Comparable<UDFCollectionValueField> {
     private static final int DEFAULT_DIGITS = 2;
@@ -120,7 +121,7 @@ public class UDFCollectionValueField extends Field implements Comparable<UDFColl
         if (JSONObject.NULL.equals(subValue)) {
             return App.getAppInstance().getString(R.string.unspecified_field_value);
         } else if ("date".equals(type)) {
-            return DateField.formatTimestampForDisplay((String) subValue);
+            return formatTimestampForDisplay((String) subValue);
         } else if ("float".equals(type)) {
             return TextField.formatWithDigits(subValue, DEFAULT_DIGITS);
         }

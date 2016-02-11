@@ -1,0 +1,8 @@
+<Button
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.5"
+    android:ems="10"
+    android:text="mm/dd/yyyy"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</Button>
