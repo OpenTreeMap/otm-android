@@ -1,5 +1,8 @@
 package org.azavea.otm.filters;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import org.azavea.helpers.Logger;
@@ -23,10 +26,21 @@ public abstract class BaseFilter {
      */
     public String label;
 
+    protected BaseFilter(String key, String identifier, String label) {
+        this.key = key;
+        this.identifier = identifier;
+        this.label = label;
+    }
+
     /**
      * Checks if this filter currently has an active value
      */
     public abstract boolean isActive();
+
+    /**
+     * Creates and returns the View that represents this filter
+     */
+    public abstract View createView(LayoutInflater inflater, Activity activity);
 
     /**
      * Update the value of the filter, and its active status
@@ -37,7 +51,7 @@ public abstract class BaseFilter {
     /**
      * Reset the filter to the default state
      */
-    public abstract void clear();
+    public abstract void clear(View view);
 
     /**
      * Called when the filter is active...

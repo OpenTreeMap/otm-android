@@ -17,7 +17,7 @@ import org.azavea.otm.filters.ChoiceFilter;
 import org.azavea.otm.filters.DefaultFilter;
 import org.azavea.otm.filters.MissingFilter;
 import org.azavea.otm.filters.MultiChoiceFilter;
-import org.azavea.otm.filters.RangeFilter;
+import org.azavea.otm.filters.NumericRangeFilter;
 import org.azavea.otm.filters.SpeciesFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
@@ -102,7 +102,7 @@ public class FilterManager {
         if (type.equals("BOOL")) {
             return new BooleanFilter(key, identifier, label);
         } else if (type.equals("RANGE")) {
-            return new RangeFilter(key, identifier, label);
+            return new NumericRangeFilter(key, identifier, label);
         } else if (type.equals("SPECIES")) {
             return new SpeciesFilter(key, identifier, label);
         } else if (type.equals("MISSING")) {
@@ -161,26 +161,12 @@ public class FilterManager {
         return species;
     }
 
-    public Species getSpecieById(int id) {
-        return species.get(id);
-    }
-
     public BaseFilter getFilter(String key) {
         return allFilters.get(key);
     }
 
     public LinkedHashMap<String, BaseFilter> getFilters() {
         return allFilters;
-    }
-
-    /**
-     * Reset all active filters to their default state
-     */
-    public void clearActiveFilters() {
-        for (LinkedHashMap.Entry<String, BaseFilter> entry : allFilters
-                .entrySet()) {
-            entry.getValue().clear();
-        }
     }
 
     /**

@@ -24,7 +24,7 @@
     <string name="incorrect_username_or_password">Incorrect username or password</string>
     <string name="cancel">Cancel</string>
     <string name="filter_range_to">to</string>
-    <string name="finish_filtering">Done</string>
+    <string name="finish_filtering">Search</string>
     <string name="clear_filtering">Clear</string>
     <string name="test_get">Get</string>
     <string name="title_activity_request_generator">RequestGenerator</string>
@@ -141,5 +141,6 @@
 
     <string name="save_tree_failure">Can not save tree</string>
     <string name="save_tree_photo_failure">Unable to upload photo</string>
+    <string name="choice_filter_clear">Clear</string>
 
 </resources>

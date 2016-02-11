@@ -1,24 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_toggle_control"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/filter_toggle_control"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    <TextView
+        android:id="@+id/filter_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:textColor="@color/text_dark"/>
 
-        <TextView
-            android:id="@+id/filter_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:textColor="@color/text_dark"/>
+    <ToggleButton
+        android:id="@+id/active"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:paddingRight="10dp"/>
 
-        <ToggleButton
-            android:id="@+id/active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:paddingRight="10dp"/>
-
-    </RelativeLayout>
+</LinearLayout>
