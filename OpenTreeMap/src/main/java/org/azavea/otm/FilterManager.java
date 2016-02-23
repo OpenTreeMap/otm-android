@@ -167,22 +167,8 @@ public class FilterManager {
         return species;
     }
 
-    public BaseFilter getFilter(String key) {
-        return allFilters.get(key);
-    }
-
     public LinkedHashMap<String, BaseFilter> getFilters() {
         return allFilters;
-    }
-
-    /**
-     * Update the values of a given filter from a filter view control
-     *
-     * @param key  - The filter key
-     * @param view - The view which contains value for the filter
-     */
-    public void updateFilterFromView(String key, View view) {
-        allFilters.get(key).updateFromView(view);
     }
 
     /**
