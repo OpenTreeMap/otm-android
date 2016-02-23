@@ -1,10 +1,17 @@
 package org.azavea.otm.filters;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
 import org.azavea.otm.Choice;
+import org.azavea.otm.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,9 +26,7 @@ public class ChoiceFilter extends BaseFilter {
 
     public ChoiceFilter(String key, String identifier, String label,
                         JSONArray choices) {
-        this.key = key;
-        this.identifier = identifier;
-        this.label = label;
+        super(key, identifier, label);
         this.choices = loadChoices(choices);
     }
 
@@ -53,12 +58,45 @@ public class ChoiceFilter extends BaseFilter {
     }
 
     @Override
+    public View createView(LayoutInflater inflater, Activity activity) {
+        View choiceLayout = inflater.inflate(R.layout.filter_choice_control, null);
+        final Button choiceButton = (Button) choiceLayout.findViewById(R.id.choice_filter);
+
+        choiceButton.setText(getSelectedLabelText());
+
+        choiceButton.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(choiceButton
+                    .getContext())
+                    .setTitle(label)
+                    .setSingleChoiceItems(getChoicesText(),
+                            selectedIndex,
+                            (dialog1, which) -> {
+                                selectedIndex = which;
+                                choiceButton.setText(getSelectedLabelText());
+                                dialog1.dismiss();
+                            }
+                    ).create();
+
+            String buttonLabel = App.getAppInstance().getString(R.string.choice_filter_clear);
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, buttonLabel,
+                    (dialog1, which) -> clear(choiceLayout));
+
+            dialog.show();
+
+        });
+
+        return choiceLayout;
+    }
+
+    @Override
     public void updateFromView(View view) {
     }
 
     @Override
-    public void clear() {
-        this.selectedIndex = DEFAULT;
+    public void clear(View view) {
+        selectedIndex = DEFAULT;
+        final Button button = (Button) view.findViewById(R.id.choice_filter);
+        button.setText(getSelectedLabelText());
     }
 
     @Override
@@ -66,15 +104,7 @@ public class ChoiceFilter extends BaseFilter {
         return buildNestedFilter(this.identifier, "IS", choices[this.selectedIndex].getValue());
     }
 
-    public Integer getSelectedIndex() {
-        return this.selectedIndex;
-    }
-
-    public void setSelectedIndex(Integer index) {
-        selectedIndex = index;
-    }
-
-    public String getSelectedValueText() {
+    private String getSelectedValueText() {
         String text = "";
         if (isActive()) {
             Choice choice = this.choices[this.selectedIndex];
@@ -85,7 +115,7 @@ public class ChoiceFilter extends BaseFilter {
         return text;
     }
 
-    public String getSelectedLabelText() {
+    private String getSelectedLabelText() {
         String labelText = this.label;
         if (isActive()) {
             labelText += ": " + getSelectedValueText();
@@ -96,7 +126,7 @@ public class ChoiceFilter extends BaseFilter {
     /**
      * Get an array of the text of each choice value
      */
-    public CharSequence[] getChoicesText() {
+    private CharSequence[] getChoicesText() {
         String[] texts = new String[this.choices.length];
         for (int i = 0; i < this.choices.length; i++) {
             texts[i] = this.choices[i].getText();

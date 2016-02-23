@@ -17,6 +17,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.azavea.helpers.DateButtonListener.formatTimestampForDisplay;
+import static org.azavea.helpers.DateButtonListener.getDateButtonListener;
+
 public class DateField extends ButtonField {
 
     DateField(JSONObject fieldDef) {
@@ -41,58 +44,6 @@ public class DateField extends ButtonField {
         } else {
             choiceButton.setText(R.string.unspecified_field_value);
         }
-        choiceButton.setOnClickListener(v -> {
-            final String setTimestamp = (String) choiceButton.getTag(R.id.choice_button_value_tag);
-            final Calendar cal = getCalendarForTimestamp(activity, setTimestamp);
-            new DatePickerDialog(activity, (view, year, month, day) -> {
-                final String updatedTimestamp = getTimestamp(activity, year, month, day);
-                final String displayDate = formatTimestampForDisplay(updatedTimestamp);
-
-                choiceButton.setText(displayDate);
-                choiceButton.setTag(R.id.choice_button_value_tag, updatedTimestamp);
-            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
-        });
-    }
-
-    public static Calendar getCalendarForTimestamp(Context context, String setTimestamp) {
-        final Calendar cal = new GregorianCalendar();
-        final SimpleDateFormat timestampFormatter =
-                new SimpleDateFormat(context.getString(R.string.server_date_format));
-
-        if (setTimestamp != null) {
-
-            try {
-                cal.setTime(timestampFormatter.parse(setTimestamp));
-            } catch (ParseException e) {
-                Logger.error("Error parsing date stored on tag.", e);
-            }
-        }
-        return cal;
-    }
-
-    public static String getTimestamp(Context context, int year, int month, int day) {
-        final SimpleDateFormat timestampFormatter =
-                new SimpleDateFormat(context.getString(R.string.server_date_format));
-        final Calendar updatedCal = new GregorianCalendar();
-        updatedCal.set(Calendar.YEAR, year);
-        updatedCal.set(Calendar.MONTH, month);
-        updatedCal.set(Calendar.DAY_OF_MONTH, day);
-
-        return timestampFormatter.format(updatedCal.getTime());
-    }
-
-    public static String formatTimestampForDisplay(String timestamp) {
-        final String displayPattern = App.getCurrentInstance().getShortDateFormat();
-        final String serverPattern = App.getAppInstance().getString(R.string.server_date_format);
-
-        final SimpleDateFormat timestampFormatter = new SimpleDateFormat(serverPattern);
-        final SimpleDateFormat displayFormatter = new SimpleDateFormat(displayPattern);
-        try {
-            final Date date = timestampFormatter.parse(timestamp);
-            return displayFormatter.format(date);
-        } catch (ParseException e) {
-            Logger.warning("Problem parsing date", e);
-            return App.getAppInstance().getResources().getString(R.string.unspecified_field_value);
-        }
+        choiceButton.setOnClickListener(getDateButtonListener(activity, R.id.choice_button_value_tag));
     }
 }

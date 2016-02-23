@@ -14,11 +14,13 @@ import org.azavea.otm.data.SpeciesContainer;
 import org.azavea.otm.filters.BaseFilter;
 import org.azavea.otm.filters.BooleanFilter;
 import org.azavea.otm.filters.ChoiceFilter;
+import org.azavea.otm.filters.DateRangeFilter;
 import org.azavea.otm.filters.DefaultFilter;
 import org.azavea.otm.filters.MissingFilter;
 import org.azavea.otm.filters.MultiChoiceFilter;
-import org.azavea.otm.filters.RangeFilter;
+import org.azavea.otm.filters.NumericRangeFilter;
 import org.azavea.otm.filters.SpeciesFilter;
+import org.azavea.otm.filters.TextFilter;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.json.JSONArray;
@@ -102,7 +104,9 @@ public class FilterManager {
         if (type.equals("BOOL")) {
             return new BooleanFilter(key, identifier, label);
         } else if (type.equals("RANGE")) {
-            return new RangeFilter(key, identifier, label);
+            return new NumericRangeFilter(key, identifier, label);
+        } else if (type.equals("DATERANGE")) {
+            return new DateRangeFilter(key, identifier, label);
         } else if (type.equals("SPECIES")) {
             return new SpeciesFilter(key, identifier, label);
         } else if (type.equals("MISSING")) {
@@ -111,6 +115,8 @@ public class FilterManager {
             return new ChoiceFilter(key, identifier, label, choices);
         } else if (type.equals("MULTICHOICE")) {
             return new MultiChoiceFilter(key, identifier, label, choices);
+        } else if (type.equals("STRING")) {
+            return new TextFilter(key, identifier, label);
         } else if (type.equals("DEFAULT")) {
             final JSONObject fieldDef = instanceInfo.getFieldDefinitions().optJSONObject(defaultIdentifier);
             return new DefaultFilter(key, identifier, label, fieldDef);
@@ -161,36 +167,8 @@ public class FilterManager {
         return species;
     }
 
-    public Species getSpecieById(int id) {
-        return species.get(id);
-    }
-
-    public BaseFilter getFilter(String key) {
-        return allFilters.get(key);
-    }
-
     public LinkedHashMap<String, BaseFilter> getFilters() {
         return allFilters;
-    }
-
-    /**
-     * Reset all active filters to their default state
-     */
-    public void clearActiveFilters() {
-        for (LinkedHashMap.Entry<String, BaseFilter> entry : allFilters
-                .entrySet()) {
-            entry.getValue().clear();
-        }
-    }
-
-    /**
-     * Update the values of a given filter from a filter view control
-     *
-     * @param key  - The filter key
-     * @param view - The view which contains value for the filter
-     */
-    public void updateFilterFromView(String key, View view) {
-        allFilters.get(key).updateFromView(view);
     }
 
     /**

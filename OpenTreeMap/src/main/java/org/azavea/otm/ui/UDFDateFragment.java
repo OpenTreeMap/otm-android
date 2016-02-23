@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import static org.azavea.helpers.DateButtonListener.getTimestamp;
+
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link org.azavea.otm.ui.UDFDateFragment#newInstance} factory method to
@@ -63,7 +65,7 @@ public class UDFDateFragment extends Fragment {
         final View layout = inflater.inflate(R.layout.collection_udf_add_date, container, false);
         DatePicker picker = (DatePicker) layout.findViewById(R.id.udf_datepicker);
         picker.init(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), (view, year, month, dayOfMonth) -> {
-            String timestamp = DateField.getTimestamp(getActivity(), year, month, dayOfMonth);
+            String timestamp = getTimestamp(getActivity(), year, month, dayOfMonth);
             changeListener.onValueChanged(fieldName, timestamp);
         });
         return layout;
@@ -83,7 +85,7 @@ public class UDFDateFragment extends Fragment {
 
     private void sendCurrentDate() {
         Calendar cal = new GregorianCalendar();
-        String timestamp = DateField.getTimestamp(getActivity(), cal.get(Calendar.YEAR),
+        String timestamp = getTimestamp(getActivity(), cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         changeListener.onValueChanged(fieldName, timestamp);
     }
