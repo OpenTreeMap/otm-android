@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 
 public class DiameterField extends TextField {
+    private boolean isChangingText = false;
 
     protected DiameterField(JSONObject fieldDef) {
         super(fieldDef);
@@ -96,6 +97,12 @@ public class DiameterField extends TextField {
     }
 
     private void handleTextChange(EditText editing, EditText receiving, boolean calcDbh) {
+        // Prevent event handling loops - when we change text in this method, we always set
+        // 'isChangingText' to true, and if it is true when entering this method, we do nothing
+        if (isChangingText) {
+            return;
+        }
+
         try {
             DecimalFormat df = new DecimalFormat("#.##");
 
@@ -103,13 +110,12 @@ public class DiameterField extends TextField {
             String other = receiving.getText().toString();
             double otherVal = (other.equals("") || other.equals(".")) ? 0 : Double.parseDouble(other);
 
-            // If the value was blanked, and the other is not already blank,
-            // blank it
+            // If the value was blanked, and the other is not already blank, blank it
             if (editingText.equals("")) {
                 if (other.equals("")) {
                     return;
                 } else {
-                    receiving.setText("");
+                    setText(receiving, "");
                 }
                 return;
             }
@@ -135,13 +141,18 @@ public class DiameterField extends TextField {
             // Only set the other text if there is a significant difference
             // in from the calculated value
             if (Math.abs(otherVal - calculatedVal) >= 0.05) {
-                receiving.setText(display);
-                receiving.setSelection(display.length());
+                setText(receiving, display);
             }
 
         } catch (Exception e) {
             Logger.error("Exception with diameter calculator", e);
-            editing.setText("");
+            setText(editing, "");
         }
+    }
+
+    private void setText(EditText view, String text) {
+        isChangingText = true;
+        view.setText(text);
+        isChangingText = false;
     }
 }
