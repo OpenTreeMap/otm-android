@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import info.guardianproject.netcipher.NetCipher;
+
 public class TMSTileProvider implements TileProvider {
     private final static int TILE_HEIGHT = 256;
     private final static int TILE_WIDTH = 256;
@@ -76,7 +78,8 @@ public class TMSTileProvider implements TileProvider {
         InputStream imageStream = null;
         Bitmap inputImage;
         try {
-            imageStream = this.getTileUrl(x, y, zoom).openStream();
+            URL url = getTileUrl(x, y, zoom);
+            imageStream = NetCipher.getHttpURLConnection(url).getInputStream();
             inputImage = BitmapFactory.decodeStream(imageStream);
         } catch (IOException e) {
             Logger.error("Could not convert tiler results to Bitmap", e);
