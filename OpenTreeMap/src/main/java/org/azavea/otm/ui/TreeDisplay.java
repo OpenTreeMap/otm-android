@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.azavea.helpers.GoogleMapsListeners;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
@@ -99,6 +100,7 @@ public class TreeDisplay extends UpEnabledActionBarActivity {
         mUiSettings.setZoomGesturesEnabled(false);
         mUiSettings.setTiltGesturesEnabled(false);
         mUiSettings.setRotateGesturesEnabled(false);
+        mMap.setOnMarkerDragListener(new GoogleMapsListeners.NoopDragListener());
     }
 
     protected void setText(int resourceId, String text) {

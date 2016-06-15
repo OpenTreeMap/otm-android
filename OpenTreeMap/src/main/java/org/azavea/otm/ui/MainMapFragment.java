@@ -43,6 +43,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.azavea.helpers.GoogleMapsListeners;
 import org.azavea.helpers.Logger;
 import org.azavea.map.FilterableTMSTileProvider;
 import org.azavea.map.TMSTileProvider;
@@ -390,6 +391,7 @@ public class MainMapFragment extends Fragment {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerDragListener(new GoogleMapsListeners.NoopDragListener());
 
         try {
             TMSTileProvider boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
