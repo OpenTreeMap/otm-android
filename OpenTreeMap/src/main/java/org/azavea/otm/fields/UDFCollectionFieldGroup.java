@@ -99,6 +99,7 @@ public class UDFCollectionFieldGroup extends FieldGroup {
 
     @Override
     public void receiveActivityResult(int resultCode, Intent data, Activity activity) {
+        boolean shouldUpdate = false;
         for (String key : editableUdfDefinitions.keySet()) {
             if (data.getExtras().containsKey(key)) {
                 final String json = data.getStringExtra(key);
@@ -111,6 +112,8 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                     Logger.error("Error parsing JSON passed as activity result", e);
                     continue;
                 }
+
+                shouldUpdate = true;
 
                 // The presence of a tag tells us if this is an edit to an existing field or an add
                 final UDFCollectionValueField field = new UDFCollectionValueField(udfDef, sortKey, value);
@@ -127,7 +130,9 @@ public class UDFCollectionFieldGroup extends FieldGroup {
                 }
             }
         }
-        rerenderEditFields(activity);
+        if (shouldUpdate) {
+            rerenderEditFields(activity);
+        }
     }
 
     @Override
