@@ -9,14 +9,17 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import org.azavea.otm.data.Model;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
+
+    public enum FilterType {
+        WORD_PREFIX,
+        ANYWHERE
+    }
 
     private LinkedHashMap<CharSequence, List<T>> originalData = null;
     private List<Entry<T>> flattenedData;
@@ -29,6 +32,7 @@ public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
     private int elementRowTextViewId;
 
     private Filter filter = null;
+    private FilterType filterType = FilterType.WORD_PREFIX;
 
     private static final int ITEM_VIEW_TYPE_ELEMENT = 0;
     private static final int ITEM_VIEW_TYPE_SEPARATOR = 1;
@@ -127,6 +131,10 @@ public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
         return convertView;
     }
 
+    public void setFilterType(FilterType filterType) {
+        this.filterType = filterType;
+    }
+
     /**
      * It is easier to work with a flattened list when building individual rows, but because the
      * data can be changed at any time from filtering, we need to reflatten the map on occasion
@@ -161,7 +169,7 @@ public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
      */
     private class LinkedHashMapFilter extends Filter {
         @Override
-        protected FilterResults performFiltering(CharSequence prefix) {
+        protected FilterResults performFiltering(CharSequence sequence) {
             FilterResults results;
 
             LinkedHashMap<CharSequence, List<T>> newData;
@@ -173,10 +181,10 @@ public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
                 }
             }
 
-            if (prefix == null || prefix.length() == 0) {
+            if (sequence == null || sequence.length() == 0) {
                 results = getFilterResults(newData);
             } else {
-                String prefixString = prefix.toString().toLowerCase();
+                String substring = sequence.toString().toLowerCase();
 
                 for (Map.Entry<CharSequence, List<T>> entry : newData.entrySet()) {
                     final List<T> values = entry.getValue();
@@ -186,18 +194,20 @@ public class LinkedHashMapAdapter<T> extends BaseAdapter implements Filterable {
                         final String valueText = value.toString().toLowerCase();
 
                         // First match against the whole, non-splitted value
-                        if (valueText.startsWith(prefixString)) {
+                        if (valueText.startsWith(substring)) {
                             newValues.add(value);
-                        } else {
+                        } else if (filterType == FilterType.WORD_PREFIX) {
                             final String[] words = valueText.split(" ");
 
                             // Start at index 0, in case valueText starts with space(s)
                             for (String word : words) {
-                                if (word.startsWith(prefixString)) {
+                                if (word.startsWith(substring)) {
                                     newValues.add(value);
                                     break;
                                 }
                             }
+                        } else if (filterType == FilterType.ANYWHERE && valueText.contains(substring)) {
+                            newValues.add(value);
                         }
                     }
                     newData.put(entry.getKey(), newValues);

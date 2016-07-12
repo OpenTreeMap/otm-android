@@ -54,6 +54,7 @@ public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInf
                         PublicInstanceListDisplay.this, sectionedInstances,
                         R.layout.list_separator_row, R.id.separator,
                         R.layout.public_instance_element_row, R.id.text);
+                adapter.setFilterType(LinkedHashMapAdapter.FilterType.ANYWHERE);
                 renderList(adapter);
             }
 
