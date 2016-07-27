@@ -143,5 +143,6 @@
     <string name="save_tree_photo_failure">Unable to upload photo</string>
     <string name="choice_filter_clear">Clear</string>
     <string name="date_field_clear">Clear</string>
+    <string name="register_continue">Continue</string>
 
 </resources>
