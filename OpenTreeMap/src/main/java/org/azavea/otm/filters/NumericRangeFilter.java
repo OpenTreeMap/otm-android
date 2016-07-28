@@ -1,6 +1,5 @@
 package org.azavea.otm.filters;
 
-import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.EditText;
 

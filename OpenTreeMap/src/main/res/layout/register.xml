@@ -29,7 +29,8 @@
     <EditText
         android:id="@+id/register_username"
         style="@style/register_textbox"
-        android:hint="@string/username" />
+        android:hint="@string/username"
+        android:inputType="text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,44 +40,17 @@
             android:id="@+id/register_firstName"
             style="@style/register_textbox"
             android:layout_weight="1"
-            android:hint="@string/first_name" />
+            android:hint="@string/first_name"
+            android:inputType="textPersonName"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:id="@+id/register_lastName"
             style="@style/register_textbox"
             android:layout_weight="1"
-            android:hint="@string/last_name" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/register_profilePic"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/mapbtn_left"
-            android:layout_marginRight="@dimen/mapbtn_right"
-            android:layout_marginTop="@dimen/mapbtn_top"
-            android:contentDescription="@string/add_profile_picture"
-            android:src="@drawable/ic_addphoto"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/register_addProfilePicture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/mapbtn_right"
-            android:layout_marginTop="@dimen/mapbtn_top"
-            android:background="@drawable/btn"
-            android:onClick="handleChangePhotoClick"
-            android:padding="@dimen/small_btn"
-            android:text="@string/add_profile_picture"
-            android:textColor="@color/text_dark"
-            android:visibility="gone" />
+            android:hint="@string/last_name"
+            android:inputType="textPersonName"
+            android:imeOptions="actionNext" />
     </LinearLayout>
 
     <RelativeLayout
@@ -88,8 +62,8 @@
             style="@style/register_button"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:onClick="handleRegisterClick"
-            android:text="@string/Register" />
+            android:onClick="handleContinueClick"
+            android:text="@string/register_continue" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <WebView
+        android:id="@+id/terms_of_service_webview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/register"
+        style="@style/register_button"
+        android:onClick="handleRegisterClick"
+        android:text="@string/Register"
+        android:layout_marginBottom="24dp" />
+</LinearLayout>
