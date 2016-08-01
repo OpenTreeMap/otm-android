@@ -1,9 +1,11 @@
 package org.azavea.otm.ui;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,7 +17,10 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.azavea.helpers.Logger;
+import org.azavea.otm.App;
+import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
+import org.json.JSONException;
 
 public class MapHelper {
 
@@ -40,7 +45,7 @@ public class MapHelper {
 
     }
 
-    protected static BinaryHttpResponseHandler getPhotoDetailHandler(final FragmentActivity activity) {
+    protected static BinaryHttpResponseHandler getPhotoDetailHandler(final FragmentActivity activity, final Plot plot) {
         return new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] imageData) {
@@ -48,10 +53,34 @@ public class MapHelper {
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageData, 0, imageData.length));
 
-                Dialog d = new Dialog(activity);
-                d.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                d.setContentView(imageView);
-                d.show();
+                new AlertDialog.Builder(activity)
+                    .setNeutralButton(R.string.photo_report_close, ((dialog, which) -> {
+                        dialog.dismiss();
+                    }))
+                    .setNegativeButton(R.string.photo_report_action, ((dialog, which) -> {
+                        String body = "";
+                        try {
+                            body = String.format(activity.getString(R.string.photo_report_body),
+                                    App.getCurrentInstance().getInstanceId(), plot.getId(),
+                                    plot.getMostRecentPhoto().optInt("id"));
+                        } catch (JSONException e) {
+                            Logger.error("Could not get plot id in photo report", e);
+                        }
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {activity.getString(R.string.photo_report_email)});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.report_photo_subject));
+                        intent.putExtra(Intent.EXTRA_TEXT, body);
+
+                        if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                            activity.startActivity(intent);
+                        } else {
+                            Toast.makeText(activity, R.string.photo_report_failure, Toast.LENGTH_LONG).show();
+                        }
+                    }))
+                    .setView(imageView)
+                    .show();
             }
 
             @Override

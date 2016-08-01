@@ -12,6 +12,7 @@
     <string name="access_key">%(accesskey)s</string>
     <string name="secret_key">%(secretkey)s</string>
     <string name="rollbar_client_access_token">%(rollbar_client_access_token)s</string>
+    <string name="photo_report_email">%(photo_report_email)s</string>
 
     <!-- build specific -->
     <string name="platform_ver_build">%(platform_ver_build)s</string>

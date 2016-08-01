@@ -211,6 +211,6 @@ public class TreeInfoDisplay extends TreeDisplay {
     }
 
     public void handlePhotoDetailClick(View view) {
-        plot.getTreePhoto(MapHelper.getPhotoDetailHandler(this));
+        plot.getTreePhoto(MapHelper.getPhotoDetailHandler(this, plot));
     }
 }

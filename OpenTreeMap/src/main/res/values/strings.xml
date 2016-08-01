@@ -144,5 +144,10 @@
     <string name="choice_filter_clear">Clear</string>
     <string name="date_field_clear">Clear</string>
     <string name="register_continue">Continue</string>
+    <string name="report_photo_subject">Inappropriate content has been added. Here are the details:</string>
+    <string name="photo_report_failure">Could not report inappropriate photo</string>
+    <string name="photo_report_body">Instance: %1$d, Plot Id: %2$d, Photo id: %3$d</string>
+    <string name="photo_report_close">Close</string>
+    <string name="photo_report_action">Report Photo</string>
 
 </resources>

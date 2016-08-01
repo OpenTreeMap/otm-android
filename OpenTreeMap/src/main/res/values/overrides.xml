@@ -8,6 +8,7 @@
     <string name="access_key">override in child app</string>
     <string name="secret_key">override in child app</string>
     <string name="google_maps_api_key">override in child app</string>
+    <string name="photo_report_email">override in child app</string>
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
     <string name="rollbar_client_access_token" />

@@ -422,8 +422,8 @@ public class MainMapFragment extends Fragment {
 
     private void setupViewHandlers(View view) {
         view.findViewById(R.id.plotImage).setOnClickListener(v -> {
-            if (MainMapFragment.this.currentPlot != null) {
-                currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity()));
+            if (currentPlot != null) {
+                currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity(), currentPlot));
             }
         });
 
