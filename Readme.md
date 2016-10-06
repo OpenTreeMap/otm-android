@@ -28,11 +28,13 @@ You will need to run an OpenTreeMap server to use the Android app.  If you do no
     * `Google APIs` (ARM if there's a choice)
     * `System Image` (if you are using an emulator)
 
-### Device Setup
+### Device / Emulator Setup
 
-You'll need to setup your device for debugging, because emulators aren't really viable.
+You may want to setup your device for debugging, if you prefer that over working in an emulator.
 Follow these instructions:
 http://developer.android.com/tools/device.html
+
+If you would prefer to use an emulator, make sure to use an x86 image with Google APIs available, and set your computer up to use hardware acceleration as documented here: https://software.intel.com/en-us/android/articles/speeding-up-the-android-emulator-on-intel-architecture
 
 ### App Setup
 
