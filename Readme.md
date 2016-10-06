@@ -38,7 +38,7 @@ If you would prefer to use an emulator, make sure to use an x86 image with Googl
 
 ### App Setup
 
-* clone the OpenTreeMap_Android repo to wherever you store code
+* clone the `otm-android` repo to wherever you store code
 
 * Put the appropriate values into the templates in OpenTreeMapSkinned (for more information, see the [OpenTreeMapSkinned README](OpenTreeMapSkinned/README.md))
 
