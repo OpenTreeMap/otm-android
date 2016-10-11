@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atlassian.fugue.Either;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -50,6 +54,7 @@ import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.map.FallbackGeocoder;
@@ -64,7 +69,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 
-public class MainMapFragment extends Fragment {
+public class MainMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
     private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
@@ -89,6 +94,7 @@ public class MainMapFragment extends Fragment {
     private GoogleMap mMap;
     private TextView filterDisplay;
     private int treeAddMode = CANCEL;
+    private GoogleApiClient mGoogleApiClient;
 
     FilterableTMSTileProvider filterTileProvider;
     TileOverlay filterTileOverlay;
@@ -260,6 +266,27 @@ public class MainMapFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -418,6 +445,27 @@ public class MainMapFragment extends Fragment {
             Logger.error("Error Setting Up Basemap", e);
             Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void moveToCurrentLocation() {
+        LocationRequest request = LocationRequest.create()
+                .setNumUpdates(1)
+                .setExpirationDuration(5000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(mGoogleApiClient, request, loc -> {
+                    LatLng latlng = new LatLng(loc.getLatitude(), loc.getLongitude());
+                    App.getAppInstance().ensureInstanceLoaded(result -> {
+                        LatLngBounds extent = App.getCurrentInstance().getExtent();
+                        if (extent.contains(latlng)) {
+                            mMap.moveCamera(CameraUpdateFactory
+                                    .newLatLngZoom(latlng, STREET_ZOOM_LEVEL));
+                        }
+                        return false;
+                    });
+
+                });
     }
 
     private void setupViewHandlers(View view) {
@@ -690,5 +738,15 @@ public class MainMapFragment extends Fragment {
         if (filterTileOverlay != null) {
             filterTileOverlay.clearTileCache();
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        moveToCurrentLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Implement the interface
     }
 }
