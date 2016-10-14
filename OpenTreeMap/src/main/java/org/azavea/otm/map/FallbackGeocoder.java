@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,7 +25,7 @@ public class FallbackGeocoder {
 
     // search box
     private final InstanceInfo currentInstance;
-    private final InstanceExtent extent;
+    private final LatLngBounds extent;
 
     // activity context
     private final Context context;
@@ -91,8 +92,8 @@ public class FallbackGeocoder {
             // Use this format to compose a url for google's geocode
             urlFormat += "&bounds=%f,%f%%7c%f,%f";
             // interpolate address and bounds into that format string
-            url = String.format(Locale.US, urlFormat, URLEncoder.encode(address), extent.minLatitude,
-                    extent.minLongitude, extent.maxLatitude, extent.maxLongitude);
+            url = String.format(Locale.US, urlFormat, URLEncoder.encode(address), extent.southwest.latitude,
+                    extent.southwest.longitude, extent.northeast.latitude, extent.northeast.longitude);
         } else {
             url = String.format(Locale.US, urlFormat, URLEncoder.encode(address));
         }

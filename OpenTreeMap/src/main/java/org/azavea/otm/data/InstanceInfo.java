@@ -1,6 +1,7 @@
 package org.azavea.otm.data;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.azavea.helpers.Logger;
 import org.json.JSONArray;
@@ -147,12 +148,14 @@ public class InstanceInfo extends Model {
         return getCenter("lng");
     }
 
-    public InstanceExtent getExtent() {
+    public LatLngBounds getExtent() {
         try {
             JSONObject json = data.getJSONObject("extent");
 
-            return new InstanceExtent(json.getDouble("min_lng"), json.getDouble("min_lat"), json.getDouble("max_lng"),
-                    json.getDouble("max_lat"));
+            return new LatLngBounds.Builder()
+                    .include(new LatLng(json.getDouble("min_lat"), json.getDouble("min_lng")))
+                    .include(new LatLng(json.getDouble("max_lat"), json.getDouble("max_lng")))
+                    .build();
         } catch (JSONException e) {
             Logger.error("Invalid Instance extent Received", e);
         }
