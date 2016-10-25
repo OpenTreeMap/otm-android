@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
 
-import org.apache.http.client.HttpResponseException;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
 import org.azavea.otm.ui.InstanceSwitcherActivity;
 import org.json.JSONException;
+
+import cz.msebera.android.httpclient.client.HttpResponseException;
 
 public class LoginManager {
     private static final String MESSAGE_KEY = "message";

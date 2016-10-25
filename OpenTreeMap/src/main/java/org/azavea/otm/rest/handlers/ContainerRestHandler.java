@@ -1,8 +1,9 @@
 package org.azavea.otm.rest.handlers;
 
-import org.apache.http.Header;
 import org.azavea.otm.data.ModelContainer;
 import org.json.JSONArray;
+
+import cz.msebera.android.httpclient.Header;
 
 public abstract class ContainerRestHandler<T extends ModelContainer<?>> extends LoggingJsonHttpResponseHandler {
     private T resultObject;

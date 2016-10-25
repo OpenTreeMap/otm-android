@@ -5,8 +5,6 @@ import android.util.Base64;
 
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
 import org.azavea.helpers.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -18,6 +16,9 @@ import java.util.Arrays;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.message.BasicHeader;
 
 public class RequestSignature {
     private static final String HMAC_ALGORITHM = "HmacSHA256";

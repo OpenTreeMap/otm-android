@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import org.azavea.otm.R;
-import org.azavea.otm.fields.DateField;
 import org.json.JSONObject;
 
 import java.util.Calendar;

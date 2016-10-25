@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class InstanceSwitcherActivity extends Activity {

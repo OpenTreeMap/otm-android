@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -27,6 +26,8 @@ import org.azavea.otm.fields.EcoField;
 import org.azavea.otm.fields.FieldGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class TreeInfoDisplay extends TreeDisplay {
     public final static int EDIT_REQUEST = 1;

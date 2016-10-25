@@ -15,12 +15,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Plot;
 import org.json.JSONException;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MapHelper {
 

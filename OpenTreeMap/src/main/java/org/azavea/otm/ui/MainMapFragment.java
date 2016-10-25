@@ -46,7 +46,6 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Header;
 import org.azavea.helpers.GoogleMapsListeners;
 import org.azavea.helpers.Logger;
 import org.azavea.map.FilterableTMSTileProvider;
@@ -54,7 +53,6 @@ import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
-import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.map.FallbackGeocoder;
@@ -68,6 +66,8 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
     private static LatLng START_POS;

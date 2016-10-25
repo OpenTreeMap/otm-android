@@ -3,7 +3,6 @@ package org.azavea.otm;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.view.View;
 
 import com.atlassian.fugue.Either;
 

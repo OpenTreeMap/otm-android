@@ -13,7 +13,6 @@ import com.loopj.android.http.RequestParams;
 
 import org.azavea.helpers.Logger;
 import org.azavea.otm.data.InstanceInfo;
-import org.azavea.otm.data.InstanceInfo.InstanceExtent;
 import org.json.JSONObject;
 
 import java.io.IOException;
