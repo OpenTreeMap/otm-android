@@ -4,8 +4,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-        classpath 'me.tatarka:gradle-retrolambda:2.4.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
 
