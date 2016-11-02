@@ -1,8 +1,9 @@
 package org.azavea.otm.rest.handlers;
 
-import org.apache.http.Header;
 import org.azavea.otm.data.Model;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public abstract class RestHandler<T extends Model> extends LoggingJsonHttpResponseHandler {
     public static final String SUCCESS_KEY = "success";

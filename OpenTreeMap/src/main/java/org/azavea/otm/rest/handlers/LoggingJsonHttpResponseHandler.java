@@ -2,9 +2,10 @@ package org.azavea.otm.rest.handlers;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public abstract class LoggingJsonHttpResponseHandler extends JsonHttpResponseHandler {
 

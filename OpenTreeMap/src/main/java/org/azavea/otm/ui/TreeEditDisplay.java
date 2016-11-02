@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -34,6 +33,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+
+import cz.msebera.android.httpclient.Header;
 
 public class TreeEditDisplay extends TreeDisplay {
     // Intent Request codes

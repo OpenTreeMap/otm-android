@@ -1,11 +1,8 @@
 package org.azavea.otm.filters;
 
 import android.app.Activity;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.azavea.otm.R;

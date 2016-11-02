@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
@@ -17,6 +16,8 @@ import org.json.JSONArray;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PublicInstanceListDisplay extends FilterableListDisplay<InstanceInfo> {
     public static final String MODEL_DATA = "instance";

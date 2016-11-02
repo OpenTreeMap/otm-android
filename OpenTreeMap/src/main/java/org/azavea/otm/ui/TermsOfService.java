@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.azavea.helpers.Logger;
 import org.azavea.otm.App;
 import org.azavea.otm.LoginManager;
@@ -23,6 +22,8 @@ import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class TermsOfService extends FragmentActivity {
 
