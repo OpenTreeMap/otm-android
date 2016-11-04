@@ -17,6 +17,7 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use these dependencies
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.android.support:support-annotations:25.0.0'
+    compile 'com.google.android.gms:play-services-analytics:9.6.0'
     compile 'com.google.android.gms:play-services-maps:9.6.0'
     compile 'com.google.android.gms:play-services-location:9.6.0'
 }

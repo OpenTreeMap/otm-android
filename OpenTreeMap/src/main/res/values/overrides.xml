@@ -12,5 +12,6 @@
     <string name="max_nearby_plots">10</string>
     <string name="platform_ver_build">android-1.0-xx</string>
     <string name="rollbar_client_access_token" />
+    <string name="app_google_analytics_id" />
     <string name="environment">development</string>
 </resources>

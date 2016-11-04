@@ -1,5 +1,6 @@
 package org.azavea.otm.ui;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
@@ -31,7 +32,6 @@ public class TabLayout extends OTMActionBarActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Map
         actionBar.addTab(
                 actionBar.newTab()
                         .setText(R.string.tab_map)
@@ -130,6 +130,7 @@ public class TabLayout extends OTMActionBarActivity {
                 // If it exists, simply attach it in order to show it
                 ft.show(tabFragment);
             }
+            App.getAppInstance().sendFragmentView(tabFragment, TabLayout.this);
         }
 
         @Override

@@ -86,6 +86,7 @@ public class LoginManager {
                 final Bundle data = new Bundle();
                 prefs.edit().putString(USER_KEY, username).commit();
                 storePassword(password);
+                App.getAppInstance().setUserOnAnalyticsTracker(response);
 
                 loggedInUser = response;
                 try {
@@ -117,6 +118,7 @@ public class LoginManager {
         loggedInUser = null;
         prefs.edit().remove(USER_KEY).commit();
         prefs.edit().remove(PASS_KEY).commit();
+        App.getAppInstance().setUserOnAnalyticsTracker(null);
     }
 
     /**
