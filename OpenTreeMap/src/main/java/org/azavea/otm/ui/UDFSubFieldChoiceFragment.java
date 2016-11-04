@@ -14,7 +14,6 @@ import static com.google.common.collect.Lists.transform;
 
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link UDFSubFieldChoiceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */

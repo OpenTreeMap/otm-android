@@ -1,10 +1,10 @@
 package org.azavea.otm.ui;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Lists.newArrayList;
 
-public abstract class UDFCollectionActivity extends ActionBarActivity {
+public abstract class UDFCollectionActivity extends Activity {
 
     public static final String UDF_DEFINITIONS = "udfs";
 
@@ -145,7 +145,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
     }
 
     public void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        getActionBar().setTitle(title);
     }
 
     private void setCurrentFragment(int fieldNumber) {
@@ -178,7 +178,7 @@ public abstract class UDFCollectionActivity extends ActionBarActivity {
     }
 
     private void setFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (currentFragment != null) {
             ft.hide(currentFragment);
         }

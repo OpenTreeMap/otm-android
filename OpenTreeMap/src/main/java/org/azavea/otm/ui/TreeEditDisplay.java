@@ -105,10 +105,12 @@ public class TreeEditDisplay extends TreeDisplay {
         setContentView(R.layout.plot_edit_activity);
         setUpMapIfNeeded();
         initializeEditPage();
-        mMap.setOnMapClickListener(point -> {
-            Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
-            treeMoveIntent.putExtra("plot", plot.getData().toString());
-            startActivityForResult(treeMoveIntent, TREE_MOVE);
+        onMapLoad(map -> {
+            map.setOnMapClickListener(point -> {
+                Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
+                treeMoveIntent.putExtra("plot", plot.getData().toString());
+                startActivityForResult(treeMoveIntent, TREE_MOVE);
+            });
         });
     }
 

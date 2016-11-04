@@ -1,6 +1,7 @@
 package org.azavea.otm.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +10,6 @@ import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler.Callback;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -396,14 +395,16 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the MapView.
-            mMap = mapView.getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap(view);
-            } else {
-                Toast.makeText(getActivity(), "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
-                Logger.warning("Map was null, missing google play support?");
-            }
+            mapView.getMapAsync(map -> {
+                mMap = map;
+                // Check if we were successful in obtaining the map.
+                if (mMap != null) {
+                    setUpMap(view);
+                } else {
+                    Toast.makeText(getActivity(), "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
+                    Logger.warning("Map was null, missing google play support?");
+                }
+            });
         }
     }
 
@@ -669,7 +670,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     private void setupSearchView(Menu menu) {
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search_button));
+        searchView = (SearchView) menu.findItem(R.id.search_button).getActionView();
         searchView.setQueryHint(getString(R.string.search_field_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

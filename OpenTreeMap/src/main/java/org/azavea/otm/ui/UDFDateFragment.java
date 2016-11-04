@@ -1,8 +1,8 @@
 package org.azavea.otm.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,6 @@ import java.util.GregorianCalendar;
 import static org.azavea.helpers.DateButtonListener.getTimestamp;
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link org.azavea.otm.ui.UDFDateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */

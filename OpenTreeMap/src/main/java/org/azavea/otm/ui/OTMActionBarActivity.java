@@ -1,6 +1,6 @@
 package org.azavea.otm.ui;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 
 import org.azavea.otm.App;
 
@@ -9,7 +9,7 @@ import org.azavea.otm.App;
  *
  * This class will grow over time as new overrides are added.
  */
-public class OTMActionBarActivity extends ActionBarActivity {
+public class OTMActionBarActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();

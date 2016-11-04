@@ -37,7 +37,7 @@
         android:id="@+id/vignette_map_view_mode"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+        class="com.google.android.gms.maps.MapFragment" />
 
     <ScrollView
         android:id="@+id/scroller"
