@@ -1,16 +1,16 @@
 package org.azavea.otm.ui;
 
+import org.azavea.otm.App;
 import org.azavea.otm.R;
 
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,10 +29,9 @@ public class TabLayout extends OTMActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Map
         actionBar.addTab(
                 actionBar.newTab()
                         .setText(R.string.tab_map)
@@ -75,9 +74,9 @@ public class TabLayout extends OTMActionBarActivity {
         // and must delegate them back down to the MainMapActivity Fragment
         // If we need to support handling back presses differently on each tab,
         // we should probably make an Interface and call whatever the current tab is
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar.getSelectedTab().getTag() == MAIN_MAP) {
-            final FragmentManager manager = TabLayout.this.getSupportFragmentManager();
+            final FragmentManager manager = TabLayout.this.getFragmentManager();
             MainMapFragment mainMap = (MainMapFragment) manager.findFragmentByTag(MAIN_MAP);
             if (mainMap.shouldHandleBackPress()) {
                 mainMap.onBackPressed();
@@ -92,12 +91,12 @@ public class TabLayout extends OTMActionBarActivity {
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        state.putInt(SELECTED_TAB, getSupportActionBar().getSelectedNavigationIndex());
+        state.putInt(SELECTED_TAB, getActionBar().getSelectedNavigationIndex());
     }
 
     public class TabListener<T extends Fragment> implements ActionBar.TabListener {
         private Fragment tabFragment;
-        private final ActionBarActivity host;
+        private final Activity host;
         private final String tag;
         private final Class<T> tabClass;
 
@@ -108,12 +107,12 @@ public class TabLayout extends OTMActionBarActivity {
          * @param tag  The identifier tag for the fragment
          * @param clz  The fragment's Class, used to instantiate the fragment
          */
-        public TabListener(ActionBarActivity host, String tag, Class<T> clz) {
+        public TabListener(Activity host, String tag, Class<T> clz) {
             this.host = host;
             this.tag = tag;
             tabClass = clz;
 
-            final FragmentManager manager = TabLayout.this.getSupportFragmentManager();
+            final FragmentManager manager = TabLayout.this.getFragmentManager();
             tabFragment = manager.findFragmentByTag(tag);
             if (tabFragment != null && !tabFragment.isHidden()) {
                 manager.beginTransaction().hide(tabFragment).commit();
@@ -121,7 +120,7 @@ public class TabLayout extends OTMActionBarActivity {
         }
 
         @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             // Check if the fragment is already initialized
             if (tabFragment == null) {
                 // If not, instantiate and add it to the activity
@@ -131,10 +130,11 @@ public class TabLayout extends OTMActionBarActivity {
                 // If it exists, simply attach it in order to show it
                 ft.show(tabFragment);
             }
+            App.getAppInstance().sendFragmentView(tabFragment, TabLayout.this);
         }
 
         @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
             if (tabFragment != null) {
                 // Detach the fragment, because another one is being attached
                 ft.hide(tabFragment);
@@ -145,11 +145,13 @@ public class TabLayout extends OTMActionBarActivity {
                 InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(currentView.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
-            menu.clear();
+            if (menu != null) {
+                menu.clear();
+            }
         }
 
         @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
         }
     }
 }

@@ -1,8 +1,8 @@
 package org.azavea.otm.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.Toast;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 
-public class Register extends FragmentActivity {
+public class Register extends Activity {
     /*
      * Activity overrides
      */

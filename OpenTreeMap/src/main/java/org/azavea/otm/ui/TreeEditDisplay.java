@@ -105,10 +105,12 @@ public class TreeEditDisplay extends TreeDisplay {
         setContentView(R.layout.plot_edit_activity);
         setUpMapIfNeeded();
         initializeEditPage();
-        mMap.setOnMapClickListener(point -> {
-            Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
-            treeMoveIntent.putExtra("plot", plot.getData().toString());
-            startActivityForResult(treeMoveIntent, TREE_MOVE);
+        onMapLoad(map -> {
+            map.setOnMapClickListener(point -> {
+                Intent treeMoveIntent = new Intent(TreeEditDisplay.this, TreeMove.class);
+                treeMoveIntent.putExtra("plot", plot.getData().toString());
+                startActivityForResult(treeMoveIntent, TREE_MOVE);
+            });
         });
     }
 
@@ -135,6 +137,10 @@ public class TreeEditDisplay extends TreeDisplay {
             return true;
         } else if (id == R.id.edit_tree_picture) {
             changeTreePhoto();
+            return true;
+        } else if (id == android.R.id.home) {
+            cancel();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -4,8 +4,4 @@
     android:versionCode="%(version_code)s"
     android:versionName="%(version_name)s" >
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="22" />
-
 </manifest>

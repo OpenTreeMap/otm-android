@@ -23,9 +23,9 @@ You will need to run an OpenTreeMap server to use the Android app.  If you do no
     * `Google Play services`
     * `Google Repository`
     * `Android Support Repository`
-  * For all the SDK versions that you will use, (currently API 10, API 16, API [latest]), grab:
+  * For all the SDK versions that you will use, (currently API 14, API 19, API 25), grab:
     * `SDK Platform`
-    * `Google APIs` (ARM if there's a choice)
+    * `Google APIs` (x86 if there's a choice)
     * `System Image` (if you are using an emulator)
 
 ### Device / Emulator Setup

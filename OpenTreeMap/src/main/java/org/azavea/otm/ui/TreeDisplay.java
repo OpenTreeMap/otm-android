@@ -1,15 +1,16 @@
 package org.azavea.otm.ui;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,7 +31,7 @@ public class TreeDisplay extends UpEnabledActionBarActivity {
     public static int RESULT_PLOT_DELETED = Activity.RESULT_FIRST_USER + 1;
     public static int RESULT_PLOT_EDITED = Activity.RESULT_FIRST_USER + 2;
     protected static final int DEFAULT_TREE_ZOOM_LEVEL = 18;
-    protected GoogleMap mMap;
+    private GoogleMap mMap;
     protected Marker plotMarker;
     protected int mapFragmentId;
 
@@ -65,32 +66,42 @@ public class TreeDisplay extends UpEnabledActionBarActivity {
     }
 
     protected void showPositionOnMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(plotLocation, DEFAULT_TREE_ZOOM_LEVEL));
-        if (plotMarker != null) {
-            plotMarker.remove();
-        }
-        plotMarker = mMap.addMarker(new MarkerOptions().position(plotLocation).title("")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+        onMapLoad(map -> {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(plotLocation, DEFAULT_TREE_ZOOM_LEVEL));
+            if (plotMarker != null) {
+                plotMarker.remove();
+            }
+            plotMarker = map.addMarker(new MarkerOptions().position(plotLocation).title("")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
+        });
     }
 
     protected void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the
         // map.
         if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            // we have to try for 2 different fragment id's, using the reasonable
-            // assumption that the base classes are going to be instantiated one
-            // at a time.
-            Log.d("VIN", String.format("%d", mapFragmentId));
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            SupportMapFragment fragment = (SupportMapFragment) fragmentManager.findFragmentById(mapFragmentId);
-            mMap = fragment.getMap();
-            if (mMap != null) {
-                setUpMap();
-            } else {
-                Log.e("VIN", "map was null.");
-            }
+            onMapLoad(map -> {
+                if (map != null) {
+                    mMap = map;
+                    setUpMap();
+                } else {
+                    Log.e("VIN", "map was null.");
+                }
+            });
         }
+    }
+
+    protected void onMapLoad(OnMapReadyCallback cb) {
+        if (mMap != null) {
+            cb.onMapReady(mMap);
+        }
+        // Try to obtain the map from the MapFragment.
+        // we have to try for 2 different fragment id's, using the reasonable
+        // assumption that the base classes are going to be instantiated one
+        // at a time.
+        FragmentManager fragmentManager = getFragmentManager();
+        MapFragment fragment = (MapFragment) fragmentManager.findFragmentById(mapFragmentId);
+        fragment.getMapAsync(cb);
     }
 
     private void setUpMap() {

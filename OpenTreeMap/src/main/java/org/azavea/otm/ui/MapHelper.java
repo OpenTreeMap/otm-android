@@ -1,11 +1,11 @@
 package org.azavea.otm.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,7 +37,7 @@ public class MapHelper {
         buttons.setOnClickListener((int index) -> mMap.setMapType(mapTypes[index]));
     }
 
-    public static void checkGooglePlay(FragmentActivity activity) {
+    public static void checkGooglePlay(Activity activity) {
         int googlePlayStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
         if (googlePlayStatus != ConnectionResult.SUCCESS) {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(googlePlayStatus, activity, 1);
@@ -46,7 +46,7 @@ public class MapHelper {
 
     }
 
-    protected static BinaryHttpResponseHandler getPhotoDetailHandler(final FragmentActivity activity, final Plot plot) {
+    protected static BinaryHttpResponseHandler getPhotoDetailHandler(final Activity activity, final Plot plot) {
         return new BinaryHttpResponseHandler(Plot.IMAGE_TYPES) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] imageData) {

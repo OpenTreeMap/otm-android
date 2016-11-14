@@ -19,9 +19,11 @@ public class TreeMove extends TreeDisplay {
         setContentView(R.layout.activity_tree_move);
         setUpMapIfNeeded();
         showPositionOnMap();
-        plotMarker.setDraggable(true);
         SegmentedButton buttons = (SegmentedButton) findViewById(R.id.basemap_controls);
-        MapHelper.setUpBasemapControls(buttons, mMap);
+        onMapLoad(map -> {
+            MapHelper.setUpBasemapControls(buttons, map);
+            plotMarker.setDraggable(true);
+        });
     }
 
     public void submitTreeMove(View view) {

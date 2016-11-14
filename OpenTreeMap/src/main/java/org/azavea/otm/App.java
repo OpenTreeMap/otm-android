@@ -1,6 +1,8 @@
 package org.azavea.otm;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -8,18 +10,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.rollbar.android.Rollbar;
 
 import org.azavea.helpers.Logger;
 import org.azavea.lists.NearbyList;
 import org.azavea.otm.data.InstanceInfo;
+import org.azavea.otm.data.User;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.RestHandler;
+import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,18 +46,19 @@ public class App extends Application {
     public static final String INSTANCE_CODE = "instance_code";
 
     private static App appInstance = null;
-    private static LoginManager loginManager = null;
     private static FilterManager filterManager = null;
     private static FieldManager fieldManager = null;
-    private static NearbyList nearbyList = null;
 
     private static SharedPreferences sharedPreferences = null;
     private static boolean pendingEnabled = false;
     private static InstanceInfo currentInstance;
     private static boolean loadingInstance = false;
 
-    private static AsyncHttpClient asyncHttpClient;
     private static ArrayList<Callback> registeredInstanceCallbacks = new ArrayList<>();
+
+    private LoginManager loginManager = null;
+    private NearbyList nearbyList = null;
+    private Tracker apptracker = null;
 
     public static App getAppInstance() {
         checkAppInstance();
@@ -57,11 +66,11 @@ public class App extends Application {
     }
 
     public static LoginManager getLoginManager() {
-        if (loginManager == null) {
-            checkAppInstance();
-            loginManager = new LoginManager(appInstance);
+        App app = getAppInstance();
+        if (app.loginManager == null) {
+            app.loginManager = new LoginManager(appInstance);
         }
-        return loginManager;
+        return app.loginManager;
     }
 
     /**
@@ -143,8 +152,13 @@ public class App extends Application {
         // the app can try to auto log in on any saved credentials
         getLoginManager();
         loadPendingStatus();
+        setupRollbarLogging();
+        setupGoogleAnalytics();
+    }
+
+    private void setupRollbarLogging() {
         String rollbarKey = getString(R.string.rollbar_client_access_token);
-        if (!"".equals(rollbarKey)) {
+        if (!TextUtils.isEmpty(rollbarKey)) {
             Rollbar.init(this, rollbarKey, getString(R.string.environment));
             // Include logs if we don't need to add a permission to do so
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -153,12 +167,61 @@ public class App extends Application {
         }
     }
 
+    synchronized private void setupGoogleAnalytics() {
+        String appTrackerKey = getString(R.string.app_google_analytics_id);
+        if (!TextUtils.isEmpty(appTrackerKey)) {
+            GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
+            ga.enableAutoActivityReports(this);
+            apptracker = ga.newTracker(appTrackerKey);
+            apptracker.enableAutoActivityTracking(true);
+        }
+    }
+
+    synchronized public void setUserOnAnalyticsTracker(@Nullable User user) {
+        if (apptracker != null) {
+            String userId = null;
+            if (user != null) {
+                try {
+                    userId = Integer.toString(user.getId());
+                } catch (JSONException e) {
+                    Logger.error("Could not get user id", e);
+                }
+            }
+
+            apptracker.set("&uid", userId);
+        }
+    }
+
+    synchronized private void setInstanceOnAnalyticstracker(@Nullable InstanceInfo instance) {
+        if (apptracker != null) {
+            // We're overriding the "App Name" to have a place to put instance.url_name
+            // If there is no Instance, we want to default to the original App Name
+            String urlName = getString(R.string.app_name);
+            if (instance != null) {
+                urlName = instance.getUrlName();
+            }
+
+            apptracker.setAppName(urlName);
+        }
+    }
+
+    synchronized public void sendFragmentView(@NonNull Fragment fragment, @NonNull Activity activity) {
+        if (apptracker != null) {
+            String screen = activity.getClass().getCanonicalName() +
+                    "/" + fragment.getClass().getCanonicalName();
+
+            // "&cd" is the "ScreenView" parameter
+            apptracker.send(new HitBuilders.ScreenViewBuilder().set("&cd", screen).build());
+        }
+    }
+
     public static NearbyList getNearbyList(Context context) {
-        if (nearbyList == null) {
-            nearbyList = new NearbyList(context);
+        App app = getAppInstance();
+        if (app.nearbyList == null) {
+            app.nearbyList = new NearbyList(context);
         }
 
-        return nearbyList;
+        return app.nearbyList;
     }
 
     /**
@@ -320,10 +383,10 @@ public class App extends Application {
     private static void setCurrentInstance(InstanceInfo currentInstance) {
         App.currentInstance = currentInstance;
         getSharedPreferences().edit().putString(INSTANCE_CODE, currentInstance.getUrlName()).commit();
+        App.getAppInstance().setInstanceOnAnalyticstracker(currentInstance);
 
         try {
             fieldManager = new FieldManager(currentInstance);
-
             filterManager = new FilterManager(currentInstance);
 
         } catch (Exception e) {

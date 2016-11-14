@@ -1,12 +1,12 @@
 package org.azavea.otm.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TermsOfService extends FragmentActivity {
+public class TermsOfService extends Activity {
 
     private final LoginManager loginManager = App.getLoginManager();
     private ProgressDialog dialog;

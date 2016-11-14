@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link UDFKeyChoiceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
