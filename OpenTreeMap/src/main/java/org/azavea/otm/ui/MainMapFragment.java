@@ -294,8 +294,10 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
                     Collection<Either<JSONObject, JSONArray>> activeFilters = App.getFilterManager().getActiveFilters();
                     setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
 
+                    mMap.clear();
                     filterTileProvider.setParameters(activeFilters);
-                    filterTileOverlay.clearTileCache();
+                    setupMapOverlays();
+                    setupCanopyOverlay();
                 }
                 break;
             case INFO_INTENT:
@@ -411,39 +413,62 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     private void setUpMap(View view) {
         SharedPreferences prefs = App.getSharedPreferences();
         int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
-        String baseTileUrl = prefs.getString("tiler_url", null);
-        String plotFeature = prefs.getString("plot_feature", null);
-        String boundaryFeature = prefs.getString("boundary_feature", null);
-        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerDragListener(new GoogleMapsListeners.NoopDragListener());
 
+        setupMapOverlays();
+
+        // Set up the default click listener
+        mMap.setOnMapClickListener(showPopupMapClickListener);
+        SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.basemap_controls);
+
+        MapHelper.setUpBasemapControls(buttons, mMap);
+    }
+
+    private void setupMapOverlays() {
+        SharedPreferences prefs = App.getSharedPreferences();
+        String baseTileUrl = prefs.getString("tiler_url", null);
+        String plotFeature = prefs.getString("plot_feature", null);
+        String boundaryFeature = prefs.getString("boundary_feature", null);
+        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
+
         try {
             TMSTileProvider boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
             boundaryTileOverlay = mMap.addTileOverlay(
                     new TileOverlayOptions().tileProvider(boundaryTileProvider).zIndex(0));
 
-            // Canopy layer shows all trees, is always on, but is 'dimmed' while a filter is active
-            TMSTileProvider canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature, 76);
-            canopyTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
-            canopyTileOverlay = mMap.addTileOverlay(
-                    new TileOverlayOptions().tileProvider(canopyTileProvider).zIndex(50));
-
             // Set up the filter layer
-            filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
+            if (filterTileProvider == null) {
+                filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
+            }
             filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
             filterTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
-
-            // Set up the default click listener
-            mMap.setOnMapClickListener(showPopupMapClickListener);
-            SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.basemap_controls);
-
-            MapHelper.setUpBasemapControls(buttons, mMap);
         } catch (Exception e) {
             Logger.error("Error Setting Up Basemap", e);
+            Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupCanopyOverlay() {
+        SharedPreferences prefs = App.getSharedPreferences();
+        String plotFeature = prefs.getString("plot_feature", null);
+        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
+        String baseTileUrl = prefs.getString("tiler_url", null);
+
+        try {
+            // Canopy layer shows all trees, is always on, but is 'dimmed' while a filter is active
+            TMSTileProvider canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
+            canopyTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
+            canopyTileOverlay = mMap.addTileOverlay(
+                    new TileOverlayOptions()
+                            .tileProvider(canopyTileProvider)
+                            .zIndex(50)
+                            .transparency(0.7f));
+        } catch (Exception e) {
+            Logger.error("Error setting up transparent canopy layer", e);
             Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
         }
     }

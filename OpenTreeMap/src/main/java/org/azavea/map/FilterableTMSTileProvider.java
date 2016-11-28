@@ -22,11 +22,6 @@ public class FilterableTMSTileProvider extends TMSTileProvider {
         super(baseUrl, featureName);
     }
 
-    public FilterableTMSTileProvider(String baseUrl, String featureName, int opacity)
-            throws MalformedURLException {
-        super(baseUrl, featureName, opacity);
-    }
-
     @Override
     public URL getTileUrl(int x, int y, int zoom) {
         URL unfilteredUrl = super.getTileUrl(x, y, zoom);
