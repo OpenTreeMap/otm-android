@@ -248,15 +248,15 @@ public class App extends Application {
         private Callback callback;
         private InstanceInfo responseInstanceInfo;
 
-        public InstanceRefreshHandler(Callback callback) {
+        InstanceRefreshHandler(Callback callback) {
             this(new InstanceInfo(), callback);
         }
 
-        public InstanceRefreshHandler() {
+        InstanceRefreshHandler() {
             this(new InstanceInfo(), null);
         }
 
-        public InstanceRefreshHandler(InstanceInfo instanceInfo, Callback callback) {
+        InstanceRefreshHandler(InstanceInfo instanceInfo, Callback callback) {
             super(instanceInfo);
             this.responseInstanceInfo = instanceInfo;
             this.callback = callback;
@@ -291,9 +291,10 @@ public class App extends Application {
 
         @Override
         public void failure(Throwable e, String message) {
-            Logger.error("Unable to Load Instance: " + responseInstanceInfo.getName(), e);
-            Toast.makeText(appInstance, "Cannot load configured tree map.",
-                    Toast.LENGTH_LONG).show();
+            String errorMessage = appInstance.getString(R.string.cannot_load_instance) +
+                    responseInstanceInfo.getName();
+            Logger.error(errorMessage, e);
+            Toast.makeText(appInstance, errorMessage, Toast.LENGTH_LONG).show();
             handleCallback(false);
         }
 

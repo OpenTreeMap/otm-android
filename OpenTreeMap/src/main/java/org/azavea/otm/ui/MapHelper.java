@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -38,12 +38,12 @@ public class MapHelper {
     }
 
     public static void checkGooglePlay(Activity activity) {
-        int googlePlayStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        GoogleApiAvailability google = GoogleApiAvailability.getInstance();
+        int googlePlayStatus = google.isGooglePlayServicesAvailable(activity);
         if (googlePlayStatus != ConnectionResult.SUCCESS) {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(googlePlayStatus, activity, 1);
+            Dialog dialog = google.getErrorDialog(activity, googlePlayStatus, 1);
             dialog.show();
         }
-
     }
 
     protected static BinaryHttpResponseHandler getPhotoDetailHandler(final Activity activity, final Plot plot) {

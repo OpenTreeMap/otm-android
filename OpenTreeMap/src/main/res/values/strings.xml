@@ -128,6 +128,8 @@
     <string name="instance_switcher_request_failed">Failed to load tree maps</string>
     <string name="filter_instances_hint">Filter tree maps…</string>
     <string name="instances_failed">Could not get tree maps</string>
+    <string name="cannot_load_instance">Unable to load tree map: </string>
+    <string name="map_failed">Unable to setup map; Google Play Store might not be setup correctly"</string>
     <string name="perms_add_tree_fail">Adding trees is not available to all users</string>
     <string name="perms_edit_tree_fail">Editing a tree\'s details is not available to all users</string>
     <string name="perms_add_tree_photo_fail">Adding tree photos is not available to all users</string>

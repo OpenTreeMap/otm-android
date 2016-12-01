@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler.Callback;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +31,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -43,7 +42,6 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.joelapenna.foursquared.widget.SegmentedButton;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.azavea.helpers.GoogleMapsListeners;
 import org.azavea.helpers.Logger;
@@ -52,24 +50,31 @@ import org.azavea.map.TMSTileProvider;
 import org.azavea.otm.App;
 import org.azavea.otm.R;
 import org.azavea.otm.data.Geometry;
+import org.azavea.otm.data.InstanceInfo;
 import org.azavea.otm.data.Plot;
 import org.azavea.otm.data.PlotContainer;
 import org.azavea.otm.map.FallbackGeocoder;
 import org.azavea.otm.rest.RequestGenerator;
 import org.azavea.otm.rest.handlers.ContainerRestHandler;
 import org.azavea.otm.rest.handlers.LoggingJsonHttpResponseHandler;
+import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.Promise;
+import org.jdeferred.android.AndroidDeferredManager;
+import org.jdeferred.impl.DeferredObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 
 import cz.msebera.android.httpclient.Header;
 
 public class MainMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
-    private static LatLng START_POS;
     private static final int STREET_ZOOM_LEVEL = 17;
     private static final int FILTER_INTENT = 1;
     private static final int INFO_INTENT = 2;
@@ -79,7 +84,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     private static final int STEP1 = 1;
     private static final int STEP2 = 2;
     private static final int CANCEL = 3;
-    private static final int FINISH = 4;
+    private static final int STEP3 = 4;
 
     private Menu menu;
     private SearchView searchView;
@@ -90,94 +95,33 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     private Plot currentPlot; // The Plot we're currently showing a pop-up for, if any
     private Marker plotMarker;
     private MapView mapView;
-    private GoogleMap mMap;
     private TextView filterDisplay;
     private int treeAddMode = CANCEL;
     private GoogleApiClient mGoogleApiClient;
 
+    private Deferred<Location, Throwable, Void> mLocationDeferred;
+
+    // the map setup can last the entire life of the fragment instance
+    private Deferred<GoogleMap, Throwable, Void> mMapSetupDeferred = new DeferredObject<>();
+
+    private Promise<InstanceInfo, Throwable, Void> mInstanceLoadPromise;
+
     FilterableTMSTileProvider filterTileProvider;
+    TMSTileProvider boundaryTileProvider;
+    TMSTileProvider canopyTileProvider;
     TileOverlay filterTileOverlay;
     TileOverlay canopyTileOverlay;
     TileOverlay boundaryTileOverlay;
 
-    // Map click listener for normal view mode
-    private final OnMapClickListener showPopupMapClickListener = point -> {
-        Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-
-        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                "Loading. Please wait...", true);
-        dialog.show();
-
-        final RequestGenerator rg = new RequestGenerator();
-        RequestParams activeFilters = null;
-
-        rg.getPlotsNearLocation(
-                point.latitude,
-                point.longitude,
-                activeFilters,
-                new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
-
-                    @Override
-                    public void failure(Throwable e, String message) {
-                        dialog.hide();
-                        Log.e("TREE_CLICK",
-                                "Error retrieving plots on map touch event: ", e);
-                    }
-
-                    @Override
-                    public void dataReceived(PlotContainer response) {
-                        try {
-                            Plot plot = response.getFirst();
-                            if (plot != null) {
-                                showPopup(plot);
-                            } else {
-                                hidePopup();
-                            }
-                        } catch (JSONException e) {
-                            Logger.error("Error retrieving plot info on map touch event: ", e);
-                        } finally {
-                            dialog.hide();
-                        }
-                    }
-                }
-        );
-    };
-
-    // Map click listener that allows us to add a tree
-    private final OnMapClickListener addMarkerMapClickListener = new GoogleMap.OnMapClickListener() {
-        @Override
-        public void onMapClick(LatLng point) {
-            Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
-
-            plotMarker = mMap.addMarker(new MarkerOptions()
-                            .position(point)
-                            .title("New Tree")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker))
-            );
-            plotMarker.setDraggable(true);
-            setTreeAddMode(STEP2);
-        }
-    };
-
     public void onBackPressed() {
         hidePopup();
         removePlotMarker();
-        setTreeAddMode(CANCEL);
+        mMapSetupDeferred.promise().done(map -> setTreeAddMode(CANCEL, map));
         searchView.setIconified(true);
     }
 
     public boolean shouldHandleBackPress() {
         return treeAddMode != CANCEL || currentPlot != null || !searchView.isIconified();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden && mMap != null) {
-            mMap.setMyLocationEnabled(false);
-        } else if (mMap != null) {
-            mMap.setMyLocationEnabled(true);
-        }
     }
 
     /**
@@ -186,46 +130,15 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
      * *****************************************************
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         this.setHasOptionsMenu(true);
+    }
 
-        final View view = inflater.inflate(R.layout.main_map, container, false);
-
-        MapsInitializer.initialize(getActivity());
-        MapHelper.checkGooglePlay(getActivity());
-
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-
-        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                "Loading Map Info...", true);
-
-        Callback instanceLoaded = result -> {
-            try {
-                if (result.getData().getBoolean("success")) {
-                    START_POS = App.getCurrentInstance().getStartPos();
-                    filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
-                    setUpMapIfNeeded(view);
-                    plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
-                    setPopupViews(view);
-                    clearTileCache();
-                    setupViewHandlers(view);
-                }
-                return true;
-
-            } catch (Exception e) {
-                Logger.error("Unable to setup map", e);
-                Toast.makeText(App.getAppInstance(), "Unable to setup map", Toast.LENGTH_LONG).show();
-                return false;
-
-            } finally {
-                dialog.dismiss();
-            }
-        };
-        // Check for an instance before loading the map
-        App.getAppInstance().ensureInstanceLoaded(instanceLoaded);
-
-        return view;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.main_map, container, false);
     }
 
     @Override
@@ -244,89 +157,191 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
             startActivityForResult(filter, FILTER_INTENT);
             return true;
         } else if (id == R.id.addTreeButton) {
-            handleAddTree();
+            mMapSetupDeferred.promise().done(this::handleAddTree);
             return true;
         } else {
             return false;
         }
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MapHelper.checkGooglePlay(getActivity());
-        mapView.onResume();
-        if (App.getAppInstance().getCurrentInstance() != null) {
-            setUpMapIfNeeded(getView());
-            setTreeAddMode(CANCEL);
-            clearTileCache();
-        }
-    }
-
+    // Called after onCreateView, so getView() is guaranteed to be non-null.
+    //
+    // Unlike activities, only our own app is responsible for fragment life cycle.
+    // We never detach this fragment from an activity and later reattach it,
+    // so onActivityCreated only gets called once in the life cycle of the fragment.
+    //
+    // If we ever do start detaching and re-attaching it, or re-intenting its parent `TabLayout`,
+    // more guards must be put in place.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .build();
+
+        // In the highly unlikely event that tile provider urls are malformed, fail fast.
+        if (!setupTileProviders(mMapSetupDeferred)) {
+            return;
+        }
+
+        Deferred<InstanceInfo, Throwable, Void> instanceLoadDeferred = new DeferredObject<>();
+        mInstanceLoadPromise = instanceLoadDeferred.promise();
+        mLocationDeferred = new DeferredObject<>();
+        final Promise<Location, Throwable, Void> locationPromise = mLocationDeferred.promise();
+        final Promise<GoogleMap, Throwable, Void> mapSetupPromise = mMapSetupDeferred.promise();
+
+        final DeferredManager dm = new AndroidDeferredManager();
+
+        final int INSTANCE = 0;
+        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                "Loading Map Info...", true);
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .build();
+        }
+
+        App.getAppInstance().ensureInstanceLoaded(result -> {
+            if (result != null && result.getData().getBoolean("success")) {
+                instanceLoadDeferred.resolve(App.getCurrentInstance());
+            } else {
+                instanceLoadDeferred.reject(new Throwable("Instance load failed"));
+                return false;
+            }
+            return true;
+        });
+
+        // Functionality dependent on the GoogleMap but not on the treeMap InstanceInfo.
+        mapSetupPromise.then(map -> {
+            setUpMap(getView(), map);
+            setupControls();
+        });
+        // Functionality dependent on both.
+        dm.when(mInstanceLoadPromise, mapSetupPromise).then(results -> {
+            // Will execute immediately, since we got here thanks to the promise being resolved.
+            // Simply a way of retrieving a correctly typed map.
+            mapSetupPromise.done(map -> {
+                setupViewHandlers(getView(), map);
+                setProviderDisplayParameters();
+                InstanceInfo treeMap = InstanceInfo.class.cast(results.get(INSTANCE).getResult());
+                initLocation(treeMap, locationPromise, map).always((state, resolved, rejected) ->
+                        dialog.dismiss());
+            });
+        }, failure -> {
+            dialog.dismiss();
+            Throwable e = Throwable.class.cast(failure.getReject());
+            Logger.error("Unable to setup map", e);
+            Toast.makeText(App.getAppInstance(), R.string.map_failed, Toast.LENGTH_SHORT).show();
+        });
+
+        // Since Google Play services is required in order to obtain a GoogleMap,
+        // check whether it is correctly installed and give the user a chance to rectify it.
+        //
+        // If it is not, the MapHelper will show a dialog which will redirect to an activity in
+        // another app (play store or system settings) to rectify the situation.
+        // A user can return to this Activity and Fragment after following the prompt and correctly
+        // installing/updating/enabling the Google Play services.
+        // The MapHelper does not tell whether the situation has been rectified,
+        // so a future attempt to fetch a GoogleMap still may fail.
+        Activity activity = getActivity();
+        MapsInitializer.initialize(activity);
+        MapHelper.checkGooglePlay(activity);
+
+        mapView = (MapView) getView().findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+
+        // If the above MapHelper check did not rectify an incorrect Google Play installation,
+        // the same prompt may be shown during getMapAsync.
+        mapView.getMapAsync(map -> {
+            if (map != null) {
+                mMapSetupDeferred.resolve(map);
+            } else {
+                Logger.warning("Map was null, missing google play support?");
+                mMapSetupDeferred.reject(new Exception("Map was null, missing google play support?"));
+            }
+        });
     }
 
+    // Inevitably called after onActivityCreated. Means the fragment is visible.
     @Override
     public void onStart() {
         super.onStart();
+
+        // Can happen in the extremely unlikely event that tile providers setup failed,
+        // or in the equally unlikely event that Google Play services is not setup correctly
+        // and the user failed to fix it when prompted by checkGooglePlay.
+        if (mMapSetupDeferred.promise().isRejected()) {
+            return;
+        }
+        // mInstanceLoadPromise could be rejected if ensureInstanceLoaded failed fast
+        if (mInstanceLoadPromise.isRejected()) {
+            return;
+        }
+
+        mapView.onStart();
+
+        // Even though the deferred is only resolved once,
+        // a done handler gets called every time .done is called thereafter.
+        mMapSetupDeferred.promise().done(map -> map.setMyLocationEnabled(true));
+
+        // Should result in onConnect being called.
         mGoogleApiClient.connect();
+    }
+
+    // Usually called after onStart. Means the fragment got the focus.
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        // Even though the deferred is only resolved once,
+        // a done handler gets called every time .done is called thereafter.
+        mMapSetupDeferred.promise().done(map -> {
+            map.setMyLocationEnabled(false);
+        });
+
+        mapView.onStop();
         mGoogleApiClient.disconnect();
     }
 
     @Override
+    // Shown when the user has added a tree, set a filter, or clicked on a tree
+    // in response to startActivityForResult
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case FILTER_INTENT:
-                if (resultCode == Activity.RESULT_OK) {
-                    Collection<Either<JSONObject, JSONArray>> activeFilters = App.getFilterManager().getActiveFilters();
-                    setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
+        mMapSetupDeferred.promise().done(map -> {
+            switch (requestCode) {
+                case FILTER_INTENT:
+                    if (resultCode == Activity.RESULT_OK) {
+                        Collection<Either<JSONObject, JSONArray>> activeFilters = App.getFilterManager().getActiveFilters();
+                        setFilterDisplay(App.getFilterManager().getActiveFilterDisplay());
 
-                    mMap.clear();
-                    filterTileProvider.setParameters(activeFilters);
-                    setupMapOverlays();
-                    setupCanopyOverlay();
-                }
-                break;
-            case INFO_INTENT:
-                if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
-                    showPlotFromIntent(data);
-                } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
-                    hidePopup();
-                    // TODO: Do we need to refresh the map tile?
-                }
-                break;
+                        filterTileProvider.setParameters(activeFilters);
+                        reloadTiles(map);
+                    }
+                    break;
+                case INFO_INTENT:
+                    if (resultCode == TreeDisplay.RESULT_PLOT_EDITED) {
+                        showPlotFromIntent(data, map);
+                    } else if (resultCode == TreeDisplay.RESULT_PLOT_DELETED) {
+                        hidePopup();
+                        reloadTiles(map);
+                        // TODO: Do we need to refresh the map tile?
+                    }
+                    break;
 
-            case ADD_INTENT:
-                if (resultCode == Activity.RESULT_OK) {
-                    showPlotFromIntent(data);
-                }
-        }
-    }
-
-    private void showPlotFromIntent(Intent data) {
-        try {
-            // The plot was updated, so update the pop-up with any new data
-            String plotJSON = data.getExtras().getString("plot");
-            Plot updatedPlot = new Plot(new JSONObject(plotJSON));
-            showPopup(updatedPlot);
-
-        } catch (JSONException e) {
-            Logger.error("Unable to deserialze updated plot for map popup", e);
-            hidePopup();
-        }
+                case ADD_INTENT:
+                    if (resultCode == Activity.RESULT_OK) {
+                        reloadTiles(map);
+                        showPlotFromIntent(data, map);
+                        setTreeAddMode(CANCEL, map);
+                    }
+            }
+        });
     }
 
     // If you use a MapView directly, you need to forward it events
@@ -362,9 +377,140 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * ***************************************************************
+     * Overrides for the GoogleApiClient.ConnectionCallbacks interface
+     * ***************************************************************
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        int WAIT_DURATION = 5000;  // 5 seconds
+        LocationRequest request = LocationRequest.create()
+                .setNumUpdates(1)
+                .setExpirationDuration(WAIT_DURATION)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(mGoogleApiClient, request, loc -> {
+                    if (mLocationDeferred.isPending()) {
+                        mLocationDeferred.resolve(loc);
+                    }
+                });
+        new Handler().postDelayed(() -> {
+            if (mLocationDeferred.isPending()) {
+                mLocationDeferred.reject(new TimeoutException("Location request timed out"));
+            }
+        }, WAIT_DURATION);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Implement the interface
+    }
+
     /*********************************
      * Private methods
      *********************************/
+
+    private void showPlotFromIntent(Intent data, GoogleMap map) {
+        try {
+            // The plot was updated, so update the pop-up with any new data
+            String plotJSON = data.getExtras().getString("plot");
+            Plot updatedPlot = new Plot(new JSONObject(plotJSON));
+            showPopup(updatedPlot, map);
+
+        } catch (JSONException e) {
+            Logger.error("Unable to deserialze updated plot for map popup", e);
+            hidePopup();
+        }
+    }
+
+    private void showPopupOnMap(LatLng point, GoogleMap map) {
+        Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+
+        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                "Loading. Please wait...", true);
+        dialog.show();
+
+        new RequestGenerator().getPlotsNearLocation(
+                point.latitude,
+                point.longitude,
+                null,
+                new ContainerRestHandler<PlotContainer>(new PlotContainer()) {
+
+                    @Override
+                    public void failure(Throwable e, String message) {
+                        dialog.hide();
+                        Log.e("TREE_CLICK",
+                                "Error retrieving plots on map touch event: ", e);
+                    }
+
+                    @Override
+                    public void dataReceived(PlotContainer response) {
+                        try {
+                            Plot plot = response.getFirst();
+                            if (plot != null) {
+                                Log.d("TREE_CLICK", "plot: " + plot.getTitle());
+                                showPopup(plot, map);
+                            } else {
+                                Log.d("TREE_CLICK", "null plot");
+                                hidePopup();
+                            }
+                        } catch (JSONException e) {
+                            Logger.error("Error retrieving plot info on map touch event: ", e);
+                        } finally {
+                            dialog.hide();
+                        }
+                    }
+                }
+        );
+    }
+
+    private boolean setupTileProviders(Deferred<GoogleMap, Throwable, Void> mapDeferred) {
+        final SharedPreferences prefs = App.getSharedPreferences();
+        final String baseTileUrl = prefs.getString("tiler_url", null);
+        final String boundaryFeature = prefs.getString("boundary_feature", null);
+        final String plotFeature = prefs.getString("plot_feature", null);
+
+        try {
+            boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
+            canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
+            if (filterTileProvider == null) {
+                filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Logger.error("Unable to setup map tile provider, baseTileUrl: " + baseTileUrl, e);
+            Toast.makeText(App.getAppInstance(), R.string.map_failed, Toast.LENGTH_SHORT).show();
+            mapDeferred.reject(e);
+
+            return false;
+        }
+        return true;
+    }
+
+    // Sets up the filterDisplay, plotPopup, and plot related views.
+    // Called from onActivityCreated, so getView() is guaranteed to return non-null.
+    private void setupControls() {
+        final View view = getView();
+        filterDisplay = (TextView) view.findViewById(R.id.filterDisplay);
+        plotPopup = (RelativeLayout) view.findViewById(R.id.plotPopup);
+        plotSpeciesView = (TextView) view.findViewById(R.id.plotSpecies);
+        plotAddressView = (TextView) view.findViewById(R.id.plotAddress);
+        plotImageView = (ImageView) view.findViewById(R.id.plotImage);
+    }
+
+    private void setProviderDisplayParameters() {
+        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
+        canopyTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
+        filterTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
+    }
+
+    private void reloadTiles(GoogleMap map) {
+        map.clear();
+        setupMapOverlays(map);
+        setupCanopyOverlay(map);
+    }
 
     private void hideMenuItems() {
         if (menu != null) {
@@ -378,91 +524,38 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         }
     }
 
-    /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap(View)} once when {@link #mMap} is not null.
-     * <p>
-     * If it isn't installed {@link com.google.android.gms.maps.MapView})
-     * will show a prompt for the user to install/update the Google Play services APK on
-     * their device.
-     * <p>
-     * A user can return to this Activity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the Activity may not have been
-     * completely destroyed during this process (it is likely that it would only be stopped or
-     * paused), {@link #onCreate(Bundle)} may not be called again so we should call this method in
-     * {@link #onResume()} to guarantee that it will be called.
-     */
-    private void setUpMapIfNeeded(View view) {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the MapView.
-            mapView.getMapAsync(map -> {
-                mMap = map;
-                // Check if we were successful in obtaining the map.
-                if (mMap != null) {
-                    setUpMap(view);
-                } else {
-                    Toast.makeText(getActivity(), "Google Play store support is required to run this app.", Toast.LENGTH_LONG).show();
-                    Logger.warning("Map was null, missing google play support?");
-                }
-            });
-        }
-    }
+    private void setUpMap(View view, GoogleMap map) {
+        map.setMyLocationEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(false);
+        map.setOnMarkerDragListener(new GoogleMapsListeners.NoopDragListener());
 
-    private void setUpMap(View view) {
-        SharedPreferences prefs = App.getSharedPreferences();
-        int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(START_POS, startingZoomLevel));
-        mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMarkerDragListener(new GoogleMapsListeners.NoopDragListener());
-
-        setupMapOverlays();
+        setupMapOverlays(map);
 
         // Set up the default click listener
-        mMap.setOnMapClickListener(showPopupMapClickListener);
+        map.setOnMapClickListener(point -> {
+            showPopupOnMap(point, map);
+        });
         SegmentedButton buttons = (SegmentedButton) view.findViewById(R.id.basemap_controls);
 
-        MapHelper.setUpBasemapControls(buttons, mMap);
+        MapHelper.setUpBasemapControls(buttons, map);
     }
 
-    private void setupMapOverlays() {
-        SharedPreferences prefs = App.getSharedPreferences();
-        String baseTileUrl = prefs.getString("tiler_url", null);
-        String plotFeature = prefs.getString("plot_feature", null);
-        String boundaryFeature = prefs.getString("boundary_feature", null);
-        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
-
+    private void setupMapOverlays(GoogleMap map) {
         try {
-            TMSTileProvider boundaryTileProvider = new TMSTileProvider(baseTileUrl, boundaryFeature);
-            boundaryTileOverlay = mMap.addTileOverlay(
+            boundaryTileOverlay = map.addTileOverlay(
                     new TileOverlayOptions().tileProvider(boundaryTileProvider).zIndex(0));
 
-            // Set up the filter layer
-            if (filterTileProvider == null) {
-                filterTileProvider = new FilterableTMSTileProvider(baseTileUrl, plotFeature);
-            }
-            filterTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
-            filterTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
+            filterTileOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(filterTileProvider));
         } catch (Exception e) {
             Logger.error("Error Setting Up Basemap", e);
-            Toast.makeText(getActivity(), "Error Setting Up Basemap", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Error Setting Up Base Map", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void setupCanopyOverlay() {
-        SharedPreferences prefs = App.getSharedPreferences();
-        String plotFeature = prefs.getString("plot_feature", null);
-        String[] displayFilters = App.getAppInstance().getResources().getStringArray(R.array.display_filters);
-        String baseTileUrl = prefs.getString("tiler_url", null);
-
+    private void setupCanopyOverlay(GoogleMap map) {
         try {
             // Canopy layer shows all trees, is always on, but is 'dimmed' while a filter is active
-            TMSTileProvider canopyTileProvider = new TMSTileProvider(baseTileUrl, plotFeature);
-            canopyTileProvider.setDisplayParameters(Arrays.asList(displayFilters));
-            canopyTileOverlay = mMap.addTileOverlay(
+            canopyTileOverlay = map.addTileOverlay(
                     new TileOverlayOptions()
                             .tileProvider(canopyTileProvider)
                             .zIndex(50)
@@ -473,35 +566,33 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         }
     }
 
-    private void moveToCurrentLocation() {
-        LocationRequest request = LocationRequest.create()
-                .setNumUpdates(1)
-                .setExpirationDuration(5000)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    private Promise<Location, Throwable, Void> initLocation(
+            InstanceInfo treeMap, Promise<Location, Throwable, Void> locationPromise,
+            GoogleMap map) {
 
-        LocationServices.FusedLocationApi
-                .requestLocationUpdates(mGoogleApiClient, request, loc -> {
-                    LatLng latlng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    App.getAppInstance().ensureInstanceLoaded(result -> {
-                        LatLngBounds extent = App.getCurrentInstance().getExtent();
-                        if (extent.contains(latlng)) {
-                            mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(latlng, STREET_ZOOM_LEVEL));
-                        }
-                        return false;
-                    });
+        SharedPreferences prefs = App.getSharedPreferences();
+        int startingZoomLevel = Integer.parseInt(prefs.getString("starting_zoom_level", "12"));
 
-                });
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(App.getCurrentInstance().getStartPos(),
+                                                         startingZoomLevel));
+
+        locationPromise.then(loc -> {
+            LatLng latlng = new LatLng(loc.getLatitude(), loc.getLongitude());
+            if (treeMap.getExtent().contains(latlng)) {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, STREET_ZOOM_LEVEL));
+            }
+        });
+        return locationPromise;
     }
 
-    private void setupViewHandlers(View view) {
+    private void setupViewHandlers(View view, GoogleMap map) {
         view.findViewById(R.id.plotImage).setOnClickListener(v -> {
             if (currentPlot != null) {
                 currentPlot.getTreePhoto(MapHelper.getPhotoDetailHandler(getActivity(), currentPlot));
             }
         });
 
-        view.findViewById(R.id.treeAddNext).setOnClickListener(v -> setTreeAddMode(FINISH));
+        view.findViewById(R.id.treeAddNext).setOnClickListener(v -> setTreeAddMode(STEP3, map));
 
         view.findViewById(R.id.plotPopup).setOnClickListener(v -> {
             // Show TreeInfoDisplay with current plot
@@ -515,18 +606,18 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         });
     }
 
-    private void handleAddTree() {
+    private void handleAddTree(GoogleMap map) {
         if (!App.getLoginManager().isLoggedIn()) {
             startActivity(new Intent(getActivity(), LoginActivity.class));
         } else if (!App.getCurrentInstance().canAddTree()) {
             Toast.makeText(getActivity(), getString(R.string.perms_add_tree_fail), Toast.LENGTH_SHORT).show();
         } else {
-            setTreeAddMode(CANCEL);
-            setTreeAddMode(STEP1);
+            setTreeAddMode(CANCEL, map);
+            setTreeAddMode(STEP1, map);
         }
     }
 
-    private void showPopup(Plot plot) {
+    private void showPopup(Plot plot, GoogleMap map) {
         //set default text
         plotSpeciesView.setText(getString(R.string.species_missing));
         plotAddressView.setText(getString(R.string.address_missing));
@@ -542,10 +633,10 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
 
             showImageOnPlotPopup(plot);
 
-            LatLng position = zoomToPlot(plot);
+            LatLng position = zoomToPlot(plot, map);
 
             removePlotMarker();
-            plotMarker = mMap.addMarker(new MarkerOptions()
+            plotMarker = map.addMarker(new MarkerOptions()
                     .position(position)
                     .title("")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker)));
@@ -556,12 +647,12 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         plotPopup.setVisibility(View.VISIBLE);
     }
 
-    private LatLng zoomToPlot(Plot plot) throws JSONException {
+    private LatLng zoomToPlot(Plot plot, GoogleMap map) throws JSONException {
         LatLng position = new LatLng(plot.getGeometry().getY(), plot.getGeometry().getX());
-        if (mMap.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+        if (map.getCameraPosition().zoom >= STREET_ZOOM_LEVEL) {
+            map.animateCamera(CameraUpdateFactory.newLatLng(position));
         } else {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, STREET_ZOOM_LEVEL));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, STREET_ZOOM_LEVEL));
         }
         return position;
     }
@@ -577,12 +668,6 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
             plotMarker.remove();
             plotMarker = null;
         }
-    }
-
-    private void setPopupViews(View view) {
-        plotSpeciesView = (TextView) view.findViewById(R.id.plotSpecies);
-        plotAddressView = (TextView) view.findViewById(R.id.plotAddress);
-        plotImageView = (ImageView) view.findViewById(R.id.plotImage);
     }
 
     private void showImageOnPlotPopup(Plot plot) {
@@ -602,7 +687,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     private void setFilterDisplay(String activeFilterDisplay) {
-        if (activeFilterDisplay.equals("") || activeFilterDisplay == null) {
+        if (activeFilterDisplay.equals("")) {
             filterDisplay.setVisibility(View.GONE);
         } else {
             filterDisplay.setText(getString(R.string.filter_display_label) + " " + activeFilterDisplay);
@@ -614,12 +699,9 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
      *  CANCEL : not adding a tree
      *  STEP1  : "Tap to add a tree"
      *  STEP2  : "Long press to move the tree into position, then click next"
-     *  FINISH : Create tree and redirect to tree detail page.
+     *  STEP3 : Create tree and redirect to tree detail page.
      */
-    public void setTreeAddMode(int step) {
-        if (mMap == null) {
-            return;
-        }
+    private void setTreeAddMode(int step, GoogleMap map) {
         this.treeAddMode = step;
 
         View step1 = getActivity().findViewById(R.id.addTreeStep1);
@@ -628,7 +710,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
             case CANCEL:
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.GONE);
-                mMap.setOnMapClickListener(showPopupMapClickListener);
+                map.setOnMapClickListener(point -> showPopupOnMap(point, map));
                 showMenuItems();
                 break;
             case STEP1:
@@ -644,20 +726,26 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
                     step1.setVisibility(View.VISIBLE);
                 }
 
-                if (mMap != null) {
-                    mMap.setOnMapClickListener(addMarkerMapClickListener);
-                }
+                map.setOnMapClickListener(point -> {
+                    Log.d("TREE_CLICK", "(" + point.latitude + "," + point.longitude + ")");
+
+                    plotMarker = map.addMarker(new MarkerOptions()
+                            .position(point)
+                            .title("New Tree")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mapmarker))
+                    );
+                    plotMarker.setDraggable(true);
+                    setTreeAddMode(STEP2, map);
+                });
                 break;
             case STEP2:
                 hidePopup();
                 hideMenuItems();
                 step1.setVisibility(View.GONE);
                 step2.setVisibility(View.VISIBLE);
-                if (mMap != null) {
-                    mMap.setOnMapClickListener(null);
-                }
+                map.setOnMapClickListener(null);
                 break;
-            case FINISH:
+            case STEP3:
                 Intent editPlotIntent = new Intent(getActivity(), TreeEditDisplay.class);
                 Plot newPlot;
                 try {
@@ -669,11 +757,9 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
 
                 } catch (Exception e) {
                     Logger.error("Error creating tree", e);
-                    setTreeAddMode(CANCEL);
+                    setTreeAddMode(CANCEL, map);
                     Toast.makeText(getActivity(), "Error creating new tree", Toast.LENGTH_LONG).show();
                 }
-                this.treeAddMode = CANCEL;
-                showMenuItems();
         }
     }
 
@@ -713,7 +799,9 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     private void moveMapAndFinishGeocode(LatLng pos) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL));
+        mMapSetupDeferred.promise().done(map ->
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, STREET_ZOOM_LEVEL))
+        );
     }
 
     private void alertGeocodeError() {
@@ -737,7 +825,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     };
 
     /* Read the location search field, geocode it, and zoom to the location. */
-    public void doLocationSearch(CharSequence query) {
+    private void doLocationSearch(CharSequence query) {
         String address = query.toString();
 
         if (address.equals("")) {
@@ -754,25 +842,5 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
         } else {
             moveMapAndFinishGeocode(pos);
         }
-    }
-
-    private void clearTileCache() {
-        if (canopyTileOverlay != null) {
-            canopyTileOverlay.clearTileCache();
-        }
-
-        if (filterTileOverlay != null) {
-            filterTileOverlay.clearTileCache();
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        moveToCurrentLocation();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // Implement the interface
     }
 }
