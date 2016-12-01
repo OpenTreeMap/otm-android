@@ -276,12 +276,14 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public void onStart() {
         super.onStart();
+        mapView.onStart();
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mapView.onStop();
         mGoogleApiClient.disconnect();
     }
 
@@ -484,7 +486,7 @@ public class MainMapFragment extends Fragment implements GoogleApiClient.Connect
                     LatLng latlng = new LatLng(loc.getLatitude(), loc.getLongitude());
                     App.getAppInstance().ensureInstanceLoaded(result -> {
                         LatLngBounds extent = App.getCurrentInstance().getExtent();
-                        if (extent.contains(latlng)) {
+                        if (extent.contains(latlng) && mMap != null) {
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(latlng, STREET_ZOOM_LEVEL));
                         }
