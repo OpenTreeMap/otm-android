@@ -352,7 +352,7 @@ public class TreeEditDisplay extends TreeDisplay {
         setResultOk(updatedPlot);
 
         // Updating may have changed the georev
-        App.getCurrentInstance().setGeoRevId(plot.getUpdatedGeoRev());
+        App.getCurrentInstance().setGeoRevId(updatedPlot.getUpdatedGeoRev());
 
         finish();
     }
